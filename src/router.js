@@ -1,9 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+const Full = resolve => {
+  require.ensure(['./containers/Full.vue'], () => {
+    resolve(require('./containers/Full.vue'))
+  }, 'full')
+}
 const Login = resolve => {
   require.ensure(['./views/Login.vue'], () => {
     resolve(require('./views/Login.vue'))
+  }, 'login')
+}
+const Dashboard = resolve => {
+  require.ensure(['./views/Dashboard.vue'], () => {
+    resolve(require('./views/Dashboard.vue'))
   }, 'login')
 }
 
@@ -16,9 +25,15 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      redirect: 'home',
-      component: Home,
-      children: []
+      redirect: 'dashboard',
+      component: Full,
+      children: [
+        {
+          path: 'dashboard',
+          name: 'Dashboard',
+          component: Dashboard
+        }
+      ]
     },
     {
       path: '/pages',
