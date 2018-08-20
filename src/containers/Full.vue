@@ -1,28 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      persistent
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      v-model="drawer"
-      enable-resize-watcher
-      fixed
-      app>
-      <v-list>
-        <v-list-tile
-          value="true"
-          v-for="(item, i) in items"
-          :key="i">
-
-          <v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
+    <side-menu :clipped="clipped" :drawer="drawer" :miniVariant="miniVariant" ></side-menu>
     <v-toolbar
       app
       :clipped-left="clipped"
@@ -83,29 +61,20 @@
 </template>
 
 <script>
-
+import SideMenu from './../components/SideMenu'
 export default {
   name: 'App',
   data () {
     return {
+      title: 'Mapas Mentales',
       clipped: true,
       drawer: true,
       fixed: false,
-      items: [
-        {
-          icon: 'table_chart',
-          title: 'Primer Modulo'
-        },
-        {
-          icon: 'input',
-          title: 'Cerrar Sesión'
-        }
-      ],
       miniVariant: false,
       right: true,
-      rightDrawer: false,
-      title: 'Mapas Mentales'
+      rightDrawer: false
     }
-  }
+  },
+  components: {SideMenu}
 }
 </script>
