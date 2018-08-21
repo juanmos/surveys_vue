@@ -1,5 +1,6 @@
 <template>
     <v-app id="inspire">
+      <loading-component v-if="loading"></loading-component>
       <div class="particles">
            <particles-background></particles-background>
       </div>
@@ -8,7 +9,7 @@
           <v-layout align-center justify-center>
                 <v-card
                   id="e3"
-                  style="max-width: 600px; margin: auto; margin-top: 10%;"
+                  style="min-width: 400px; margin: auto; margin-top: 10%;"
                   class="appear"
                 >
                   <v-toolbar
@@ -17,46 +18,9 @@
                     dense
                   >
                   <v-toolbar-title class="white--text">Mapas Mentales</v-toolbar-title>
+                   <v-spacer></v-spacer>.
                   </v-toolbar>
-                  <v-card>
-                    <div class="logo">
-                      <img src="https://via.placeholder.com/100x100" alt="Logo">
-                    </div>
-                    <v-container
-                      fluid
-                      grid-list-lg
-                    >
-                      <v-layout row wrap>
-                        <v-flex xs12>
-                          <v-form v-model="valid">
-                              <v-text-field
-                                :append-icon="'email'"
-                                v-model="email"
-                                :rules="rules.emailRules"
-                                :counter="10"
-                                label="Email"
-                                required
-                              ></v-text-field>
-                              <v-text-field
-                                :append-icon="showPass ? 'visibility_off' : 'visibility'"
-                                v-model="password"
-                                :rules="rules.passwordRules"
-                                :type="showPass ? 'text' : 'password'"
-                                label="Contraseña"
-                                value=""
-                                @click:append="showPass = !showPass"
-                                required
-                              ></v-text-field>
-                          </v-form>
-
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn flat small color="blue">Entrar</v-btn>
-                  </v-card-actions>
-                  </v-card>
+                  <login-form @dataSubmited="auth($event)"></login-form>
                 </v-card>
           </v-layout>
          </v-container>
@@ -65,25 +29,35 @@
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'
 import ParticlesBackground from './../components/docaration/ParticlesBackground'
+import LoginForm from './../components/forms/LoginForm'
+import LoadingComponent from './../components/docaration/LoadingComponent'
+import {validations} from './../utils/validations'
 export default {
   data: () => ({
     valid: false,
     email: '',
     password: '',
     showPass: false,
-    rules: {
-      emailRules: [
-        v => !!v || 'Email es requerido',
-        v => /.+@.+/.test(v) || 'Email no es Valido'
-      ],
-      passwordRules: [
-        v => !!v || 'Contraseña es requerida',
-        v => v.length <= 8 || 'Al menos 8 caracteres'
-      ]
-    }
+    rules: validations
   }),
-  components: {ParticlesBackground}
+  methods: {
+    ...mapActions('auth', ['authenticate']),
+    auth (credentials) {
+      this.authenticate(credentials).then((result) => {
+        this.$router.push('/')
+      }, (err) => {
+        console.log(err)
+      })
+    }
+  },
+  computed: {
+    ...mapState('auth', {
+      loading: 'isAuthenticatePending'
+    })
+  },
+  components: {ParticlesBackground, LoginForm, LoadingComponent}
 }
 </script>
 
@@ -95,12 +69,6 @@ export default {
     background-repeat: no-repeat;
     background-size: cover; background-position: 50% 50%;
     background-color: #fff;
-  }
-  .logo {
-    text-align: center;
-  }
-  .logo img {
-    margin: 10px;
   }
   .v-toolbar_title {
     display: none;
