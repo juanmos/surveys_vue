@@ -26,8 +26,6 @@
                   :rules="rules.passwordRules"
                   :type="showPass ? 'text' : 'password'"
                   label="Contraseña"
-                  :counter="8"
-                  value=""
                   @click:append="showPass = !showPass"
                   required
                 ></v-text-field>

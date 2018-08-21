@@ -1,12 +1,12 @@
 <template>
     <v-app id="inspire">
+      <loading-component v-if="loading"></loading-component>
       <div class="particles">
            <particles-background></particles-background>
       </div>
        <v-content>
          <v-container fluid fill-height>
           <v-layout align-center justify-center>
-                <loading-component v-if="loading"></loading-component>
                 <v-card
                   id="e3"
                   style="min-width: 400px; margin: auto; margin-top: 10%;"

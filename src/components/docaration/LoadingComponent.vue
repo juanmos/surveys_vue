@@ -1,9 +1,11 @@
 <template>
-    <v-progress-circular
+<div class="loading">
+  <v-progress-circular
       :size="50"
       color="primary"
       indeterminate
-    ></v-progress-circular>
+  ></v-progress-circular>
+</div>
 </template>
 
 <script>
@@ -11,6 +13,17 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .loading {
+    position: fixed;
+    z-index: 999;
+    height: 2em;
+    width: 2em;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
 </style>
