@@ -2,8 +2,13 @@ export default {
   items: [
     {
       icon: 'table_chart',
-      url: '/my-dashboard',
+      url: '/dashboard',
       title: 'Panel'
+    },
+    {
+      icon: 'people',
+      url: '/users',
+      title: 'Users'
     }
   ]
 }

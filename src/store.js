@@ -13,7 +13,8 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         email: '',
-        password: ''
+        password: '',
+        removed: false
       },
       debug: true
     }),

@@ -21,6 +21,7 @@
                    <v-spacer></v-spacer>.
                   </v-toolbar>
                   <login-form @dataSubmited="auth($event)"></login-form>
+                  <snack-message v-if="logErr" :message="`USUARIO O CONTRASEÑA INVALIDO`" :type="'error'" ></snack-message>
                 </v-card>
           </v-layout>
          </v-container>
@@ -31,6 +32,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import ParticlesBackground from './../components/docaration/ParticlesBackground'
+import SnackMessage from './../components/docaration/SnackMessage'
 import LoginForm from './../components/forms/LoginForm'
 import LoadingComponent from './../components/docaration/LoadingComponent'
 import {validations} from './../utils/validations'
@@ -54,10 +56,11 @@ export default {
   },
   computed: {
     ...mapState('auth', {
-      loading: 'isAuthenticatePending'
+      loading: 'isAuthenticatePending',
+      logErr: 'errorOnAuthenticate'
     })
   },
-  components: {ParticlesBackground, LoginForm, LoadingComponent}
+  components: {ParticlesBackground, LoginForm, LoadingComponent, SnackMessage}
 }
 </script>
 

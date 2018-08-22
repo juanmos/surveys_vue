@@ -23,14 +23,6 @@
       <v-btn icon>
         <v-icon>search</v-icon>
       </v-btn>
-
-      <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>refresh</v-icon>
-      </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>more_vert</v-icon>
       </v-btn>
@@ -50,7 +42,8 @@
           <v-list-tile-action>
             <v-icon>compare_arrows</v-icon>
           </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
+          <v-list-tile-title></v-list-tile-title>
+          {{user.email}}
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -61,6 +54,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 import SideMenu from './../components/SideMenu'
 export default {
   name: 'App',
@@ -74,6 +69,9 @@ export default {
       right: true,
       rightDrawer: false
     }
+  },
+  computed: {
+    ...mapState('auth', { user: 'user' })
   },
   components: {SideMenu}
 }
