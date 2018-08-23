@@ -43,7 +43,7 @@
             <v-icon>compare_arrows</v-icon>
           </v-list-tile-action>
           <v-list-tile-title></v-list-tile-title>
-          {{user.email}}
+          {{user ? user.email : null}}
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
