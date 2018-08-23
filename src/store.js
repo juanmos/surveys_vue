@@ -27,6 +27,16 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('studies', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        _user_id: '',
+        memberIds: [],
+        sub_studies: []
+      },
+      debug: true
+    }),
     auth({ userService: 'users' })
   ],
   state: {

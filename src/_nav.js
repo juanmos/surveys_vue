@@ -6,6 +6,11 @@ export default {
       title: 'Panel'
     },
     {
+      icon: 'insert_chart',
+      url: '/studies',
+      title: 'Estudios'
+    },
+    {
       icon: 'people',
       url: '/users',
       title: 'Usuarios'

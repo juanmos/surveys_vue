@@ -16,7 +16,7 @@
                   <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.name" typeField="text"></editable-field>
                 </td>
                 <td>
-                  <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.email" typeField="text"></editable-field>
+                  <editable-field @changeConfirmed="edit($event, props.item, 'email')"  :value="props.item.email" typeField="text"></editable-field>
                 </td>
                 <td>
                   <v-menu
