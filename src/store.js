@@ -13,7 +13,17 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         email: '',
-        password: ''
+        password: '',
+        removed: false
+      },
+      debug: true
+    }),
+    service('boards', {
+      instanceDefaults: {
+        name: '',
+        _user_id: '',
+        memberIds: [],
+        graphic_content: {}
       },
       debug: true
     }),

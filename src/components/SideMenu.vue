@@ -1,9 +1,9 @@
 <template>
     <v-navigation-drawer
       persistent
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      v-model="drawer"
+      :mini-variant="mutableMiniVariant"
+      :clipped="mutableClipped"
+      v-model="mutableDrawer"
       enable-resize-watcher
       fixed
       class="blue-grey lighten-5"
@@ -43,7 +43,10 @@ export default {
     items: nav.items,
     fixed: false,
     right: true,
-    rightDrawer: false
+    rightDrawer: false,
+    mutableClipped: null,
+    mutableDrawer: null,
+    mutableMiniVariant: null
   }),
   methods: {
     ...mapActions('auth', ['logout']),
@@ -59,6 +62,23 @@ export default {
         this.$router.push('pages/login')
       })
     }
+  },
+  watch: {
+    clipped (val) {
+      this.mutableClipped = val
+    },
+    drawer (val) {
+      this.mutableDrawer = val
+    },
+    miniVariant (val) {
+      this.mutableMiniVariant = val
+    }
+  },
+  created () {
+    this.mutableClipped = this.clipped
+    this.mutableDrawer = this.drawer
+    this.mutableClipped = this.clipped
+    this.mutableMiniVariant = this.miniVariant
   }
 }
 </script>

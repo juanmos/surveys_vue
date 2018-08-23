@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import store from './store'
 const Full = resolve => {
   require.ensure(['./containers/Full.vue'], () => {
     resolve(require('./containers/Full.vue'))
@@ -9,6 +11,16 @@ const Login = resolve => {
   require.ensure(['./views/Login.vue'], () => {
     resolve(require('./views/Login.vue'))
   }, 'login')
+}
+const UserList = resolve => {
+  require.ensure(['./views/users/UserList.vue'], () => {
+    resolve(require('./views/users/UserList.vue'))
+  }, 'users')
+}
+const UserNew = resolve => {
+  require.ensure(['./views/users/UserNew.vue'], () => {
+    resolve(require('./views/users/UserNew.vue'))
+  }, 'users')
 }
 const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
@@ -27,11 +39,29 @@ export default new Router({
       name: 'home',
       redirect: 'dashboard',
       component: Full,
+      beforeEnter (to, from, next) {
+        store.dispatch('auth/authenticate').then(() => {
+          next()
+        }).catch((err) => {
+          console.log(err)
+          next('/pages/login')
+        })
+      },
       children: [
         {
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'users',
+          name: 'Users',
+          component: UserList
+        },
+        {
+          path: 'new-user',
+          name: 'NewUsers',
+          component: UserNew
         }
       ]
     },
