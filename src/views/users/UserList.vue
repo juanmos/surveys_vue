@@ -4,16 +4,20 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Usuarios</v-subheader>
+              <v-subheader>Listado de Usuarios </v-subheader>
             <v-data-table
                 :headers="headers"
-                :items="users"
+                :items="getUsers"
                 hide-actions
                 class="elevation-1"
             >
                 <template slot="items" slot-scope="props">
-                <td>{{ props.item.name }}</td>
-                <td>{{ props.item.email }}</td>
+                <td>
+                  <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.name" typeField="text"></editable-field>
+                </td>
+                <td>
+                  <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.email" typeField="text"></editable-field>
+                </td>
                 <td>
                   <v-menu
                   bottom
@@ -28,9 +32,6 @@
                    <v-icon>more_vert</v-icon>
                   </v-btn>
                   <v-list>
-                    <v-list-tile @click="edit(props.item)">
-                      <v-list-tile-title>Editar</v-list-tile-title>
-                    </v-list-tile>
                     <v-list-tile @click="del(props.item)">
                       <v-list-tile-title>Eliminar</v-list-tile-title>
                     </v-list-tile>
@@ -51,7 +52,8 @@
                 >
                     <v-icon>add</v-icon>
                 </v-btn>
-                <loading-component v-if="pending"></loading-component>
+                <loading-component v-if="loading
+                "></loading-component>
             </v-card>
         </v-flex>
         </v-layout>
@@ -60,8 +62,9 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters, mapActions} from 'vuex'
 
+import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 export default {
   data () {
@@ -93,6 +96,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('users', { findUsers: 'find' }),
     goToNew () {
       this.$router.push('/new-user')
     },
@@ -100,39 +104,43 @@ export default {
       let params = {query: {removed: false}}
       return this.$store.dispatch('users/find', params)
     },
-    edit (element) {
-      console.log(element)
+    edit (val, elem, field) {
+      const {User} = this.$FeathersVuex
+      const user = new User(elem)
+      user[field] = val
+      user.patch().then((result) => {
+        this.findUsers({ query: {removed: false} }).then(response => {
+          const users = response.data || response
+          console.log(users)
+        })
+      })
     },
     del (element) {
       const {User} = this.$FeathersVuex
       const user = new User(element)
       user.removed = true
-      console.log(element)
       user.patch().then((result) => {
-        this.showMsg = true
-        this.message = 'USUARIO ELIMINADO'
-        this.msgType = 'success'
+        this.findUsers({ query: {removed: false} }).then(response => {
+          const users = response.data || response
+          console.log(users)
+        })
       })
     }
   },
   computed: {
-    ...mapState('users', {
-      errCreate: 'errorOnCreate',
-      errFind: 'errorOnFind',
-      errGet: 'errorOnGet',
-      errPatch: 'errorOnPatch',
-      errRemove: 'errorOnRemove',
-      errUpdate: 'errorOnUpdate',
-      pending: 'isPatchPending'
+    ...mapState('users', {loading: 'isFindPending'}),
+    ...mapGetters('users', {findUsersInStore: 'find'}),
+    getUsers () {
+      return this.findUsersInStore({query: {removed: false}}).data
+    }
+  },
+  created () {
+    this.findUsers({ query: {removed: false} }).then(response => {
+      const users = response.data || response
+      console.log(users)
     })
   },
-  components: {LoadingComponent},
-  created () {
-    this.getData().then((res) => {
-      console.log(res)
-      this.users = res.data
-    })
-  }
+  components: {LoadingComponent, EditableField}
 }
 </script>
 

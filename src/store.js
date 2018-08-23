@@ -18,6 +18,15 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('boards', {
+      instanceDefaults: {
+        name: '',
+        _user_id: '',
+        memberIds: [],
+        graphic_content: {}
+      },
+      debug: true
+    }),
     auth({ userService: 'users' })
   ],
   state: {

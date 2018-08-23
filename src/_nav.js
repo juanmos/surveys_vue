@@ -8,7 +8,7 @@ export default {
     {
       icon: 'people',
       url: '/users',
-      title: 'Users'
+      title: 'Usuarios'
     }
   ]
 }
