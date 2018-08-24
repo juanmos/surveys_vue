@@ -77,16 +77,28 @@ export default {
           value: 'name'
         },
         {
-          text: 'Email',
+          text: 'Ruc',
           align: 'center',
           sortable: true,
           value: 'email'
         },
         {
-          text: 'Acciones',
+          text: 'Direccion',
           align: 'center',
           sortable: false,
-          value: 'email'
+          value: 'address'
+        },
+        {
+          text: 'Telefono',
+          align: 'center',
+          sortable: false,
+          value: 'phones'
+        },
+        {
+          text: 'Representante',
+          align: 'center',
+          sortable: false,
+          value: 'emai_representative_user_idl'
         }
       ],
       customers: [],

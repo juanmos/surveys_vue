@@ -43,7 +43,7 @@ export default new Vuex.Store({
     service('customers', {
       instanceDefaults: {
         code: '',
-        count: '',
+        count: 2,
         name: '',
         ruc: '',
         economic_group: '',
@@ -51,7 +51,7 @@ export default new Vuex.Store({
         email: '',
         phones: '',
         type: '',
-        special_ruc: '',
+        special_ruc: false,
         _city_id: '',
         _type_company_id: '',
         _segment_id: '',
