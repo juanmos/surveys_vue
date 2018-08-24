@@ -11,6 +11,11 @@ export default {
       title: 'Estudios'
     },
     {
+      icon: 'group',
+      url: '/customers',
+      title: 'Clientes'
+    },
+    {
       icon: 'people',
       url: '/users',
       title: 'Usuarios'

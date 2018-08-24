@@ -14,6 +14,7 @@ export default new Vuex.Store({
         name: '',
         email: '',
         password: '',
+        avatar: '',
         removed: false
       },
       debug: true
@@ -33,9 +34,30 @@ export default new Vuex.Store({
         description: '',
         _user_id: '',
         memberIds: [],
-        sub_studies: []
+        sub_studies: [],
+        geographical_scope: '',
+        _customer_id: ''
       },
       debug: true
+    }),
+    service('customers', {
+      instanceDefaults: {
+        code: '',
+        count: '',
+        name: '',
+        ruc: '',
+        economic_group: '',
+        address: '',
+        email: '',
+        phones: '',
+        type: '',
+        special_ruc: '',
+        _city_id: '',
+        _type_company_id: '',
+        _segment_id: '',
+        _representative_user_id: '',
+        removed: false
+      }
     }),
     auth({ userService: 'users' })
   ],

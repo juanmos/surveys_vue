@@ -1,7 +1,7 @@
 <template>
     <span>
         <v-layout row wrap>
-            <v-flex xs6>
+            <v-flex xs8>
                 <v-text-field
                     @click.stop="focus"
                     @keyup.enter="broadcastData"
@@ -10,7 +10,7 @@
                     solo
                 ></v-text-field>
             </v-flex>
-            <v-flex xs2>
+            <v-flex xs4>
                 <v-btn @click.stop="broadcastData" flat icon color="indigo">
                     <v-icon>edit</v-icon>
                 </v-btn>

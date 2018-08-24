@@ -4,8 +4,8 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nuevo Estudio</v-subheader>
-                <studies-form @dataSubmited="create"></studies-form>
+                <v-subheader>Nuevo de Clientes</v-subheader>
+                <customer-form @dataSubmited="create"></customer-form>
                 <v-btn
                 absolute
                 dark
@@ -26,30 +26,28 @@
 <script>
 import {mapState} from 'vuex'
 
-import StudiesForm from './StudiesForm'
+import CustomerForm from './CustomerForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
     create (values) {
-      // method with feathers vuex to create an Studies
-      values._user_id = this.user._id
-      const { Study } = this.$FeathersVuex
-      const study = new Study(values)
-      study.save().then((result) => {
+      // method with feathers vuex to create an Customer
+      const { Customer } = this.$FeathersVuex
+      const customer = new Customer(values)
+      customer.save().then((result) => {
         this.goToList()
       }, (err) => {
         console.log(err)
       })
     },
     goToList () {
-      this.$router.push('/studies')
+      this.$router.push('/customers')
     }
   },
   computed: {
-    ...mapState('studies', {loading: 'isCreatePending'}),
-    ...mapState('auth', {user: 'user'})
+    ...mapState('customers', {loading: 'isCreatePending'})
   },
-  components: {StudiesForm, LoadingComponent}
+  components: {CustomerForm, LoadingComponent}
 }
 </script>
 <style>

@@ -32,6 +32,16 @@ const StudiesNew = resolve => {
     resolve(require('./views/studies/StudiesNew.vue'))
   }, 'studies')
 }
+const CustomerNew = resolve => {
+  require.ensure(['./views/customers/CustomerNew.vue'], () => {
+    resolve(require('./views/customers/CustomerNew.vue'))
+  }, 'customers')
+}
+const CustomerList = resolve => {
+  require.ensure(['./views/customers/CustomerList.vue'], () => {
+    resolve(require('./views/customers/CustomerList.vue'))
+  }, 'customers')
+}
 const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
     resolve(require('./views/Dashboard.vue'))
@@ -82,6 +92,16 @@ export default new Router({
           path: 'new-studies',
           name: 'NewStudies',
           component: StudiesNew
+        },
+        {
+          path: 'customers',
+          name: 'Customers',
+          component: CustomerList
+        },
+        {
+          path: 'new-customers',
+          name: 'NewCustomers',
+          component: CustomerNew
         }
       ]
     },

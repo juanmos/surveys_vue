@@ -1,18 +1,23 @@
 <template>
 <div>
+    <loading-component v-if="loading"></loading-component>
     <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
+        <v-flex v-for="study in getStudies" :key="study._id" xs3>
+            <v-card class="study-card" :light="true" >
 
-        <v-flex xs3>
-            <v-card :light="true" >
-
-               <v-card-title>Test</v-card-title>
-
+               <v-card-title><editable-field @changeConfirmed="edit($event, study, 'name')"  :value="study.name" typeField="text"></editable-field></v-card-title>
+                 <p  class="grey--text"><editable-field @changeConfirmed="edit($event, study, 'description')"  :value="study.description" typeField="text"></editable-field></p>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn icon>
-                    <v-icon color="indigo">visibility</v-icon>
-                  </v-btn>
+                  <div class="actions">
+                    <v-btn icon>
+                      <v-icon color="indigo">visibility</v-icon>
+                    </v-btn>
+                    <v-btn @click="del(study)" icon>
+                      <v-icon color="pink">delete</v-icon>
+                    </v-btn>
+                  </div>
                 </v-card-actions>
               </v-card>
         </v-flex>
@@ -77,10 +82,10 @@ export default {
       return this.$store.dispatch('studies/find', params)
     },
     edit (val, elem, field) {
-      const {User} = this.$FeathersVuex
-      const user = new User(elem)
-      user[field] = val
-      user.patch().then((result) => {
+      const {Study} = this.$FeathersVuex
+      const study = new Study(elem)
+      study[field] = val
+      study.patch().then((result) => {
         this.findStudies({ query: {removed: false} }).then(response => {
           const studies = response.data || response
           console.log(studies)
@@ -88,10 +93,10 @@ export default {
       })
     },
     del (element) {
-      const {User} = this.$FeathersVuex
-      const user = new User(element)
-      user.removed = true
-      user.patch().then((result) => {
+      const {Study} = this.$FeathersVuex
+      const study = new Study(element)
+      study.removed = true
+      study.patch().then((result) => {
         this.findStudies({ query: {removed: false} }).then(response => {
           const studies = response.data || response
           console.log(studies)
@@ -117,5 +122,10 @@ export default {
 </script>
 
 <style scoped>
-
+  .actions {
+    opacity: 0;
+  }
+  .study-card:hover .actions {
+    opacity: 1;
+  }
 </style>
