@@ -4,10 +4,10 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Usuarios </v-subheader>
+              <v-subheader>Listado de Clientes </v-subheader>
             <v-data-table
                 :headers="headers"
-                :items="getUsers"
+                :items="getCustomers"
                 hide-actions
                 class="elevation-1"
             >
@@ -89,55 +89,55 @@ export default {
           value: 'email'
         }
       ],
-      users: [],
+      customers: [],
       message: '',
       showMsg: false,
       msgType: 'error'
     }
   },
   methods: {
-    ...mapActions('users', { findUsers: 'find' }),
+    ...mapActions('customers', { findCustomers: 'find' }),
     goToNew () {
-      this.$router.push('/new-user')
+      this.$router.push('/new-customer')
     },
     getData () {
       let params = {query: {removed: false}}
-      return this.$store.dispatch('users/find', params)
+      return this.$store.dispatch('customers/find', params)
     },
     edit (val, elem, field) {
-      const {User} = this.$FeathersVuex
-      const user = new User(elem)
-      user[field] = val
-      user.patch().then((result) => {
-        this.findUsers({ query: {removed: false} }).then(response => {
-          const users = response.data || response
-          console.log(users)
+      const {Customer} = this.$FeathersVuex
+      const customer = new Customer(elem)
+      customer[field] = val
+      customer.patch().then((result) => {
+        this.findCustomers({ query: {removed: false} }).then(response => {
+          const customers = response.data || response
+          console.log(customers)
         })
       })
     },
     del (element) {
-      const {User} = this.$FeathersVuex
-      const user = new User(element)
-      user.removed = true
-      user.patch().then((result) => {
-        this.findUsers({ query: {removed: false} }).then(response => {
-          const users = response.data || response
-          console.log(users)
+      const {Customer} = this.$FeathersVuex
+      const customer = new Customer(element)
+      customer.removed = true
+      customer.patch().then((result) => {
+        this.findCustomers({ query: {removed: false} }).then(response => {
+          const customers = response.data || response
+          console.log(customers)
         })
       })
     }
   },
   computed: {
-    ...mapState('users', {loading: 'isFindPending'}),
-    ...mapGetters('users', {findUsersInStore: 'find'}),
-    getUsers () {
-      return this.findUsersInStore({query: {removed: false}}).data
+    ...mapState('customers', {loading: 'isFindPending'}),
+    ...mapGetters('customers', {findCustomersInStore: 'find'}),
+    getCustomers () {
+      return this.findCustomersInStore({query: {removed: false}}).data
     }
   },
   created () {
-    this.findUsers({ query: {removed: false} }).then(response => {
-      const users = response.data || response
-      console.log(users)
+    this.findCustomers({ query: {removed: false} }).then(response => {
+      const customers = response.data || response
+      console.log(customers)
     })
   },
   components: {LoadingComponent, EditableField}

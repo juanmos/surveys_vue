@@ -1,10 +1,10 @@
 export const validations = {
   nameRules: [
-    v => !!v || 'Nombre es requerido',
-    v => v.length <= 10 || 'Nombre debe ser no mayor a 10 caracteres'
+    v => !!v || 'Nombre es requerido'
   ],
   emailRules: [
     v => !!v || 'Email es requerido',
-    v => /.+@.+/.test(v) || 'Email es invalido'
+    v => /.+@.+/.test(v) || 'Email es invalido',
+    v => v.length >= 6 || 'Minimo 6 caracteres'
   ]
 }

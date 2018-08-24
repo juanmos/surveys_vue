@@ -22,6 +22,26 @@ const UserNew = resolve => {
     resolve(require('./views/users/UserNew.vue'))
   }, 'users')
 }
+const StudiesList = resolve => {
+  require.ensure(['./views/studies/StudiesList.vue'], () => {
+    resolve(require('./views/studies/StudiesList.vue'))
+  }, 'studies')
+}
+const StudiesNew = resolve => {
+  require.ensure(['./views/studies/StudiesNew.vue'], () => {
+    resolve(require('./views/studies/StudiesNew.vue'))
+  }, 'studies')
+}
+const CustomerNew = resolve => {
+  require.ensure(['./views/customers/CustomerNew.vue'], () => {
+    resolve(require('./views/customers/CustomerNew.vue'))
+  }, 'customers')
+}
+const CustomerList = resolve => {
+  require.ensure(['./views/customers/CustomerList.vue'], () => {
+    resolve(require('./views/customers/CustomerList.vue'))
+  }, 'customers')
+}
 const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
     resolve(require('./views/Dashboard.vue'))
@@ -62,6 +82,26 @@ export default new Router({
           path: 'new-user',
           name: 'NewUsers',
           component: UserNew
+        },
+        {
+          path: 'studies',
+          name: 'Studies',
+          component: StudiesList
+        },
+        {
+          path: 'new-studies',
+          name: 'NewStudies',
+          component: StudiesNew
+        },
+        {
+          path: 'customers',
+          name: 'Customers',
+          component: CustomerList
+        },
+        {
+          path: 'new-customers',
+          name: 'NewCustomers',
+          component: CustomerNew
         }
       ]
     },
