@@ -5,9 +5,46 @@
         <v-layout row wrap>
         <v-flex v-for="study in getStudies" :key="study._id" xs3>
             <v-card class="study-card" :light="true" >
+               <v-card-title>
+                 <div class="study-title">
+                    <v-edit-dialog
+                      lazy
+                      @save="edit(study.name, study, 'name')"
+                    > {{ study.name }}
+                      <v-text-field
+                        slot="input"
+                        v-model="study.name"
+                        label="Editar Email"
+                        single-line
+                        counter
+                      ></v-text-field>
+                    </v-edit-dialog>
+                 </div>
+                </v-card-title>
+                <v-card-title>
+                  <div>
+                    <span class="grey--text">
+                      <v-edit-dialog
+                        align= "center"
+                        lazy
+                        @save="edit(study.description, study, 'description')"
+                      > {{ study.description }}
+                        <v-text-field
+                          slot="input"
+                          v-model="study.description"
+                          label="Editar Descripcion"
+                          single-line
+                          counter
+                        ></v-text-field>
+                      </v-edit-dialog>
+                    </span>
+                  </div>
+                </v-card-title>
+                <div class="study-content">
+                  <p  class="grey--text">
 
-               <v-card-title><editable-field @changeConfirmed="edit($event, study, 'name')"  :value="study.name" typeField="text"></editable-field></v-card-title>
-                 <p  class="grey--text"><editable-field @changeConfirmed="edit($event, study, 'description')"  :value="study.description" typeField="text"></editable-field></p>
+                  </p>
+                </div>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <div class="actions">
@@ -127,5 +164,12 @@ export default {
   }
   .study-card:hover .actions {
     opacity: 1;
+  }
+  .study-title{
+    margin: 10px;
+    text-align: center;
+  }
+  .study-content {
+    text-align: center;
   }
 </style>

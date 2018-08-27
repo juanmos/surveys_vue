@@ -31,7 +31,9 @@
               <v-flex xs12>
                 <v-select
                   label="Cliente"
-                  :items="getUsers"
+                  :items="getClients"
+                  item-text="name"
+                  item-value="name"
                   box
                 ></v-select>
               </v-flex>
@@ -138,6 +140,7 @@ export default {
   },
   methods: {
     ...mapActions('users', { findUsers: 'find' }),
+    ...mapActions('customers', { findClients: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.study)
@@ -146,8 +149,12 @@ export default {
   },
   computed: {
     ...mapGetters('users', {findUsersInStore: 'find'}),
+    ...mapGetters('customers', {findCustomersInStore: 'find'}),
     getUsers () {
       return this.findUsersInStore({query: {removed: false}}).data
+    },
+    getClients () {
+      return this.findCustomersInStore({query: {removed: false}}).data
     }
   },
   watch: {
@@ -161,6 +168,10 @@ export default {
     this.findUsers({ query: {removed: false} }).then(response => {
       const users = response.data || response
       console.log(users)
+    })
+    this.findClients({ query: {removed: false} }).then(response => {
+      const clients = response.data || response
+      console.log(clients)
     })
   }
 }

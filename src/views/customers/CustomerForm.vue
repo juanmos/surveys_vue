@@ -12,37 +12,61 @@
             @keydown.prevent.enter
             >
                 <v-text-field
-                  :append-icon="'name'"
                   v-model="customer.name"
                   :rules="rules.nameRules"
                   label="Nombre"
+                  box
+                  color="blue-grey lighten-2"
                   required
+                ></v-text-field>
+                <v-text-field
+                  v-model="customer.ruc"
+                  label="Ruc"
+                  box
+                  color="blue-grey lighten-2"
+                  required
+                  type="number"
                 ></v-text-field>
                 <v-text-field
                   :append-icon="'email'"
                   v-model="customer.email"
                   :rules="rules.emailRules"
+                  box
+                  color="blue-grey lighten-2"
                   label="Email"
                   required
                 ></v-text-field>
                 <v-text-field
-                  :append-icon="showPass ? 'visibility_off' : 'visibility'"
-                  v-model="customer.password"
-                  :rules="rules.passwordRules"
-                  :type="showPass ? 'text' : 'password'"
-                  label="Contraseña"
-                  @click:append="showPass = !showPass"
-                  required
+                  v-model="customer.phones"
+                  label="Telefonos"
+                  box
+                  color="blue-grey lighten-2"
                 ></v-text-field>
                 <v-text-field
-                  :append-icon="showPass ? 'visibility_off' : 'visibility'"
-                  v-model="customer.confirmPassword"
-                  :rules="confirmPasswordRules"
-                  :type="showPass ? 'text' : 'password'"
-                  label="Repita contraseña"
-                  @click:append="showPass = !showPass"
-                  required
+                  v-model="customer.address"
+                  label="Direccion"
+                  box
+                  color="blue-grey lighten-2"
                 ></v-text-field>
+                <v-text-field
+                  v-model="customer.economic_group"
+                  label="Grupo Empresarial"
+                  box
+                  color="blue-grey lighten-2"
+                ></v-text-field>
+                <v-select
+                  label="Tipo de Cliente"
+                  v-model="customer.type"
+                  :items="['premium', 'vip', 'normal']"
+                  box
+                ></v-select>
+                <v-switch
+                  v-model="customer.special_ruc"
+                  class="mt-0"
+                  color="blue lighten-2"
+                  hide-details
+                  label="Consumidor final o extranjero?"
+                ></v-switch>
                 <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Usuario</v-btn>
             </v-form>
           </v-flex>
@@ -56,19 +80,23 @@ import {validations} from './../../utils/validations'
 export default {
   data: (vm) => ({
     customer: {
+      code: '',
+      count: '333',
       name: '',
+      ruc: '',
+      economic_group: '',
+      address: '',
       email: '',
-      password: ''
+      phones: '',
+      type: '',
+      special_ruc: '',
+      _city_id: '',
+      _type_company: '',
+      _representative_user_id: '',
+      removed: false
     },
     valid: false,
-    name: '',
-    password: '',
-    email: '',
-    showPass: false,
-    rules: validations,
-    confirmPasswordRules: [
-      (confirmPassword) => confirmPassword === vm.customer.password || 'Contraseñas deben ser igual'
-    ]
+    rules: validations
   }),
   methods: {
     sendData () {

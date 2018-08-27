@@ -13,10 +13,35 @@
             >
                 <template slot="items" slot-scope="props">
                 <td>
-                  <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.name" typeField="text"></editable-field>
+                  <v-edit-dialog
+                    :return-value.sync="props.item.name"
+                    lazy
+                    @save="edit(props.item.name, props.item, 'name')"
+                  > {{ props.item.name }}
+                    <v-text-field
+                      slot="input"
+                      v-model="props.item.name"
+                      label="Editar Nombre"
+                      single-line
+                      counter
+                    ></v-text-field>
+                  </v-edit-dialog>
                 </td>
                 <td>
-                  <editable-field @changeConfirmed="edit($event, props.item, 'email')"  :value="props.item.email" typeField="text"></editable-field>
+                  <v-edit-dialog
+                    :return-value.sync="props.item.email"
+                    lazy
+                    @save="edit(props.item.email, props.item, 'email')"
+                  > {{ props.item.email }}
+                    <v-text-field
+                      slot="input"
+                      v-model="props.item.email"
+                      label="Editar Email"
+                      :rules="rules.emailRules"
+                      single-line
+                      counter
+                    ></v-text-field>
+                  </v-edit-dialog>
                 </td>
                 <td>
                   <v-menu
@@ -66,6 +91,7 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import {validations} from './../../utils/validations'
 export default {
   data () {
     return {
@@ -92,7 +118,8 @@ export default {
       users: [],
       message: '',
       showMsg: false,
-      msgType: 'error'
+      msgType: 'error',
+      rules: validations
     }
   },
   methods: {

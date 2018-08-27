@@ -99,7 +99,7 @@ export default new Router({
           component: CustomerList
         },
         {
-          path: 'new-customers',
+          path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
         }
