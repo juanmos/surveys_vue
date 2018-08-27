@@ -4,42 +4,131 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Clientes </v-subheader>
+              <v-subheader>Listado de Clientes</v-subheader>
             <v-data-table
-                :headers="headers"
-                :items="getCustomers"
-                hide-actions
-                class="elevation-1"
-            >
-                <template slot="items" slot-scope="props">
-                <td>
-                  <editable-field @changeConfirmed="edit($event, props.item, 'name')"  :value="props.item.name" typeField="text"></editable-field>
-                </td>
-                <td>
-                  <editable-field @changeConfirmed="edit($event, props.item, 'email')"  :value="props.item.email" typeField="text"></editable-field>
-                </td>
-                <td>
-                  <v-menu
-                  bottom
-                  transition="slide-y-transition"
+                  :headers="headers"
+                  :items="getCustomers"
+                  hide-actions
+                  item-key="name"
                 >
-                  <v-btn
-                    slot="activator"
-                    color="primary"
-                    flat
-                    icon
-                  >
-                   <v-icon>more_vert</v-icon>
-                  </v-btn>
-                  <v-list>
-                    <v-list-tile @click="del(props.item)">
-                      <v-list-tile-title>Eliminar</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                </td>
-                </template>
-            </v-data-table>
+                  <template slot="items" slot-scope="props">
+                    <tr @click="props.expanded = !props.expanded">
+                      <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.name"
+                          lazy
+                          @save="edit(props.item.name, props.item, 'name')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.name }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.name"
+                            label="Editar Nombre"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td class="text-xs-left">
+                        <v-edit-dialog
+                          :return-value.sync="props.item.ruc"
+                          lazy
+                          @save="edit(props.item.ruc, props.item, 'ruc')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.ruc }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.ruc"
+                            label="Editar Ruc"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td class="text-xs-left">
+                        <v-edit-dialog
+                          :return-value.sync="props.item.email"
+                          lazy
+                          @save="edit(props.item.email, props.item, 'email')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.email }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.email"
+                            label="Editar Email"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td class="text-xs-left">
+                        <v-edit-dialog
+                          :return-value.sync="props.item.phones"
+                          lazy
+                          @save="edit(props.item.phones, props.item, 'phones')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.phones }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.phones"
+                            label="Editar Telefono"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td class="text-xs-left">
+                        <v-edit-dialog
+                          :return-value.sync="props.item.address"
+                          lazy
+                          @save="edit(props.item.address, props.item, 'address')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.address }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.address"
+                            label="Editar Direccion"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td class="justify-center layout px-0">
+                        <v-menu
+                          bottom
+                          transition="slide-y-transition"
+                        >
+                          <v-btn
+                            slot="activator"
+                            color="primary"
+                            flat
+                            icon
+                          >
+                          <v-icon>more_vert</v-icon>
+                          </v-btn>
+                          <v-list>
+                            <v-list-tile @click="del(props.item)">
+                              <v-list-tile-title>Eliminar</v-list-tile-title>
+                            </v-list-tile>
+                          </v-list>
+                        </v-menu>
+                      </td>
+                    </tr>
+                  </template>
+                </v-data-table>
+                <div class="text-xs-center pt-2">
+                  <v-pagination v-model="page" :length="pages"></v-pagination>
+                </div>
                 <v-btn
                 absolute
                 dark
@@ -72,49 +161,46 @@ export default {
       headers: [
         {
           text: 'Nombre',
-          align: 'center',
-          sortable: true,
+          align: 'left',
+          sortable: false,
           value: 'name'
         },
-        {
-          text: 'Ruc',
-          align: 'center',
-          sortable: true,
-          value: 'email'
+        { text: 'Ruc',
+          value: 'ruc',
+          sortable: false
         },
         {
-          text: 'Direccion',
-          align: 'center',
-          sortable: false,
-          value: 'address'
+          text: 'Email',
+          value: 'email',
+          sortable: false
         },
         {
           text: 'Telefono',
-          align: 'center',
-          sortable: false,
-          value: 'phones'
+          value: 'phones',
+          sortable: false
         },
         {
-          text: 'Representante',
-          align: 'center',
-          sortable: false,
-          value: 'emai_representative_user_idl'
+          text: 'Direccion',
+          value: 'address',
+          sortable: false
+        },
+        {
+          text: 'Acciones',
+          value: 'name',
+          sortable: false
         }
       ],
       customers: [],
       message: '',
       showMsg: false,
-      msgType: 'error'
+      msgType: 'error',
+      page: 1
     }
   },
   methods: {
     ...mapActions('customers', { findCustomers: 'find' }),
     goToNew () {
       this.$router.push('/new-customer')
-    },
-    getData () {
-      let params = {query: {removed: false}}
-      return this.$store.dispatch('customers/find', params)
     },
     edit (val, elem, field) {
       const {Customer} = this.$FeathersVuex
@@ -137,20 +223,59 @@ export default {
           console.log(customers)
         })
       })
+    },
+    save (val) {
+      console.log(val)
+      this.snack = true
+      this.snackColor = 'success'
+      this.snackText = 'Data saved'
+    },
+    cancel () {
+      this.snack = true
+      this.snackColor = 'error'
+      this.snackText = 'Canceled'
+    },
+    open () {
+      this.snack = true
+      this.snackColor = 'info'
+      this.snackText = 'Dialog opened'
+    },
+    close (val) {
+      console.log('Dialog closed', val)
+    },
+    getData () {
+      this.findCustomers({ query: {removed: false} }).then(response => {
+        const customers = response
+        console.log(customers)
+      })
     }
   },
   computed: {
     ...mapState('customers', {loading: 'isFindPending'}),
+    ...mapState('customers', { paginationVal: 'pagination' }),
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
     getCustomers () {
       return this.findCustomersInStore({query: {removed: false}}).data
+    },
+    pages () {
+      if (this.paginationVal.default) {
+        if (this.paginationVal.default.limit == null ||
+          this.paginationVal.default.total == null
+        ) {
+          return 0
+        } else {
+          return Math.ceil(this.paginationVal.default.total / this.paginationVal.default.limit)
+        }
+      }
+    }
+  },
+  watch: {
+    page (val) {
+      this.getData()
     }
   },
   created () {
-    this.findCustomers({ query: {removed: false} }).then(response => {
-      const customers = response.data || response
-      console.log(customers)
-    })
+    this.getData()
   },
   components: {LoadingComponent, EditableField}
 }
