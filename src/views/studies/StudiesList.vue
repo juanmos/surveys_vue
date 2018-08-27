@@ -5,7 +5,11 @@
         <v-layout row wrap>
         <v-flex v-for="study in getStudies" :key="study._id" xs3>
             <v-card class="study-card" :light="true" >
-               <v-card-title>
+              <v-card-media
+                src="https://images.unsplash.com/photo-1519377483941-d4c7ea7ae521?ixlib=rb-0.3.5&s=56987893d5b34445b86aaec9e484efde&auto=format&fit=crop&w=1744&q=80"
+                height="200px"
+              ></v-card-media>
+               <v-card-title primary-title>
                  <div class="study-title">
                     <v-edit-dialog
                       lazy

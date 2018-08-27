@@ -1,5 +1,6 @@
 import '@babel/polyfill'
 import Vue from 'vue'
+import go from 'gojs'
 import VueParticles from 'vue-particles'
 import './plugins/vuetify'
 
@@ -10,6 +11,8 @@ import store from './store'
 Vue.use(VueParticles)
 
 Vue.config.productionTip = false
+var $ = go.GraphObject.make
+console.log($)
 
 new Vue({
   router,
