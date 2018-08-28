@@ -47,6 +47,11 @@ const Dashboard = resolve => {
     resolve(require('./views/Dashboard.vue'))
   }, 'login')
 }
+const BoardsDetail = resolve => {
+  require.ensure(['./views/boards/BoardsDetail.vue'], () => {
+    resolve(require('./views/boards/BoardsDetail.vue'))
+  }, 'boards')
+}
 
 Vue.use(Router)
 
@@ -102,6 +107,12 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'boards/:id',
+          name: 'BoardsDetail',
+          props: true,
+          component: BoardsDetail
         }
       ]
     },
