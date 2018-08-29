@@ -59,15 +59,37 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('countries', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('cities', {
+      instanceDefaults: {
+        name: '',
+        _country_id: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
-
+    studyId: null
+  },
+  getters: {
+    getStudyId: (state) => {
+      return state.studyId
+    }
   },
   mutations: {
-
+    setStudyId (state, id) {
+      state.studyId = id
+    }
   },
   actions: {
-
+    setStudyId: ({ commit }, id) => {
+      commit('setStudyId', id)
+    }
   }
 })

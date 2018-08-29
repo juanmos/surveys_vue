@@ -17,7 +17,7 @@ export default {
       if (val instanceof go.Model) {
         this.diagram.model = val
       } else {
-        let m = new go.GraphLinksModel()
+        let m = new go.TreeModel()
         if (val) {
           for (let p in val) {
             m[p] = val[p]

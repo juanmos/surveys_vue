@@ -1,30 +1,23 @@
 <template>
+
   <div>
-    <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="border: solid 1px black; width:100%; height:400px"></diagram>
-      <button @click="addNode">Add Child to Gamma</button>
-      <button @click="modifyStuff">Modify view model data without undo</button>
-      <br>Current Node:
-      <input v-model.lazy="currentNodeText" v-bind:disabled="currentNode === null">
-      <br>The saved GoJS Model:
-      <textarea style="width:100%;height:250px">hi</textarea>
-      <p class="box bg-info">
-        This is a <a href="https://vuejs.org">Vue.js</a> sample.
-      </p>
-      <p>
-        The GoJS Diagram is held in a "diagram" component, and only exposes a small fraction of the functionality of <a>Diagram</a>.
-        That includes the "modelData" property, to initialize the Diagram to show a model, and
-        the "diagram" property, to get access to the <a>Diagram</a>.
-      </p>
-      <p>
-        That component also raises two events: "model-changed" corresponding to <a>Model.addChangedListener</a>, and
-        "changed-selection" for the "ChangedSelection" <a>DiagramEvent</a>.
-      </p>
-      <p>
-        That component also supports two different ways of modifying the diagram: access to the <a>Model</a> via the "model" method
-        so that code can call Model methods such as <a>Model.setDataProperty</a>, and an "updateDiagramFromData" method.
-        The latter permits data changes without calling Model methods to notify Diagrams showing the model,
-        but at the cost of not being able to support undo and redo.
-      </p>
+    <v-flex xs12>
+      <v-card>
+        <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="border: solid 1px black; width:100%; height:400px"></diagram>
+        <v-card-actions>
+          <v-flex xs12 md6>
+            <v-text-field
+              box
+              color="blue-grey lighten-2"
+              v-model.lazy="currentNodeText"
+              v-bind:disabled="currentNode === null"
+            ></v-text-field>
+          </v-flex>
+          <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
+          <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
   </div>
 </template>
 <script>
