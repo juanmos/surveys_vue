@@ -9,7 +9,7 @@
           >
           <v-container>
             <v-layout wrap>
-              <v-flex xs12 md6>
+              <v-flex xs12>
                 <v-text-field
                   box
                   color="blue-grey lighten-2"
@@ -21,21 +21,50 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 md6>
-                <v-text-field
-                  v-model="study.geographical_scope"
+                <v-select
+                  label="Pais"
+                  v-model="study._country_id"
+                  :items="getCountries"
+                  item-text="name"
+                  item-value="_id"
+                  @change="updateCities"
                   box
-                  color="blue-grey lighten-2"
-                  label="Alcance Geografico "
-                ></v-text-field>
+                ></v-select>
+              </v-flex>
+              <v-flex xs12 md6>
+                <v-select
+                  label="Ciudad"
+                  v-model="study._city_id"
+                  :items="getCities"
+                  item-text="name"
+                  item-value="_id"
+                  box
+                ></v-select>
               </v-flex>
               <v-flex xs12>
                 <v-select
                   label="Cliente"
+                  v-model="study._customer_id"
                   :items="getClients"
                   item-text="name"
-                  item-value="name"
+                  item-value="_id"
                   box
+                  required
                 ></v-select>
+              </v-flex>
+              <v-flex xs12>
+                <v-card-title primary-title>
+                  <h3 class="text--secondary body-2">Fecha de estudio</h3>
+                </v-card-title>
+                <v-date-picker
+                  :first-day-of-week="1"
+                  v-model="study.date"
+                  locale="es"
+                  full-width
+                  landscape
+                  class="mt-3"
+                  required
+                ></v-date-picker>
               </v-flex>
               <v-flex xs12>
                 <v-autocomplete
@@ -141,20 +170,37 @@ export default {
   methods: {
     ...mapActions('users', { findUsers: 'find' }),
     ...mapActions('customers', { findClients: 'find' }),
+    ...mapActions('countries', { findCountries: 'find' }),
+    ...mapActions('cities', { findCities: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.study)
       }
+    },
+    updateCities () {
+      this.findCities({ query: {removed: false, _country_id: this.study._country_id} }).then(response => {
+        const cities = response.data || response
+        console.log(cities)
+      })
+      console.log(this.study._country_id)
     }
   },
   computed: {
     ...mapGetters('users', {findUsersInStore: 'find'}),
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
+    ...mapGetters('cities', {findCitiesInStore: 'find'}),
+    ...mapGetters('countries', {findCountriesInStore: 'find'}),
     getUsers () {
       return this.findUsersInStore({query: {removed: false}}).data
     },
     getClients () {
       return this.findCustomersInStore({query: {removed: false}}).data
+    },
+    getCities () {
+      return this.findCitiesInStore({query: {removed: false, _country_id: this.study._country_id}}).data
+    },
+    getCountries () {
+      return this.findCountriesInStore({query: {removed: false}}).data
     }
   },
   watch: {
@@ -172,6 +218,10 @@ export default {
     this.findClients({ query: {removed: false} }).then(response => {
       const clients = response.data || response
       console.log(clients)
+    })
+    this.findCountries({ query: {removed: false} }).then(response => {
+      const countries = response.data || response
+      console.log(countries)
     })
   }
 }
