@@ -28,10 +28,6 @@ export default {
     return {
       diagramData: { // passed to  as its modelData
         nodeDataArray: [
-          { key: 1, text: 'Primero', color: 'lightblue' },
-          { key: 2, text: 'Segundo', color: 'orange' },
-          { key: 3, text: 'Tercero', color: 'lightgreen' },
-          { key: 4, text: 'Cuarto ', color: 'pink' }
         ],
         linkDataArray: [
         ]

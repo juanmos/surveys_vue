@@ -2,7 +2,7 @@
    <v-container grid-list-md text-xs-center>
     <v-layout row wrap>
       <v-flex xs2>
-        <boards-categories></boards-categories>
+        <boards-categories :boards="getBoards"></boards-categories>
       </v-flex>
       <v-flex xs10>
         <v-card >

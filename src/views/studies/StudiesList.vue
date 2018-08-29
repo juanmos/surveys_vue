@@ -122,6 +122,8 @@ import LoadingComponent from './../../components/docaration/LoadingComponent'
 export default {
   data () {
     return {
+      query: {
+      },
       headers: [
         {
           text: 'Nombre',
@@ -188,7 +190,7 @@ export default {
     ...mapState('studies', {loading: 'isFindPending'}),
     ...mapGetters('studies', {findStudiesInStore: 'find'}),
     getStudies () {
-      return this.findStudiesInStore({query: {removed: false}}).data
+      return this.findStudiesInStore({query: {removed: false, ...this.query}}).data
     }
   },
   created () {

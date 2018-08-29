@@ -9,6 +9,7 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
+                  @blur="sendData"
                   box
                   color="blue-grey lighten-2"
                   label="Nombre"
@@ -29,6 +30,11 @@ export default {
       valid: false,
       notify: true,
       board: {}
+    }
+  },
+  methods: {
+    sendData () {
+      this.$emit('dataUpdated', this.board)
     }
   }
 }

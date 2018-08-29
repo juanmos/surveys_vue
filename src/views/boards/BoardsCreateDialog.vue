@@ -7,7 +7,7 @@
         </v-card-title>
         <v-card-text>
             <v-container>
-                <boards-form></boards-form>
+                <boards-form @dataUpdated="requestData = Object.assign({}, $event)"></boards-form>
             </v-container>
         </v-card-text>
         <v-card-actions>
@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       mutableDialog: null,
-      requestData: {name: 'test'}
+      requestData: {}
     }
   },
   methods: {
@@ -37,7 +37,6 @@ export default {
       const { Board } = this.$FeathersVuex
       const board = new Board({_study_id: this.getStudyId, ...this.requestData})
       board.save().then((result) => {
-        console.log(result)
       }, (err) => {
         console.log(err)
       })
