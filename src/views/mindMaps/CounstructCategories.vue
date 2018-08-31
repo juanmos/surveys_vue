@@ -1,7 +1,6 @@
 <template>
 <v-container>
 <v-layout row wrap>
-  {{getBoard}}
     <v-flex xs12 sm4>
         <v-text-field
         label="Nombre de Categoria"
@@ -27,22 +26,46 @@
         </v-layout>
     </v-flex>
     <v-flex xs12 sm2>
-        <v-btn icon>
+        <v-btn @click="addCategory" icon>
           <v-icon>send</v-icon>
         </v-btn>
     </v-flex>
 </v-layout>
-<v-data-table
-    :headers="headers"
-    :items="getConstructCategories"
-    hide-actions
-    class="elevation-1"
-  >
-    <template slot="items" slot-scope="props">
-      <td>{{ props.item.name }}</td>
-      <td class="text-xs-right">{{ props.item.color }}</td>
-    </template>
-  </v-data-table>
+  <v-card>
+        <v-list subheader>
+          <v-subheader>Listado de Categorias</v-subheader>
+          <v-list-tile
+            v-for="item in getCategories"
+            :key="item.name"
+            avatar
+          >
+            <v-list-tile-avatar>
+              <div class="color-displayer" :style="{backgroundColor: item.color}"></div>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-edit-dialog
+                  align= "center"
+                  lazy
+                  @save="editCategory(item.name, item, 'name')"
+                > {{ item.name }}
+                  <v-text-field
+                    slot="input"
+                    v-model="item.name"
+                    label="Editar Nombre"
+                    single-line
+                  ></v-text-field>
+              </v-edit-dialog>
+              <v-list-tile-title v-html="item.name"></v-list-tile-title>
+            </v-list-tile-content>
+
+            <v-list-tile-action>
+              <v-icon @click="deleteCategory(item)" :color="item.active ? 'teal' : 'grey'">delete</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+
+      </v-card>
 </v-container>
 
 </template>
@@ -60,26 +83,54 @@ export default {
       headers: [
         {
           text: 'Nombre',
-          align: 'center',
+          align: 'left',
           sortable: true,
           value: 'name'
         },
-        { text: 'Color', value: 'color' }
+        {
+          text: 'Color',
+          align: 'left',
+          value: 'color'
+        }
       ]
     }
   },
   methods: {
-    ...mapActions('boards', { findBoards: 'find' })
+    ...mapActions('boards', { findBoards: 'find' }),
+    addCategory () {
+      const {Board} = this.$FeathersVuex
+      const board = new Board(this.getBoard)
+      let boardRequest = Object.assign({}, this.category)
+      board.constructCategories = [
+        boardRequest
+      ]
+      board.patch({query: {method: 'push', field: 'constructCategories'}}).then(result => {
+        this.category = {}
+      })
+    },
+    deleteCategory (item) {
+      const {Board} = this.$FeathersVuex
+      const board = new Board(this.getBoard)
+      let boardRequest = Object.assign({}, item)
+      board.constructCategories = [
+        boardRequest
+      ]
+      board.patch({query: {method: 'pull', field: 'constructCategories'}}).then(result => {
+      })
+    },
+    editCategory (val, elem, field) {
+
+    }
   },
   computed: {
-    getConstructCategories () {
-      return []
-    },
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId']),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     getBoard () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
+    getCategories () {
+      return this.getBoard ? this.getBoard.constructCategories : []
     }
   },
   mounted () {
@@ -95,5 +146,9 @@ export default {
     .color-selector {
         width: 60px;
         height: 60px;
+    }
+    .color-displayer {
+        width: 30px;
+        height: 30px;
     }
 </style>

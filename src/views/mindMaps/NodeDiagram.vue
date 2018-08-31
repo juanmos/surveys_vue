@@ -25,20 +25,21 @@
           </v-tab>
           <v-tab-item
           >
-            <v-card flat>
-               <v-card-actions>
+          <v-card flat>
+              <v-card-actions>
                   <v-flex xs12 md6>
-                    <v-text-field
+                  <v-text-field
                       box
                       color="blue-grey lighten-2"
                       v-model.lazy="currentNodeText"
                       v-bind:disabled="currentNode === null"
-                    ></v-text-field>
+                  ></v-text-field>
                   </v-flex>
                   <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
                   <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
-                </v-card-actions>
-            </v-card>
+              </v-card-actions>
+          </v-card>
+          <constructs-component></constructs-component>
           </v-tab-item>
            <v-tab
             ripple
@@ -61,6 +62,7 @@ import go from 'gojs'
 import {mapState} from 'vuex'
 import Diagram from './Diagram'
 import ConstructCategories from './CounstructCategories'
+import ConstructsComponent from './ConstructsComponet'
 import DestructsComponent from './DestructsComponent'
 export default {
   data () {
@@ -155,7 +157,7 @@ export default {
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent}
+  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent}
 }
 </script>
 
