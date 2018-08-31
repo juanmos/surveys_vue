@@ -18,6 +18,15 @@
                   required
                 ></v-text-field>
               </v-flex>
+              <v-flex xs12>
+                <v-select
+                  label="Categoria"
+                  @blur="sendData"
+                  v-model="board.category"
+                  :items="['personas', 'empresas']"
+                  box
+                ></v-select>
+              </v-flex>
             </v-layout>
         </v-container>
         </v-form>

@@ -22,6 +22,7 @@ export default new Vuex.Store({
     service('boards', {
       instanceDefaults: {
         name: '',
+        category: '',
         _user_id: '',
         memberIds: [],
         graphic_content: {}
@@ -72,24 +73,45 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('customer-contacts', {
+      instanceDefaults: {
+        name: '',
+        phones: '',
+        cellphones: '',
+        email: '',
+        position: '',
+        _customer_id: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
-    studyId: null
+    studyId: null,
+    currentMapId: null
   },
   getters: {
     getStudyId: (state) => {
       return state.studyId
+    },
+    getCurrentMapId: (state) => {
+      return state.currentMapId
     }
   },
   mutations: {
     setStudyId (state, id) {
       state.studyId = id
+    },
+    setCurrentMapId (state, id) {
+      state.currentMapId = id
     }
   },
   actions: {
     setStudyId: ({ commit }, id) => {
       commit('setStudyId', id)
+    },
+    setCurrentMapId: ({ commit }, id) => {
+      commit('setCurrentMapId', id)
     }
   }
 })

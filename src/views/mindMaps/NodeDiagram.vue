@@ -3,19 +3,55 @@
   <div>
     <v-flex xs12>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="border: solid 1px black; width:100%; height:400px"></diagram>
-        <v-card-actions>
-          <v-flex xs12 md6>
-            <v-text-field
-              box
-              color="blue-grey lighten-2"
-              v-model.lazy="currentNodeText"
-              v-bind:disabled="currentNode === null"
-            ></v-text-field>
-          </v-flex>
-          <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
-          <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
-        </v-card-actions>
+        <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <v-tabs
+          v-model="active"
+          slider-color="indigo"
+        >
+          <v-tab
+            ripple
+          >
+            Categorias
+
+          </v-tab>
+          <v-tab-item
+          >
+          <construct-categories></construct-categories>
+          </v-tab-item>
+           <v-tab
+            ripple
+          >
+            Constructos
+          </v-tab>
+          <v-tab-item
+          >
+            <v-card flat>
+               <v-card-actions>
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      box
+                      color="blue-grey lighten-2"
+                      v-model.lazy="currentNodeText"
+                      v-bind:disabled="currentNode === null"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
+                  <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
+                </v-card-actions>
+            </v-card>
+          </v-tab-item>
+           <v-tab
+            ripple
+          >
+            Destructos
+          </v-tab>
+          <v-tab-item
+          >
+            <v-card flat>
+              <destructs-component></destructs-component>
+            </v-card>
+          </v-tab-item>
+        </v-tabs>
       </v-card>
     </v-flex>
   </div>
@@ -23,9 +59,12 @@
 <script>
 import go from 'gojs'
 import Diagram from './Diagram'
+import ConstructCategories from './CounstructCategories'
+import DestructsComponent from './DestructsComponent'
 export default {
   data () {
     return {
+      active: null,
       diagramData: { // passed to  as its modelData
         nodeDataArray: [
         ],
@@ -114,7 +153,7 @@ export default {
     },
     model () { return this.$refs.diag.model }
   },
-  components: {Diagram}
+  components: {Diagram, ConstructCategories, DestructsComponent}
 }
 </script>
 

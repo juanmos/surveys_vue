@@ -39,6 +39,7 @@
                   item-text="name"
                   item-value="_id"
                   box
+                  multiple
                 ></v-select>
               </v-flex>
               <v-flex xs12>
@@ -65,6 +66,17 @@
                   class="mt-3"
                   required
                 ></v-date-picker>
+              </v-flex>
+              <v-flex xs12>
+                <v-select
+                  label="Seleccione Nodo"
+                  v-model="study._contact_id"
+                  :items="getContacts"
+                  item-text="name"
+                  item-value="_id"
+                  box
+                  required
+                ></v-select>
               </v-flex>
               <v-flex xs12>
                 <v-autocomplete
@@ -172,6 +184,7 @@ export default {
     ...mapActions('customers', { findClients: 'find' }),
     ...mapActions('countries', { findCountries: 'find' }),
     ...mapActions('cities', { findCities: 'find' }),
+    ...mapActions('customer-contacts', { findContacts: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.study)
@@ -190,6 +203,7 @@ export default {
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
     ...mapGetters('cities', {findCitiesInStore: 'find'}),
     ...mapGetters('countries', {findCountriesInStore: 'find'}),
+    ...mapGetters('customer-contacts', {findContactsInStore: 'find'}),
     getUsers () {
       return this.findUsersInStore({query: {removed: false}}).data
     },
@@ -201,6 +215,9 @@ export default {
     },
     getCountries () {
       return this.findCountriesInStore({query: {removed: false}}).data
+    },
+    getContacts () {
+      return this.findContactsInStore({query: {removed: false}}).data
     }
   },
   watch: {
@@ -222,6 +239,10 @@ export default {
     this.findCountries({ query: {removed: false} }).then(response => {
       const countries = response.data || response
       console.log(countries)
+    })
+    this.findContacts({ query: {removed: false} }).then(response => {
+      const contacts = response.data || response
+      console.log(contacts)
     })
   }
 }

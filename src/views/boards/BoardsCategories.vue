@@ -12,19 +12,35 @@
             v-for="item in getBoards"
             v-model="item.active"
             :key="item.title"
-            :prepend-icon="item.action"
             no-action
           >
-            <v-list-tile slot="activator">
+            <v-list-tile  slot="activator">
               <v-list-tile-avatar>
                 <v-icon :class="`grey lighten-1 white--text`">folder</v-icon>
               </v-list-tile-avatar>
               <v-list-tile-content>
-                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                <v-list-tile-title>
+                  {{ item.name }}
+                </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
               <v-list-tile
+              @click="setCurrentMapId(item._id)"
               >
+                <v-list-tile-avatar>
+                  <v-icon :class="`grey lighten-1 white--text`">category</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>Mapa Mental</v-list-tile-title>
+                </v-list-tile-content>
+
+              </v-list-tile>
+              <v-list-tile
+              @click="setCurrentMapId(item._id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`grey lighten-1 white--text`">link</v-icon>
+                </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Links</v-list-tile-title>
                 </v-list-tile-content>
@@ -32,12 +48,18 @@
               </v-list-tile>
               <v-list-tile
               >
+                <v-list-tile-avatar>
+                  <v-icon :class="`grey lighten-1 white--text`">merge_type</v-icon>
+                </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Conexiones</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
               <v-list-tile
               >
+                <v-list-tile-avatar>
+                  <v-icon :class="`grey lighten-1 white--text`">show_chart</v-icon>
+                </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Graficos</v-list-tile-title>
                 </v-list-tile-content>
@@ -73,7 +95,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions('boards', { findBoards: 'find' })
+    ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions([
+      'setCurrentMapId'
+    ]),
+    edit (val, elem, field) {
+      console.log(val, elem, field)
+      const {Board} = this.$FeathersVuex
+      const board = new Board(elem)
+      board[field] = val
+      board.patch().then((result) => {
+        this.find({ query: {removed: false} }).then(response => {
+          const boards = response.data || response
+          console.log(boards)
+        })
+      })
+    }
   },
   watch: {
   },
