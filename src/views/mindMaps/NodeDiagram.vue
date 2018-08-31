@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <v-flex xs12>
+    <v-flex  v-if="currentMapId" xs12>
       <v-card>
         <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
         <v-tabs
@@ -58,6 +58,7 @@
 </template>
 <script>
 import go from 'gojs'
+import {mapState} from 'vuex'
 import Diagram from './Diagram'
 import ConstructCategories from './CounstructCategories'
 import DestructsComponent from './DestructsComponent'
@@ -151,6 +152,7 @@ export default {
         }
       }
     },
+    ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
   },
   components: {Diagram, ConstructCategories, DestructsComponent}

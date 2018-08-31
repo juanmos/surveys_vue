@@ -1,6 +1,7 @@
 <template>
 <v-container>
 <v-layout row wrap>
+  {{getBoard}}
     <v-flex xs12 sm4>
         <v-text-field
         label="Nombre de Categoria"
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
+import {mapState, mapGetters, mapActions} from 'vuex'
 export default {
   data () {
     return {
@@ -67,15 +68,25 @@ export default {
       ]
     }
   },
+  methods: {
+    ...mapActions('boards', { findBoards: 'find' })
+  },
   computed: {
     getConstructCategories () {
       return []
     },
     ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState(['currentMapId']),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
-    getBoards () {
-      return this.findBoardsInStore({query: {removed: false, _study_id: this.$route.params.id}}).data
+    getBoard () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data
     }
+  },
+  mounted () {
+    this.findBoards({query: {removed: false}}).then(response => {
+      const boards = response.data || response
+      console.log(boards)
+    })
   }
 }
 </script>
