@@ -1,36 +1,5 @@
 <template>
 <v-container>
-<v-layout row wrap>
-    <v-flex xs12 sm4>
-        <v-text-field
-        label="Nombre de Categoria"
-        single-line
-        box
-        v-model="category.name"
-        ></v-text-field>
-    </v-flex>
-    <v-flex xs12 sm2>
-        <v-layout row wrap>
-            <v-flex xs12 sm10>
-                <v-text-field
-                label="Color"
-                type="color"
-                box
-                v-model="category.color"
-                ></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm2>
-                <div :style="{backgroundColor: category.color}" class="color-selector">
-                </div>
-            </v-flex>
-        </v-layout>
-    </v-flex>
-    <v-flex xs12 sm2>
-        <v-btn @click="addCategory" icon>
-          <v-icon>send</v-icon>
-        </v-btn>
-    </v-flex>
-</v-layout>
   <v-card>
         <v-list subheader>
           <v-subheader>Listado de Categorias</v-subheader>
@@ -66,6 +35,37 @@
         </v-list>
 
       </v-card>
+      <v-layout row wrap>
+        <v-flex xs12 sm4>
+            <v-text-field
+            label="Nombre de Categoria"
+            single-line
+            box
+            v-model="category.name"
+            ></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm2>
+            <v-layout row wrap>
+                <v-flex xs12 sm10>
+                    <v-text-field
+                    label="Color"
+                    type="color"
+                    box
+                    v-model="category.color"
+                    ></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm2>
+                    <div :style="{backgroundColor: category.color}" class="color-selector">
+                    </div>
+                </v-flex>
+            </v-layout>
+        </v-flex>
+        <v-flex xs12 sm2>
+            <v-btn @click="addCategory" icon>
+              <v-icon>send</v-icon>
+            </v-btn>
+        </v-flex>
+    </v-layout>
 </v-container>
 
 </template>

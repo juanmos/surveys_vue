@@ -25,7 +25,7 @@
           </v-tab>
           <v-tab-item
           >
-          <v-card flat>
+         <!-- <v-card flat>
               <v-card-actions>
                   <v-flex xs12 md6>
                   <v-text-field
@@ -38,8 +38,8 @@
                   <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
                   <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
               </v-card-actions>
-          </v-card>
-          <constructs-component></constructs-component>
+          </v-card> !-->
+          <constructs-component @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
            <v-tab
             ripple
@@ -83,16 +83,16 @@ export default {
   methods: {
     // get access to the GoJS Model of the GoJS Diagram
     // tell the GoJS Diagram to update based on the arbitrarily modified model data
-    updateDiagramFromData: function () { this.$refs.diag.updateDiagramFromData() },
+    updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
     // this event listener is declared on the
-    modelChanged: function (e) {
+    modelChanged  (e) {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
       }
     },
 
-    changedSelection: function (e) {
+    changedSelection (e) {
       var node = e.diagram.selection.first()
       if (node instanceof go.Node) {
         this.currentNode = node
@@ -107,13 +107,13 @@ export default {
     // which can be much more efficient than modifying some memory and asking
     // the GoJS Diagram to find differences and update accordingly.
     // Undo and Redo will work as expected.
-    addNode: function () {
+    addNode (val) {
+      console.log('este es el valor', val)
       var model = this.model
       model.startTransaction()
       model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = { text: 'NEW ' + this.counter++, color: 'yellow' }
+      var data = { text: val.name, color: val.color }
       model.addNodeData(data)
-      model.addLinkData({ from: 3, to: model.getKeyForNodeData(data) })
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
       var diagram = this.$refs.diag.diagram
@@ -124,7 +124,7 @@ export default {
     // then ask the GoJS Diagram to update everything from the data.
     // This is less efficient than calling the appropriate GoJS Model methods.
     // NOTE: Undo will not be able to restore all of the state properly!!
-    modifyStuff: function () {
+    modifyStuff () {
       var data = this.diagramData
       data.nodeDataArray[0].color = 'red'
       // Note here that because we do not have the GoJS Model,
@@ -136,7 +136,7 @@ export default {
   },
   computed: {
     currentNodeText: {
-      get: function () {
+      get () {
         var node = this.currentNode
         if (node instanceof go.Node) {
           return node.data.text
@@ -144,7 +144,7 @@ export default {
           return ''
         }
       },
-      set: function (val) {
+      set (val) {
         var node = this.currentNode
         if (node instanceof go.Node) {
           var model = this.model

@@ -42,9 +42,9 @@ export default {
     }
   },
   watch: {
-    modelData: function (val) { this.updateModel(val) }
+    modelData (val) { this.updateModel(val) }
   },
-  mounted: function () {
+  mounted () {
     var self = this
     var myDiagram =
       $(go.Diagram, this.$el,
