@@ -36,6 +36,7 @@
       v-model="rightDrawer"
       fixed
       app
+      width="1200"
     >
       <v-list>
         <v-list-tile @click="right = !right">
