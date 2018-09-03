@@ -8,20 +8,10 @@
           v-model="active"
           slider-color="indigo"
         >
-          <v-tab
-            ripple
-          >
-            Categorias
-
-          </v-tab>
-          <v-tab-item
-          >
-          <construct-categories></construct-categories>
-          </v-tab-item>
            <v-tab
             ripple
           >
-            Constructos
+            Constructos Madre
           </v-tab>
           <v-tab-item
           >
@@ -40,17 +30,6 @@
               </v-card-actions>
           </v-card> !-->
           <constructs-component @constructAdded="addNode($event)"></constructs-component>
-          </v-tab-item>
-           <v-tab
-            ripple
-          >
-            Destructos
-          </v-tab>
-          <v-tab-item
-          >
-            <v-card flat>
-              <destructs-component></destructs-component>
-            </v-card>
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -163,9 +142,8 @@ export default {
     },
     getNodeDataArray () {
       return this.getConstructs.map((construct) => {
-        let resultCategory = this.getCategories ? this.getCategories.filter((category) => category._id === construct._category_id)[0] : null
         return {
-          color: resultCategory ? resultCategory.color : '#fff',
+          color: construct.color,
           text: construct.name
         }
       })

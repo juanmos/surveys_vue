@@ -2,9 +2,12 @@
   <v-layout row>
     <v-flex xs12>
       <v-toolbar>
-        <v-toolbar-title>Mapas</v-toolbar-title>
+        <v-toolbar-title>Tematicas</v-toolbar-title>
         <v-spacer></v-spacer>
         <boards-create-dialog></boards-create-dialog>
+        <v-btn @click="$emit('closeMenu')" icon>
+          <v-icon>keyboard_arrow_up</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-card>
         <v-list two-line subheader>

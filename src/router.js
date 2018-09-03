@@ -7,6 +7,11 @@ const Full = resolve => {
     resolve(require('./containers/Full.vue'))
   }, 'full')
 }
+const WorkingTable = resolve => {
+  require.ensure(['./containers/WorkingTable.vue'], () => {
+    resolve(require('./containers/WorkingTable.vue'))
+  }, 'worgingTable')
+}
 const Login = resolve => {
   require.ensure(['./views/Login.vue'], () => {
     resolve(require('./views/Login.vue'))
@@ -107,7 +112,23 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
-        },
+        }
+      ]
+    },
+    {
+      path: '/mesa-trabajo',
+      name: 'mesaTrabajo',
+      redirect: '/',
+      component: WorkingTable,
+      beforeEnter (to, from, next) {
+        store.dispatch('auth/authenticate').then(() => {
+          next()
+        }).catch((err) => {
+          console.log(err)
+          next('/pages/login')
+        })
+      },
+      children: [
         {
           path: 'boards/:id',
           name: 'BoardsDetail',

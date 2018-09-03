@@ -35,7 +35,7 @@
                 <v-spacer></v-spacer>
 
                 <v-card-title class="dark--text pl-5 pt-5">
-                  <div class="display-1 pl-5 pt-5">{{ study.name }}</div>
+                  <div class="display-1 pl-12 pt-12">{{ study.name }}</div>
                 </v-card-title>
               </v-layout>
               </v-card-media>
@@ -183,7 +183,7 @@ export default {
       })
     },
     goToDetail (id) {
-      this.$router.push(`boards/${id}`)
+      this.$router.push(`mesa-trabajo/boards/${id}`)
     }
   },
   computed: {

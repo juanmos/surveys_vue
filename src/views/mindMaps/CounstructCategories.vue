@@ -2,7 +2,7 @@
 <v-container>
   <v-card>
         <v-list subheader>
-          <v-subheader>Listado de Categorias</v-subheader>
+          <v-subheader>Constructos</v-subheader>
           <v-list-tile
             v-for="item in getCategories"
             :key="item.name"

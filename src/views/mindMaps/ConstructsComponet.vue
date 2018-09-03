@@ -34,12 +34,11 @@
                                     avatar
                                     >
                                     <v-list-tile-avatar>
-                                       <div class="color-displayer" :style="{backgroundColor: getCategories.filter(category => category._id === item._category_id)[0] ? getCategories.filter(category => category._id === item._category_id)[0].color : '#fff'}"></div>
+                                       <div class="color-displayer" :style="{backgroundColor: item.color}"></div>
                                     </v-list-tile-avatar>
 
                                     <v-list-tile-content>
                                         <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                                        <v-list-tile-sub-title >Categoria: {{getCategories.filter(category => category._id === item._category_id)[0] ? getCategories.filter(category => category._id === item._category_id)[0].name : 'sin nombre'}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     </v-list-tile>
                                 </template>
@@ -50,7 +49,7 @@
                                         <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
                                     </v-btn>
                                     <v-btn icon>
-                                        <v-icon color="grey">delete</v-icon>
+                                        <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
                                     </v-btn>
                                     <v-btn icon>
                                         <v-icon color="grey">share</v-icon>
@@ -67,17 +66,25 @@
             single-line
             box
             v-model="construct.name"
+                @keyup.enter="addConstruct"
             ></v-text-field>
         </v-flex>
-        <v-flex xs12 sm4>
-            <v-select
-            :items="getCategories"
-            box
-            label="Categoria del Constructo"
-            item-text="name"
-            item-value="_id"
-            v-model="construct._category_id"
-            ></v-select>
+         <v-flex xs12 sm2>
+            <v-layout row wrap>
+                <v-flex xs12 sm10>
+                    <v-text-field
+                    @keyup.enter="addConstruct"
+                    label="Color"
+                    type="color"
+                    box
+                    v-model="construct.color"
+                    ></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm2>
+                    <div :style="{backgroundColor: construct.color}" class="color-selector">
+                    </div>
+                </v-flex>
+            </v-layout>
         </v-flex>
         <v-flex xs12 sm2>
             <v-btn @click="addConstruct" icon>
@@ -141,12 +148,21 @@ export default {
         boardRequest
       ]
       board.patch({query: {method: 'push', field: 'constructs'}}).then(result => {
-        // data that will be shared
-        let formatedValue = {}
-        formatedValue.color = this.getCategories.filter(category => category._id === this.construct._category_id)[0] ? this.getCategories.filter(category => category._id === this.construct._category_id)[0].color : '#fff'
-        formatedValue.name = this.construct.name
-        // this.$emit('constructAdded', formatedValue)
         this.construct = {}
+      })
+    },
+    deleteConstruct (item) {
+      const {Board} = this.$FeathersVuex
+      const board = new Board(this.getBoard)
+      let boardRequest = Object.assign({}, item)
+      board.constructs = [
+        boardRequest
+      ]
+      board.patch({query: {method: 'pull', field: 'constructs'}}).then(result => {
+        this.findBoards({query: {removed: false}}).then(response => {
+          const boards = response.data || response
+          console.log(boards)
+        })
       })
     },
     detailConstruct (id) {
@@ -165,9 +181,12 @@ export default {
 </script>
 
 <style scoped>
+    .color-selector {
+        width: 60px;
+        height: 60px;
+    }
     .color-displayer {
         width: 30px;
         height: 30px;
     }
-
 </style>

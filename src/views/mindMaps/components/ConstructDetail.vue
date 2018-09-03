@@ -11,7 +11,7 @@
             <v-btn icon dark @click.native="emitClose()">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Detalle de Constructo: {{getCurrentConstruct.name}}</v-toolbar-title>
+            <v-toolbar-title class="text-uppercase">Detalle : {{getCurrentConstruct ? getCurrentConstruct.name : '' }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-menu bottom right offset-y>
               <v-btn slot="activator" dark icon>
@@ -26,12 +26,48 @@
           </v-toolbar>
           <v-tabs
               v-model="active"
-              slider-color="indigo"
+              slider-color="primary"
           >
             <v-tab
               ripple
             >
               Descripcion
+
+            </v-tab>
+            <v-tab-item
+            >
+              <v-card flat>
+
+              </v-card>
+            </v-tab-item>
+            <v-tab
+              ripple
+            >
+              Noticias Relacionadas
+
+            </v-tab>
+            <v-tab-item
+            >
+              <v-card flat>
+
+              </v-card>
+            </v-tab-item>
+            <v-tab
+              ripple
+            >
+              Imagenes y Videos
+
+            </v-tab>
+            <v-tab-item
+            >
+              <v-card flat>
+
+              </v-card>
+            </v-tab-item>
+            <v-tab
+              ripple
+            >
+             Analisis & Conclusiones
 
             </v-tab>
             <v-tab-item
@@ -118,6 +154,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
