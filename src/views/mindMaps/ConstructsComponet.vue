@@ -159,7 +159,7 @@ export default {
         let formatedValue = {}
         formatedValue.color = this.getCategories.filter(category => category._id === this.construct._category_id)[0] ? this.getCategories.filter(category => category._id === this.construct._category_id)[0].color : '#fff'
         formatedValue.name = this.construct.name
-        this.$emit('constructAdded', formatedValue)
+        // this.$emit('constructAdded', formatedValue)
         this.construct = {}
       })
     }

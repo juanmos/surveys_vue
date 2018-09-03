@@ -59,7 +59,7 @@
 </template>
 <script>
 import go from 'gojs'
-import {mapState} from 'vuex'
+import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
 import ConstructCategories from './CounstructCategories'
 import ConstructsComponent from './ConstructsComponet'
@@ -81,6 +81,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('boards', { findBoards: 'find' }),
     // get access to the GoJS Model of the GoJS Diagram
     // tell the GoJS Diagram to update based on the arbitrarily modified model data
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
@@ -154,10 +155,42 @@ export default {
         }
       }
     },
+    ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState(['currentMapId']),
+    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    getBoard () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
+    getCategories () {
+      return this.getBoard ? this.getBoard.constructCategories : []
+    },
+    getConstructs () {
+      return this.getBoard ? this.getBoard.constructs : []
+    },
+    getNodeDataArray () {
+      return this.getConstructs.map((construct) => {
+        return {
+          color: '',
+          name: construct.name
+        }
+      })
+    },
+    getDiagramData () {
+      return {
+        nodeDataArray: [],
+        linkDataArray: []
+      }
+    },
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent}
+  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
+  mounted () {
+    this.findBoards({query: {removed: false}}).then(response => {
+      const boards = response.data || response
+      console.log(boards)
+    })
+  }
 }
 </script>
 
