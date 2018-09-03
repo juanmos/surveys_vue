@@ -1,17 +1,1 @@
-{
-  "CORE-DEVELOPMENT": {
-    "host": "localhost",
-    "port": 8080,
-    "backend": {
-      "urlBase": "http://127.0.0.1:3033"
-    }
-  },
-  "CORE-PRODUCTION": {
-    "host": "localhost",
-    "port": 8080,
-    "backend": {
-      "urlBase": "http://api-mind-map.propraxis.ec/"
-    }
-  },
-  "currentEnviroment": "CORE-DEVELOPMENT"
-}
+{"CORE-DEVELOPMENT":{"host":"localhost","port":8080,"backend":{"urlBase":"http://127.0.0.1:3033"}},"CORE-PRODUCTION":{"host":"localhost","port":8080,"backend":{"urlBase":"http://api-mind-map.propraxis.ec/"}},"currentEnviroment":"CORE-PRODUCTION"}
