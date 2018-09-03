@@ -47,7 +47,7 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
-                                        <v-icon @click="showDetail = !showDetail" color="grey">visibility</v-icon>
+                                        <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
                                     </v-btn>
                                     <v-btn icon>
                                         <v-icon color="grey">delete</v-icon>
@@ -130,6 +130,9 @@ export default {
   },
   methods: {
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions([
+      'setCurrentConstructId'
+    ]),
     addConstruct () {
       const {Board} = this.$FeathersVuex
       const board = new Board(this.getBoard)
@@ -145,6 +148,10 @@ export default {
         // this.$emit('constructAdded', formatedValue)
         this.construct = {}
       })
+    },
+    detailConstruct (id) {
+      this.showDetail = !this.showDetail
+      this.setCurrentConstructId(id)
     }
   },
   components: {ConstructDetail},

@@ -68,12 +68,6 @@ export default {
   data () {
     return {
       active: null,
-      diagramData: { // passed to  as its modelData
-        nodeDataArray: [
-        ],
-        linkDataArray: [
-        ]
-      },
       currentNode: null,
       savedModelText: '',
       counter: 1, // used by addNode
@@ -169,7 +163,7 @@ export default {
     },
     getNodeDataArray () {
       return this.getConstructs.map((construct) => {
-        let resultCategory = this.getCategories.filter((category) => category._id === construct._category_id)[0]
+        let resultCategory = this.getCategories ? this.getCategories.filter((category) => category._id === construct._category_id)[0] : null
         return {
           color: resultCategory ? resultCategory.color : '#fff',
           text: construct.name

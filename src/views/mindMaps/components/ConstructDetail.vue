@@ -11,11 +11,8 @@
             <v-btn icon dark @click.native="emitClose()">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title>Settings</v-toolbar-title>
+            <v-toolbar-title>Detalle de Constructo: {{getCurrentConstruct.name}}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn dark flat @click.native="mutableDialog = false">Save</v-btn>
-            </v-toolbar-items>
             <v-menu bottom right offset-y>
               <v-btn slot="activator" dark icon>
                 <v-icon>more_vert</v-icon>
@@ -27,66 +24,30 @@
               </v-list>
             </v-menu>
           </v-toolbar>
-          <v-card-text>
-            <v-btn color="primary" dark @click="dialog2 = !dialog2">Open Dialog 2</v-btn>
-            <v-tooltip right>
-              <v-btn slot="activator">Tool Tip Activator</v-btn>
-              Tool Tip
-            </v-tooltip>
-            <v-list three-line subheader>
-              <v-subheader>User Controls</v-subheader>
-              <v-list-tile avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Content filtering</v-list-tile-title>
-                  <v-list-tile-sub-title>Set the content filtering level to restrict apps that can be downloaded</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Password</v-list-tile-title>
-                  <v-list-tile-sub-title>Require password for purchase or use password to restrict purchase</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list three-line subheader>
-              <v-subheader>General</v-subheader>
-              <v-list-tile avatar>
-                <v-list-tile-action>
-                  <v-checkbox v-model="notifications"></v-checkbox>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>Notifications</v-list-tile-title>
-                  <v-list-tile-sub-title>Notify me about updates to apps or games that I downloaded</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile avatar>
-                <v-list-tile-action>
-                  <v-checkbox v-model="sound"></v-checkbox>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>Sound</v-list-tile-title>
-                  <v-list-tile-sub-title>Auto-update apps at any time. Data charges may apply</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile avatar>
-                <v-list-tile-action>
-                  <v-checkbox v-model="widgets"></v-checkbox>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>Auto-add widgets</v-list-tile-title>
-                  <v-list-tile-sub-title>Automatically add home screen widgets</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-card-text>
+          <v-tabs
+              v-model="active"
+              slider-color="indigo"
+          >
+            <v-tab
+              ripple
+            >
+              Descripcion
 
+            </v-tab>
+            <v-tab-item
+            >
+              <v-card flat>
+                descripcion
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
           <div style="flex: 1 1 auto;"></div>
         </v-card>
       </v-dialog>
 </template>
 
 <script>
+import {mapState, mapGetters, mapActions} from 'vuex'
 export default {
   props: ['dialog'],
   data () {
@@ -97,18 +58,14 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
+      active: null,
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       items: [
         {
-          title: 'Click Me'
+          title: 'Exportar Constructo'
         },
         {
-          title: 'Click Me'
-        },
-        {
-          title: 'Click Me'
-        },
-        {
-          title: 'Click Me 2'
+          title: 'Eliminar Constructo'
         }
       ],
       select: [
@@ -123,9 +80,35 @@ export default {
     }
   },
   methods: {
+    ...mapActions('boards', { findBoards: 'find' }),
     emitClose () {
       this.$emit('closed')
+    },
+    next () {
+      const active = parseInt(this.active)
+      this.active = (active < 2 ? active + 1 : 0)
     }
+  },
+  computed: {
+    ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState([
+      'currentMapId',
+      'currentConstructId'
+    ]),
+    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    getBoard () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
+    getCategories () {
+      return this.getBoard ? this.getBoard.constructCategories : []
+    },
+    getConstructs () {
+      return this.getBoard ? this.getBoard.constructs : []
+    },
+    getCurrentConstruct () {
+      return this.getBoard ? this.getBoard.constructs.filter(construct => construct._id === this.currentConstructId)[0] : {}
+    },
+    ...mapState(['currentMapId'])
   },
   watch: {
     dialog (val) {
