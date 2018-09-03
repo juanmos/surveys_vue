@@ -8,7 +8,7 @@
       >
         <v-card tile>
           <v-toolbar card dark color="primary">
-            <v-btn icon dark @click.native="mutableDialog = false">
+            <v-btn icon dark @click.native="emitClose()">
               <v-icon>close</v-icon>
             </v-btn>
             <v-toolbar-title>Settings</v-toolbar-title>
@@ -91,6 +91,7 @@ export default {
   props: ['dialog'],
   data () {
     return {
+      mutableDialog: false,
       dialog2: false,
       dialog3: false,
       notifications: false,
@@ -119,6 +120,11 @@ export default {
         { text: 'State 6' },
         { text: 'State 7' }
       ]
+    }
+  },
+  methods: {
+    emitClose () {
+      this.$emit('closed')
     }
   },
   watch: {

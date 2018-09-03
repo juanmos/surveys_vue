@@ -47,7 +47,7 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
-                                        <v-icon color="grey">visibility</v-icon>
+                                        <v-icon @click="showDetail = !showDetail" color="grey">visibility</v-icon>
                                     </v-btn>
                                     <v-btn icon>
                                         <v-icon color="grey">delete</v-icon>
@@ -100,35 +100,18 @@
             <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
         </v-card-actions>
     </v-card> !-->
+    <construct-detail @closed="showDetail = false" :dialog="showDetail"></construct-detail>
     </v-container>
 </template>
 
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
+import ConstructDetail from './components/ConstructDetail'
 export default {
   data () {
     return {
       construct: {},
-      items: [
-        { header: 'Today' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend."
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?"
-        }
-      ]
+      showDetail: false
     }
   },
   computed: {
@@ -164,6 +147,7 @@ export default {
       })
     }
   },
+  components: {ConstructDetail},
   mounted () {
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response

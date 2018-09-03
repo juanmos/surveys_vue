@@ -3,7 +3,7 @@
   <div>
     <v-flex  v-if="currentMapId" xs12>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="diagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -169,15 +169,16 @@ export default {
     },
     getNodeDataArray () {
       return this.getConstructs.map((construct) => {
+        let resultCategory = this.getCategories.filter((category) => category._id === construct._category_id)[0]
         return {
-          color: '',
-          name: construct.name
+          color: resultCategory ? resultCategory.color : '#fff',
+          text: construct.name
         }
       })
     },
     getDiagramData () {
       return {
-        nodeDataArray: [],
+        nodeDataArray: this.getNodeDataArray,
         linkDataArray: []
       }
     },
