@@ -59,6 +59,7 @@
                 </v-list-tile-content>
               </v-list-tile>
               <v-list-tile
+              @click="setCurrentMapId(item._id)"
               >
                 <v-list-tile-avatar>
                   <v-icon :class="`grey lighten-1 white--text`">show_chart</v-icon>
