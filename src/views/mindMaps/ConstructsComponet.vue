@@ -4,7 +4,7 @@
         <v-flex xs12 sm12>
             <v-list>
                 <v-list-group
-                    v-for="item in getConstructs"
+                    v-for="item in getMainConstructsBoard"
                     v-model="item.active"
                     :key="item._id"
                     :prepend-icon="`center_focus_weak`"
@@ -18,11 +18,19 @@
                             <v-card flat>
                                 <v-list two-line>
                                 <template>
-                                    <v-subheader
-                                    v-if="item.name"
-                                    :key="item.name"
-                                    >
-                                    {{ item.name }}
+                                    <v-subheader>
+                                    <v-edit-dialog
+                                        align= "center"
+                                        @save="edit(item.name, item, 'name')"
+                                    > {{ item.name }}
+                                        <v-text-field
+                                        slot="input"
+                                        v-model="item.name"
+                                        label="Editar Nombre"
+                                        single-line
+                                        ></v-text-field>
+                                    </v-edit-dialog>
+
                                     </v-subheader>
 
                                     <v-divider
@@ -34,11 +42,35 @@
                                     avatar
                                     >
                                     <v-list-tile-avatar>
-                                       <div class="color-displayer" :style="{backgroundColor: item.color}"></div>
+                                        <v-edit-dialog
+                                            align= "center"
+                                            @save="edit(item.color, item, 'color')"
+                                        > <span v-if="item.color"><div class="color-displayer" :style="{backgroundColor: item.color}"></div></span>
+                                        <span v-else><div class="color-displayer" :style="{backgroundColor: '#ccc'}"></div></span>
+                                            <v-text-field
+                                            slot="input"
+                                            solo
+                                            v-model="item.color"
+                                            label="Editar Color"
+                                            type="color"
+                                            ></v-text-field>
+                                        </v-edit-dialog>
                                     </v-list-tile-avatar>
 
                                     <v-list-tile-content>
-                                        <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                                        <v-list-tile-title>
+                                            <v-edit-dialog
+                                                align= "center"
+                                                @save="edit(item.description, item, 'description')"
+                                            > <span v-if="item.description">{{ item.description }}</span> <span v-else>Escriba una descripcion...</span>
+                                                <v-textarea
+                                                slot="input"
+                                                solo
+                                                v-model="item.description"
+                                                label="Editar Descripcion"
+                                                ></v-textarea>
+                                            </v-edit-dialog>
+                                        </v-list-tile-title>
                                     </v-list-tile-content>
                                     </v-list-tile>
                                 </template>
@@ -117,52 +149,46 @@ import ConstructDetail from './components/ConstructDetail'
 export default {
   data () {
     return {
-      construct: {},
+      construct: {
+      },
       showDetail: false
     }
   },
   computed: {
-    ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState('main-constructs', {loading: 'isFindPending'}),
     ...mapState(['currentMapId']),
-    ...mapGetters('boards', {findBoardsInStore: 'find'}),
-    getBoard () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
-    },
-    getCategories () {
-      return this.getBoard ? this.getBoard.constructCategories : []
-    },
-    getConstructs () {
-      return this.getBoard ? this.getBoard.constructs : []
+    ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
+    getMainConstructsBoard () {
+      return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     }
   },
   methods: {
-    ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions([
       'setCurrentConstructId'
     ]),
     addConstruct () {
-      const {Board} = this.$FeathersVuex
-      const board = new Board(this.getBoard)
-      let boardRequest = Object.assign({}, this.construct)
-      board.constructs = [
-        boardRequest
-      ]
-      board.patch({query: {method: 'push', field: 'constructs'}}).then(result => {
+      this.construct._board_id = this.currentMapId
+      const {MainConstruct} = this.$FeathersVuex
+      const mainConstruct = new MainConstruct(this.construct)
+      mainConstruct.save().then(result => {
         this.construct = {}
       })
     },
+    edit (val, elem, field) {
+      console.log(val, elem, field)
+      const {MainConstruct} = this.$FeathersVuex
+      const mainConstruct = new MainConstruct(elem)
+      mainConstruct[field] = val
+      mainConstruct.patch().then((result) => {
+      })
+    },
     deleteConstruct (item) {
-      const {Board} = this.$FeathersVuex
-      const board = new Board(this.getBoard)
-      let boardRequest = Object.assign({}, item)
-      board.constructs = [
-        boardRequest
-      ]
-      board.patch({query: {method: 'pull', field: 'constructs'}}).then(result => {
-        this.findBoards({query: {removed: false}}).then(response => {
-          const boards = response.data || response
-          console.log(boards)
-        })
+      const {MainConstruct} = this.$FeathersVuex
+      const mainConstruct = new MainConstruct(item)
+      mainConstruct.removed = true
+      mainConstruct.patch().then(result => {
+        console.log(result)
       })
     },
     detailConstruct (id) {
@@ -172,9 +198,9 @@ export default {
   },
   components: {ConstructDetail},
   mounted () {
-    this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
+    this.findMainConstructs({query: {removed: false}}).then(response => {
+      const constructs = response.data || response
+      console.log(constructs)
     })
   }
 }

@@ -3,7 +3,7 @@
     <loading-component v-if="loading"></loading-component>
     <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
-        <v-flex v-for="study in getStudies" :key="study._id" xs3>
+        <v-flex v-for="study in getStudies" :key="study._id" xs4>
             <v-card class="study-card" :light="true" >
               <v-card-media
                 src="https://images.unsplash.com/photo-1519419166318-4f5c601b8e6c?ixlib=rb-0.3.5&s=281a47878ba7292df40256a164dd3058&auto=format&fit=crop&w=3967&q=80"

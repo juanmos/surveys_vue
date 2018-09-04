@@ -84,6 +84,14 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('main-constructs', {
+      instanceDefaults: {
+        name: '',
+        _board_id: '',
+        color: '',
+        description: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

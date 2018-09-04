@@ -50,7 +50,22 @@ export default {
       $(go.Diagram, this.$el,
         {
           initialContentAlignment: go.Spot.Center,
-          layout: $(go.TreeLayout, { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal }),
+          layout: $(go.TreeLayout, {
+            arrangement: go.TreeLayout.ArrangementHorizontal,
+            treeStyle: go.TreeLayout.StyleLastParents,
+            // properties for most of the tree:
+            angle: 90,
+            layerSpacing: 35,
+            // properties for the "last parents":
+            alternateAngle: 90,
+            alternateLayerSpacing: 35,
+            alternateAlignment: go.TreeLayout.AlignmentBus,
+            alternateNodeSpacing: 20
+          }),
+          // have mouse wheel events zoom in and out instead of scroll up and down
+          'toolManager.mouseWheelBehavior': go.ToolManager.WheelZoom,
+          // support double-click in background creating a new node
+          'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo' },
           'undoManager.isEnabled': true,
           // Model ChangedEvents get passed up to component users
           'ModelChanged': function (e) { self.$emit('model-changed', e) },
@@ -59,18 +74,27 @@ export default {
 
     myDiagram.nodeTemplate =
       $(go.Node, 'Auto',
-        $(go.Shape,
+        new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+        $(go.Shape, 'RoundedRectangle',
           {
-            fill: 'white',
-            strokeWidth: 0,
-            portId: '',
+            fill: $(go.Brush, 'Linear', { 0: 'rgb(254, 201, 0)', 1: 'rgb(254, 162, 0)' }),
+            stroke: null,
+            portId: '', // this Shape is the Node's port, not the whole Node
             fromLinkable: true,
+            fromLinkableSelfNode: true,
+            fromLinkableDuplicates: true,
             toLinkable: true,
+            toLinkableSelfNode: true,
+            toLinkableDuplicates: true,
             cursor: 'pointer'
           },
           new go.Binding('fill', 'color')),
         $(go.TextBlock,
-          { margin: 8, editable: true },
+          {
+            margin: 8,
+            editable: true, // editing the text automatically updates the model data
+            font: 'bold 12pt helvetica, bold arial, sans-serif'
+          },
           new go.Binding('text').makeTwoWay())
       )
 

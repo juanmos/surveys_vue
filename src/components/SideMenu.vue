@@ -59,7 +59,7 @@ export default {
     },
     exit () {
       this.closeSession().then((res) => {
-        this.$router.push('pages/login')
+        this.$router.push('/pages/login')
       })
     }
   },

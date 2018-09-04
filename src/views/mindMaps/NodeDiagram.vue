@@ -3,7 +3,7 @@
   <div>
     <v-flex  v-if="currentMapId" xs12>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px"></diagram>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -54,6 +54,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
     // get access to the GoJS Model of the GoJS Diagram
     // tell the GoJS Diagram to update based on the arbitrarily modified model data
@@ -128,28 +129,35 @@ export default {
         }
       }
     },
-    ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId']),
+    ...mapState('main-constructs', {loading: 'isFindPending'}),
+    ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
-    getBoard () {
+    getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
-    getCategories () {
-      return this.getBoard ? this.getBoard.constructCategories : []
+    getCurrentBoardForNode () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data.map(board => {
+        return {
+          text: board.name,
+          loc: '0 120'
+        }
+      })
     },
-    getConstructs () {
-      return this.getBoard ? this.getBoard.constructs : []
+    getMainConstructsBoard () {
+      return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     },
     getNodeDataArray () {
-      return this.getConstructs.map((construct) => {
+      return this.getMainConstructsBoard.map((construct) => {
         return {
-          color: construct.color,
-          text: construct.name
+          text: construct.name,
+          id: construct._id
         }
       })
     },
     getDiagramData () {
       return {
+        nodeKeyProperty: 'id',
         nodeDataArray: this.getNodeDataArray,
         linkDataArray: []
       }
@@ -159,6 +167,10 @@ export default {
   },
   components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
   mounted () {
+    this.findMainConstructs({query: {removed: false}}).then(response => {
+      const constructs = response.data || response
+      console.log(constructs)
+    })
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response
       console.log(boards)
