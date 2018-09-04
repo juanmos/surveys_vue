@@ -26,7 +26,7 @@
       </v-flex>
       <v-flex xs9>
         <v-card >
-            <component :is="diagramComponent"></component>
+            <component :is="diagramComponent" v-bind:current-diagram="getCurrtenDiagram"></component>
         </v-card>
       </v-flex>
     </v-layout>
@@ -55,6 +55,9 @@ export default {
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     getBoards () {
       return this.findBoardsInStore({query: {removed: false, _study_id: this.$route.params.id}}).data
+    },
+    getCurrtenDiagram () {
+      return 'Kanban'
     }
   },
   mounted () {

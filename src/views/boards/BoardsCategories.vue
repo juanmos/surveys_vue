@@ -79,7 +79,6 @@
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex'
-
 import BoardsCreateDialog from './BoardsCreateDialog'
 export default {
   props: ['boards'],

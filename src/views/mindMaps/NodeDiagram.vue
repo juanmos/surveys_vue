@@ -2,9 +2,15 @@
 
   <div>
     <v-flex  v-if="currentMapId" xs12>
+      <v-select
+            :items="typeDiagram"
+            @change="selectDiagram"
+            box
+            label="--- Seleccionar Diagrama ---"
+          ></v-select>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
-        <kanban-diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged"></kanban-diagram>
+        <diagram ref="diag" v-if="currentDiagram == 'Árbol'" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <kanban-diagram v-if="currentDiagram == 'Mesa de trabajo'" ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged"></kanban-diagram>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -46,15 +52,15 @@ import ConstructCategories from './CounstructCategories'
 import ConstructsComponent from './ConstructsComponet'
 import DestructsComponent from './DestructsComponent'
 export default {
+  props: ['currentDiagram'],
   data () {
     return {
+      typeDiagram: ['Árbol', 'Mesa de trabajo'],
       active: null,
       currentNode: null,
       savedModelText: '',
       counter: 1, // used by addNode
-      counter2: 4, // used by modifyStuff
-      renderKanban: false
-
+      counter2: 4 // used by modifyStuff
     }
   },
   methods: {
@@ -70,7 +76,10 @@ export default {
         this.savedModelText = e.model.toJson()
       }
     },
-
+    selectDiagram (typeDiagram) {
+      this.currentDiagram = typeDiagram
+      console.log('diagram----', typeDiagram)
+    },
     changedSelection (e) {
       var node = e.diagram.selection.first()
       if (node instanceof go.Node) {
@@ -178,7 +187,7 @@ export default {
         nodeDataArrayKanban.push(dataSegment)
       })
       let cont = 0
-      const segments = ['Temperamento', 'Liderazgo', 'Corrupción', 'Dictador']
+      const segments = ['Critica a las personas', 'Es amigo de Maduro', 'Sabe manajer a las personas', 'Tiene experiencia']
       segments.forEach((data) => {
         cont++
         let dataKanban = {
