@@ -5,5 +5,7 @@ import io from 'socket.io-client'
 const socket = io('http://192.168.0.65:3033', {transports: ['websocket']})
 const feathersClient = feathers()
   .configure(socketio(socket))
-  .configure(auth({ storage: window.localStorage }))
+  .configure(auth({
+    storage: window.localStorage
+  }))
 export default feathersClient
