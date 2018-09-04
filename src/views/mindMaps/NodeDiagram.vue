@@ -168,22 +168,22 @@ export default {
     },
     getKanbanDiagramData () {
       var nodeDataArrayKanban = []
-      const segments = ['Temperamento', 'Liderazgo', 'Corrupción', 'Dictador']
-      segments.forEach((key) => {
+      this.getNodeDataArray.forEach((data) => {
         let dataSegment = {
-          key: key,
-          text: key,
+          key: data.text,
+          text: data.text,
           isGroup: true,
           loc: '0 0'
         }
         nodeDataArrayKanban.push(dataSegment)
       })
       let cont = 0
-      this.getNodeDataArray.forEach((data) => {
+      const segments = ['Temperamento', 'Liderazgo', 'Corrupción', 'Dictador']
+      segments.forEach((data) => {
         cont++
         let dataKanban = {
           key: cont,
-          text: data.text,
+          text: data,
           group: 'Temperamento',
           color: '0'
         }
