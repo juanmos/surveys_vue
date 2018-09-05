@@ -97,7 +97,8 @@ export default new Vuex.Store({
   state: {
     studyId: null,
     currentMapId: null,
-    currentConstructId: null
+    currentConstructId: null,
+    currentDiagram: null
   },
   getters: {
     getStudyId: (state) => {
@@ -108,6 +109,9 @@ export default new Vuex.Store({
     },
     getCurrentConstructId: (state) => {
       return state.currentConstructId
+    },
+    getCurrentDiagram: (state) => {
+      return state.currentDiagram
     }
   },
   mutations: {
@@ -119,6 +123,9 @@ export default new Vuex.Store({
     },
     setCurrentConstructId (state, id) {
       state.currentConstructId = id
+    },
+    setCurrentDiagram (state, type) {
+      state.currentDiagram = type
     }
   },
   actions: {
@@ -130,6 +137,9 @@ export default new Vuex.Store({
     },
     setCurrentConstructId: ({ commit }, id) => {
       commit('setCurrentConstructId', id)
+    },
+    setCurrentDiagram: ({ commit }, type) => {
+      commit('setCurrentDiagram', type)
     }
   }
 })

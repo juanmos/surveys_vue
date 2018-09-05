@@ -2,15 +2,9 @@
 
   <div>
     <v-flex  v-if="currentMapId" xs12>
-      <v-select
-            :items="typeDiagram"
-            @change="selectDiagram"
-            box
-            label="--- Seleccionar Diagrama ---"
-          ></v-select>
       <v-card>
-        <diagram ref="diag" v-if="currentDiagram == 'Árbol'" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
-        <kanban-diagram v-if="currentDiagram == 'Mesa de trabajo'" ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged"></kanban-diagram>
+        <diagram ref="diag" v-if="currentDiagram == 'tree'" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <kanban-diagram v-if="currentDiagram == 'kanban'" ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged"></kanban-diagram>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -52,10 +46,8 @@ import ConstructCategories from './CounstructCategories'
 import ConstructsComponent from './ConstructsComponet'
 import DestructsComponent from './DestructsComponent'
 export default {
-  props: ['currentDiagram'],
   data () {
     return {
-      typeDiagram: ['Árbol', 'Mesa de trabajo'],
       active: null,
       currentNode: null,
       savedModelText: '',
@@ -75,10 +67,6 @@ export default {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
       }
-    },
-    selectDiagram (typeDiagram) {
-      this.currentDiagram = typeDiagram
-      console.log('diagram----', typeDiagram)
     },
     changedSelection (e) {
       var node = e.diagram.selection.first()
@@ -142,10 +130,10 @@ export default {
         }
       }
     },
-    ...mapState(['currentMapId']),
     ...mapState('main-constructs', {loading: 'isFindPending'}),
     ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
-    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState(['currentMapId', 'currentDiagram']),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
