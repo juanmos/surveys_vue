@@ -181,7 +181,7 @@ export default {
         let dataKanban = {
           key: cont,
           text: data,
-          group: 'Temperamento',
+          group: this.getNodeDataArray[0].text,
           color: '0'
         }
         nodeDataArrayKanban.push(dataKanban)
