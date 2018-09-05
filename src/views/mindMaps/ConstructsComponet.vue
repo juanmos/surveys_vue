@@ -2,16 +2,17 @@
     <v-container>
      <v-layout row wrap>
         <v-flex xs12 sm12>
+            {{getCurrentBoard}}
             <v-list>
                 <v-list-group
-                    v-for="item in getMainConstructsBoard"
+                    v-for="item in getCurrentBoard.nodeDataArray "
                     v-model="item.active"
                     :key="item._id"
                     :prepend-icon="`center_focus_weak`"
                 >
                     <v-list-tile slot="activator">
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                        <v-list-tile-title>{{ item.text }}</v-list-tile-title>
                     </v-list-tile-content>
                     </v-list-tile>
                         <v-flex xs12 sm8 offset-sm2>
@@ -21,11 +22,11 @@
                                     <v-subheader>
                                     <v-edit-dialog
                                         align= "center"
-                                        @save="edit(item.name, item, 'name')"
-                                    > {{ item.name }}
+                                        @save="edit(item.text, item, 'text')"
+                                    > {{ item.text }}
                                         <v-text-field
                                         slot="input"
-                                        v-model="item.name"
+                                        v-model="item.text"
                                         label="Editar Nombre"
                                         single-line
                                         ></v-text-field>
@@ -155,15 +156,20 @@ export default {
     }
   },
   computed: {
-    ...mapState('main-constructs', {loading: 'isFindPending'}),
+    ...mapState('boards', {loading: 'isPatchPending'}),
     ...mapState(['currentMapId']),
     ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
+    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    getCurrentBoard () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
     getMainConstructsBoard () {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     }
   },
   methods: {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
+    ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
       'setCurrentConstructId'
     ]),
@@ -201,6 +207,10 @@ export default {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response
       console.log(constructs)
+    })
+    this.findBoards({query: {removed: false}}).then(response => {
+      const boards = response.data || response
+      console.log(boards)
     })
   }
 }

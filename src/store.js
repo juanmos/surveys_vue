@@ -92,6 +92,12 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('working-tables', {
+      instanceDefaults: {
+        name: '',
+        type: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

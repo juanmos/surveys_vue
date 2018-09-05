@@ -3,7 +3,22 @@
   <div>
     <v-flex  v-if="currentMapId" xs12>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px"></diagram>
+        <span>
+          <v-btn
+            absolute
+            right
+            top
+            :loading="loading"
+            :disabled="loading"
+            @click.native="saveBoardChanges"
+          >
+            Guardar
+            <v-icon right dark>cloud_upload</v-icon>
+          </v-btn>
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          </diagram>
+
+        </span>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -50,7 +65,9 @@ export default {
       currentNode: null,
       savedModelText: '',
       counter: 1, // used by addNode
-      counter2: 4 // used by modifyStuff
+      counter2: 4, // used by modifyStuff,
+      dataChangedArray: [],
+      newDataArray: null
     }
   },
   methods: {
@@ -64,6 +81,9 @@ export default {
     modelChanged  (e) {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
+        let newModel = JSON.parse(e.model.toJson())
+        this.newDataArray = newModel.nodeDataArray
+        console.log(this.newDataArray)
       }
     },
 
@@ -107,6 +127,13 @@ export default {
       data.nodeDataArray.push({ key: ++this.counter2, text: this.counter2.toString(), color: 'orange' })
       data.linkDataArray.push({ from: 2, to: this.counter2 })
       this.updateDiagramFromData()
+    },
+    saveBoardChanges () {
+      const {Board} = this.$FeathersVuex
+      let board = new Board(this.getCurrentBoard)
+      board.nodeDataArray = this.newDataArray
+      board.patch().then((result) => {
+      })
     }
   },
   computed: {
@@ -136,6 +163,9 @@ export default {
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
+    getCurrentNodeData () {
+      return this.getCurrentBoard.nodeDataArray
+    },
     getCurrentBoardForNode () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data.map(board => {
         return {
@@ -148,14 +178,7 @@ export default {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     },
     getNodeDataArray () {
-      return this.getCurrentBoardForNode.concat(
-        this.getMainConstructsBoard.map((construct) => {
-          return {
-            text: construct.name,
-            id: construct._id
-          }
-        })
-      )
+      return this.getCurrentNodeData
     },
     getDiagramData () {
       return {
@@ -168,6 +191,9 @@ export default {
     model () { return this.$refs.diag.model }
   },
   watch: {
+    newDataArray (val) {
+      console.log('new model changed', val)
+    }
   },
   components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
   mounted () {

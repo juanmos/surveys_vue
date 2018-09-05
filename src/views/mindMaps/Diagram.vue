@@ -42,7 +42,10 @@ export default {
     }
   },
   watch: {
-    modelData (val) { this.updateModel(val) }
+    modelData (val) { this.updateModel(val) },
+    diagram (val) {
+      this.$emit('modelChanged', val)
+    }
   },
   mounted () {
     var self = this
@@ -50,18 +53,6 @@ export default {
       $(go.Diagram, this.$el,
         {
           initialContentAlignment: go.Spot.Center,
-          layout: $(go.TreeLayout, {
-            arrangement: go.TreeLayout.ArrangementHorizontal,
-            treeStyle: go.TreeLayout.StyleLastParents,
-            // properties for most of the tree:
-            angle: 90,
-            layerSpacing: 35,
-            // properties for the "last parents":
-            alternateAngle: 90,
-            alternateLayerSpacing: 35,
-            alternateAlignment: go.TreeLayout.AlignmentBus,
-            alternateNodeSpacing: 20
-          }),
           // have mouse wheel events zoom in and out instead of scroll up and down
           'toolManager.mouseWheelBehavior': go.ToolManager.WheelZoom,
           // support double-click in background creating a new node
