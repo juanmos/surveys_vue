@@ -175,6 +175,8 @@ export default {
         nodeDataArrayKanban.push(dataSegment)
       })
       let cont = 0
+      let newData = {'key': -1, 'group': this.getNodeDataArray[0].text, 'category': 'newbutton', 'loc': '0 0'}
+      nodeDataArrayKanban.push(newData)
       const segments = ['Critica a las personas', 'Es amigo de Maduro', 'Sabe manajer a las personas', 'Tiene experiencia']
       segments.forEach((data) => {
         cont++
