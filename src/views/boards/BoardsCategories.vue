@@ -28,13 +28,24 @@
               </v-list-tile-content>
             </v-list-tile>
               <v-list-tile
-              @click="setCurrentMapId(item._id)"
+                @click="selectCurrentDiagram('tree', item._id)"
               >
                 <v-list-tile-avatar>
                   <v-icon :class="`grey lighten-1 white--text`">category</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Mapa Mental</v-list-tile-title>
+                </v-list-tile-content>
+
+              </v-list-tile>
+              <v-list-tile
+              @click="selectCurrentDiagram('kanban', item._id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`grey lighten-1 white--text`">view_column</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>Kanban</v-list-tile-title>
                 </v-list-tile-content>
 
               </v-list-tile>
@@ -59,6 +70,7 @@
                 </v-list-tile-content>
               </v-list-tile>
               <v-list-tile
+              @click="setCurrentMapId(item._id)"
               >
                 <v-list-tile-avatar>
                   <v-icon :class="`grey lighten-1 white--text`">show_chart</v-icon>
@@ -78,7 +90,6 @@
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex'
-
 import BoardsCreateDialog from './BoardsCreateDialog'
 export default {
   props: ['boards'],
@@ -100,7 +111,8 @@ export default {
   methods: {
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentMapId'
+      'setCurrentMapId',
+      'setCurrentDiagram'
     ]),
     edit (val, elem, field) {
       console.log(val, elem, field)
@@ -113,6 +125,10 @@ export default {
           console.log(boards)
         })
       })
+    },
+    selectCurrentDiagram (typeDiagram, id) {
+      this.setCurrentDiagram(typeDiagram)
+      this.setCurrentMapId(id)
     }
   },
   watch: {
