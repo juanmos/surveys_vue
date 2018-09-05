@@ -3,7 +3,8 @@
   <div>
     <v-flex  v-if="currentMapId" xs12>
       <v-card>
-        <diagram ref="diag" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px"></diagram>
+        <diagram ref="diag" v-if="currentDiagram == 'tree'" v-bind:model-data="getDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:400px"></diagram>
+        <kanban-diagram v-if="currentDiagram == 'kanban'" ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged"></kanban-diagram>
         <v-tabs
           v-model="active"
           slider-color="indigo"
@@ -40,6 +41,7 @@
 import go from 'gojs'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
+import KanbanDiagram from './KanbanDiagram'
 import ConstructCategories from './CounstructCategories'
 import ConstructsComponent from './ConstructsComponet'
 import DestructsComponent from './DestructsComponent'
@@ -66,7 +68,6 @@ export default {
         this.savedModelText = e.model.toJson()
       }
     },
-
     changedSelection (e) {
       var node = e.diagram.selection.first()
       if (node instanceof go.Node) {
@@ -129,10 +130,10 @@ export default {
         }
       }
     },
-    ...mapState(['currentMapId']),
     ...mapState('main-constructs', {loading: 'isFindPending'}),
     ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
-    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapState('boards', {loading: 'isFindPending'}),
+    ...mapState(['currentMapId', 'currentDiagram']),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
@@ -162,10 +163,38 @@ export default {
         linkDataArray: []
       }
     },
+    getKanbanDiagramData () {
+      var nodeDataArrayKanban = []
+      this.getNodeDataArray.forEach((data) => {
+        let dataSegment = {
+          key: data.text,
+          text: data.text,
+          isGroup: true,
+          loc: '0 0'
+        }
+        nodeDataArrayKanban.push(dataSegment)
+      })
+      let cont = 0
+      const segments = ['Critica a las personas', 'Es amigo de Maduro', 'Sabe manajer a las personas', 'Tiene experiencia']
+      segments.forEach((data) => {
+        cont++
+        let dataKanban = {
+          key: cont,
+          text: data,
+          group: 'Temperamento',
+          color: '0'
+        }
+        nodeDataArrayKanban.push(dataKanban)
+      })
+      return {
+        'class': 'go.GraphLinksModel',
+        'nodeDataArray': nodeDataArrayKanban,
+        'linkDataArray': []}
+    },
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
+  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent, KanbanDiagram},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response
