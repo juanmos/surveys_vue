@@ -148,12 +148,14 @@ export default {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     },
     getNodeDataArray () {
-      return this.getMainConstructsBoard.map((construct) => {
-        return {
-          text: construct.name,
-          id: construct._id
-        }
-      })
+      return this.getCurrentBoardForNode.concat(
+        this.getMainConstructsBoard.map((construct) => {
+          return {
+            text: construct.name,
+            id: construct._id
+          }
+        })
+      )
     },
     getDiagramData () {
       return {
@@ -164,6 +166,8 @@ export default {
     },
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
+  },
+  watch: {
   },
   components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
   mounted () {
