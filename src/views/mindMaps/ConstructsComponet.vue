@@ -97,7 +97,7 @@
             label="Nombre de Constructo"
             single-line
             box
-            v-model="construct.name"
+            v-model="construct.text"
                 @keyup.enter="addConstruct"
             ></v-text-field>
         </v-flex>
@@ -150,6 +150,7 @@ export default {
   data () {
     return {
       construct: {
+        loc: '0 0'
       },
       showDetail: false
     }
@@ -173,9 +174,14 @@ export default {
       'setCurrentConstructId'
     ]),
     addConstruct () {
+      let mutableConstruct = Object.assign({}, this.construct)
       const {Board} = this.$FeathersVuex
       const board = new Board(this.getCurrentBoard)
-      console.log(board)
+      board.nodeDataArray = [
+        mutableConstruct
+      ]
+      board.patch({query: {method: 'push', field: 'nodeDataArray'}})
+      console.log('request', board)
     },
     edit (val, elem, field) {
       console.log(val, elem, field)
