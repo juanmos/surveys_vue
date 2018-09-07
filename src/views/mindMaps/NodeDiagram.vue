@@ -15,7 +15,7 @@
             Guardar
             <v-icon right dark>cloud_upload</v-icon>
           </v-btn>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray, linkKeyProperty: 'id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
