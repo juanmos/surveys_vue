@@ -73,8 +73,6 @@ export default {
   methods: {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
-    // get access to the GoJS Model of the GoJS Diagram
-    // tell the GoJS Diagram to update based on the arbitrarily modified model data
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
     // this event listener is declared on the

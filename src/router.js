@@ -57,6 +57,16 @@ const BoardsDetail = resolve => {
     resolve(require('./views/boards/BoardsDetail.vue'))
   }, 'boards')
 }
+const WorkingTableList = resolve => {
+  require.ensure(['./views/working-tables/WorkingTableList.vue'], () => {
+    resolve(require('./views/working-tables/WorkingTableList.vue'))
+  }, 'workingTableList')
+}
+const WorkingTableNew = resolve => {
+  require.ensure(['./views/working-tables/WorkingTableNew.vue'], () => {
+    resolve(require('./views/working-tables/WorkingTableNew.vue'))
+  }, 'workingTableNew')
+}
 
 Vue.use(Router)
 
@@ -102,6 +112,16 @@ export default new Router({
           path: 'new-studies',
           name: 'NewStudies',
           component: StudiesNew
+        },
+        {
+          path: 'working-tables',
+          name: 'WorkingTableList',
+          component: WorkingTableList
+        },
+        {
+          path: 'working-table-new',
+          name: 'WorkingTableNew',
+          component: WorkingTableNew
         },
         {
           path: 'customers',

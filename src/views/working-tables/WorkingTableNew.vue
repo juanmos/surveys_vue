@@ -4,8 +4,8 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nuevo Estudio</v-subheader>
-                <studies-form @dataSubmited="create"></studies-form>
+                <v-subheader>Nueva Mesa de Trabajo</v-subheader>
+                <working-table-form @dataSubmited="create"></working-table-form>
                 <v-btn
                 absolute
                 dark
@@ -26,12 +26,12 @@
 <script>
 import {mapState} from 'vuex'
 
-import StudiesForm from './StudiesForm'
+import WorkingTableForm from './WorkingTableForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
     create (values) {
-      // method with feathers vuex to create an Studies
+      // method with feathers vuex to create an WorkingTables
       values._user_id = this.user._id
       const { Study } = this.$FeathersVuex
       const study = new Study(values)
@@ -42,14 +42,14 @@ export default {
       })
     },
     goToList () {
-      this.$router.push('/studies')
+      this.$router.push('/working-tables')
     }
   },
   computed: {
-    ...mapState('studies', {loading: 'isCreatePending'}),
+    ...mapState('working-tables', {loading: 'isCreatePending'}),
     ...mapState('auth', {user: 'user'})
   },
-  components: {StudiesForm, LoadingComponent}
+  components: {WorkingTableForm, LoadingComponent}
 }
 </script>
 <style>

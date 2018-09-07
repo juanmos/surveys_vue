@@ -3,10 +3,10 @@
     <loading-component v-if="loading"></loading-component>
     <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
-        <v-flex v-for="study in getStudies" :key="study._id" xs4>
+        <v-flex v-for="study in getWorkingTables" :key="study._id" xs4>
             <v-card class="study-card" :light="true" >
               <v-card-media
-                src="https://images.unsplash.com/photo-1519419166318-4f5c601b8e6c?ixlib=rb-0.3.5&s=281a47878ba7292df40256a164dd3058&auto=format&fit=crop&w=3967&q=80"
+                src=""
                 height="200px"
               >
               <v-layout
@@ -151,9 +151,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('studies', { findStudies: 'find' }),
+    ...mapActions('working-tables', { findWorkingTables: 'find' }),
     goToNew () {
-      this.$router.push('/new-studies')
+      this.$router.push('/working-table-new')
     },
     getData () {
       let params = {query: {removed: false}}
@@ -187,14 +187,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('studies', {loading: 'isFindPending'}),
-    ...mapGetters('studies', {findStudiesInStore: 'find'}),
-    getStudies () {
-      return this.findStudiesInStore({query: {removed: false, ...this.query}}).data
+    ...mapState('working-tables', {loading: 'isFindPending'}),
+    ...mapGetters('working-tables', {findWorkingTablesInStore: 'find'}),
+    getWorkingTables () {
+      return this.findWorkingTablesInStore({query: {removed: false, ...this.query}}).data
     }
   },
   created () {
-    this.findStudies({ query: {removed: false} }).then(response => {
+    this.findWorkingTables({ query: {removed: false} }).then(response => {
       const studies = response.data || response
       console.log(studies)
     })
