@@ -15,7 +15,7 @@
             Guardar
             <v-icon right dark>cloud_upload</v-icon>
           </v-btn>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.map((board) => { return { text: board.name } }).concat(getCurrentBoard[0].nodeDataArray)}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -160,7 +160,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
 
     getCurrentBoard () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
     getCurrentNodeData () {
       return this.getCurrentBoard.nodeDataArray
