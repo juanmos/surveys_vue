@@ -173,12 +173,9 @@ export default {
       'setCurrentConstructId'
     ]),
     addConstruct () {
-      this.construct._board_id = this.currentMapId
-      const {MainConstruct} = this.$FeathersVuex
-      const mainConstruct = new MainConstruct(this.construct)
-      mainConstruct.save().then(result => {
-        this.construct = {}
-      })
+      const {Board} = this.$FeathersVuex
+      const board = new Board(this.getCurrentBoard)
+      console.log(board)
     },
     edit (val, elem, field) {
       console.log(val, elem, field)
