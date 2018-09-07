@@ -3,19 +3,24 @@
   <div>
     <v-flex  v-if="currentMapId" xs12>
       <v-card>
+        <v-toolbar
+          flat
+        >
+          <v-spacer></v-spacer>
+          <v-toolbar-items class="hidden-sm-and-down">
+            <v-btn
+              flat
+              :loading="loading"
+              :disabled="loading"
+              @click.stop="saveBoardChanges"
+            >
+              Guardar
+              <v-icon right dark>cloud_upload</v-icon>
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
         <span>
-          <v-btn
-            absolute
-            right
-            top
-            :loading="loading"
-            :disabled="loading"
-            @click.native="saveBoardChanges"
-          >
-            Guardar
-            <v-icon right dark>cloud_upload</v-icon>
-          </v-btn>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray, linkKeyProperty: 'id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray, linkKeyProperty: '_id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -29,21 +34,7 @@
           </v-tab>
           <v-tab-item
           >
-         <!-- <v-card flat>
-              <v-card-actions>
-                  <v-flex xs12 md6>
-                  <v-text-field
-                      box
-                      color="blue-grey lighten-2"
-                      v-model.lazy="currentNodeText"
-                      v-bind:disabled="currentNode === null"
-                  ></v-text-field>
-                  </v-flex>
-                  <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
-                  <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
-              </v-card-actions>
-          </v-card> !-->
-          <constructs-component @constructAdded="addNode($event)"></constructs-component>
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -102,14 +93,18 @@ export default {
     addNode (val) {
       console.log('este es el valor', val)
       var model = this.model
-      model.startTransaction()
-      model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = { text: val.name, color: val.color }
+      // model.startTransaction()
+      // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
+      var data = {text: val.text}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
       var diagram = this.$refs.diag.diagram
       diagram.select(diagram.findNodeForData(data))
+    },
+    deleteNode (val) {
+      var model = this.model
+      model.removeNodeData(val)
     },
 
     // Here we modify VUE's view model directly, and

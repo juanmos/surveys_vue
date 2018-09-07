@@ -62,9 +62,16 @@ export default {
           'ModelChanged': function (e) { self.$emit('model-changed', e) },
           'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
         })
-
+    var cxElement = document.getElementById('contextMenu')
+    // Since we have only one main element, we don't have to declare a hide method,
+    // we can set mainElement and GoJS will hide it automatically
+    var myContextMenu = $(go.HTMLInfo, {
+      show: showContextMenu,
+      mainElement: cxElement
+    })
     myDiagram.nodeTemplate =
       $(go.Node, 'Auto',
+        { contextMenu: myContextMenu },
         new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
         $(go.Shape, 'RoundedRectangle',
           {
@@ -88,6 +95,22 @@ export default {
           },
           new go.Binding('text').makeTwoWay())
       )
+    function showContextMenu (obj, diagram, tool) {
+    // Show only the relevant buttons given the current state.
+      var cmd = diagram.commandHandler
+      document.getElementById('cut').style.display = cmd.canCutSelection() ? 'block' : 'none'
+      document.getElementById('copy').style.display = cmd.canCopySelection() ? 'block' : 'none'
+      document.getElementById('paste').style.display = cmd.canPasteSelection() ? 'block' : 'none'
+      document.getElementById('delete').style.display = cmd.canDeleteSelection() ? 'block' : 'none'
+      document.getElementById('color').style.display = (obj !== null ? 'block' : 'none')
+
+      // Now show the whole context menu element
+      cxElement.style.display = 'block'
+      // we don't bother overriding positionContextMenu, we just do it here:
+      var mousePt = diagram.lastInput.viewPoint
+      cxElement.style.left = mousePt.x + 'px'
+      cxElement.style.top = mousePt.y + 'px'
+    }
 
     myDiagram.linkTemplate =
       $(go.Link,

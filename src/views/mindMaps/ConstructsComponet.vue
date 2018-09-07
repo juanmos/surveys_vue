@@ -97,26 +97,9 @@
             label="Nombre de Constructo"
             single-line
             box
-            v-model="construct.name"
+            v-model="construct.text"
                 @keyup.enter="addConstruct"
             ></v-text-field>
-        </v-flex>
-         <v-flex xs12 sm2>
-            <v-layout row wrap>
-                <v-flex xs12 sm10>
-                    <v-text-field
-                    @keyup.enter="addConstruct"
-                    label="Color"
-                    type="color"
-                    box
-                    v-model="construct.color"
-                    ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm2>
-                    <div :style="{backgroundColor: construct.color}" class="color-selector">
-                    </div>
-                </v-flex>
-            </v-layout>
         </v-flex>
         <v-flex xs12 sm2>
             <v-btn @click="addConstruct" icon>
@@ -150,6 +133,7 @@ export default {
   data () {
     return {
       construct: {
+        loc: '0 0'
       },
       showDetail: false
     }
@@ -173,28 +157,24 @@ export default {
       'setCurrentConstructId'
     ]),
     addConstruct () {
-      this.construct._board_id = this.currentMapId
-      const {MainConstruct} = this.$FeathersVuex
-      const mainConstruct = new MainConstruct(this.construct)
-      mainConstruct.save().then(result => {
-        this.construct = {}
-      })
+      let mutableConstruct = Object.assign({}, this.construct)
+      this.$emit('addNode', mutableConstruct)
+      this.construct = {}
     },
     edit (val, elem, field) {
       console.log(val, elem, field)
-      const {MainConstruct} = this.$FeathersVuex
-      const mainConstruct = new MainConstruct(elem)
-      mainConstruct[field] = val
-      mainConstruct.patch().then((result) => {
+      const {Board} = this.$FeathersVuex
+      const board = new Board(this.getCurrentBoard)
+      let request = {
+        _id: elem._id
+      }
+      request[field] = val
+
+      board.patch().then((result) => {
       })
     },
     deleteConstruct (item) {
-      const {MainConstruct} = this.$FeathersVuex
-      const mainConstruct = new MainConstruct(item)
-      mainConstruct.removed = true
-      mainConstruct.patch().then(result => {
-        console.log(result)
-      })
+      this.$emit('deleteNode', item)
     },
     detailConstruct (id) {
       this.showDetail = !this.showDetail
