@@ -2,7 +2,6 @@
     <v-container>
      <v-layout row wrap>
         <v-flex xs12 sm12>
-            {{getCurrentBoard}}
             <v-list>
                 <v-list-group
                     v-for="item in getCurrentBoard.nodeDataArray "
