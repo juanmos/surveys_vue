@@ -20,56 +20,9 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 md6>
-                <v-select
-                  label="Pais"
-                  v-model="study._country_id"
-                  :items="getCountries"
-                  item-text="name"
-                  item-value="_id"
-                  @change="updateCities"
-                  box
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 md6>
-                <v-select
-                  label="Ciudad"
-                  v-model="study._city_id"
-                  :items="getCities"
-                  item-text="name"
-                  item-value="_id"
-                  box
-                  multiple
-                ></v-select>
-              </v-flex>
               <v-flex xs12>
                 <v-select
-                  label="Cliente"
-                  v-model="study._customer_id"
-                  :items="getClients"
-                  item-text="name"
-                  item-value="_id"
-                  box
-                  required
-                ></v-select>
-              </v-flex>
-              <v-flex xs12>
-                <v-card-title primary-title>
-                  <h3 class="text--secondary body-2">Fecha de estudio</h3>
-                </v-card-title>
-                <v-date-picker
-                  :first-day-of-week="1"
-                  v-model="study.date"
-                  locale="es"
-                  full-width
-                  landscape
-                  class="mt-3"
-                  required
-                ></v-date-picker>
-              </v-flex>
-              <v-flex xs12>
-                <v-select
-                  label="Seleccione Nodo"
+                  label="Seleccione Tipo de Grafico"
                   v-model="study._contact_id"
                   :items="getContacts"
                   item-text="name"
@@ -77,53 +30,6 @@
                   box
                   required
                 ></v-select>
-              </v-flex>
-              <v-flex xs12>
-                <v-autocomplete
-                  v-model="study.memberIds"
-                  :items="getUsers"
-                  box
-                  chips
-                  color="blue-grey lighten-2"
-                  label="Miembros del Estudio"
-                  item-text="name"
-                  item-value="name"
-                  multiple
-                >
-                  <template
-                    slot="selection"
-                    slot-scope="data"
-                  >
-                    <v-chip
-                      :selected="data.selected"
-                      close
-                      class="chip--select-multi"
-                      @input="data.parent.selectItem(data.item)"
-                    >
-                      <v-avatar>
-                        <img :src="data.item.avatar">
-                      </v-avatar>
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                  <template
-                    slot="item"
-                    slot-scope="data"
-                  >
-                    <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item"></v-list-tile-content>
-                    </template>
-                    <template v-else>
-                      <v-list-tile-avatar>
-                        <img :src="data.item.avatar">
-                      </v-list-tile-avatar>
-                      <v-list-tile-content>
-                        <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
-                        <v-list-tile-sub-title v-html="data.item.group"></v-list-tile-sub-title>
-                      </v-list-tile-content>
-                    </template>
-                  </template>
-                </v-autocomplete>
               </v-flex>
               <v-flex xs12>
                  <v-textarea
@@ -137,14 +43,6 @@
           </v-container>
           <v-divider></v-divider>
           <v-card-actions>
-            <v-switch
-              v-model="autoUpdate"
-              :disabled="isUpdating"
-              class="mt-0"
-              color="blue lighten-2"
-              hide-details
-              label="Notificar a Miembros"
-            ></v-switch>
             <v-spacer></v-spacer>
             <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Estudio</v-btn>
           </v-card-actions>
@@ -161,12 +59,7 @@ export default {
     return {
       study: {
         name: '',
-        description: '',
-        _user_id: '',
-        memberIds: ['Sandra Adams', 'Britta Holt'],
-        sub_studies: [],
-        geographical_scope: '',
-        _customer_id: ''
+        description: ''
       },
       valid: false,
       name: '',

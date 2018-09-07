@@ -16,6 +16,11 @@ export default {
       title: 'Clientes'
     },
     {
+      icon: 'border_color',
+      url: '/working-tables',
+      title: 'Mesas de Trabajo'
+    },
+    {
       icon: 'people',
       url: '/users',
       title: 'Usuarios'
