@@ -26,7 +26,7 @@
       </v-flex>
       <v-flex xs9>
         <v-card >
-            <component :is="diagramComponent"></component>
+            <component :is="getCurrentDiagram"></component>
         </v-card>
       </v-flex>
     </v-layout>
@@ -36,13 +36,12 @@
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
 import BoardsCategories from './BoardsCategories'
-import NodeDiagram from './../mindMaps/NodeDiagram'
+import NodeDiagram from './../mindMaps/graphLinks/NodeDiagram'
 import KanbanDiagram from './../mindMaps/kanban/KanbanDiagram'
 export default {
   data () {
     return {
-      fullScreen: false,
-      diagramComponent: 'NodeDiagram'
+      fullScreen: false
     }
   },
   methods: {
@@ -54,6 +53,9 @@ export default {
   computed: {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters([
+      'getCurrentDiagram'
+    ]),
     getBoards () {
       return this.findBoardsInStore({query: {removed: false, _study_id: this.$route.params.id}}).data
     }

@@ -23,7 +23,7 @@
                   label="Categoria"
                   @blur="sendData"
                   v-model="board.category"
-                  :items="['personas', 'empresas']"
+                  :items="['privado', 'publico', 'imagen/compañia']"
                   box
                 ></v-select>
               </v-flex>

@@ -28,7 +28,7 @@
               </v-list-tile-content>
             </v-list-tile>
               <v-list-tile
-                @click="selectCurrentDiagram('tree', item._id)"
+                @click="selectCurrentDiagram('NodeDiagram', item._id)"
               >
                 <v-list-tile-avatar>
                   <v-icon :class="`grey lighten-1 white--text`">category</v-icon>
@@ -39,7 +39,7 @@
 
               </v-list-tile>
               <v-list-tile
-              @click="selectCurrentDiagram('kanban', item._id)"
+              @click="selectCurrentDiagram('KanbanDiagram', item._id)"
               >
                 <v-list-tile-avatar>
                   <v-icon :class="`grey lighten-1 white--text`">view_column</v-icon>
