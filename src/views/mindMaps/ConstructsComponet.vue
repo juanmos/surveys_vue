@@ -33,13 +33,14 @@
                                     <v-edit-dialog
                                         align= "center"
                                         @save="edit(item.description, item, 'description')"
-                                    > <span v-if="item.description">{{ item.description }}</span> <span v-else>Escriba una descripcion...</span>
-                                        <v-textarea
+                                    >   <span v-if="item.description">{{ item.description }}</span>
+                                        <span v-else>Escriba una descripcion...</span>
+                                        <v-text-field
                                         slot="input"
-                                        solo
                                         v-model="item.description"
                                         label="Editar Descripcion"
-                                        ></v-textarea>
+                                        single-line
+                                        ></v-text-field>
                                     </v-edit-dialog>
                                 </span><br>
                             </v-flex>

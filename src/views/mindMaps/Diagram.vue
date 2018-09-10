@@ -17,7 +17,7 @@ export default {
       if (val instanceof go.Model) {
         this.diagram.model = val
       } else {
-        let m = new go.TreeModel()
+        let m = new go.GraphLinksModel()
         if (val) {
           for (let p in val) {
             m[p] = val[p]
@@ -62,30 +62,25 @@ export default {
           'ModelChanged': function (e) { self.$emit('model-changed', e) },
           'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
         })
-    var cxElement = document.getElementById('contextMenu')
     // Since we have only one main element, we don't have to declare a hide method,
     // we can set mainElement and GoJS will hide it automatically
-    var myContextMenu = $(go.HTMLInfo, {
-      show: showContextMenu,
-      mainElement: cxElement
-    })
     myDiagram.nodeTemplate =
       $(go.Node, 'Auto',
-        { contextMenu: myContextMenu },
         new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
         $(go.Shape, 'RoundedRectangle',
           {
-            parameter1: 20, // the corner has a large radius
-            fill: $(go.Brush, 'Linear', { 0: 'rgb(254, 201, 0)', 1: 'rgb(254, 162, 0)' }),
-            stroke: null,
-            portId: '', // this Shape is the Node's port, not the whole Node
+            fill: 'rgba(128,128,128,0.2)',
+            stroke: 'gray',
+            strokeWidth: 3,
+            portId: '',
+            cursor: 'pointer', // the Shape is the port, not the whole Node
+            // allow all kinds of links from and to this port
             fromLinkable: true,
             fromLinkableSelfNode: true,
             fromLinkableDuplicates: true,
             toLinkable: true,
             toLinkableSelfNode: true,
-            toLinkableDuplicates: true,
-            cursor: 'pointer'
+            toLinkableDuplicates: true
           },
           new go.Binding('fill', 'color')),
         $(go.TextBlock,
@@ -96,31 +91,15 @@ export default {
           },
           new go.Binding('text').makeTwoWay())
       )
-
-    function showContextMenu (obj, diagram, tool) {
-    // Show only the relevant buttons given the current state.
-      var cmd = diagram.commandHandler
-      document.getElementById('cut').style.display = cmd.canCutSelection() ? 'block' : 'none'
-      document.getElementById('copy').style.display = cmd.canCopySelection() ? 'block' : 'none'
-      document.getElementById('paste').style.display = cmd.canPasteSelection() ? 'block' : 'none'
-      document.getElementById('delete').style.display = cmd.canDeleteSelection() ? 'block' : 'none'
-      document.getElementById('color').style.display = (obj !== null ? 'block' : 'none')
-
-      // Now show the whole context menu element
-      cxElement.style.display = 'block'
-      // we don't bother overriding positionContextMenu, we just do it here:
-      var mousePt = diagram.lastInput.viewPoint
-      cxElement.style.left = mousePt.x + 'px'
-      cxElement.style.top = mousePt.y + 'px'
-    }
-
     myDiagram.linkTemplate =
       $(go.Link,
         {
           curve: go.Link.Bezier,
           adjusting: go.Link.Stretch,
           reshapable: true,
-          toShortLength: 3
+          toShortLength: 3,
+          relinkableFrom: true,
+          relinkableTo: true
         },
         new go.Binding('points').makeTwoWay(),
         new go.Binding('curviness'),
