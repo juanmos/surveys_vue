@@ -70,8 +70,8 @@ export default {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
-        this.newDataArray = newModel.nodeDataArray
-        console.log(this.newDataArray)
+        this.nodeDataArrayKanban = newModel.nodeDataArray
+        console.log(this.nodeDataArrayKanban)
       }
     },
     changedSelection (e) {
@@ -90,11 +90,8 @@ export default {
     // the GoJS Diagram to find differences and update accordingly.
     // Undo and Redo will work as expected.
     addNode (val) {
-      console.log('este es el valor', val)
       var model = this.model
-      // model.startTransaction()
-      // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = {text: val.text}
+      var data = {text: val.text, isGroup: true}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
@@ -122,8 +119,9 @@ export default {
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
-      board.nodeDataArray = this.newDataArray
+      board.nodeDataArrayKanban = this.nodeDataArrayKanban
       board.patch().then((result) => {
+        console.log('save kanban')
       })
     }
   },
@@ -153,17 +151,25 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      var nodeDataArrayKanban = []
-      this.getCurrentBoard.nodeDataArray.forEach((data) => {
-        let dataSegment = {
-          key: data.text,
-          text: data.text,
-          isGroup: true,
-          loc: '0 0'
-        }
-        nodeDataArrayKanban.push(dataSegment)
-      })
-
+      let nodeDataArrayKanban = []
+      let newData = { key: '-1', group: '1', category: 'newbutton', loc: '0 0' }
+      console.log('cargando data', this.getCurrenteBoard)
+      if (this.getCurrentBoard.hasOwnProperty('nodeDataArrayKanban') && this.getCurrentBoard.nodeDataArrayKanban.length > 0) {
+        nodeDataArrayKanban = this.getCurrentBoard.nodeDataArrayKanban
+      } else {
+        let cont = 0
+        this.getCurrentBoard.nodeDataArray.forEach((data) => {
+          cont++
+          let dataBuilder = {
+            key: cont,
+            text: data.text,
+            isGroup: true,
+            loc: '0 0'
+          }
+          nodeDataArrayKanban.push(dataBuilder)
+        })
+      }
+      nodeDataArrayKanban.push(newData)
       return {
         'class': 'go.GraphLinksModel',
         'nodeDataArray': nodeDataArrayKanban,

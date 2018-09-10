@@ -36,7 +36,7 @@
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
 import BoardsCategories from './BoardsCategories'
-import NodeDiagram from './../mindMaps/kanban/NodeDiagram'
+import NodeDiagram from './../mindMaps/kanban/KanbanDiagram'
 export default {
   data () {
     return {

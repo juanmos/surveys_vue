@@ -57,9 +57,6 @@ export default {
     modelData: function (val) {
       this.updateModel(val)
       this.mutableData = val
-    },
-    diagram (val) {
-      this.$emit('modelChanged', val)
     }
   },
   mounted () {
@@ -163,7 +160,8 @@ export default {
         'SelectionCopied': relayoutDiagram, // defined above
         'animationManager.isEnabled': false,
         'undoManager.isEnabled': true,
-        'ModelChanged': function (e) { that.$emit('model-changed', e) }
+        'ModelChanged': function (e) { that.$emit('model-changed', e) },
+        'ChangedSelection': function (e) { that.$emit('changed-selection', e) }
       })
     // Customize the dragging tool:
     // When dragging a Node set its opacity to 0.7 and move it to the foreground layer
@@ -384,52 +382,6 @@ export default {
     myDiagram.delayInitialization(relayoutDiagram)
     that.diagram = myDiagram
     that.updateModel(that.modelData)
-    myDiagram.add(
-      $(go.Part, 'Table', {
-        position: new go.Point(300, 10),
-        selectable: false
-      },
-      $(go.TextBlock, 'Key', {
-        row: 0,
-        font: '700 14px Droid Serif, sans-serif'
-      }), // end row 0
-      $(go.Panel, 'Horizontal', {
-        row: 1,
-        alignment: go.Spot.Left
-      },
-      $(go.Shape, 'Rectangle', {
-        desiredSize: new go.Size(10, 10),
-        fill: '#CC293D',
-        margin: 5
-      }),
-      $(go.TextBlock, 'Negativo', {
-        font: '700 13px Droid Serif, sans-serif'
-      })
-      ), // end row 1
-      $(go.Panel, 'Horizontal', {
-        row: 2,
-        alignment: go.Spot.Left
-      },
-      $(go.Shape, 'Rectangle', {
-        desiredSize: new go.Size(10, 10),
-        fill: '#FFD700',
-        margin: 5
-      }),
-      $(go.TextBlock, 'Intermedio', {
-        font: '700 13px Droid Serif, sans-serif'
-      })
-      ), // end row 2
-      $(go.Panel, 'Horizontal', {
-        row: 3,
-        alignment: go.Spot.Left
-      }, $(go.Shape, 'Rectangle', {
-        desiredSize: new go.Size(10, 10),
-        fill: '#009CCC',
-        margin: 5
-      }), $(go.TextBlock, 'Positivo', {
-        font: '700 13px Droid Serif, sans-serif'
-      }))
-      ))
   }
 }
 </script>
