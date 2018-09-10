@@ -26,7 +26,8 @@ export default new Vuex.Store({
         _user_id: '',
         memberIds: [],
         graphic_content: {},
-        nodeDataArray: []
+        nodeDataArray: [],
+        linkDataArray: []
       },
       debug: true
     }),

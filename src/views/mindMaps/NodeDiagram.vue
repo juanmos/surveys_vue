@@ -20,7 +20,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray, linkKeyProperty: '_id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray, linkKeyProperty: '_id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -34,8 +34,17 @@
           </v-tab>
           <v-tab-item
           >
-          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-component>
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
+            <v-tab
+              ripple
+            >
+              Constructos desde mesa de trabajo
+            </v-tab>
+            <v-tab-item
+            >
+            <constructs-from-kanban @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-from-kanban>
+            </v-tab-item>
         </v-tabs>
       </v-card>
     </v-flex>
@@ -49,6 +58,7 @@ import KanbanDiagram from './KanbanDiagram'
 import ConstructCategories from './CounstructCategories'
 import ConstructsComponent from './ConstructsComponet'
 import DestructsComponent from './DestructsComponent'
+import ConstructsFromKanban from './ConstructsFromKanban'
 export default {
   data () {
     return {
@@ -58,6 +68,7 @@ export default {
       counter: 1, // used by addNode
       counter2: 4, // used by modifyStuff,
       dataChangedArray: [],
+      newLinkDataArray: null,
       newDataArray: null
     }
   },
@@ -71,8 +82,8 @@ export default {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
+        this.newLinkDataArray = newModel.linkDataArray
         this.newDataArray = newModel.nodeDataArray
-        console.log(this.newDataArray)
       }
     },
     changedSelection (e) {
@@ -91,7 +102,6 @@ export default {
     // the GoJS Diagram to find differences and update accordingly.
     // Undo and Redo will work as expected.
     addNode (val) {
-      console.log('este es el valor', val)
       var model = this.model
       // model.startTransaction()
       // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
@@ -101,6 +111,7 @@ export default {
       // also manipulate the Diagram by changing its Diagram.selection collection
       var diagram = this.$refs.diag.diagram
       diagram.select(diagram.findNodeForData(data))
+      this.saveBoardChanges()
     },
     deleteNode (val) {
       var model = this.model
@@ -124,8 +135,18 @@ export default {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
       board.nodeDataArray = this.newDataArray
+      board.linkDataArray = this.newLinkDataArray
       board.patch().then((result) => {
       })
+    },
+    editNode (event) {
+      let field = event.field
+      delete event.field
+      let model = this.model
+      model.startTransaction()
+      model.setDataProperty(event, field, event[field])
+      model.commitTransaction('edited text')
+      this.saveBoardChanges()
     }
   },
   computed: {
@@ -175,10 +196,9 @@ export default {
   },
   watch: {
     newDataArray (val) {
-      console.log('new model changed', val)
     }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent, KanbanDiagram},
+  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent, KanbanDiagram, ConstructsFromKanban},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response

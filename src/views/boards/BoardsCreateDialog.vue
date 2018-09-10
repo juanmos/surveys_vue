@@ -36,6 +36,16 @@ export default {
       // method with feathers vuex to create an user
       const { Board } = this.$FeathersVuex
       const board = new Board({_study_id: this.getStudyId, ...this.requestData})
+      board.nodeDataArray = [
+        {
+          id: '',
+          loc: '0 0',
+          text: this.requestData.name,
+          parent: '',
+          points: [],
+          description: 'Contructo Principal'
+        }
+      ]
       board.save().then((result) => {
       }, (err) => {
         console.log(err)
