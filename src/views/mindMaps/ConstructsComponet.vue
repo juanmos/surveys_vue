@@ -1,112 +1,84 @@
 <template>
     <v-container>
-     <v-layout row wrap>
-        <v-flex xs12 sm12>
-            <v-list>
-                <v-list-group
-                    v-for="item in getCurrentBoard.nodeDataArray "
-                    v-model="item.active"
-                    :key="item._id"
-                    :prepend-icon="`center_focus_weak`"
+    <v-layout justify-center>
+            <v-flex xs12 sm12>
+            <v-card>
+                <v-container
+                fluid
+                grid-list-md
                 >
-                    <v-list-tile slot="activator">
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{ item.text }}</v-list-tile-title>
-                    </v-list-tile-content>
-                    </v-list-tile>
-                        <v-flex xs12 sm8 offset-sm2>
-                            <v-card flat>
-                                <v-list two-line>
-                                <template>
-                                    <v-subheader>
+                <v-layout row wrap>
+                    <v-flex
+                    v-for="item in getCurrentBoard.nodeDataArray"
+                    xs3
+                    :key="item._id"
+                    >
+                    <v-card>
+                        <v-card-title primary-title>
+                            <div class="headline">
+                                <v-edit-dialog
+                                    align= "center"
+                                    @save="edit(item.text, item, 'text')"
+                                > {{ item.text }}
+                                    <v-text-field
+                                    slot="input"
+                                    v-model="item.text"
+                                    label="Editar Nombre"
+                                    single-line
+                                    ></v-text-field>
+                                </v-edit-dialog>
+                            </div>
+                            <v-flex xs12 offset-sm2>
+                                <span class="grey--text">
                                     <v-edit-dialog
                                         align= "center"
-                                        @save="edit(item.text, item, 'text')"
-                                    > {{ item.text }}
-                                        <v-text-field
+                                        @save="edit(item.description, item, 'description')"
+                                    > <span v-if="item.description">{{ item.description }}</span> <span v-else>Escriba una descripcion...</span>
+                                        <v-textarea
                                         slot="input"
-                                        v-model="item.text"
-                                        label="Editar Nombre"
-                                        single-line
-                                        ></v-text-field>
+                                        solo
+                                        v-model="item.description"
+                                        label="Editar Descripcion"
+                                        ></v-textarea>
                                     </v-edit-dialog>
-
-                                    </v-subheader>
-
-                                    <v-divider
-                                    :inset="true"
-                                    ></v-divider>
-
-                                    <v-list-tile
-                                    :key="item._category_id"
-                                    avatar
-                                    >
-                                    <v-list-tile-avatar>
-                                        <v-edit-dialog
-                                            align= "center"
-                                            @save="edit(item.color, item, 'color')"
-                                        > <span v-if="item.color"><div class="color-displayer" :style="{backgroundColor: item.color}"></div></span>
-                                        <span v-else><div class="color-displayer" :style="{backgroundColor: '#ccc'}"></div></span>
-                                            <v-text-field
-                                            slot="input"
-                                            solo
-                                            v-model="item.color"
-                                            label="Editar Color"
-                                            type="color"
-                                            ></v-text-field>
-                                        </v-edit-dialog>
-                                    </v-list-tile-avatar>
-
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>
-                                            <v-edit-dialog
-                                                align= "center"
-                                                @save="edit(item.description, item, 'description')"
-                                            > <span v-if="item.description">{{ item.description }}</span> <span v-else>Escriba una descripcion...</span>
-                                                <v-textarea
-                                                slot="input"
-                                                solo
-                                                v-model="item.description"
-                                                label="Editar Descripcion"
-                                                ></v-textarea>
-                                            </v-edit-dialog>
-                                        </v-list-tile-title>
-                                    </v-list-tile-content>
-                                    </v-list-tile>
-                                </template>
-                                </v-list>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn icon>
-                                        <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
-                                    </v-btn>
-                                    <v-btn icon>
-                                        <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
-                                    </v-btn>
-                                    <v-btn icon>
-                                        <v-icon color="grey">share</v-icon>
-                                    </v-btn>
-                                    </v-card-actions>
-                            </v-card>
+                                </span><br>
                             </v-flex>
-                </v-list-group>
-                </v-list>
-        </v-flex>
-        <v-flex xs12 sm4>
-            <v-text-field
-            label="Nombre de Constructo"
-            single-line
-            box
-            v-model="construct.text"
-                @keyup.enter="addConstruct"
-            ></v-text-field>
-        </v-flex>
-        <v-flex xs12 sm2>
-            <v-btn @click="addConstruct" icon>
-            <v-icon>send</v-icon>
-            </v-btn>
-        </v-flex>
-    </v-layout>
+                        </v-card-title>
+
+                        <div>
+                        </div>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn icon>
+                            <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
+                        </v-btn>
+                        <v-btn icon>
+                            <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                    </v-flex>
+                </v-layout>
+                </v-container>
+            </v-card>
+            </v-flex>
+        </v-layout>
+        <v-layout>
+            <v-flex xs12 sm4>
+                <v-text-field
+                label="Nombre de Constructo"
+                single-line
+                box
+                v-model="construct.text"
+                    @keyup.enter="addConstruct"
+                ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm2>
+                <v-btn @click="addConstruct" icon>
+                <v-icon>send</v-icon>
+                </v-btn>
+            </v-flex>
+        </v-layout>
 
    <!-- <v-card flat>
         <v-card-actions>
@@ -135,7 +107,12 @@ export default {
       construct: {
         loc: '0 0'
       },
-      showDetail: false
+      showDetail: false,
+      cards: [
+        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
+        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 }
+      ]
     }
   },
   computed: {
@@ -162,16 +139,10 @@ export default {
       this.construct = {}
     },
     edit (val, elem, field) {
-      console.log(val, elem, field)
-      const {Board} = this.$FeathersVuex
-      const board = new Board(this.getCurrentBoard)
-      let request = {
-        _id: elem._id
-      }
+      let request = elem
       request[field] = val
-
-      board.patch().then((result) => {
-      })
+      request.field = field
+      this.$emit('editNode', request)
     },
     deleteConstruct (item) {
       this.$emit('deleteNode', item)

@@ -75,6 +75,7 @@ export default {
         new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
         $(go.Shape, 'RoundedRectangle',
           {
+            parameter1: 20, // the corner has a large radius
             fill: $(go.Brush, 'Linear', { 0: 'rgb(254, 201, 0)', 1: 'rgb(254, 162, 0)' }),
             stroke: null,
             portId: '', // this Shape is the Node's port, not the whole Node
@@ -95,6 +96,7 @@ export default {
           },
           new go.Binding('text').makeTwoWay())
       )
+
     function showContextMenu (obj, diagram, tool) {
     // Show only the relevant buttons given the current state.
       var cmd = diagram.commandHandler
@@ -114,13 +116,22 @@ export default {
 
     myDiagram.linkTemplate =
       $(go.Link,
-        { relinkableFrom: true, relinkableTo: true },
-        $(go.Shape),
+        {
+          curve: go.Link.Bezier,
+          adjusting: go.Link.Stretch,
+          reshapable: true,
+          toShortLength: 3
+        },
+        new go.Binding('points').makeTwoWay(),
+        new go.Binding('curviness'),
+        $(go.Shape, { strokeWidth: 1.5 }
+        ),
+        $(go.Shape, // the arrowhead
+          { toArrow: 'standard', stroke: null }),
         $(go.Shape, { toArrow: 'OpenTriangle' })
       )
 
     this.diagram = myDiagram
-
     this.updateModel(this.modelData)
   }
 }
