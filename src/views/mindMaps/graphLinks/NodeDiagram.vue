@@ -138,7 +138,7 @@ export default {
       let board = new Board(this.getCurrentBoard)
       board.nodeDataArray = this.newDataArray
       board.linkDataArray = this.newLinkDataArray
-      board.patch().then((result) => {
+      board.patch({query: {node: true}}).then((result) => {
       })
     },
     editNode (event) {

@@ -157,7 +157,7 @@ export default {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
       board.kanbanNodeDataArray = this.kanbanNodeDataArray
-      board.patch().then((result) => {
+      board.patch({query: {kanban: true}}).then((result) => {
         console.log('save kanban')
       })
     }
