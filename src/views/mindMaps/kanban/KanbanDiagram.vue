@@ -34,7 +34,7 @@
           </v-tab>
           <v-tab-item
           >
-          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-component>
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
 
           <v-tab
@@ -44,7 +44,7 @@
          </v-tab>
          <v-tab-item
          >
-         <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @constructAdded="addNodeBuilder($event)"></construct>
+         <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @editNodeBuilder="editNodeBuilder" @constructAdded="addNodeBuilder($event)"></construct>
          </v-tab-item>
         </v-tabs>
       </v-card>
@@ -135,6 +135,24 @@ export default {
       data.nodeDataArray.push({ key: ++this.counter2, text: this.counter2.toString(), color: 'orange' })
       data.linkDataArray.push({ from: 2, to: this.counter2 })
       this.updateDiagramFromData()
+    },
+    editNode (event) {
+      let field = event.field
+      delete event.field
+      let model = this.model
+      model.startTransaction()
+      model.setDataProperty(event, field, event[field])
+      model.commitTransaction('edited text')
+      this.saveBoardChanges()
+    },
+    editNodeBuilder (event) {
+      let field = event.field
+      delete event.field
+      let model = this.model
+      model.startTransaction()
+      model.setDataProperty(event, field, event[field])
+      model.commitTransaction('edited text')
+      this.saveBoardChanges()
     },
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
