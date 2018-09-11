@@ -79,8 +79,8 @@ export default {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
-        this.nodeDataArrayKanban = newModel.nodeDataArray
-        console.log(this.nodeDataArrayKanban)
+        this.kanbanNodeDataArray = newModel.nodeDataArray
+        console.log(this.kanbanNodeDataArray)
       }
     },
     changedSelection (e) {
@@ -156,7 +156,7 @@ export default {
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
-      board.nodeDataArrayKanban = this.nodeDataArrayKanban
+      board.kanbanNodeDataArray = this.kanbanNodeDataArray
       board.patch().then((result) => {
         console.log('save kanban')
       })
@@ -188,10 +188,10 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      let nodeDataArrayKanban = []
+      let kanbanNodeDataArray = []
       let newData = { key: '-1', group: '1', category: 'newbutton', loc: '0 0', text: 'texto nuevo boton' }
-      if (this.getCurrentBoard.hasOwnProperty('nodeDataArrayKanban') && this.getCurrentBoard.nodeDataArrayKanban.length > 0) {
-        nodeDataArrayKanban = this.getCurrentBoard.nodeDataArrayKanban
+      if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
+        kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
       } else {
         let cont = 0
         this.getCurrentBoard.nodeDataArray.forEach((data) => {
@@ -202,13 +202,13 @@ export default {
             isGroup: true,
             loc: '0 0'
           }
-          nodeDataArrayKanban.push(dataBuilder)
-          nodeDataArrayKanban.push(newData)
+          kanbanNodeDataArray.push(dataBuilder)
+          kanbanNodeDataArray.push(newData)
         })
       }
       return {
         'class': 'go.GraphLinksModel',
-        'nodeDataArray': nodeDataArrayKanban,
+        'nodeDataArray': kanbanNodeDataArray,
         'linkDataArray': []}
     },
     getCurrentBoard () {
