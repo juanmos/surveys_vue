@@ -45,7 +45,7 @@
                   <v-icon :class="`grey lighten-1 white--text`">view_column</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
-                  <v-list-tile-title>Kanban</v-list-tile-title>
+                  <v-list-tile-title>Mesa de trabajo</v-list-tile-title>
                 </v-list-tile-content>
 
               </v-list-tile>
