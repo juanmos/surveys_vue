@@ -125,6 +125,7 @@ export default {
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
       this.$emit('addNode', mutableConstruct)
+      this.$emit('saveBoardChanges', mutableConstruct)
       this.construct = {}
     },
     edit (val, elem, field) {

@@ -30,22 +30,21 @@
            <v-tab
             ripple
           >
-            Temas
+            CONSTRUCTOS MADRE
           </v-tab>
           <v-tab-item
           >
           <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
-
-          <v-tab
-           ripple
-         >
-           Constructos
-         </v-tab>
-         <v-tab-item
-         >
-         <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @editNodeBuilder="editNodeBuilder" @constructAdded="addNodeBuilder($event)"></construct>
-         </v-tab-item>
+                <!--    <v-tab
+                     ripple
+                   >
+                     Constructos
+                   </v-tab>
+                   <v-tab-item
+                   >
+                   <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @editNodeBuilder="editNodeBuilder" @constructAdded="addNodeBuilder($event)"></construct>
+                 </v-tab-item> -->
         </v-tabs>
       </v-card>
     </v-flex>
@@ -111,7 +110,7 @@ export default {
     addNodeBuilder (val) {
       console.log('agregando constt')
       var model = this.model
-      var data = {text: val.text, group: '1', color: '0', loc: '0 0'}
+      var data = {text: val.text, group: '1', color: '0', loc: '671 23.52284749830794'}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
