@@ -113,7 +113,7 @@ export default {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
     },
     getMainBuilder () {
-      return this.getCurrentBoard.nodeDataArrayKanban.filter(nodeData => nodeData.isGroup === true)
+      return this.getCurrentBoard.kanbanNodeDataArray.filter(nodeData => nodeData.isGroup === true)
     }
   },
   methods: {
