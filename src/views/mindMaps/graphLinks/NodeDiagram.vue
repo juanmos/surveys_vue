@@ -36,6 +36,24 @@
           >
           <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
+           <v-tab
+            ripple
+          >
+            Constructos Hijos
+          </v-tab>
+          <v-tab-item
+          >
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
+          </v-tab-item>
+           <v-tab
+            ripple
+          >
+            Relaciones
+          </v-tab>
+          <v-tab-item
+          >
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
+          </v-tab-item>
         </v-tabs>
       </v-card>
     </v-flex>
@@ -95,11 +113,11 @@ export default {
       // also manipulate the Diagram by changing its Diagram.selection collection
       var diagram = this.$refs.diag.diagram
       diagram.select(diagram.findNodeForData(data))
-      this.saveBoardChanges()
     },
     deleteNode (val) {
       var model = this.model
       model.removeNodeData(val)
+      model.commitTransaction('Deleted Node')
     },
 
     // Here we modify VUE's view model directly, and
