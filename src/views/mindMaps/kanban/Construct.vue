@@ -132,7 +132,7 @@ export default {
       let request = elem
       request[field] = val
       request.field = field
-      this.$emit('editNode', request)
+      this.$emit('editNodeBuilder', request)
     },
     deleteConstruct (item) {
       this.$emit('deleteNode', item)

@@ -202,7 +202,7 @@ export default {
         ),
         $(go.Panel, 'Auto',
           $(go.Shape, 'Rectangle', {
-            fill: 'white',
+            fill: 'white', // color de backgroud caja
             stroke: '#CCCCCC'
           }),
           $(go.Panel, 'Table', {
@@ -229,9 +229,9 @@ export default {
         click: function (e, node) {
           myDiagram.startTransaction('add node')
           var newdata = {
-            group: 'Problems',
+            group: '1',
             loc: '0 50',
-            text: 'New item ' + node.containingGroup.memberParts.count,
+            text: 'Nuevo constructo ' + node.containingGroup.memberParts.count,
             color: 0
           }
           myDiagram.model.addNodeData(newdata)
