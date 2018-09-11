@@ -36,15 +36,6 @@
           >
           <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
-            <v-tab
-              ripple
-            >
-              Constructos desde mesa de trabajo
-            </v-tab>
-            <v-tab-item
-            >
-            <constructs-from-kanban @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-from-kanban>
-            </v-tab-item>
         </v-tabs>
       </v-card>
     </v-flex>
@@ -54,11 +45,8 @@
 import go from 'gojs'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
-import KanbanDiagram from './KanbanDiagram'
-import ConstructCategories from './CounstructCategories'
-import ConstructsComponent from './ConstructsComponet'
-import DestructsComponent from './DestructsComponent'
-import ConstructsFromKanban from './ConstructsFromKanban'
+import ConstructCategories from './../CounstructCategories'
+import ConstructsComponent from './../ConstructsComponet'
 export default {
   data () {
     return {
@@ -198,7 +186,7 @@ export default {
     newDataArray (val) {
     }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent, KanbanDiagram, ConstructsFromKanban},
+  components: {Diagram, ConstructCategories, ConstructsComponent},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response
