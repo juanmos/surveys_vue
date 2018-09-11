@@ -136,6 +136,7 @@ export default {
     ]),
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
+      mutableConstruct.mother = true
       this.$emit('addNode', mutableConstruct)
       this.construct = {}
     },
