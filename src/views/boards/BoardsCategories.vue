@@ -28,10 +28,21 @@
               </v-list-tile-content>
             </v-list-tile>
               <v-list-tile
+              @click="selectCurrentDiagram('KanbanDiagram', item._id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`green lighten-1 white--text`">view_column</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>Mesa de Trabajo</v-list-tile-title>
+                </v-list-tile-content>
+
+              </v-list-tile>
+              <v-list-tile
                 @click="selectCurrentDiagram('NodeDiagram', item._id)"
               >
                 <v-list-tile-avatar>
-                  <v-icon :class="`grey lighten-1 white--text`">category</v-icon>
+                  <v-icon :class="`yellow lighten-1 white--text`">category</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Mapa Mental</v-list-tile-title>
@@ -39,21 +50,10 @@
 
               </v-list-tile>
               <v-list-tile
-              @click="selectCurrentDiagram('KanbanDiagram', item._id)"
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`grey lighten-1 white--text`">view_column</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Kanban</v-list-tile-title>
-                </v-list-tile-content>
-
-              </v-list-tile>
-              <v-list-tile
               @click="setCurrentMapId(item._id)"
               >
                 <v-list-tile-avatar>
-                  <v-icon :class="`grey lighten-1 white--text`">link</v-icon>
+                  <v-icon :class="`blue-grey lighten-1 white--text`">link</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Links</v-list-tile-title>
@@ -63,7 +63,7 @@
               <v-list-tile
               >
                 <v-list-tile-avatar>
-                  <v-icon :class="`grey lighten-1 white--text`">merge_type</v-icon>
+                  <v-icon :class="`brown lighten-1 white--text`">merge_type</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Conexiones</v-list-tile-title>
@@ -73,10 +73,21 @@
               @click="setCurrentMapId(item._id)"
               >
                 <v-list-tile-avatar>
-                  <v-icon :class="`grey lighten-1 white--text`">show_chart</v-icon>
+                  <v-icon :class="`teal lighten-1 white--text`">show_chart</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Graficos</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+
+              <v-list-tile
+                @click="dialogConfirm = true; currentItem = item"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`red lighten-1 white--text`">warning</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>Eliminar Tematica</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
 
@@ -86,6 +97,38 @@
         </v-list>
       </v-card>
     </v-flex>
+    <v-dialog
+      v-model="dialogConfirm"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">¿Esta usted completamente seguro?</v-card-title>
+
+        <v-card-text>
+          Al borrar una tematica estaria borrando todo el trabajo de grafico realizado
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey darken-1"
+            flat="flat"
+            @click="dialogConfirm = false"
+          >
+            No
+          </v-btn>
+
+          <v-btn
+            color="red darken-1"
+            flat="flat"
+            @click="deleteBoard(currentItem)"
+          >
+            Si
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 <script>
@@ -95,7 +138,8 @@ export default {
   props: ['boards'],
   data () {
     return {
-      dialog: false,
+      dialogConfirm: false,
+      currentItem: {},
       items: [
         { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 1', subtitle: 'descripcion' },
         { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 2', subtitle: 'descripcion' },
@@ -105,7 +149,8 @@ export default {
         { icon: 'assignment', iconClass: 'blue white--text', title: 'Archivo 1', subtitle: 'descripcion' },
         { icon: 'call_to_action', iconClass: 'amber white--text', title: 'Archivo 2', subtitle: 'descripcion' }
       ],
-      mutableBoards: []
+      mutableBoards: [],
+      dialog: false
     }
   },
   methods: {
@@ -129,6 +174,16 @@ export default {
     selectCurrentDiagram (typeDiagram, id) {
       this.setCurrentDiagram(typeDiagram)
       this.setCurrentMapId(id)
+    },
+    deleteBoard (item) {
+      console.log(item)
+      const {Board} = this.$FeathersVuex
+      const board = new Board(item)
+      board.removed = true
+      board.patch().then((result) => {
+        console.log('board ha sido eliminada')
+        this.dialogConfirm = false
+      })
     }
   },
   watch: {

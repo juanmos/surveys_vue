@@ -15,7 +15,7 @@
           >
               <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
-            <component :is="diagramComponent"></component>
+            <component :is="getCurrentDiagram"></component>
         </v-card>
 
       </v-flex>

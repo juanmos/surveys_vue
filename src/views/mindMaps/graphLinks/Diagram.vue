@@ -85,9 +85,11 @@ export default {
           new go.Binding('fill', 'color')),
         $(go.TextBlock,
           {
-            margin: 8,
-            editable: true, // editing the text automatically updates the model data
-            font: 'bold 12pt helvetica, bold arial, sans-serif'
+            font: 'bold 14px sans-serif',
+            stroke: '#333',
+            margin: 6, // make some extra space for the shape around the text
+            isMultiline: true, // don't allow newlines in text
+            editable: true // allow in-place editing by user
           },
           new go.Binding('text').makeTwoWay())
       )

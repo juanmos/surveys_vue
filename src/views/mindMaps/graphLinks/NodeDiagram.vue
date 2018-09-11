@@ -75,13 +75,9 @@ export default {
       }
     },
     changedSelection (e) {
-      var node = e.diagram.selection.first()
-      if (node instanceof go.Node) {
-        this.currentNode = node
-        this.currentNodeText = node.data.text
-      } else {
-        this.currentNode = null
-        this.currentNodeText = ''
+      let node = e.diagram.selection.first()
+      if (node) {
+        console.log('ha sido seleccionado', node.data._id)
       }
     },
 
