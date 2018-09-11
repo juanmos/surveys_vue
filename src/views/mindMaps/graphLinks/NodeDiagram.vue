@@ -107,7 +107,7 @@ export default {
       var model = this.model
       // model.startTransaction()
       // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = {text: val.text}
+      var data = {text: val.text, mother: val.mother}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
