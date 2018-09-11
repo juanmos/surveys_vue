@@ -30,12 +30,22 @@
            <v-tab
             ripple
           >
-            Constructos Madre
+            Temas
           </v-tab>
           <v-tab-item
           >
           <constructs-component @addNode="addNode" @deleteNode="deleteNode" @constructAdded="addNode($event)"></constructs-component>
           </v-tab-item>
+
+          <v-tab
+           ripple
+         >
+           Constructos
+         </v-tab>
+         <v-tab-item
+         >
+         <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @constructAdded="addNodeBuilder($event)"></construct>
+         </v-tab-item>
         </v-tabs>
       </v-card>
     </v-flex>
@@ -45,8 +55,8 @@
 import go from 'gojs'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
-import ConstructCategories from './../CounstructCategories'
-import ConstructsComponent from './../ConstructsComponet'
+import Construct from './Construct'
+import ConstructsComponent from './MainConstruct'
 import DestructsComponent from './../DestructsComponent'
 export default {
   data () {
@@ -92,6 +102,16 @@ export default {
     addNode (val) {
       var model = this.model
       var data = {text: val.text, isGroup: true}
+      model.addNodeData(data)
+      model.commitTransaction('added Node and Link')
+      // also manipulate the Diagram by changing its Diagram.selection collection
+      var diagram = this.$refs.diag.diagram
+      diagram.select(diagram.findNodeForData(data))
+    },
+    addNodeBuilder (val) {
+      console.log('agregando constt')
+      var model = this.model
+      var data = {text: val.text, group: '1', color: '0', loc: '0 0'}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
@@ -152,8 +172,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
       let nodeDataArrayKanban = []
-      let newData = { key: '-10', group: '1', category: 'newbutton', loc: '0 0', text: 'texto nuevo boton' }
-      console.log('cargando data', this.getCurrenteBoard)
+      let newData = { key: '-1', group: '1', category: 'newbutton', loc: '0 0', text: 'texto nuevo boton' }
       if (this.getCurrentBoard.hasOwnProperty('nodeDataArrayKanban') && this.getCurrentBoard.nodeDataArrayKanban.length > 0) {
         nodeDataArrayKanban = this.getCurrentBoard.nodeDataArrayKanban
       } else {
@@ -199,7 +218,7 @@ export default {
       console.log('new model changed', val)
     }
   },
-  components: {Diagram, ConstructCategories, DestructsComponent, ConstructsComponent},
+  components: {Diagram, Construct, DestructsComponent, ConstructsComponent},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response
