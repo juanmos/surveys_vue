@@ -152,7 +152,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
       let nodeDataArrayKanban = []
-      let newData = { key: '-1', group: '1', category: 'newbutton', loc: '0 0' }
+      let newData = { key: '-10', group: '1', category: 'newbutton', loc: '0 0', text: 'texto nuevo boton' }
       console.log('cargando data', this.getCurrenteBoard)
       if (this.getCurrentBoard.hasOwnProperty('nodeDataArrayKanban') && this.getCurrentBoard.nodeDataArrayKanban.length > 0) {
         nodeDataArrayKanban = this.getCurrentBoard.nodeDataArrayKanban
@@ -167,9 +167,9 @@ export default {
             loc: '0 0'
           }
           nodeDataArrayKanban.push(dataBuilder)
+          nodeDataArrayKanban.push(newData)
         })
       }
-      nodeDataArrayKanban.push(newData)
       return {
         'class': 'go.GraphLinksModel',
         'nodeDataArray': nodeDataArrayKanban,
