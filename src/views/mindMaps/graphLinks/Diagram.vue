@@ -88,8 +88,7 @@ export default {
             font: 'bold 14px sans-serif',
             stroke: '#333',
             margin: 6, // make some extra space for the shape around the text
-            isMultiline: true, // don't allow newlines in text
-            editable: true // allow in-place editing by user
+            isMultiline: true // don't allow newlines in text
           },
           new go.Binding('text').makeTwoWay())
       )

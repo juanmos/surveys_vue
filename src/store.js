@@ -108,6 +108,7 @@ export default new Vuex.Store({
     studyId: null,
     currentMapId: null,
     currentConstructId: null,
+    currentConstruct: {},
     currentDiagram: null
   },
   getters: {
@@ -119,6 +120,9 @@ export default new Vuex.Store({
     },
     getCurrentConstructId: (state) => {
       return state.currentConstructId
+    },
+    getCurrentConstruct: (state) => {
+      return state.currentConstruct
     },
     getCurrentDiagram: (state) => {
       return state.currentDiagram
@@ -134,6 +138,9 @@ export default new Vuex.Store({
     setCurrentConstructId (state, id) {
       state.currentConstructId = id
     },
+    setCurrentConstruct (state, construct) {
+      state.currentConstruct = construct
+    },
     setCurrentDiagram (state, type) {
       state.currentDiagram = type
     }
@@ -147,6 +154,9 @@ export default new Vuex.Store({
     },
     setCurrentConstructId: ({ commit }, id) => {
       commit('setCurrentConstructId', id)
+    },
+    setCurrentConstruct: ({ commit }, construct) => {
+      commit('setCurrentDiagram', construct)
     },
     setCurrentDiagram: ({ commit }, type) => {
       commit('setCurrentDiagram', type)

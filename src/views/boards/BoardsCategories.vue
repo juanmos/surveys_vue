@@ -5,9 +5,13 @@
         <v-toolbar-title>Tematicas</v-toolbar-title>
         <v-spacer></v-spacer>
         <boards-create-dialog></boards-create-dialog>
-        <v-btn @click="$emit('closeMenu')" icon>
-          <v-icon>keyboard_arrow_up</v-icon>
-        </v-btn>
+        <v-tooltip bottom>
+          <v-btn slot="activator" dark color="blue-grey lighten-4" @click="$emit('closeMenu')" icon>
+            <v-icon>keyboard_arrow_up</v-icon>
+          </v-btn>
+          <span>Ocultar Tematicas</span>
+        </v-tooltip>
+
       </v-toolbar>
       <v-card>
         <v-list two-line subheader>
@@ -19,7 +23,7 @@
           >
             <v-list-tile  slot="activator">
               <v-list-tile-avatar>
-                <v-icon :class="`grey lighten-1 white--text`">folder</v-icon>
+                <v-icon :class="`light-blue accent-1 white--text`">folder</v-icon>
               </v-list-tile-avatar>
               <v-list-tile-content>
                 <v-list-tile-title>

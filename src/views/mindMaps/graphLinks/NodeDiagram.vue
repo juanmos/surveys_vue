@@ -12,6 +12,16 @@
               flat
               :loading="loading"
               :disabled="loading"
+              @click.stop="addMainConstruct"
+              v-if="!hasMainConstruct"
+            >
+              constructo tematica
+              <v-icon right dark>add</v-icon>
+            </v-btn>
+            <v-btn
+              flat
+              :loading="loading"
+              :disabled="loading"
               @click.stop="saveBoardChanges"
             >
               Guardar
@@ -43,19 +53,33 @@
           </v-tab>
           <v-tab-item
           >
-          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
+          <constructs-child-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-child-component>
           </v-tab-item>
            <v-tab
             ripple
           >
-            Relaciones
+            Constructo Seleccionado
           </v-tab>
           <v-tab-item
           >
-          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
+          <construct-selected @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></construct-selected>
           </v-tab-item>
         </v-tabs>
       </v-card>
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="3000"
+        :vertical="false"
+      >
+        {{msgText}}
+        <v-btn
+          color="pink"
+          flat
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
     </v-flex>
   </div>
 </template>
@@ -65,6 +89,8 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
 import ConstructCategories from './../CounstructCategories'
 import ConstructsComponent from './../ConstructsComponet'
+import ConstructsChildComponent from './../ConstructsChildComponent'
+import ConstructSelected from './../ConstructSelected'
 export default {
   data () {
     return {
@@ -75,12 +101,17 @@ export default {
       counter2: 4, // used by modifyStuff,
       dataChangedArray: [],
       newLinkDataArray: null,
-      newDataArray: null
+      newDataArray: null,
+      snackbar: false,
+      msgText: ''
     }
   },
   methods: {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions([
+      'setCurrentConstruct'
+    ]),
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
     // this event listener is declared on the
@@ -95,7 +126,7 @@ export default {
     changedSelection (e) {
       let node = e.diagram.selection.first()
       if (node) {
-        console.log('ha sido seleccionado', node.data._id)
+        console.log(node.data)
       }
     },
 
@@ -107,17 +138,30 @@ export default {
       var model = this.model
       // model.startTransaction()
       // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = {text: val.text, mother: val.mother}
+      var data = {text: val.text, mother: val.mother, color: val.color, main: val.main}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
       var diagram = this.$refs.diag.diagram
       diagram.select(diagram.findNodeForData(data))
+      let msg = ''
+      if (val.mother) {
+        msg = 'Constructo Madre Creado'
+      } else if (val.main) {
+        msg = 'Constructo Principal Creado'
+      } else {
+        msg = 'Constructo Creado'
+      }
+      this.showMsg(msg)
     },
     deleteNode (val) {
       var model = this.model
-      model.removeNodeData(val)
-      model.commitTransaction('Deleted Node')
+      if (val.main) {
+        this.showMsg('No se puede borrar constructo principal')
+      } else {
+        model.removeNodeData(val)
+        model.commitTransaction('Deleted Node')
+      }
     },
 
     // Here we modify VUE's view model directly, and
@@ -149,6 +193,13 @@ export default {
       model.setDataProperty(event, field, event[field])
       model.commitTransaction('edited text')
       this.saveBoardChanges()
+    },
+    showMsg (msg) {
+      this.snackbar = true
+      this.msgText = msg
+    },
+    addMainConstruct () {
+      this.addNode({text: this.getCurrentBoard.name, main: true, color: '#B2DFDB'})
     }
   },
   computed: {
@@ -183,15 +234,19 @@ export default {
     getCurrentNodeData () {
       return this.getCurrentBoard.nodeDataArray
     },
-    getMainConstructsBoard () {
-      return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
-    },
     getDiagramData () {
       return {
         nodeKeyProperty: 'id',
         nodeDataArray: [],
         linkDataArray: []
       }
+    },
+    hasMainConstruct () {
+      return this.getCurrentNodeData.filter((construct) => {
+        return construct.main === true
+      }).length !== 0 ? this.getCurrentNodeData.filter((construct) => {
+          return construct.main
+        }).length !== 0 : false
     },
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
@@ -200,7 +255,7 @@ export default {
     newDataArray (val) {
     }
   },
-  components: {Diagram, ConstructCategories, ConstructsComponent},
+  components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response
