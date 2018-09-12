@@ -231,7 +231,7 @@ export default {
           var newdata = {
             group: '1',
             loc: '0 50',
-            text: 'Nuevo constructo ' + node.containingGroup.memberParts.count,
+            text: 'Descripción ' + node.containingGroup.memberParts.count,
             color: 0
           }
           myDiagram.model.addNodeData(newdata)
@@ -246,7 +246,7 @@ export default {
         $(go.Shape, 'Rectangle', {
           strokeWidth: 0,
           stroke: null,
-          fill: '#6FB583'
+          fill: '#51d074'
         }),
         $(go.Shape, 'PlusLine', {
           margin: 6,
@@ -254,11 +254,11 @@ export default {
           width: 12,
           height: 12,
           stroke: 'white',
-          background: '#6FB583'
+          background: '#51d074'
         })
       ),
-      $(go.TextBlock, 'New item', {
-        font: '10px Lato, sans-serif',
+      $(go.TextBlock, 'Nuevo constructo', {
+        font: 'bold 10px Lato, sans-serif',
         margin: 6
       })
       )
