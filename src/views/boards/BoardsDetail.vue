@@ -3,18 +3,22 @@
     <v-layout v-if="fullScreen" row wrap>
       <v-flex xs12>
         <v-card >
+          <v-tooltip bottom>
           <v-btn
-          absolute
-          dark
-          fab
-          small
-          top
-          left
-          color="pink"
-          @click="fullScreen = !fullScreen"
-          >
-              <v-icon>keyboard_arrow_down</v-icon>
+            slot="activator"
+            absolute
+            dark
+            fab
+            small
+            top
+            left
+            color="pink"
+            @click="fullScreen = !fullScreen"
+            >
+                <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
+          <span>Mostrar Tematicas</span>
+        </v-tooltip>
             <component :is="getCurrentDiagram"></component>
         </v-card>
 

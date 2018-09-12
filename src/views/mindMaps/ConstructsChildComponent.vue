@@ -9,11 +9,11 @@
                 >
                 <v-layout row wrap>
                     <v-flex
-                    v-for="item in  getMainConstructs"
+                    v-for="item in getChildConstructs"
                     xs3
                     :key="item._id"
                     >
-                    <v-card color="lime lighten-4">
+                    <v-card color="blue-grey lighten-4">
                         <v-card-title primary-title>
                             <div class="headline">
                                 <v-edit-dialog
@@ -80,6 +80,21 @@
                 </v-btn>
             </v-flex>
         </v-layout>
+
+   <!-- <v-card flat>
+        <v-card-actions>
+            <v-flex xs12 md6>
+            <v-text-field
+                box
+                color="blue-grey lighten-2"
+                v-model.lazy="currentNodeText"
+                v-bind:disabled="currentNode === null"
+            ></v-text-field>
+            </v-flex>
+            <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
+            <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
+        </v-card-actions>
+    </v-card> !-->
     <construct-detail @closed="showDetail = false" :dialog="showDetail"></construct-detail>
     </v-container>
 </template>
@@ -109,8 +124,8 @@ export default {
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
-    getMainConstructs () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].nodeDataArray.filter(node => node.mother)
+    getChildConstructs () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].nodeDataArray.filter(node => !node.mother && !node.main)
     }
   },
   methods: {
@@ -121,8 +136,7 @@ export default {
     ]),
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
-      mutableConstruct.mother = true
-      mutableConstruct.color = '#E6EE9C'
+      mutableConstruct.color = 'rgba(128,128,128,0.2)'
       this.$emit('addNode', mutableConstruct)
       this.construct = {}
     },

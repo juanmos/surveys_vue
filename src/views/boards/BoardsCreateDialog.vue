@@ -1,6 +1,11 @@
 <template>
     <v-dialog v-model="mutableDialog" persistent max-width="800px">
-        <v-btn slot="activator" icon> <v-icon>add</v-icon></v-btn>
+        <v-btn slot="activator" icon>
+        <v-tooltip bottom>
+           <v-icon  slot="activator">add</v-icon>
+           <span>Crear Tematica</span>
+        </v-tooltip>
+        </v-btn>
         <v-card>
         <v-card-title>
             <span class="headline">Nuevo Mapa</span>
@@ -43,7 +48,9 @@ export default {
           text: this.requestData.name,
           parent: '',
           points: [],
-          description: 'Contructo Principal'
+          description: 'Contructo Principal',
+          main: true,
+          color: '#B2DFDB'
         }
       ]
       board.save().then((result) => {
