@@ -50,6 +50,7 @@ export default {
           points: [],
           description: 'Contructo Principal',
           main: true,
+          mother: false,
           color: '#B2DFDB'
         }
       ]

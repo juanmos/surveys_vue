@@ -151,6 +151,7 @@ export default {
       model.startTransaction()
       model.setDataProperty(event, field, event[field])
       model.commitTransaction('edited text')
+      this.saveBoardChanges()
     },
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
@@ -187,7 +188,7 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      var kanbanNodeDataArray = []
+      let kanbanNodeDataArray = []
       let newData = { key: '-1', group: '1', category: 'newbutton', loc: '0 0', text: 'texto nuevo boton' }
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
