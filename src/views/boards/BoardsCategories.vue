@@ -13,7 +13,7 @@
         </v-tooltip>
 
       </v-toolbar>
-      <v-card>
+      <v-card flat>
         <v-list two-line subheader>
           <v-list-group
             v-for="item in getBoards"
@@ -53,6 +53,7 @@
                 </v-list-tile-content>
 
               </v-list-tile>
+              <!--
               <v-list-tile
               @click="setCurrentMapId(item._id)"
               >
@@ -94,10 +95,12 @@
                   <v-list-tile-title>Eliminar Tematica</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
+              !-->
 
           </v-list-group>
-
           <v-divider inset></v-divider>
+
+          <v-subheader inset>Mesas de Trabajo Personalizadas  <v-spacer></v-spacer> <working-table-create-dialog></working-table-create-dialog> </v-subheader>
         </v-list>
       </v-card>
     </v-flex>
@@ -138,21 +141,13 @@
 <script>
 import {mapGetters, mapActions} from 'vuex'
 import BoardsCreateDialog from './BoardsCreateDialog'
+import WorkingTableCreateDialog from './../working-tables/working-table-instances/WorkingTableCreateDialog'
 export default {
   props: ['boards'],
   data () {
     return {
       dialogConfirm: false,
       currentItem: {},
-      items: [
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 1', subtitle: 'descripcion' },
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 2', subtitle: 'descripcion' },
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 3', subtitle: 'descripcion' }
-      ],
-      items2: [
-        { icon: 'assignment', iconClass: 'blue white--text', title: 'Archivo 1', subtitle: 'descripcion' },
-        { icon: 'call_to_action', iconClass: 'amber white--text', title: 'Archivo 2', subtitle: 'descripcion' }
-      ],
       mutableBoards: [],
       dialog: false
     }
@@ -209,7 +204,7 @@ export default {
       return this.findBoardsInStore({query: {removed: false, _study_id: this.getStudyId}}).data
     }
   },
-  components: {BoardsCreateDialog}
+  components: {BoardsCreateDialog, WorkingTableCreateDialog}
 }
 </script>
 <style>
