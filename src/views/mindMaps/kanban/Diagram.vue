@@ -260,9 +260,10 @@ export default {
       $(go.Node, 'Horizontal', {
         selectable: false,
         click: function (e, node) {
+          console.log('data del node-->', node.data.group)
           myDiagram.startTransaction('add node')
           var newdata = {
-            group: '1',
+            group: node.data.group,
             loc: '0 50',
             text: 'Descripción ' + node.containingGroup.memberParts.count,
             color: 0
