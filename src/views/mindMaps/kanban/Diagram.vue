@@ -1,12 +1,8 @@
 <template>
-
   <div style="width:100%; white-space:nowrap;">
-   <span style="display: inline-block; vertical-align: top; width:200px">
-     <div id="leftPalette" style="border: solid 1px black; height: 400px"></div>
-   </span>
-
-   <span style="display: inline-block; vertical-align: top; width:75%">
+   <span style="display: inline-block; vertical-align: top; width:100%">
      <div id="myDiagramDiv" style="border: solid 1px black; height: 400px"></div>
+     <div id="leftPalette" style="border: solid 1px black; height: 100px"></div>
    </span>
  </div>
 </template>
@@ -260,12 +256,11 @@ export default {
       $(go.Node, 'Horizontal', {
         selectable: false,
         click: function (e, node) {
-          console.log('data del node-->', node.data.group)
           myDiagram.startTransaction('add node')
           var newdata = {
             group: node.data.group,
             loc: '0 50',
-            text: 'Descripción ' + node.containingGroup.memberParts.count,
+            text: 'Descripción...',
             color: 0
           }
           myDiagram.model.addNodeData(newdata)
