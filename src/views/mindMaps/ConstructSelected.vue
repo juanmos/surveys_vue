@@ -7,22 +7,92 @@
                   >
                     <v-card-title primary-title>
                     <v-layout justify-center>
-                        <h3 class="headline mb-0">{{getCurrentConstruct.text}}</h3>
+                        <h3 class="headline">{{getCurrentConstruct.text}}</h3>
                     </v-layout>
+                    <v-chip v-if="getCurrentConstruct.mother" color="lime lighten-4" text-color="black">
+                        <v-avatar>
+                            <v-icon>all_out</v-icon>
+                        </v-avatar>
+                        Constructo Madre
+                    </v-chip>
+                    <v-chip v-else color="blue-grey lighten-4" text-color="black">
+                        <v-avatar>
+                            <v-icon>device_hub</v-icon>
+                        </v-avatar>
+                        Constructo Hijo
+                    </v-chip>
                     </v-card-title>
-                    <v-list two-line>
-                        <template>
-                            <v-subheader
-                            >
-                            Constructos Hijos
-                            </v-subheader>
+                    <v-tabs>
+                        <v-tab>
+                            Hijos
+                        </v-tab>
+                        <v-tab-item>
+                            <v-list two-line>
+                                <template>
+                                    <v-subheader
+                                    >
+                                    Constructos Hijos
+                                    </v-subheader>
 
-                            <v-divider
-                            ></v-divider>
-                            <constructs-child-component></constructs-child-component>
-                        </template>
-                    </v-list>
+                                    <v-divider
+                                    ></v-divider>
+                                    <constructs-child-component :constructDetailMode="true"></constructs-child-component>
+                                </template>
+                            </v-list>
+                        </v-tab-item>
+                         <v-tab v-if="!getCurrentConstruct.mother">
+                            Padre
 
+                        </v-tab>
+                        <v-tab-item v-if="!getCurrentConstruct.mother">
+                            <v-list two-line>
+                                <template>
+                                    <v-subheader
+                                    >
+                                    Constructo Padre
+                                    </v-subheader>
+
+                                    <v-divider
+                                    ></v-divider>
+                                    <constructs-child-component></constructs-child-component>
+                                </template>
+                            </v-list>
+                        </v-tab-item>
+                        <v-tab>
+                            Noticias Relacionadas
+                        </v-tab>
+                        <v-tab-item>
+                            <v-list two-line>
+                                <template>
+                                    <v-subheader
+                                    >
+                                    Noticias Relacionadas
+                                    </v-subheader>
+
+                                    <v-divider
+                                    ></v-divider>
+                                    <constructs-child-component></constructs-child-component>
+                                </template>
+                            </v-list>
+                        </v-tab-item>
+                        <v-tab>
+                            Imagenes y Videos
+                        </v-tab>
+                        <v-tab-item>
+                            <v-list two-line>
+                                <template>
+                                    <v-subheader
+                                    >
+                                    Imagenes y Videos
+                                    </v-subheader>
+
+                                    <v-divider
+                                    ></v-divider>
+                                    <constructs-child-component></constructs-child-component>
+                                </template>
+                            </v-list>
+                        </v-tab-item>
+                    </v-tabs>
                     <v-card-actions>
                     </v-card-actions>
                 </v-card>
@@ -33,6 +103,7 @@
                         <v-container fill-height>
                         <v-layout align-center>
                             <v-flex>
+                                <v-icon size="90">warning</v-icon>
                             <h4 class="title">No se ha seleccionado</h4>
                             <span class="subheading">Debe seleccionar constructo en el area de mapa para ver informacion.</span>
                             <v-divider class="my-3"></v-divider>

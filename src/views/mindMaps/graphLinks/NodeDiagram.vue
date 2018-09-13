@@ -49,7 +49,7 @@
            <v-tab
             ripple
           >
-            Constructos Hijos
+            Todos los Hijos
           </v-tab>
           <v-tab-item
           >
@@ -129,6 +129,7 @@ export default {
         console.log('asignando current construct', node.data)
         setTimeout(() => {
           this.setCurrentConstruct(node.data)
+          console.log(node.data)
         }, 0)
       }
     },
@@ -260,7 +261,6 @@ export default {
     newDataArray (val) {
     },
     getCurrentConstruct (val) {
-      this.active = 2
     }
   },
   components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected},
