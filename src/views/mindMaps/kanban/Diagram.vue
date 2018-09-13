@@ -167,7 +167,7 @@ export default {
         // automatically re-layout the swim lanes after dragging the selection
         'SelectionMoved': relayoutDiagram, // this DiagramEvent listener is
         'SelectionCopied': relayoutDiagram, // defined above
-        'animationManager.isEnabled': false,
+        'animationManager.isEnabled': true,
         'undoManager.isEnabled': true,
         'ModelChanged': function (e) { that.$emit('model-changed', e) },
         'ChangedSelection': function (e) { that.$emit('changed-selection', e) }
@@ -235,7 +235,7 @@ export default {
       ),
       $(go.Panel, 'Auto',
         $(go.Shape, 'Rectangle', {
-          fill: 'white', // color de backgroud caja
+          fill: 'white', // color de background caja
           stroke: '#CCCCCC'
         }),
         $(go.Panel, 'Table', {
@@ -369,19 +369,15 @@ export default {
       $(go.Panel, 'Horizontal', {
         name: 'HEADER',
         angle: 0, // maybe rotate the header to read sideways going up
-        alignment: go.Spot.Left
+        alignment: go.Spot.Center
       },
       $('SubGraphExpanderButton', {
         margin: 5
       }), // this remains always visible
       $(go.Panel, 'Horizontal', // this is hidden when the swimlane is collapsed
         new go.Binding('visible', 'isSubGraphExpanded').ofObject(),
-        $(go.TextBlock, // the lane label
-          {
-            font: '15px Lato, sans-serif',
-            editable: true,
-            margin: new go.Margin(2, 0, 0, 0)
-          },
+        $(go.TextBlock, // titulo de la columna
+          { font: 'bold 13pt sans-serif', editable: true, margin: new go.Margin(2, 0, 0, 0) },
           new go.Binding('text', 'text').makeTwoWay())
       )
       ),
@@ -403,7 +399,7 @@ export default {
         $(go.TextBlock, {
           name: 'LABEL',
           font: '15px Lato, sans-serif',
-          editable: true,
+          editable: false,
           angle: 90,
           alignment: go.Spot.TopLeft,
           margin: new go.Margin(4, 0, 0, 2)
