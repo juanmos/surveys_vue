@@ -1,6 +1,14 @@
 <template>
-<div id='myDiagramDiv' style='border: solid 1px black; width:100%; height:500px;'>
-</div>
+
+  <div style="width:100%; white-space:nowrap;">
+   <span style="display: inline-block; vertical-align: top; width:200px">
+     <div id="leftPalette" style="border: solid 1px black; height: 400px"></div>
+   </span>
+
+   <span style="display: inline-block; vertical-align: top; width:75%">
+     <div id="myDiagramDiv" style="border: solid 1px black; height: 400px"></div>
+   </span>
+ </div>
 </template>
 <script>
 import go from 'gojs'
@@ -115,7 +123,7 @@ export default {
       this.cellSize = new go.Size(1, 1)
       this.wrappingColumn = Infinity
       this.wrappingWidth = Infinity
-      this.spacing = new go.Size(0, 0)
+      this.spacing = new go.Size(6, 0)
       this.alignment = go.GridLayout.Position
     }
     go.Diagram.inherit(PoolLayout, go.GridLayout)
@@ -149,6 +157,7 @@ export default {
         contentAlignment: go.Spot.TopCenter,
         // use a simple layout to stack the top-level Groups next to each other
         layout: $(PoolLayout),
+        allowDrop: true,
         // disallow nodes to be dragged to the diagram's background
         mouseDrop: function (e) {
           e.diagram.currentTool.doCancel()
@@ -179,49 +188,73 @@ export default {
     function getNoteColor (num) {
       return that.noteColors[Math.min(num, that.noteColors.length - 1)]
     }
+
+    function mouseEnter (e, obj) {
+    //  var shape = obj.findObject('LEFT_RECT')
+    //  shape.fill = '#6DAB80'
+    //  shape.stroke = '#A6E6A1'
+    // console.log('In mouseEnter. obj.data: ', obj.data);
+    // var text = obj.findObject("TEXT");
+    // text.stroke = "#009CCC";
+    }
+
+    function mouseLeave (e, obj) {
+      // var shape = obj.findObject('LEFT_RECT')
+      // Return the Shape's fill and stroke to the defaults
+      // shape.fill = '0'
+      // shape.stroke = obj.data.stroke
+    // console.log('In mouseLeave. obj.data: ', obj.data);
+    // Return the TextBlock's stroke to its default
+    // var text = obj.findObject("TEXT");
+    // text.stroke = "black";
+    }
     myDiagram.nodeTemplate =
-      $(go.Node, 'Horizontal',
-        new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+    $(go.Node, 'Horizontal',
+      {
+        mouseEnter: mouseEnter,
+        mouseLeave: mouseLeave
+      },
+      new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+      $(go.Shape, 'Rectangle', {
+        fill: '#009CCC',
+        strokeWidth: 2,
+        stroke: '#009CCC',
+        width: 6,
+        stretch: go.GraphObject.Vertical,
+        alignment: go.Spot.Left,
+        click: function (e, obj) {
+          myDiagram.startTransaction('Update node color')
+          var newColor = parseInt(obj.part.data.color) + 1
+          if (newColor > that.noteColors.length - 1) newColor = 0
+          myDiagram.model.setDataProperty(obj.part.data, 'color', newColor)
+          myDiagram.commitTransaction('Update node color')
+        }
+      },
+      new go.Binding('fill', 'color', getNoteColor),
+      new go.Binding('stroke', 'color', getNoteColor)
+      ),
+      $(go.Panel, 'Auto',
         $(go.Shape, 'Rectangle', {
-          fill: '#009CCC',
-          strokeWidth: 1,
-          stroke: '#009CCC',
-          width: 6,
-          stretch: go.GraphObject.Vertical,
-          alignment: go.Spot.Left,
-          click: function (e, obj) {
-            myDiagram.startTransaction('Update node color')
-            var newColor = parseInt(obj.part.data.color) + 1
-            if (newColor > that.noteColors.length - 1) newColor = 0
-            myDiagram.model.setDataProperty(obj.part.data, 'color', newColor)
-            myDiagram.commitTransaction('Update node color')
-          }
+          fill: 'white', // color de backgroud caja
+          stroke: '#CCCCCC'
+        }),
+        $(go.Panel, 'Table', {
+          width: 130,
+          minSize: new go.Size(NaN, 50)
         },
-        new go.Binding('fill', 'color', getNoteColor),
-        new go.Binding('stroke', 'color', getNoteColor)
-        ),
-        $(go.Panel, 'Auto',
-          $(go.Shape, 'Rectangle', {
-            fill: 'white', // color de backgroud caja
-            stroke: '#CCCCCC'
-          }),
-          $(go.Panel, 'Table', {
-            width: 130,
-            minSize: new go.Size(NaN, 50)
-          },
-          $(go.TextBlock, {
-            name: 'TEXT',
-            margin: 6,
-            font: '11px Lato, sans-serif',
-            editable: true,
-            stroke: '#000',
-            maxSize: new go.Size(130, NaN),
-            alignment: go.Spot.TopLeft
-          },
-          new go.Binding('text', 'text').makeTwoWay())
-          )
+        $(go.TextBlock, {
+          name: 'TEXT',
+          margin: 6,
+          font: '11px Lato, sans-serif',
+          editable: true,
+          stroke: '#000',
+          maxSize: new go.Size(130, NaN),
+          alignment: go.Spot.TopLeft
+        },
+        new go.Binding('text', 'text').makeTwoWay())
         )
       )
+    )
     // unmovable node that acts as a button
     myDiagram.nodeTemplateMap.add('newbutton',
       $(go.Node, 'Horizontal', {
@@ -265,9 +298,11 @@ export default {
     )
     // While dragging, highlight the dragged-over group
     function highlightGroup (grp, show) {
-      if (show) {
-        var part = myDiagram.toolManager.draggingTool.currentPart
-        if (part.containingGroup !== grp) {
+      if (!grp) return
+      if (show) { // check that the drop may really happen into the Group
+        var tool = grp.diagram.toolManager.draggingTool
+        var map = tool.draggedParts || tool.copiedParts // this is a Map
+        if (grp.canAddMembers(map.toKeySet())) {
           grp.isHighlighted = true
           return
         }
@@ -276,7 +311,10 @@ export default {
     }
     myDiagram.groupTemplate =
       $(go.Group, 'Vertical', {
-        selectable: false,
+        copyable: false,
+        movable: false,
+        deletable: false,
+        selectionAdorned: false,
         selectionObjectName: 'SHAPE', // even though its not selectable, this is used in the layout
         layerName: 'Background', // all lanes are always behind all nodes and links
         layout: $(go.GridLayout, // automatically lay out the lane's subgraph
@@ -377,7 +415,35 @@ export default {
       )
       )
 
-    myDiagram.model = go.Model.fromJson(that.modelData)
+    var leftPalette =
+      $(go.Palette, 'leftPalette', { // share the templates with the main Diagram
+        nodeTemplate: myDiagram.nodeTemplate,
+        groupTemplate: myDiagram.groupTemplate,
+        layout: $(go.GridLayout)
+      })
+
+    leftPalette.model = new go.GraphLinksModel([{
+      key: '11',
+      text: 'PP Rename...',
+      color: '0',
+      size: '100 25',
+      type: '11',
+      stroke: '#009CCC'
+    }, {
+      key: '12',
+      text: 'TT Rename...',
+      color: '1',
+      size: '100 25',
+      type: '12',
+      stroke: '#009CCC'
+    }, {
+      key: '13',
+      text: 'Scan Rename...',
+      color: '2',
+      size: '100 25',
+      type: '13',
+      stroke: '#009CCC'
+    }])
     myDiagram.model = go.Model.fromJson(that.modelData)
     myDiagram.delayInitialization(relayoutDiagram)
     that.diagram = myDiagram
