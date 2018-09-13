@@ -8,8 +8,9 @@
                 grid-list-md
                 >
                 <v-layout row wrap>
-                    <v-flex
-                    v-for="item in getChildConstructs"
+                 <!-- convertir esto en dos componentes !-->
+                  <v-flex
+                    v-for="item in getChildsSwitchMode"
                     xs3
                     :key="item._id"
                     >
@@ -58,7 +59,7 @@
                         </v-btn>
                         </v-card-actions>
                     </v-card>
-                    </v-flex>
+                  </v-flex>
                 </v-layout>
                 </v-container>
             </v-card>
@@ -103,17 +104,13 @@
 import {mapState, mapGetters, mapActions} from 'vuex'
 import ConstructDetail from './components/ConstructDetail'
 export default {
+  props: ['constructDetailMode'],
   data () {
     return {
       construct: {
         loc: '0 0'
       },
-      showDetail: false,
-      cards: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 }
-      ]
+      showDetail: false
     }
   },
   computed: {
@@ -121,11 +118,27 @@ export default {
     ...mapState(['currentMapId']),
     ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters([
+      'getCurrentConstruct'
+    ]),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
     getChildConstructs () {
+      // Returned different Values depending on constructDetailModel (childs for an specific mother)
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].nodeDataArray.filter(node => !node.mother && !node.main)
+    },
+    getCurrentChilds () {
+      return this.getCurrentBoard.linkDataArray.filter(link => Number(link.from) === Number(this.getCurrentConstruct.key)).map((link) => {
+        return this.getChildConstructs.filter(construct => Number(construct.key) === Number(link.to))[0]
+      })
+    },
+    getChildsSwitchMode () {
+      if (this.constructDetailMode) {
+        return this.getCurrentChilds
+      } else {
+        return this.getChildConstructs
+      }
     }
   },
   methods: {

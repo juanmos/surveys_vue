@@ -156,7 +156,7 @@ export default new Vuex.Store({
       commit('setCurrentConstructId', id)
     },
     setCurrentConstruct: ({ commit }, construct) => {
-      commit('setCurrentDiagram', construct)
+      commit('setCurrentConstruct', construct)
     },
     setCurrentDiagram: ({ commit }, type) => {
       commit('setCurrentDiagram', type)

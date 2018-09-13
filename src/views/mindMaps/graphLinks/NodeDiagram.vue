@@ -49,7 +49,7 @@
            <v-tab
             ripple
           >
-            Constructos Hijos
+            Todos los Hijos
           </v-tab>
           <v-tab-item
           >
@@ -126,7 +126,11 @@ export default {
     changedSelection (e) {
       let node = e.diagram.selection.first()
       if (node) {
-        console.log(node.data)
+        console.log('asignando current construct', node.data)
+        setTimeout(() => {
+          this.setCurrentConstruct(node.data)
+          console.log(node.data)
+        }, 0)
       }
     },
 
@@ -227,7 +231,9 @@ export default {
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
-
+    ...mapGetters([
+      'getCurrentConstruct'
+    ]),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
@@ -253,6 +259,8 @@ export default {
   },
   watch: {
     newDataArray (val) {
+    },
+    getCurrentConstruct (val) {
     }
   },
   components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected},
@@ -265,6 +273,7 @@ export default {
       const boards = response.data || response
       console.log(boards)
     })
+    this.setCurrentConstruct({name: 'Juan Garcia'})
   }
 }
 </script>
