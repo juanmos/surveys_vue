@@ -14,16 +14,18 @@
                   color="blue-grey lighten-2"
                   label="Nombre"
                   :append-icon="'name'"
-                  v-model="board.name"
+                  v-model="tableInstance.name"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select
-                  label="Categoria"
+                  label="Mesa de Trabajo"
                   @blur="sendData"
-                  v-model="board.category"
-                  :items="['privado', 'publico', 'imagen/compañia']"
+                  v-model="tableInstance._working_table_id"
+                  item-text="name"
+                  item-value="_id"
+                  :items="getTables"
                   box
                 ></v-select>
               </v-flex>
@@ -33,18 +35,33 @@
     </div>
 </template>
 <script>
+import {mapGetters, mapActions} from 'vuex'
 export default {
   data () {
     return {
       valid: false,
       notify: true,
-      board: {}
+      tableInstance: {}
     }
   },
   methods: {
     sendData () {
-      this.$emit('dataUpdated', this.board)
+      console.log('en el form', this.tableInstance)
+      this.$emit('dataUpdated', this.tableInstance)
+    },
+    ...mapActions('working-tables', { findTables: 'find' })
+  },
+  computed: {
+    ...mapGetters('working-tables', {findWorkingInStore: 'find'}),
+    getTables () {
+      return this.findWorkingInStore({query: {removed: false}}).data
     }
+  },
+  created () {
+    this.findTables({ query: {removed: false} }).then(response => {
+      const tables = response.data || response
+      console.log(tables)
+    })
   }
 }
 </script>

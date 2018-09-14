@@ -3,7 +3,7 @@
         <v-btn slot="activator" icon>
         <v-tooltip bottom>
            <v-icon  slot="activator">add</v-icon>
-           <span>Crear Mesa de Trabajo</span>
+           <span>{{$FeathersVuex}}</span>
         </v-tooltip>
         </v-btn>
         <v-card>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 import WorkingTableInstanceForm from './WorkingTableInstanceForm'
 export default {
@@ -37,24 +37,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     create () {
-      // method with feathers vuex to create an user
-      const { Board } = this.$FeathersVuex
-      const board = new Board({_study_id: this.getStudyId, ...this.requestData})
-      board.nodeDataArray = [
-        {
-          id: '',
-          loc: '0 0',
-          text: this.requestData.name,
-          parent: '',
-          points: [],
-          description: 'Contructo Principal',
-          main: true,
-          mother: false,
-          color: '#B2DFDB'
-        }
-      ]
-      board.save().then((result) => {
+      const { TableInstance } = this.$FeathersVuex
+      const tInstance = new TableInstance({_study_id: this.getStudyId, ...this.requestData})
+      tInstance.save().then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Instancia de mesa de trabajo creada')
       }, (err) => {
         console.log(err)
       })

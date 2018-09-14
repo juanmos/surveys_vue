@@ -102,6 +102,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('table-instances', {
+      instanceDefaults: {
+        name: '',
+        _working_table_id: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
