@@ -55,6 +55,8 @@ export default {
           initialContentAlignment: go.Spot.Center,
           // have mouse wheel events zoom in and out instead of scroll up and down
           'toolManager.mouseWheelBehavior': go.ToolManager.WheelZoom,
+          // disable animation
+          'animationManager.isEnabled': false,
           // support double-click in background creating a new node
           'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo' },
           'undoManager.isEnabled': true,
