@@ -15,16 +15,15 @@
                   color="blue-grey lighten-2"
                   label="Nombre"
                   :append-icon="'name'"
-                  v-model="study.name"
-                  :rules="rules.nameRules"
+                  v-model="workingTable.name"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select
                   label="Seleccione Tipo de Grafico"
-                  v-model="study._contact_id"
-                  :items="getContacts"
+                  v-model="workingTable.type"
+                  :items="getGraphTypes"
                   item-text="name"
                   item-value="_id"
                   box
@@ -33,7 +32,7 @@
               </v-flex>
               <v-flex xs12>
                  <v-textarea
-                    v-model="study.description"
+                    v-model="workingTable.description"
                     label="Descripcion"
                     box
                     color="blue-grey lighten-2"
@@ -44,7 +43,7 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Estudio</v-btn>
+            <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Mesa</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -57,7 +56,7 @@ import {validations} from './../../utils/validations'
 export default {
   data (vm) {
     return {
-      study: {
+      workingTable: {
         name: '',
         description: ''
       },
@@ -80,7 +79,7 @@ export default {
     ...mapActions('customer-contacts', { findContacts: 'find' }),
     sendData () {
       if (this.valid) {
-        this.$emit('dataSubmited', this.study)
+        this.$emit('dataSubmited', this.workingTable)
       }
     },
     updateCities () {
@@ -109,8 +108,8 @@ export default {
     getCountries () {
       return this.findCountriesInStore({query: {removed: false}}).data
     },
-    getContacts () {
-      return this.findContactsInStore({query: {removed: false}}).data
+    getGraphTypes () {
+      return ['Kanban', 'Links', 'Espiral']
     }
   },
   watch: {

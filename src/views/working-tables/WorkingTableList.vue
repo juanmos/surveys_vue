@@ -2,101 +2,97 @@
 <div>
     <loading-component v-if="loading"></loading-component>
     <v-container grid-list-md text-xs-center>
+      <v-card flat>
+        <v-subheader>Listado de Mesas de Trabajo</v-subheader>
         <v-layout row wrap>
-        <v-flex v-for="study in getWorkingTables" :key="study._id" xs4>
-            <v-card class="study-card" :light="true" >
-              <v-card-media
-                src=""
-                height="200px"
-              >
-              <v-layout
-                column
-                fill-height
-              >
-                <v-card-title>
-                  <v-spacer></v-spacer>
-                  <v-menu bottom left>
-                    <v-btn
-                      flat
-                      slot="activator"
-                      icon
-                      color="indigo"
-                    >
-                      <v-icon>more_vert</v-icon>
-                    </v-btn>
-
-                    <v-list>
-                      <v-list-tile>Editar Estudio</v-list-tile>
-                      <v-list-tile>Cambiar Imagen</v-list-tile>
-                    </v-list>
-                  </v-menu>
-                </v-card-title>
-
-                <v-spacer></v-spacer>
-
-                <v-card-title class="dark--text pl-5 pt-5">
-                  <div class="display-1 pl-12 pt-12">{{ study.name }}</div>
-                </v-card-title>
-              </v-layout>
-              </v-card-media>
-                <v-list
-                  subheader
-                  three-line
+          <v-flex v-for="wTable in getWorkingTables" :key="wTable._id" xs4>
+              <v-card class="study-card" >
+                <v-card-media
+                  src="https://images.unsplash.com/photo-1502404679462-d669245fc482?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3ef5d7093916f0ff49461a52fe234703&auto=format&fit=crop&w=4050&q=80"
+                  height="200px"
                 >
-                  <v-subheader>
-                    <v-edit-dialog
-                        align= "center"
-                        lazy
-                        @save="edit(study.name, study, 'name')"
-                      > {{ study.name }}
-                        <v-text-field
-                          slot="input"
-                          v-model="study.name"
-                          label="Editar Nombre"
-                          single-line
-                          counter
-                        ></v-text-field>
-                    </v-edit-dialog>
-                  </v-subheader>
-                  <v-divider></v-divider>
+                <v-layout
+                  column
+                  fill-height
+                >
+                  <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-menu bottom left>
+                      <v-btn
+                        flat
+                        slot="activator"
+                        icon
+                        color="indigo"
+                      >
+                        <v-icon>more_vert</v-icon>
+                      </v-btn>
 
-                  <v-list-tile>
-                    <v-list-tile-content>
-                      <v-list-tile-sub-title>
-                        <p>
-                          <v-edit-dialog
-                            lazy
-                            @save="edit(study.description, study, 'description')"
-                          >  <v-list-tile-sub-title>{{ study.description }}</v-list-tile-sub-title>
-                            <v-text-field
-                              slot="input"
-                              v-model="study.description"
-                              label="Editar Descripcion"
-                              single-line
-                              counter
-                            ></v-text-field>
-                          </v-edit-dialog>
-                        </p>
-                      </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </v-list>
-                <v-card-actions>
-                  <v-btn flat>
-                    {{study.customer.name}}
-                  </v-btn>
+                      <v-list>
+                        <v-list-tile @click="currentWTable = wTable; dialogConfirm = true">Borrar Mesa de Trabajo</v-list-tile>
+                      </v-list>
+                    </v-menu>
+                  </v-card-title>
+
                   <v-spacer></v-spacer>
-                  <div class="actions">
-                    <v-btn @click="goToDetail(study._id)" icon>
-                      <v-icon color="indigo">visibility</v-icon>
-                    </v-btn>
-                    <v-btn @click="del(study)" icon>
-                      <v-icon color="pink">delete</v-icon>
-                    </v-btn>
-                  </div>
-                </v-card-actions>
-              </v-card>
-        </v-flex>
+
+                  <v-card-title style="background:rgba(0,0,0,0.5);" class="white--text pl-2 pt-2">
+                    <div class="display-1 pl-12 pt-12">{{ wTable.name }}</div>
+                  </v-card-title>
+                </v-layout>
+                </v-card-media>
+                  <v-list
+                    subheader
+                    three-line
+                  >
+                    <v-subheader>
+                      <v-edit-dialog
+                          align= "center"
+                          lazy
+                          @save="edit(wTable.name, wTable, 'name')"
+                        > {{ wTable.name }}
+                          <v-text-field
+                            slot="input"
+                            v-model="wTable.name"
+                            label="Editar Nombre"
+                            single-line
+                            counter
+                          ></v-text-field>
+                      </v-edit-dialog>
+                    </v-subheader>
+                    <v-divider></v-divider>
+
+                    <v-list-tile>
+                      <v-list-tile-content>
+                        <v-list-tile-sub-title>
+                          <p>
+                            <v-edit-dialog
+                              lazy
+                              @save="edit(wTable.description, wTable, 'description')"
+                            >  <v-list-tile-sub-title>{{ wTable.description }}</v-list-tile-sub-title>
+                              <v-text-field
+                                slot="input"
+                                v-model="wTable.description"
+                                label="Editar Descripcion"
+                                single-line
+                                counter
+                              ></v-text-field>
+                            </v-edit-dialog>
+                          </p>
+                        </v-list-tile-sub-title>
+                      </v-list-tile-content>
+                    </v-list-tile>
+                  </v-list>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <div class="actions">
+                      <v-btn @click="currentWTable = wTable; dialogConfirm = true" icon>
+                        <v-icon color="pink">delete</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-card-actions>
+                </v-card>
+          </v-flex>
+        </v-layout>
         <v-btn
           absolute
           dark
@@ -109,8 +105,40 @@
           >
               <v-icon>add</v-icon>
           </v-btn>
-        </v-layout>
-    </v-container>
+      </v-card>
+      <v-dialog
+      v-model="dialogConfirm"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">¿Esta usted completamente seguro?</v-card-title>
+
+        <v-card-text>
+          Al borrar una Mesa de trabajo estaria borrando todas las instancias relacionadas
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey darken-1"
+            flat="flat"
+            @click="dialogConfirm = false"
+          >
+            No
+          </v-btn>
+
+          <v-btn
+            color="red darken-1"
+            flat="flat"
+            @click="del(currentWTable)"
+          >
+            Si
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </div>
 </template>
 
@@ -147,39 +175,38 @@ export default {
       user: [],
       message: '',
       showMsg: false,
-      msgType: 'error'
+      msgType: 'error',
+      dialogConfirm: false,
+      currentWTable: {}
     }
   },
   methods: {
     ...mapActions('working-tables', { findWorkingTables: 'find' }),
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     goToNew () {
       this.$router.push('/working-table-new')
     },
-    getData () {
-      let params = {query: {removed: false}}
-      return this.$store.dispatch('studies/find', params)
-    },
     edit (val, elem, field) {
       console.log(val, elem, field)
-      const {Study} = this.$FeathersVuex
-      const study = new Study(elem)
-      study[field] = val
-      study.patch().then((result) => {
-        this.findStudies({ query: {removed: false} }).then(response => {
-          const studies = response.data || response
-          console.log(studies)
-        })
+      const {WorkingTable} = this.$FeathersVuex
+      const wTable = new WorkingTable(elem)
+      wTable[field] = val
+      wTable.patch().then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Editada la Mesa de Trabajo')
       })
     },
     del (element) {
-      const {Study} = this.$FeathersVuex
-      const study = new Study(element)
-      study.removed = true
-      study.patch().then((result) => {
-        this.findStudies({ query: {removed: false} }).then(response => {
-          const studies = response.data || response
-          console.log(studies)
-        })
+      const {WorkingTable} = this.$FeathersVuex
+      const wTable = new WorkingTable(element)
+      wTable.removed = true
+      wTable.patch().then((result) => {
+        this.dialogConfirm = false
+        this.setShowSnack(true)
+        this.setSnackMessage('Mesa de Trabajo Borrada')
       })
     },
     goToDetail (id) {
@@ -216,5 +243,8 @@ export default {
   }
   .study-content {
     text-align: center;
+  }
+  v-card-title {
+
   }
 </style>

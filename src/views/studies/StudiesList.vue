@@ -2,101 +2,104 @@
 <div>
     <loading-component v-if="loading"></loading-component>
     <v-container grid-list-md text-xs-center>
+      <v-card flat>
+        <v-subheader>Listado de Estudios</v-subheader>
         <v-layout row wrap>
-        <v-flex v-for="study in getStudies" :key="study._id" xs4>
-            <v-card class="study-card" :light="true" >
-              <v-card-media
-                src="https://images.unsplash.com/photo-1519419166318-4f5c601b8e6c?ixlib=rb-0.3.5&s=281a47878ba7292df40256a164dd3058&auto=format&fit=crop&w=3967&q=80"
-                height="200px"
-              >
-              <v-layout
-                column
-                fill-height
-              >
-                <v-card-title>
-                  <v-spacer></v-spacer>
-                  <v-menu bottom left>
-                    <v-btn
-                      flat
-                      slot="activator"
-                      icon
-                      color="indigo"
-                    >
-                      <v-icon>more_vert</v-icon>
-                    </v-btn>
-
-                    <v-list>
-                      <v-list-tile>Editar Estudio</v-list-tile>
-                      <v-list-tile>Cambiar Imagen</v-list-tile>
-                    </v-list>
-                  </v-menu>
-                </v-card-title>
-
-                <v-spacer></v-spacer>
-
-                <v-card-title class="dark--text pl-5 pt-5">
-                  <div class="display-1 pl-12 pt-12">{{ study.name }}</div>
-                </v-card-title>
-              </v-layout>
-              </v-card-media>
-                <v-list
-                  subheader
-                  three-line
+          <v-flex v-for="study in getStudies" :key="study._id" xs4>
+              <v-card class="study-card" :light="true" >
+                <v-card-media
+                  src="https://images.unsplash.com/photo-1519419166318-4f5c601b8e6c?ixlib=rb-0.3.5&s=281a47878ba7292df40256a164dd3058&auto=format&fit=crop&w=3967&q=80"
+                  height="200px"
                 >
-                  <v-subheader>
-                    <v-edit-dialog
-                        align= "center"
-                        lazy
-                        @save="edit(study.name, study, 'name')"
-                      > {{ study.name }}
-                        <v-text-field
-                          slot="input"
-                          v-model="study.name"
-                          label="Editar Nombre"
-                          single-line
-                          counter
-                        ></v-text-field>
-                    </v-edit-dialog>
-                  </v-subheader>
-                  <v-divider></v-divider>
+                <v-layout
+                  column
+                  fill-height
+                >
+                  <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-menu bottom left>
+                      <v-btn
+                        flat
+                        slot="activator"
+                        icon
+                        color="indigo"
+                      >
+                        <v-icon>more_vert</v-icon>
+                      </v-btn>
 
-                  <v-list-tile>
-                    <v-list-tile-content>
-                      <v-list-tile-sub-title>
-                        <p>
-                          <v-edit-dialog
-                            lazy
-                            @save="edit(study.description, study, 'description')"
-                          >  <v-list-tile-sub-title>{{ study.description }}</v-list-tile-sub-title>
-                            <v-text-field
-                              slot="input"
-                              v-model="study.description"
-                              label="Editar Descripcion"
-                              single-line
-                              counter
-                            ></v-text-field>
-                          </v-edit-dialog>
-                        </p>
-                      </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </v-list>
-                <v-card-actions>
-                  <v-btn flat>
-                    {{study.customer.name}}
-                  </v-btn>
+                      <v-list>
+                        <v-list-tile>Editar Estudio</v-list-tile>
+                        <v-list-tile>Cambiar Imagen</v-list-tile>
+                      </v-list>
+                    </v-menu>
+                  </v-card-title>
+
                   <v-spacer></v-spacer>
-                  <div class="actions">
-                    <v-btn @click="goToDetail(study._id)" icon>
-                      <v-icon color="indigo">visibility</v-icon>
+
+                  <v-card-title style="background:rgba(0,0,0,0.5);" class="white--text text-capitalize pl-2 pt-2">
+                    <div class="display-1 pl-12 pt-12">{{ study.name }}</div>
+                  </v-card-title>
+                </v-layout>
+                </v-card-media>
+                  <v-list
+                    subheader
+                    three-line
+                  >
+                    <v-subheader>
+                      <v-edit-dialog
+                          align= "center"
+                          lazy
+                          @save="edit(study.name, study, 'name')"
+                        > {{ study.name }}
+                          <v-text-field
+                            slot="input"
+                            v-model="study.name"
+                            label="Editar Nombre"
+                            single-line
+                            counter
+                          ></v-text-field>
+                      </v-edit-dialog>
+                    </v-subheader>
+                    <v-divider></v-divider>
+
+                    <v-list-tile>
+                      <v-list-tile-content>
+                        <v-list-tile-sub-title>
+                          <p>
+                            <v-edit-dialog
+                              lazy
+                              @save="edit(study.description, study, 'description')"
+                            >  <v-list-tile-sub-title>{{ study.description }}</v-list-tile-sub-title>
+                              <v-text-field
+                                slot="input"
+                                v-model="study.description"
+                                label="Editar Descripcion"
+                                single-line
+                                counter
+                              ></v-text-field>
+                            </v-edit-dialog>
+                          </p>
+                        </v-list-tile-sub-title>
+                      </v-list-tile-content>
+                    </v-list-tile>
+                  </v-list>
+                  <v-card-actions>
+                    <v-btn flat>
+                      {{study.customer.name}}
                     </v-btn>
-                    <v-btn @click="del(study)" icon>
-                      <v-icon color="pink">delete</v-icon>
-                    </v-btn>
-                  </div>
-                </v-card-actions>
-              </v-card>
-        </v-flex>
+                    <v-spacer></v-spacer>
+                    <div class="actions">
+                      <v-btn @click="goToDetail(study._id)" icon>
+                        <v-icon color="indigo">visibility</v-icon>
+                      </v-btn>
+                      <v-btn @click="del(study)" icon>
+                        <v-icon color="pink">delete</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-card-actions>
+                </v-card>
+          </v-flex>
+        </v-layout>
         <v-btn
           absolute
           dark
@@ -107,9 +110,9 @@
           color="pink"
           @click="goToNew()"
           >
-              <v-icon>add</v-icon>
-          </v-btn>
-        </v-layout>
+          <v-icon>add</v-icon>
+        </v-btn>
+      </v-card>
     </v-container>
 </div>
 </template>
@@ -152,6 +155,10 @@ export default {
   },
   methods: {
     ...mapActions('studies', { findStudies: 'find' }),
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     goToNew () {
       this.$router.push('/new-studies')
     },
@@ -165,10 +172,8 @@ export default {
       const study = new Study(elem)
       study[field] = val
       study.patch().then((result) => {
-        this.findStudies({ query: {removed: false} }).then(response => {
-          const studies = response.data || response
-          console.log(studies)
-        })
+        this.setShowSnack(true)
+        this.setSnackMessage('Estudio Editado')
       })
     },
     del (element) {
@@ -176,10 +181,8 @@ export default {
       const study = new Study(element)
       study.removed = true
       study.patch().then((result) => {
-        this.findStudies({ query: {removed: false} }).then(response => {
-          const studies = response.data || response
-          console.log(studies)
-        })
+        this.setShowSnack(true)
+        this.setSnackMessage('Estudio Borrado')
       })
     },
     goToDetail (id) {

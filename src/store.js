@@ -109,7 +109,9 @@ export default new Vuex.Store({
     currentMapId: null,
     currentConstructId: null,
     currentConstruct: {},
-    currentDiagram: null
+    currentDiagram: null,
+    snackMessage: '',
+    showSnack: false
   },
   getters: {
     getStudyId: (state) => {
@@ -126,6 +128,12 @@ export default new Vuex.Store({
     },
     getCurrentDiagram: (state) => {
       return state.currentDiagram
+    },
+    getSnackMessage: (state) => {
+      return state.snackMessage
+    },
+    getShowSnack: (state) => {
+      return state.getShowSnack
     }
   },
   mutations: {
@@ -143,6 +151,12 @@ export default new Vuex.Store({
     },
     setCurrentDiagram (state, type) {
       state.currentDiagram = type
+    },
+    setSnackMessage (state, message) {
+      state.snackMessage = message
+    },
+    setShowSnack (state, show) {
+      state.showSnack = show
     }
   },
   actions: {
@@ -160,6 +174,12 @@ export default new Vuex.Store({
     },
     setCurrentDiagram: ({ commit }, type) => {
       commit('setCurrentDiagram', type)
+    },
+    setSnackMessage: ({ commit }, message) => {
+      commit('setSnackMessage', message)
+    },
+    setShowSnack: ({ commit }, show) => {
+      commit('setShowSnack', show)
     }
   }
 })

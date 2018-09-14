@@ -29,6 +29,7 @@
     </v-toolbar>
     <v-content>
       <router-view/>
+      <snack-message></snack-message>
     </v-content>
     <v-navigation-drawer
       temporary
@@ -58,6 +59,7 @@
 import {mapState} from 'vuex'
 
 import SideMenu from './../components/SideMenu'
+import SnackMessage from './../components/docaration/SnackMessage'
 export default {
   name: 'App',
   data () {
@@ -74,6 +76,6 @@ export default {
   computed: {
     ...mapState('auth', { user: 'user' })
   },
-  components: {SideMenu}
+  components: {SideMenu, SnackMessage}
 }
 </script>

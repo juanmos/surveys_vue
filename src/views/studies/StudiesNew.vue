@@ -24,18 +24,24 @@
     </v-container>
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 import StudiesForm from './StudiesForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     create (values) {
       // method with feathers vuex to create an Studies
       values._user_id = this.user._id
       const { Study } = this.$FeathersVuex
       const study = new Study(values)
       study.save().then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Estudio Creado')
         this.goToList()
       }, (err) => {
         console.log(err)
