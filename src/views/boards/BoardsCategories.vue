@@ -13,7 +13,7 @@
         </v-tooltip>
 
       </v-toolbar>
-      <v-card>
+      <v-card flat>
         <v-list two-line subheader>
           <v-list-group
             v-for="item in getBoards"
@@ -54,50 +54,32 @@
 
               </v-list-tile>
               <v-list-tile
-              @click="setCurrentMapId(item._id)"
+              @click="dialogConfirm = true; currentItem = item"
               >
                 <v-list-tile-avatar>
-                  <v-icon :class="`blue-grey lighten-1 white--text`">link</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Links</v-list-tile-title>
-                </v-list-tile-content>
-
-              </v-list-tile>
-              <v-list-tile
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`brown lighten-1 white--text`">merge_type</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Conexiones</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile
-              @click="setCurrentMapId(item._id)"
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`teal lighten-1 white--text`">show_chart</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Graficos</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-
-              <v-list-tile
-                @click="dialogConfirm = true; currentItem = item"
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`red lighten-1 white--text`">warning</v-icon>
+                  <v-icon :class="`red lighten-1 white--text`">cancel</v-icon>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Eliminar Tematica</v-list-tile-title>
                 </v-list-tile-content>
+
               </v-list-tile>
 
           </v-list-group>
-
           <v-divider inset></v-divider>
+          <v-subheader inset>Mesas de Trabajo Personalizadas  <v-spacer></v-spacer> <working-table-create-dialog></working-table-create-dialog> </v-subheader>
+          <v-list-tile
+              v-for="table in getTables"
+              :key="table._id"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`blue lighten-1 white--text`">category</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{table.name}}</v-list-tile-title>
+                </v-list-tile-content>
+
+            </v-list-tile>
         </v-list>
       </v-card>
     </v-flex>
@@ -138,27 +120,20 @@
 <script>
 import {mapGetters, mapActions} from 'vuex'
 import BoardsCreateDialog from './BoardsCreateDialog'
+import WorkingTableCreateDialog from './../working-tables/working-table-instances/WorkingTableCreateDialog'
 export default {
   props: ['boards'],
   data () {
     return {
       dialogConfirm: false,
       currentItem: {},
-      items: [
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 1', subtitle: 'descripcion' },
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 2', subtitle: 'descripcion' },
-        { icon: 'folder', iconClass: 'grey lighten-1 white--text', title: 'Categoria 3', subtitle: 'descripcion' }
-      ],
-      items2: [
-        { icon: 'assignment', iconClass: 'blue white--text', title: 'Archivo 1', subtitle: 'descripcion' },
-        { icon: 'call_to_action', iconClass: 'amber white--text', title: 'Archivo 2', subtitle: 'descripcion' }
-      ],
       mutableBoards: [],
       dialog: false
     }
   },
   methods: {
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions('table-instances', { findTables: 'find' }),
     ...mapActions([
       'setCurrentMapId',
       'setCurrentDiagram'
@@ -197,9 +172,14 @@ export default {
       const boards = response.data || response
       console.log(boards)
     })
+    this.findTables({ query: {removed: false, _study_id: this.getStudyId} }).then(response => {
+      const tables = response.data || response
+      console.log(tables)
+    })
   },
   computed: {
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters('table-instances', {findTablesInStore: 'find'}),
     ...mapGetters(
       [
         'getStudyId'
@@ -207,9 +187,12 @@ export default {
     ),
     getBoards () {
       return this.findBoardsInStore({query: {removed: false, _study_id: this.getStudyId}}).data
+    },
+    getTables () {
+      return this.findTablesInStore({query: {removed: false, _study_id: this.getStudyId}}).data
     }
   },
-  components: {BoardsCreateDialog}
+  components: {BoardsCreateDialog, WorkingTableCreateDialog}
 }
 </script>
 <style>

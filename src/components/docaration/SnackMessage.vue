@@ -1,47 +1,47 @@
 <template>
     <v-snackbar
-        v-model="mutableShow"
-        :color="mutableType"
-        :multi-line="mode === 'multi-line'"
-        :timeout="timeout"
-        :vertical="mode === 'vertical'"
+        :value="showSnack"
     >
-        {{ mutableMessage }}
+        {{ snackMessage }}
         <v-btn
         dark
         flat
-        @click="snackbar = false"
+        @click="setShowSnack(false)"
         >
         Cerrar
         </v-btn>
     </v-snackbar>
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters, mapActions} from 'vuex'
 export default {
   props: ['message', 'type', 'show'],
   data () {
     return {
-      mutableShow: false,
-      color: '',
-      mode: '',
-      timeout: 6000,
-      mutableType: null,
-      mutableMessage: null
     }
   },
+  methods: {
+    ...mapActions([
+      'setShowSnack'
+    ])
+  },
   computed: {
-    ...mapState('', {})
+    ...mapState([
+      'showSnack',
+      'snackMessage'
+    ]),
+    ...mapGetters([
+      'getShowSnack'
+    ])
   },
   watch: {
-    type (val) {
-      this.mutableType = val
-    },
-    message (val) {
-      this.mutableMessage = val
-    },
-    show (val) {
-      this.mutableShow = val
+    showSnack (val) {
+      if (val === true) {
+        console.log('es true')
+        setTimeout(() => {
+          this.setShowSnack(false)
+        }, 3000)
+      }
     }
   },
   created () {

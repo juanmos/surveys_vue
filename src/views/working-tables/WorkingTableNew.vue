@@ -24,18 +24,23 @@
     </v-container>
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 import WorkingTableForm from './WorkingTableForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     create (values) {
       // method with feathers vuex to create an WorkingTables
-      values._user_id = this.user._id
-      const { Study } = this.$FeathersVuex
-      const study = new Study(values)
-      study.save().then((result) => {
+      const { WorkingTable } = this.$FeathersVuex
+      const wTable = new WorkingTable(values)
+      wTable.save().then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Mesa de Trabajo Creada')
         this.goToList()
       }, (err) => {
         console.log(err)
