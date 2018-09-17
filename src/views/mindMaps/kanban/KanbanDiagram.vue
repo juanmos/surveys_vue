@@ -5,6 +5,8 @@
         <v-toolbar
           flat
         >
+          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
+
           <v-spacer></v-spacer>
           <v-toolbar-items class="hidden-sm-and-down">
             <v-btn
@@ -18,29 +20,6 @@
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <v-tabs
-          v-model="active"
-          slider-color="indigo"
-        >
-           <v-tab
-            ripple
-          >
-            CONSTRUCTOS MADRE
-          </v-tab>
-          <v-tab-item
-          >
-          <constructs-component @addNode="addNode" @deleteNode="deleteNode" @editNode="editNode" @constructAdded="addNode($event)"></constructs-component>
-          </v-tab-item>
-                <!--    <v-tab
-                     ripple
-                   >
-                     Constructos
-                   </v-tab>
-                   <v-tab-item
-                   >
-                   <construct @addNodeBuilder="addNodeBuilder" @deleteNode="deleteNode" @editNodeBuilder="editNodeBuilder" @constructAdded="addNodeBuilder($event)"></construct>
-                 </v-tab-item> -->
-        </v-tabs>
         <span>
           <diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:500px">
           </diagram>
@@ -82,7 +61,7 @@ export default {
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
         this.kanbanNodeDataArray = newModel.nodeDataArray
-        console.log(this.kanbanNodeDataArray)
+        // console.log(this.kanbanNodeDataArray)
         this.finisTransaction = false
       }
     },
@@ -194,13 +173,13 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      // if (this.finisTransaction === true) {
       var kanbanNodeDataArray = []
-      // console.log('data obtenida -->', this.getCurrentBoard.kanbanNodeDataArray)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
         kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
-        console.log('options--->', this.getCurrentBoard.optionsKanban)
+        kanbanNodeDataArray.forEach(function (element) {
+          element['color'] = '0'
+        })
       } else {
         let mainConstruct = {
           'key': 'idMainBuilder',
@@ -217,7 +196,6 @@ export default {
         'class': 'go.GraphLinksModel',
         'nodeDataArray': kanbanNodeDataArray,
         'linkDataArray': []}
-      // }
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]

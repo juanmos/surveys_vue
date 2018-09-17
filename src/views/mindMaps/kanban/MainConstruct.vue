@@ -1,14 +1,15 @@
 <template>
-    <v-container>
+    <v-container style="margin-top: -21px;">
         <v-layout>
-            <v-flex xs12 sm4>
-                <v-text-field
-                label="Nombre de Constructo"
-                single-line
-                box
-                v-model="construct.text"
-                    @keyup.enter="addConstruct"
-                ></v-text-field>
+            <v-flex xs12 sm6>
+              <v-text-field
+              label="Solo"
+              single-line
+              placeholder="+ Agregar constructo madre"
+              solo
+              v-model="construct.text"
+                  @keyup.enter="addConstruct"
+            ></v-text-field>
             </v-flex>
             <v-flex xs12 sm2>
                 <v-btn @click="addConstruct" icon>
