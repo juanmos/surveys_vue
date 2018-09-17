@@ -30,7 +30,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray, linkKeyProperty: '_id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -146,8 +146,20 @@ export default {
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
       // also manipulate the Diagram by changing its Diagram.selection collection
-      var diagram = this.$refs.diag.diagram
-      diagram.select(diagram.findNodeForData(data))
+      // this condition is to select the current created node (it doesnt apply when you have a node already selected)
+      if (!val.fromSelected) {
+        var diagram = this.$refs.diag.diagram
+        diagram.select(diagram.findNodeForData(data))
+      } else {
+        // link created when a node is selected and childs are appended to it
+        model.addLinkData(
+          {
+            from: val.selected,
+            to: this.model.nodeDataArray[(this.model.nodeDataArray.length - 1)].key,
+            points: []
+          }
+        )
+      }
       let msg = ''
       if (val.mother) {
         msg = 'Constructo Madre Creado'
@@ -159,6 +171,8 @@ export default {
       this.showMsg(msg)
     },
     deleteNode (val) {
+      console.log('llego arriba')
+      console.log('este es el val de arriba', val)
       var model = this.model
       if (val.main) {
         this.showMsg('No se puede borrar constructo principal')

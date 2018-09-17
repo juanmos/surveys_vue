@@ -109,6 +109,22 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('construct-images', {
+      instanceDefaults: {
+        name: '',
+        filename: '',
+        _construct_id: '',
+        description: '',
+        type: '',
+        removed: false
+      }
+    }),
+    service('uploads', {
+      instanceDefaults: {
+        file: '',
+        type: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

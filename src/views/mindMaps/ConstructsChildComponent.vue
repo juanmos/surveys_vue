@@ -10,9 +10,10 @@
                 <v-layout row wrap>
                  <!-- convertir esto en dos componentes !-->
                   <v-flex
+                    v-if="item"
                     v-for="item in getChildsSwitchMode"
                     xs3
-                    :key="item._id"
+                    :key="item.key"
                     >
                     <v-card color="blue-grey lighten-4">
                         <v-card-title primary-title>
@@ -150,7 +151,12 @@ export default {
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
       mutableConstruct.color = 'rgba(128,128,128,0.2)'
-      this.$emit('addNode', mutableConstruct)
+      if (this.constructDetailMode) {
+        // emiting different event when is inside the component construct selected
+        this.$emit('addChildNode', mutableConstruct)
+      } else {
+        this.$emit('addNode', mutableConstruct)
+      }
       this.construct = {}
     },
     edit (val, elem, field) {
