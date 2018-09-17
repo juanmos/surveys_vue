@@ -450,7 +450,7 @@ export default {
 
             var marg = child.margin
             var margw = marg.right + marg.left
-            var margh = marg.top + marg.bottom
+            // var margh = marg.top + marg.bottom
 
             var stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
             var dsize = child.resizeObject.desiredSize
@@ -478,7 +478,8 @@ export default {
 
             var m = child.actualBounds
             var mwidth = Math.max(m.width + margw, 0)
-            var mheight = Math.max(m.height + margh, 0)
+            // var mheight = Math.max(m.height + margh, 0) //aqui cambio
+            var mheight = 200 + m.height
 
             //  Make sure the heralds have the right layout size
             //    the row/column should use the largest meausured size of any
