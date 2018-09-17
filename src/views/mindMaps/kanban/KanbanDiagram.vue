@@ -21,7 +21,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:750px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getKanbanDiagramData, linkDataArray: ''}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:750px">
           </diagram>
         </span>
       </v-card>
@@ -32,9 +32,7 @@
 import go from 'gojs'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
-import Construct from './Construct'
 import ConstructsComponent from './MainConstruct'
-import DestructsComponent from './../DestructsComponent'
 export default {
   data () {
     return {
@@ -42,7 +40,7 @@ export default {
       currentNode: null,
       savedModelText: '',
       finisTransaction: true,
-      kanbanNodeDataArray: null,
+      kanbanNodeDataArray: [],
       optionsBuilder: null,
       counter: 1, // used by addNode
       counter2: 4, // used by modifyStuff,
@@ -53,6 +51,9 @@ export default {
   methods: {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions([
+      'setCurrentConstruct'
+    ]),
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
     // this event listener is declared on the
@@ -66,16 +67,15 @@ export default {
       }
     },
     changedSelection (e) {
-      var node = e.diagram.selection.first()
-      if (node instanceof go.Node) {
-        this.currentNode = node
-        this.currentNodeText = node.data.text
-      } else {
-        this.currentNode = null
-        this.currentNodeText = ''
+      let node = e.diagram.selection.first()
+      if (node) {
+        console.log('asignando current construct', node.data)
+        setTimeout(() => {
+          this.setCurrentConstruct(node.data)
+          console.log(node.data)
+        }, 0)
       }
     },
-
     // Here we modify the GoJS Diagram's Model using its methods,
     // which can be much more efficient than modifying some memory and asking
     // the GoJS Diagram to find differences and update accordingly.
@@ -143,7 +143,8 @@ export default {
       board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton'))
       board.optionsKanban = this.optionsBuilder
       board.patch({query: {kanban: true}}).then((result) => {
-        console.log('save ok', board)
+        // this.setSnackMessage('Mesa de trabajo guardado con éxito.')
+        console.log('table save ok', board)
       })
     }
   },
@@ -172,12 +173,16 @@ export default {
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
+    ...mapGetters([
+      'getCurrentConstruct'
+    ]),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
-      console.log('currente board', this.getCurrentBoard)
+      console.log('current kanbanNodeDataArray', this.getCurrentBoard.kanbanNodeDataArray)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
         kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
+        console.log('options---', this.getCurrentBoard)
         kanbanNodeDataArray.forEach(function (element) {
           element['color'] = '0'
         })
@@ -193,10 +198,11 @@ export default {
         kanbanNodeDataArray.push(mainConstruct)
         kanbanNodeDataArray.push(buttonBuilder)
       }
-      return {
+      return kanbanNodeDataArray
+      /* return {
         'class': 'go.GraphLinksModel',
         'nodeDataArray': kanbanNodeDataArray,
-        'linkDataArray': []}
+        'linkDataArray': []} */
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
@@ -220,9 +226,11 @@ export default {
   watch: {
     newDataArray (val) {
       console.log('new model changed', val)
+    },
+    getKanbanDiagramData (val) {
     }
   },
-  components: {Diagram, Construct, DestructsComponent, ConstructsComponent},
+  components: {Diagram, ConstructsComponent},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response

@@ -11,8 +11,8 @@ export default {
   data () {
     return {
       diagram: null, // provide access to goJS diagram
-      mutableData: null,
-      noteColors: ['#58ACFA', '#FA5858', '#F4FA58']
+      // noteColors: ['#58ACFA', '#FA5858', '#F4FA58']
+      noteColors: ['#58ACFA']
     }
   },
   computed: {
@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     updateModel (val) {
+      this.diagram.model.nodeDataArray = val.nodeDataArray
       // this.diagram.model = go.Model.fromJson(this.modelData)
       this.diagram.delayInitialization(this.relayoutDiagram())
     },
@@ -30,32 +31,12 @@ export default {
         n.invalidateLayout()
       })
       this.diagram.layoutDiagram()
-    },
-    buildCategories (arrayData) {
-      var data = ''
-      var nodeDataCategory = {
-        key: data,
-        text: data,
-        isGroup: true,
-        loc: data
-      }
-      this.nodeDataArray.push(nodeDataCategory)
-    },
-    buildBuilder (arrayData, categotyName) {
-      var data = ''
-      var nodeDataBuilder = {
-        key: data,
-        text: data,
-        group: categotyName,
-        colod: '0'
-      }
-      this.nodeDataArray.push(nodeDataBuilder)
     }
   },
   watch: {
-    modelData: function (val) {
-      this.updateModel(val)
-      this.mutableData = val
+    modelData (val) { this.updateModel(val) },
+    diagram (val) {
+      this.$emit('modelChanged', val)
     }
   },
   mounted () {
