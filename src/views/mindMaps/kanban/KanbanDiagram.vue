@@ -21,7 +21,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:500px">
+          <diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:750px">
           </diagram>
         </span>
       </v-card>
@@ -174,6 +174,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
+      console.log('currente board', this.getCurrentBoard)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
         kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)

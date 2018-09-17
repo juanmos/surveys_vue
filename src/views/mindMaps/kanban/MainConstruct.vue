@@ -1,5 +1,5 @@
 <template>
-    <v-container style="margin-top: -21px;">
+    <v-container style="margin-top: -18px;">
         <v-layout>
             <v-flex xs12 sm6>
               <v-text-field
