@@ -1,5 +1,5 @@
 <template>
-  <div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:500px;"></div>
+  <div id="myDiagramDiv" style="width:100%; height:500px;"></div>
 </template>
 <script>
 import go from 'gojs'
@@ -1015,7 +1015,7 @@ export default {
           selectable: false,
           click: function (e, node) {
             myDiagram.startTransaction('add node')
-            var newdata = { group: node.data.group, loc: '0 50', text: 'New item ' + node.containingGroup.memberParts.count, color: 0 }
+            var newdata = { group: node.data.group, loc: '0 50', text: 'Descripción...', color: 0 }
             myDiagram.model.addNodeData(newdata)
             myDiagram.commitTransaction('add node')
             var nodeData = myDiagram.findNodeForData(newdata)
@@ -1028,7 +1028,7 @@ export default {
           $(go.Shape, 'Rectangle', { strokeWidth: 0, stroke: null, fill: '#6FB583' }),
           $(go.Shape, 'PlusLine', { margin: 6, strokeWidth: 2, width: 12, height: 12, stroke: 'white', background: '#6FB583' })
         ),
-        $(go.TextBlock, 'New item', { font: '10px Lato, sans-serif', margin: 6 })
+        $(go.TextBlock, 'Nuevo constructo', { font: '10px Lato, sans-serif', margin: 6 })
       )
     )
 
