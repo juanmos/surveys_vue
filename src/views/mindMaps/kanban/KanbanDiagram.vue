@@ -42,7 +42,7 @@
                  </v-tab-item> -->
         </v-tabs>
         <span>
-          <diagram ref="diag" v-bind:model-data="getKanbanDiagramData" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:500px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getKanbanDiagramData, linkDataArray: '', linkKeyProperty: '_id'}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:500px">
           </diagram>
         </span>
       </v-card>
@@ -82,7 +82,7 @@ export default {
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
         this.kanbanNodeDataArray = newModel.nodeDataArray
-        console.log(this.kanbanNodeDataArray)
+        // console.log(this.kanbanNodeDataArray)
         this.finisTransaction = false
       }
     },
@@ -198,9 +198,9 @@ export default {
       var kanbanNodeDataArray = []
       // console.log('data obtenida -->', this.getCurrentBoard.kanbanNodeDataArray)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
-        kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
-        kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
-        console.log('options--->', this.getCurrentBoard.optionsKanban)
+        // kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
+        this.getCurrentBoard.kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
+        console.log('options--->', kanbanNodeDataArray)
       } else {
         let mainConstruct = {
           'key': 'idMainBuilder',
@@ -210,13 +210,14 @@ export default {
           'colspan': 6
         }
         let buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
-        kanbanNodeDataArray.push(mainConstruct)
-        kanbanNodeDataArray.push(buttonBuilder)
+        this.getCurrentBoard.kanbanNodeDataArray.push(mainConstruct)
+        this.getCurrentBoard.kanbanNodeDataArray.push(buttonBuilder)
       }
-      return {
+      return this.getCurrentBoard.kanbanNodeDataArray
+    /*  return {
         'class': 'go.GraphLinksModel',
         'nodeDataArray': kanbanNodeDataArray,
-        'linkDataArray': []}
+        'linkDataArray': []} */
       // }
     },
     getCurrentBoard () {
