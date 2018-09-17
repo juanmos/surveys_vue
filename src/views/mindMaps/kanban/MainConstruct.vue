@@ -12,7 +12,7 @@
             ></v-text-field>
             </v-flex>
             <v-flex xs12 sm2>
-                <v-btn @click="addConstruct" icon>
+                <v-btn @click="addConstruct" title="Agregar" icon>
                 <v-icon>send</v-icon>
                 </v-btn>
             </v-flex>

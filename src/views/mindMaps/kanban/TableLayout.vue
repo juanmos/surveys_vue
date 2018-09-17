@@ -12,7 +12,8 @@ export default {
     return {
       diagram: null, // provide access to goJS diagram
       mutableData: null,
-      noteColors: ['#58ACFA', '#FA5858', '#F4FA58']
+      // noteColors: ['#58ACFA', '#FA5858', '#F4FA58']
+      noteColors: ['#58ACFA']
     }
   },
   computed: {
