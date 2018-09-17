@@ -178,11 +178,9 @@ export default {
     ]),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
-      console.log('current kanbanNodeDataArray', this.getCurrentBoard.kanbanNodeDataArray)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
         kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
-        console.log('options---', this.getCurrentBoard)
         kanbanNodeDataArray.forEach(function (element) {
           element['color'] = '0'
         })
