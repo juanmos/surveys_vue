@@ -62,35 +62,36 @@ export default {
   mounted () {
     var that = this
     var myDiagram = null
+    // inicio de TableLayout
     /*
-    *  Copyright (C) 1998-2018 by Northwoods Software Corporation. All Rights Reserved.
-    */
+*  Copyright (C) 1998-2018 by Northwoods Software Corporation. All Rights Reserved.
+*/
 
     // This layout is patterned after the "Table" Panel layout.
 
     /**
-    * @constructor
-    * @extends Layout
-    * @class
-    * This Layout positions non-Link Parts into a table according to the values of
-    * GraphObject.row, GraphObject.column, GraphObject.rowSpan, GraphObject.columnSpan,
-    * GraphObject.alignment, GraphObject.stretch.
-    * If the value of GraphObject.stretch is not go.GraphObject.None, the Part will be sized
-    * according to the available space in the cell(s).
-    * <p>
-    * You can specify constraints for whole rows or columns by calling
-    * getRowDefinition(row) or getColumnDefinition(col) and setting one of the following properties:
-    * RowColumnDefinition.alignment, RowColumnDefinition.height, RowColumnDefinition.width,
-    * RowColumnDefinition.maximum, RowColumnDefinition.minimum, RowColumnDefinition.stretch.
-    * <p>
-    * The defaultAlignment and defaultStretch properties apply to all parts if not specified
-    * on the individual Part or in the corresponding row or column definition.
-    * <p>
-    * At the current time, there is no support for separator lines
-    * (RowColumnDefinition.separatorStroke, separatorStrokeWidth, and separatorDashArray properties)
-    * nor background (RowColumnDefinition.background and coversSeparators properties).
-    * There is no support for RowColumnDefinition.sizing, either.
-    */
+* @constructor
+* @extends Layout
+* @class
+* This Layout positions non-Link Parts into a table according to the values of
+* GraphObject.row, GraphObject.column, GraphObject.rowSpan, GraphObject.columnSpan,
+* GraphObject.alignment, GraphObject.stretch.
+* If the value of GraphObject.stretch is not go.GraphObject.None, the Part will be sized
+* according to the available space in the cell(s).
+* <p>
+* You can specify constraints for whole rows or columns by calling
+* getRowDefinition(row) or getColumnDefinition(col) and setting one of the following properties:
+* RowColumnDefinition.alignment, RowColumnDefinition.height, RowColumnDefinition.width,
+* RowColumnDefinition.maximum, RowColumnDefinition.minimum, RowColumnDefinition.stretch.
+* <p>
+* The defaultAlignment and defaultStretch properties apply to all parts if not specified
+* on the individual Part or in the corresponding row or column definition.
+* <p>
+* At the current time, there is no support for separator lines
+* (RowColumnDefinition.separatorStroke, separatorStrokeWidth, and separatorDashArray properties)
+* nor background (RowColumnDefinition.background and coversSeparators properties).
+* There is no support for RowColumnDefinition.sizing, either.
+*/
     function TableLayout () {
       go.Layout.call(this)
       /** @type {Spot} */
@@ -113,46 +114,46 @@ export default {
         var def = this._rowDefs[i]
         copy._rowDefs.push(def !== undefined ? def.copy() : def)
       }
-      for (var i = 0; i < this._colDefs.length; i++) {
-        var def = this._colDefs[i]
-        copy._colDefs.push(def !== undefined ? def.copy() : def)
+      for (var x = 0; x < this._colDefs.length; x++) {
+        var defX = this._colDefs[x]
+        copy._colDefs.push(defX !== undefined ? defX.copy() : defX)
       }
     }
 
     /**
-    * Gets or sets the alignment to use by default for Parts in rows (vertically) and in columns (horizontally).
-    * The default value is {@link Spot#Default}.
-    * Setting this property does not raise any events.
-    * @name TableLayout#defaultAlignment
-    * @function.
-    * @return {Spot}
-    */
+* Gets or sets the alignment to use by default for Parts in rows (vertically) and in columns (horizontally).
+* The default value is {@link Spot#Default}.
+* Setting this property does not raise any events.
+* @name TableLayout#defaultAlignment
+* @function.
+* @return {Spot}
+*/
     Object.defineProperty(TableLayout.prototype, 'defaultAlignment', {
       get: function () { return this._defaultAlignment },
       set: function (val) { this._defaultAlignment = val }
     })
 
     /**
-    * Gets or sets whether Parts should be stretched in rows (vertically) and in columns (horizontally).
-    * The default value is {@link GraphObject#Default}.
-    * Setting this property does not raise any events.
-    * @name TableLayout#defaultStretch
-    * @function.
-    * @return {EnumValue}
-    */
+* Gets or sets whether Parts should be stretched in rows (vertically) and in columns (horizontally).
+* The default value is {@link GraphObject#Default}.
+* Setting this property does not raise any events.
+* @name TableLayout#defaultStretch
+* @function.
+* @return {EnumValue}
+*/
     Object.defineProperty(TableLayout.prototype, 'defaultStretch', {
       get: function () { return this._defaultStretch },
       set: function (val) { this._defaultStretch = val }
     })
 
     /**
-    * Gets the {@link RowColumnDefinition} for a particular row in this TableLayout.
-    * If you ask for the definition of a row at or beyond the {@link #rowCount},
-    * it will automatically create one and return it.
-    * @this {TableLayout}
-    * @param {number} idx the non-negative zero-based integer row index.
-    * @return {RowColumnDefinition}
-    */
+* Gets the {@link RowColumnDefinition} for a particular row in this TableLayout.
+* If you ask for the definition of a row at or beyond the {@link #rowCount},
+* it will automatically create one and return it.
+* @this {TableLayout}
+* @param {number} idx the non-negative zero-based integer row index.
+* @return {RowColumnDefinition}
+*/
     TableLayout.prototype.getRowDefinition = function (idx) {
       if (idx < 0) throw new Error('Row index must be non-negative, not: ' + idx)
       idx = Math.round(idx)
@@ -170,27 +171,27 @@ export default {
     }
 
     /**
-    * This read-only property returns the number of rows in this TableLayout.
-    * This value is only valid after the layout has been performed.
-    * @name TableLayout#rowCount
-    * @function.
-    * @return {number}
-    */
+* This read-only property returns the number of rows in this TableLayout.
+* This value is only valid after the layout has been performed.
+* @name TableLayout#rowCount
+* @function.
+* @return {number}
+*/
     Object.defineProperty(TableLayout.prototype, 'rowCount', {
       get: function () { return this._rowDefs.length }
     })
 
     /**
-    * Returns the row at a given y-coordinate in document coordinates.
-    * This information is only valid when this layout has been performed and {#Layout.isValidLayout}.
-    * <p>
-    * If the point is above row 0, this method returns -1.
-    * If the point below the last row, this returns the last row + 1.
-    * @this {TableLayout}
-    * @param {number} y
-    * @return {number} a zero-based integer
-    * @see #findColumnForDocumentX
-    */
+* Returns the row at a given y-coordinate in document coordinates.
+* This information is only valid when this layout has been performed and {#Layout.isValidLayout}.
+* <p>
+* If the point is above row 0, this method returns -1.
+* If the point below the last row, this returns the last row + 1.
+* @this {TableLayout}
+* @param {number} y
+* @return {number} a zero-based integer
+* @see #findColumnForDocumentX
+*/
     TableLayout.prototype.findRowForDocumentY = function (y) {
       y -= this.arrangementOrigin.y
       if (y < 0) return -1
@@ -209,13 +210,13 @@ export default {
     }
 
     /**
-    * Gets the {@link RowColumnDefinition} for a particular column in this TableLayout.
-    * If you ask for the definition of a column at or beyond the {@link #columnCount},
-    * it will automatically create one and return it.
-    * @this {TableLayout}
-    * @param {number} idx the non-negative zero-based integer column index.
-    * @return {RowColumnDefinition}
-    */
+* Gets the {@link RowColumnDefinition} for a particular column in this TableLayout.
+* If you ask for the definition of a column at or beyond the {@link #columnCount},
+* it will automatically create one and return it.
+* @this {TableLayout}
+* @param {number} idx the non-negative zero-based integer column index.
+* @return {RowColumnDefinition}
+*/
     TableLayout.prototype.getColumnDefinition = function (idx) {
       if (idx < 0) throw new Error('Column index must be non-negative, not: ' + idx)
       idx = Math.round(idx)
@@ -233,27 +234,27 @@ export default {
     }
 
     /**
-    * This read-only property returns the number of columns in this TableLayout.
-    * This value is only valid after the layout has been performed.
-    * @name TableLayout#rowCount
-    * @function.
-    * @return {number}
-    */
+* This read-only property returns the number of columns in this TableLayout.
+* This value is only valid after the layout has been performed.
+* @name TableLayout#rowCount
+* @function.
+* @return {number}
+*/
     Object.defineProperty(TableLayout.prototype, 'columnCount', {
       get: function () { return this._colDefs.length }
     })
 
     /**
-    * Returns the cell at a given x-coordinate in document coordinates.
-    * This information is only valid when this layout has been performed and {#Layout.isValidLayout}.
-    * <p>
-    * If the point is to left of the column 0, this method returns -1.
-    * If the point to to the right of the last column, this returns the last column + 1.
-    * @this {TableLayout}
-    * @param {number} x
-    * @return {number} a zero-based integer
-    * @see #findRowForDocumentY
-    */
+* Returns the cell at a given x-coordinate in document coordinates.
+* This information is only valid when this layout has been performed and {#Layout.isValidLayout}.
+* <p>
+* If the point is to left of the column 0, this method returns -1.
+* If the point to to the right of the last column, this returns the last column + 1.
+* @this {TableLayout}
+* @param {number} x
+* @return {number} a zero-based integer
+* @see #findRowForDocumentY
+*/
     TableLayout.prototype.findColumnForDocumentX = function (x) {
       x -= this.arrangementOrigin.x
       if (x < 0) return -1
@@ -272,20 +273,20 @@ export default {
     }
 
     /**
-    * @ignore
-    * @this {TableLayout}
-    * @param {Part} child
-    * @param {number} row
-    * @param {number} col
-    * @return {EnumValue}
-    */
+* @ignore
+* @this {TableLayout}
+* @param {Part} child
+* @param {number} row
+* @param {number} col
+* @return {EnumValue}
+*/
     TableLayout.prototype.getEffectiveTableStretch = function (child, row, col) {
       var effectivestretch = child.stretch
       if (effectivestretch !== go.GraphObject.Default) return effectivestretch
       // which directions are we stretching?
       // undefined = default
-      var horizontal = undefined
-      var vertical = undefined
+      var horizontal = null
+      var vertical = null
       switch (row.stretch) {
         case go.GraphObject.Default:
         case go.GraphObject.Horizontal: break
@@ -300,12 +301,12 @@ export default {
       }
 
       var str = this.defaultStretch
-      if (horizontal === undefined && (str === go.GraphObject.Horizontal || str === go.GraphObject.Fill)) {
+      if (horizontal === null && (str === go.GraphObject.Horizontal || str === go.GraphObject.Fill)) {
         horizontal = true
       } else {
         horizontal = false
       }
-      if (vertical === undefined && (str === go.GraphObject.Vertical || str === go.GraphObject.Fill)) {
+      if (vertical === null && (str === go.GraphObject.Vertical || str === go.GraphObject.Fill)) {
         vertical = true
       } else {
         vertical = false
@@ -317,10 +318,10 @@ export default {
     }
 
     /**
-    * @ignore
-    * @override
-    * @this {TableLayout}
-    */
+* @ignore
+* @override
+* @this {TableLayout}
+*/
     TableLayout.prototype.doLayout = function (coll) {
       this.arrangementOrigin = this.initialOrigin(this.arrangementOrigin)
       // put all eligible Parts that are not Links into an Array
@@ -341,28 +342,28 @@ export default {
     }
 
     /**
-    * @ignore
-    * @override
-    * @this {TableLayout}
-    * @param {List} parts
-    * @param {Array.<Array.<Array>>} rowcol  [row][col][cell]
-    */
+* @ignore
+* @override
+* @this {TableLayout}
+* @param {List} parts
+* @param {Array.<Array.<Array>>} rowcol  [row][col][cell]
+*/
     TableLayout.prototype.beforeMeasure = function (parts, rowcol) { }
 
     /**
-    * @ignore
-    * @override
-    * @this {TableLayout}
-    * @param {List} parts
-    * @param {Array.<Array.<Array>>} rowcol  [row][col][cell]
-    */
+* @ignore
+* @override
+* @this {TableLayout}
+* @param {List} parts
+* @param {Array.<Array.<Array>>} rowcol  [row][col][cell]
+*/
     TableLayout.prototype.afterArrange = function (parts, rowcol) { }
 
     /**
-    * @ignore
-    * @override
-    * @this {TableLayout}
-    */
+* @ignore
+* @override
+* @this {TableLayout}
+*/
     TableLayout.prototype.measureTable = function (width, height, children, union, minw, minh) {
       var l = children.length
       // Make the array that holds [rows][cols] of the table
@@ -395,21 +396,21 @@ export default {
 
       var defs = this._rowDefs
       l = defs.length
-      for (var i = 0; i < l; i++) {
-        var def = defs[i]
+      for (let i = 0; i < l; i++) {
+        let def = defs[i]
         if (def !== undefined) def.actual = 0
       }
 
       defs = this._colDefs
       l = defs.length
-      for (var i = 0; i < l; i++) {
-        var def = defs[i]
+      for (let i = 0; i < l; i++) {
+        let def = defs[i]
         if (def !== undefined) def.actual = 0
       }
 
-      var lrow = rowcol.length // number of rows
-      var lcol = 0
-      for (var i = 0; i < lrow; i++) {
+      let lrow = rowcol.length // number of rows
+      let lcol = 0
+      for (let i = 0; i < lrow; i++) {
         if (!rowcol[i]) continue
         lcol = Math.max(lcol, rowcol[i].length) // column length in this row
       }
@@ -417,15 +418,15 @@ export default {
       // Go through each cell (first pass)
       var amt = 0.0
       lrow = rowcol.length // number of rows
-      for (var i = 0; i < lrow; i++) {
+      for (let i = 0; i < lrow; i++) {
         if (!rowcol[i]) continue
         lcol = rowcol[i].length // column length in this row
-        var rowHerald = this.getRowDefinition(i)
+        let rowHerald = this.getRowDefinition(i)
         rowHerald.actual = 0 // Reset rows (only on first pass)
-        for (var j = 0; j < lcol; j++) {
+        for (let j = 0; j < lcol; j++) {
           // foreach column j in row i...
           if (!rowcol[i][j]) continue
-          var colHerald = this.getColumnDefinition(j)
+          let colHerald = this.getColumnDefinition(j)
           if (resetCols[j] === undefined) { // make sure we only reset these once
             colHerald.actual = 0
             resetCols[j] = true
@@ -435,7 +436,7 @@ export default {
           var len = cell.length
           for (var k = 0; k < len; k++) {
             // foreach element in cell, measure
-            var child = cell[k]
+            let child = cell[k]
 
             // Skip children that span more than one row or column or do not have a set size
             var spanner = (child.rowSpan > 1 || child.columnSpan > 1)
@@ -450,7 +451,7 @@ export default {
 
             var marg = child.margin
             var margw = marg.right + marg.left
-            var margh = marg.top + marg.bottom
+            // var margh = marg.top + marg.bottom
 
             var stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
             var dsize = child.resizeObject.desiredSize
@@ -478,7 +479,8 @@ export default {
 
             var m = child.actualBounds
             var mwidth = Math.max(m.width + margw, 0)
-            var mheight = Math.max(m.height + margh, 0)
+            // var mheight = Math.max(m.height + margh, 0) //aqui cambio
+            var mheight = 200 + m.height
 
             //  Make sure the heralds have the right layout size
             //    the row/column should use the largest meausured size of any
@@ -492,7 +494,7 @@ export default {
             }
 
             if (child.columnSpan === 1 && (realwidth || stretch === go.GraphObject.None || stretch === go.GraphObject.Vertical)) {
-              var def = this.getColumnDefinition(j)
+              let def = this.getColumnDefinition(j)
               amt = Math.max(mwidth - def.actual, 0)
               if (amt > colleft) amt = colleft
               def.actual = def.actual + amt
@@ -507,12 +509,12 @@ export default {
       var totalColWidth = 0.0
       var totalRowHeight = 0.0
       l = this.columnCount
-      for (var i = 0; i < l; i++) {
+      for (let i = 0; i < l; i++) {
         if (this._colDefs[i] === undefined) continue
         totalColWidth += this.getColumnDefinition(i).actual
       }
       l = this.rowCount
-      for (var i = 0; i < l; i++) {
+      for (let i = 0; i < l; i++) {
         if (this._rowDefs[i] === undefined) continue
         totalRowHeight += this.getRowDefinition(i).actual
       }
@@ -523,15 +525,15 @@ export default {
 
       // Determine column sizes for the yet-to-be-sized columns
       l = nosize.length
-      for (var i = 0; i < l; i++) {
-        var child = nosize[i]
-        var rowHerald = this.getRowDefinition(child.row)
-        var colHerald = this.getColumnDefinition(child.column)
+      for (let i = 0; i < l; i++) {
+        let child = nosize[i]
+        let rowHerald = this.getRowDefinition(child.row)
+        let colHerald = this.getColumnDefinition(child.column)
         // We want to gather the largest difference between desired and expected col/row sizes
-        var mb = child.actualBounds
-        var marg = child.margin
-        var margw = marg.right + marg.left
-        var margh = marg.top + marg.bottom
+        let mb = child.actualBounds
+        let marg = child.margin
+        let margw = marg.right + marg.left
+        let margh = marg.top + marg.bottom
 
         if (colHerald.actual === 0 && nosizeCols[child.column] !== undefined) {
           nosizeCols[child.column] = Math.max(mb.width + margw, nosizeCols[child.column])
@@ -546,18 +548,18 @@ export default {
       }
       // we now have the size that all these columns prefer to be
       // we also have the amount left over
-      var desiredRowTotal = 0.0
-      var desiredColTotal = 0.0
+      let desiredRowTotal = 0.0
+      let desiredColTotal = 0.0
       for (i in nosizeRows) { if (i !== 'count') desiredRowTotal += nosizeRows[i] }
       for (i in nosizeCols) { if (i !== 'count') desiredColTotal += nosizeCols[i] }
 
-      var allowedSize = new go.Size() // used in stretch and span loops
+      let allowedSize = new go.Size() // used in stretch and span loops
 
       // Deal with objects that have a stretch
-      for (var i = 0; i < l; i++) {
-        var child = nosize[i]
-        var rowHerald = this.getRowDefinition(child.row)
-        var colHerald = this.getColumnDefinition(child.column)
+      for (let i = 0; i < l; i++) {
+        let child = nosize[i]
+        let rowHerald = this.getRowDefinition(child.row)
+        let colHerald = this.getColumnDefinition(child.column)
 
         var w = 0.0
         if (isFinite(colHerald.width)) {
@@ -595,7 +597,7 @@ export default {
           Math.max(rowHerald.minimum, Math.min(h, rowHerald.maximum)))
 
         // Which way do we care about fill:
-        var stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
+        let stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
         // This used to set allowedSize height/width to Infinity,
         // but we can only set it to the current row/column space, plus rowleft/colleft values, at most.
         switch (stretch) {
@@ -607,17 +609,17 @@ export default {
             break
         }
 
-        var marg = child.margin
-        var margw = marg.right + marg.left
-        var margh = marg.top + marg.bottom
+        let marg = child.margin
+        let margw = marg.right + marg.left
+        let margh = marg.top + marg.bottom
 
-        var m = child.actualBounds
-        var mwidth = Math.max(m.width + margw, 0)
-        var mheight = Math.max(m.height + margh, 0)
+        let m = child.actualBounds
+        let mwidth = Math.max(m.width + margw, 0)
+        let mheight = Math.max(m.height + margh, 0)
         if (isFinite(colleft)) mwidth = Math.min(mwidth, allowedSize.width)
         if (isFinite(rowleft)) mheight = Math.min(mheight, allowedSize.height)
 
-        var oldAmount = 0.0
+        let oldAmount = 0.0
 
         oldAmount = rowHerald.actual
         rowHerald.actual = Math.max(rowHerald.actual, mheight)
@@ -631,30 +633,30 @@ export default {
       } // end no fixed size objects
 
       // Go through each object that spans multiple rows or columns
-      var additionalSpan = new go.Size()
+      // let additionalSpan = new go.Size()
       l = spanners.length
       if (l !== 0) {
         // record the actual sizes of every row/column before measuring spanners
         // because they will change during the loop and we want to use their 'before' values
         var actualSizeRows = []
         var actualSizeColumns = []
-        for (var i = 0; i < lrow; i++) {
+        for (let i = 0; i < lrow; i++) {
           if (!rowcol[i]) continue
           lcol = rowcol[i].length // column length in this row
-          var rowHerald = this.getRowDefinition(i)
+          let rowHerald = this.getRowDefinition(i)
           actualSizeRows[i] = rowHerald.actual
-          for (var j = 0; j < lcol; j++) {
+          for (let j = 0; j < lcol; j++) {
             // foreach column j in row i...
             if (!rowcol[i][j]) continue
-            var colHerald = this.getColumnDefinition(j)
+            let colHerald = this.getColumnDefinition(j)
             actualSizeColumns[j] = colHerald.actual
           }
         }
       }
-      for (var i = 0; i < l; i++) {
-        var child = spanners[i]
-        var rowHerald = this.getRowDefinition(child.row)
-        var colHerald = this.getColumnDefinition(child.column)
+      for (let i = 0; i < l; i++) {
+        let child = spanners[i]
+        let rowHerald = this.getRowDefinition(child.row)
+        let colHerald = this.getColumnDefinition(child.column)
 
         // If there's a set column width/height we don't care about the given width/height
         allowedSize.setTo(
@@ -662,7 +664,7 @@ export default {
           Math.max(rowHerald.minimum, Math.min(height, rowHerald.maximum)))
 
         // If it is a spanner and has a fill:
-        var stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
+        let stretch = this.getEffectiveTableStretch(child, rowHerald, colHerald)
         switch (stretch) {
           case go.GraphObject.Fill:
             if (actualSizeColumns[colHerald.index] !== 0) allowedSize.width = Math.min(allowedSize.width, actualSizeColumns[colHerald.index])
@@ -679,24 +681,24 @@ export default {
         if (isFinite(colHerald.width)) allowedSize.width = colHerald.width
         if (isFinite(rowHerald.height)) allowedSize.height = rowHerald.height
 
-        var marg = child.margin
-        var margw = marg.right + marg.left
-        var margh = marg.top + marg.bottom
-        var m = child.actualBounds
-        var mwidth = Math.max(m.width + margw, 0)
-        var mheight = Math.max(m.height + margh, 0)
+        let marg = child.margin
+        let margw = marg.right + marg.left
+        let margh = marg.top + marg.bottom
+        let m = child.actualBounds
+        let mwidth = Math.max(m.width + margw, 0)
+        let mheight = Math.max(m.height + margh, 0)
 
-        var totalRow = 0.0
-        for (var n = 0; n < child.rowSpan; n++) {
+        let totalRow = 0.0
+        for (let n = 0; n < child.rowSpan; n++) {
           if (child.row + n >= this.rowCount) break // if the row exists at all
           def = this.getRowDefinition(child.row + n)
           totalRow += def.total || 0
         }
         // def is the last row definition
         if (totalRow < mheight) {
-          var roomLeft = mheight - totalRow
+          let roomLeft = mheight - totalRow
           while (roomLeft > 0) { // Add the extra to the first row that allows us to
-            var act = def.actual || 0
+            let act = def.actual || 0
             if (isNaN(def.height) && def.maximum > act) {
               def.actual = Math.min(def.maximum, act + roomLeft)
               if (def.actual !== act) roomLeft -= def.actual - act
@@ -728,7 +730,7 @@ export default {
       } // end spanning objects
 
       l = this.columnCount
-      for (var i = 0; i < l; i++) {
+      for (let i = 0; i < l; i++) {
         if (this._colDefs[i] === undefined) continue
         def = this.getColumnDefinition(i)
         def.position = union.width
@@ -739,7 +741,7 @@ export default {
       }
 
       l = this.rowCount
-      for (var i = 0; i < l; i++) {
+      for (let i = 0; i < l; i++) {
         if (this._rowDefs[i] === undefined) continue
         def = this.getRowDefinition(i)
         def.position = union.height
@@ -754,12 +756,12 @@ export default {
     } // end measureTable
 
     /**
-    * @ignore
-    * @override
-    * @this {TableLayout}
-    */
+* @ignore
+* @override
+* @this {TableLayout}
+*/
     TableLayout.prototype.arrangeTable = function (children, union, rowcol) {
-      var l = children.length
+      // var l = children.length
       var originx = this.arrangementOrigin.x
       var originy = this.arrangementOrigin.y
       var x = 0.0
@@ -774,12 +776,12 @@ export default {
 
       var additionalSpan = new go.Size()
       // Find cell space and arrange objects:
-      for (var i = 0; i < lrow; i++) {
+      for (let i = 0; i < lrow; i++) {
         if (!rowcol[i]) continue
         lcol = rowcol[i].length // column length in this row
         var rowHerald = this.getRowDefinition(i)
         y = originy + rowHerald.position + rowHerald.computeEffectiveSpacingTop()
-        for (var j = 0; j < lcol; j++) {
+        for (let j = 0; j < lcol; j++) {
           // foreach column j in row i...
           if (!rowcol[i][j]) continue
           var colHerald = this.getColumnDefinition(j)
@@ -801,10 +803,10 @@ export default {
               additionalSpan.height += rh.total
             }
 
-            for (var n = 1; n < child.columnSpan; n++) {
+            for (let n = 1; n < child.columnSpan; n++) {
               // if the col exists at all
               if (j + n >= this.columnCount) break
-              var ch = this.getColumnDefinition(j + n)
+              let ch = this.getColumnDefinition(j + n)
               additionalSpan.width += ch.total
             }
 
@@ -822,14 +824,14 @@ export default {
             ar.height = rowheight
 
             // Also keep them for clip values
-            var cellx = x
-            var celly = y
-            var cellw = colwidth
-            var cellh = rowheight
+            // var cellx = x
+            // var celly = y
+            // let cellw = colwidth
+            // var cellh = rowheight
             // Ending rows/col might have actual spaces that are larger than the remaining space
             // Modify them for clipping regions
-            if (x + colwidth > union.width) cellw = Math.max(union.width - x, 0)
-            if (y + rowheight > union.height) cellh = Math.max(union.height - y, 0)
+            if (x + colwidth > union.width) colwidth = Math.max(union.width - x, 0)
+            if (y + rowheight > union.height) rowheight = Math.max(union.height - y, 0)
 
             // Construct alignment:
             var align = child.alignment
@@ -902,6 +904,7 @@ export default {
       } // end row
     } // end arrangeTable
     // end TableLayout class
+    // fin TableLayout
   }
 }
 </script>
