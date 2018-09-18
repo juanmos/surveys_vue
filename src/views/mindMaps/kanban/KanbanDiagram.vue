@@ -180,8 +180,13 @@ export default {
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
+        var numColumn = this.getCurrentKanbanNodeData.filter(nodeData => (nodeData.col && nodeData.isGroup === true)).length
         this.getCurrentKanbanNodeData.forEach(function (element) {
           element['color'] = '0'
+          if (!element.col && element.isGroup === true && element.key !== 'idMainBuilder') {
+            numColumn++
+            element['col'] = numColumn
+          }
         })
         var that = this
         this.getCurrentKanbanOptions.forEach(function (option) {
