@@ -109,7 +109,7 @@ export default {
       return this.findCountriesInStore({query: {removed: false}}).data
     },
     getGraphTypes () {
-      return ['Kanban', 'Links', 'Espiral']
+      return ['Kanban', 'Links', 'Espiral', 'Matriz']
     }
   },
   watch: {

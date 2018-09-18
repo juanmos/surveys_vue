@@ -106,6 +106,7 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         _working_table_id: '',
+        _board_id: '',
         removed: false
       }
     }),

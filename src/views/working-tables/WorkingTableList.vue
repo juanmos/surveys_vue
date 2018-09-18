@@ -37,6 +37,23 @@
 
                   <v-card-title style="background:rgba(0,0,0,0.5);" class="white--text pl-2 pt-2">
                     <div class="display-1 pl-12 pt-12">{{ wTable.name }}</div>
+                    <div>
+                      <v-tooltip bottom>
+                        <v-avatar
+                          slot="activator"
+                          class="tableType"
+                          :tile="tile"
+                          :size="avatarSize"
+                          color="grey lighten-4"
+                          >
+                            <v-icon v-if="wTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>
+                            <v-icon v-if="wTable.type === 'Kanban'" :class="`teal lighten-1 white--text`">view_carousel</v-icon>
+                            <v-icon v-if="wTable.type === 'Links'" :class="`lime lighten-1 white--text`">call_merge</v-icon>
+                            <v-icon v-if="wTable.type === 'Espiral'" :class="`brown lighten-1 white--text`">sync</v-icon>
+                        </v-avatar>
+                        <span>{{wTable.type}}</span>
+                      </v-tooltip>
+                    </div>
                   </v-card-title>
                 </v-layout>
                 </v-img>
@@ -58,6 +75,7 @@
                             counter
                           ></v-text-field>
                       </v-edit-dialog>
+                      {{wTable.type}}
                     </v-subheader>
                     <v-divider></v-divider>
 
@@ -243,6 +261,9 @@ export default {
   }
   .study-content {
     text-align: center;
+  }
+  .tableType {
+    margin: 40px;
   }
   v-card-title {
 

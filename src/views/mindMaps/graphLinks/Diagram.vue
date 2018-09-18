@@ -62,6 +62,7 @@ export default {
           'undoManager.isEnabled': true,
           // Model ChangedEvents get passed up to component users
           'ModelChanged': function (e) { self.$emit('model-changed', e) },
+          'ObjectSingleClicked': function (e) { self.$emit('object-clicked', e) },
           'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
         })
     // Since we have only one main element, we don't have to declare a hide method,

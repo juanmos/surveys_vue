@@ -30,7 +30,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -103,7 +103,8 @@ export default {
       newLinkDataArray: null,
       newDataArray: null,
       snackbar: false,
-      msgText: ''
+      msgText: '',
+      selection: {}
     }
   },
   methods: {
@@ -122,6 +123,10 @@ export default {
         this.newLinkDataArray = newModel.linkDataArray
         this.newDataArray = newModel.nodeDataArray
       }
+    },
+    objectClicked  (e) {
+      console.log('clickedddd', e.diagram.selection.first())
+      this.selection = e.diagram.selection.first()
     },
     changedSelection (e) {
       let node = e.diagram.selection.first()
@@ -274,7 +279,8 @@ export default {
   watch: {
     newDataArray (val) {
     },
-    getCurrentConstruct (val) {
+    selection (val) {
+      this.active = 2
     }
   },
   components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected},
