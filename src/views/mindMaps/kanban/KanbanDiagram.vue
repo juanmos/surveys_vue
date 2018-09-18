@@ -72,10 +72,8 @@ export default {
     changedSelection (e) {
       let node = e.diagram.selection.first()
       if (node) {
-        console.log('asignando current construct', node.data)
         setTimeout(() => {
           this.setCurrentConstruct(node.data)
-          console.log(node.data)
         }, 0)
       }
     },
@@ -142,20 +140,16 @@ export default {
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
-      this.optionsBuilder = []
-      console.log('tam data:', this.kanbanNodeDataArray.length)
-      this.optionsBuilder = this.kanbanNodeDataArray.filter(nodeData => (nodeData.group === 'idMainBuilder'))
-      board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton') && nodeData.row !== '1')
+      this.optionsBuilder = this.kanbanNodeDataArray.filter(nodeData => (nodeData.group === 'idMainBuilder' || nodeData.key === 'idMainBuilder'))
+      board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton'))
       board.optionsKanban = this.optionsBuilder
-      console.log('options kanban', this.optionsBuilder);
-      console.log('kanban', this.kanbanNodeDataArray);
-      /* board.patch({query: {kanban: true}}).then((result) => {
+      board.patch({query: {kanban: true}}).then((result) => {
         this.setShowSnack(true)
         this.setSnackMessage('Mesa de trabajo guardada con éxito.')
         console.log('save ok', board)
       }, (err) => {
         console.log(err)
-      }) */
+      })
     }
   },
   computed: {
@@ -184,6 +178,7 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
+      var kanbanNodeDataArray = []
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
         this.getCurrentKanbanNodeData.forEach(function (element) {
           element['color'] = '0'
@@ -192,13 +187,11 @@ export default {
         this.getCurrentKanbanOptions.forEach(function (option) {
           if (that.getCurrentKanbanNodeData.includes(option) === false) {
             that.getCurrentKanbanNodeData.push(option)
-          }else {
-            console.log('ya existe---', option)
           }
         })
-        console.log('tam total---', this.getCurrentKanbanNodeData.length)
+        kanbanNodeDataArray = this.getCurrentKanbanNodeData
       } else {
-        /* let mainConstruct = {
+        let mainConstruct = {
           'key': 'idMainBuilder',
           'text': 'CONSTRUCTOS',
           'isGroup': true,
@@ -207,13 +200,9 @@ export default {
         }
         let buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
         kanbanNodeDataArray.push(mainConstruct)
-        kanbanNodeDataArray.push(buttonBuilder) */
+        kanbanNodeDataArray.push(buttonBuilder)
       }
-      return this.getCurrentKanbanNodeData
-      /* return {
-        'class': 'go.GraphLinksModel',
-        'nodeDataArray': kanbanNodeDataArray,
-        'linkDataArray': []} */
+      return kanbanNodeDataArray
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
