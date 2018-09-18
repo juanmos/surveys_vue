@@ -53,6 +53,9 @@
                 </v-list-tile-content>
 
               </v-list-tile>
+              <v-subheader class="grey lighten-5">Mesas Personalizadas  <working-table-create-dialog :boardId="item._id"></working-table-create-dialog> </v-subheader>
+              <working-table-instance-list :boardId="item._id"></working-table-instance-list>
+              <v-divider ></v-divider>
               <v-list-tile
               @click="dialogConfirm = true; currentItem = item"
               >
@@ -66,20 +69,6 @@
               </v-list-tile>
 
           </v-list-group>
-          <v-divider inset></v-divider>
-          <v-subheader inset>Mesas de Trabajo Personalizadas  <v-spacer></v-spacer> <working-table-create-dialog></working-table-create-dialog> </v-subheader>
-          <v-list-tile
-              v-for="table in getTables"
-              :key="table._id"
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`blue lighten-1 white--text`">category</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{table.name}}</v-list-tile-title>
-                </v-list-tile-content>
-
-            </v-list-tile>
         </v-list>
       </v-card>
     </v-flex>
@@ -121,6 +110,7 @@
 import {mapGetters, mapActions} from 'vuex'
 import BoardsCreateDialog from './BoardsCreateDialog'
 import WorkingTableCreateDialog from './../working-tables/working-table-instances/WorkingTableCreateDialog'
+import WorkingTableInstanceList from './../working-tables/working-table-instances/WorkingTableInstanceList'
 export default {
   props: ['boards'],
   data () {
@@ -192,7 +182,7 @@ export default {
       return this.findTablesInStore({query: {removed: false, _study_id: this.getStudyId}}).data
     }
   },
-  components: {BoardsCreateDialog, WorkingTableCreateDialog}
+  components: {BoardsCreateDialog, WorkingTableCreateDialog, WorkingTableInstanceList}
 }
 </script>
 <style>

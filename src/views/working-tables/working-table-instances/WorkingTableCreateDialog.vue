@@ -3,7 +3,7 @@
         <v-btn slot="activator" icon>
         <v-tooltip bottom>
            <v-icon  slot="activator">add</v-icon>
-           <span>{{$FeathersVuex}}</span>
+           <span>Agregar Mesa Personalizada</span>
         </v-tooltip>
         </v-btn>
         <v-card>
@@ -29,7 +29,7 @@ import {mapGetters, mapActions} from 'vuex'
 
 import WorkingTableInstanceForm from './WorkingTableInstanceForm'
 export default {
-  props: ['dialog', 'study_id'],
+  props: ['dialog', 'study_id', 'boardId'],
   data () {
     return {
       mutableDialog: null,
@@ -43,7 +43,7 @@ export default {
     ]),
     create () {
       const { TableInstance } = this.$FeathersVuex
-      const tInstance = new TableInstance({_study_id: this.getStudyId, ...this.requestData})
+      const tInstance = new TableInstance({_board_id: this.boardId, ...this.requestData})
       tInstance.save().then((result) => {
         this.setShowSnack(true)
         this.setSnackMessage('Instancia de mesa de trabajo creada')
