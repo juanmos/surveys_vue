@@ -147,7 +147,7 @@ export default {
       board.patch({query: {kanban: true}}).then((result) => {
         this.setShowSnack(true)
         this.setSnackMessage('Mesa de trabajo guardada con éxito.')
-        console.log('table save ok', board)
+        console.log('save ok', board)
       }, (err) => {
         console.log(err)
       })
