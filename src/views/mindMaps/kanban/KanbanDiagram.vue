@@ -183,6 +183,7 @@ export default {
     ]),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
+      console.log('board', this.getCurrentBoard)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
         kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
         kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
