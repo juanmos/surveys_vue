@@ -52,7 +52,9 @@ export default {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstruct'
+      'setCurrentConstruct',
+      'setShowSnack',
+      'setSnackMessage'
     ]),
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
@@ -143,8 +145,11 @@ export default {
       board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton'))
       board.optionsKanban = this.optionsBuilder
       board.patch({query: {kanban: true}}).then((result) => {
-        // this.setSnackMessage('Mesa de trabajo guardado con éxito.')
+        this.setShowSnack(true)
+        this.setSnackMessage('Mesa de trabajo guardada con éxito.')
         console.log('table save ok', board)
+      }, (err) => {
+        console.log(err)
       })
     }
   },
