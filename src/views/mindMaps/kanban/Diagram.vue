@@ -982,7 +982,6 @@ export default {
                font: '11px Lato, sans-serif',
                editable: true,
                isMultiline: false,
-               stroke: '#000',
                maxSize: new go.Size(130, NaN),
                alignment: go.Spot.TopLeft
              },
