@@ -37,6 +37,7 @@ export default {
   data () {
     return {
       active: null,
+      cont: 0,
       currentNode: null,
       savedModelText: '',
       finisTransaction: true,
@@ -71,10 +72,8 @@ export default {
     changedSelection (e) {
       let node = e.diagram.selection.first()
       if (node) {
-        console.log('asignando current construct', node.data)
         setTimeout(() => {
           this.setCurrentConstruct(node.data)
-          console.log(node.data)
         }, 0)
       }
     },
@@ -141,7 +140,7 @@ export default {
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
       let board = new Board(this.getCurrentBoard)
-      this.optionsBuilder = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key === 'idMainBuilder' || nodeData.group === 'idMainBuilder'))
+      this.optionsBuilder = this.kanbanNodeDataArray.filter(nodeData => (nodeData.group === 'idMainBuilder' || nodeData.key === 'idMainBuilder'))
       board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton'))
       board.optionsKanban = this.optionsBuilder
       board.patch({query: {kanban: true}}).then((result) => {
@@ -178,18 +177,19 @@ export default {
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
-    ...mapGetters([
-      'getCurrentConstruct'
-    ]),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
-      console.log('board', this.getCurrentBoard)
-      if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentBoard.kanbanNodeDataArray.length > 0) {
-        kanbanNodeDataArray = this.getCurrentBoard.kanbanNodeDataArray
-        kanbanNodeDataArray.push(...this.getCurrentBoard.optionsKanban)
-        kanbanNodeDataArray.forEach(function (element) {
+      if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
+        this.getCurrentKanbanNodeData.forEach(function (element) {
           element['color'] = '0'
         })
+        var that = this
+        this.getCurrentKanbanOptions.forEach(function (option) {
+          if (that.getCurrentKanbanNodeData.includes(option) === false) {
+            that.getCurrentKanbanNodeData.push(option)
+          }
+        })
+        kanbanNodeDataArray = this.getCurrentKanbanNodeData
       } else {
         let mainConstruct = {
           'key': 'idMainBuilder',
@@ -203,16 +203,15 @@ export default {
         kanbanNodeDataArray.push(buttonBuilder)
       }
       return kanbanNodeDataArray
-      /* return {
-        'class': 'go.GraphLinksModel',
-        'nodeDataArray': kanbanNodeDataArray,
-        'linkDataArray': []} */
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
-    getCurrentNodeData () {
-      return this.getCurrentBoard.nodeDataArray
+    getCurrentKanbanNodeData () {
+      return this.getCurrentBoard.kanbanNodeDataArray
+    },
+    getCurrentKanbanOptions () {
+      return this.getCurrentBoard.optionsKanban
     },
     getMainConstructsBoard () {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
@@ -227,13 +226,7 @@ export default {
     ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model }
   },
-  watch: {
-    newDataArray (val) {
-      console.log('new model changed', val)
-    },
-    getKanbanDiagramData (val) {
-    }
-  },
+  watch: {},
   components: {Diagram, ConstructsComponent},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
