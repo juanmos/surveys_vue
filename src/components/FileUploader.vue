@@ -39,7 +39,7 @@ export default {
     },
     onFilePicked (e) {
       let file = e.target.files[0]
-      let form = {}
+      let form = new FormData()
       if (file) {
         this.imageName = file.name
         if (this.imageName.lastIndexOf('.') <= 0) {
@@ -50,8 +50,8 @@ export default {
         fr.addEventListener('load', () => {
           this.imageUrl = fr.result
           this.imageFile = file
-          form['type'] = 'construct'
-          form['file'] = this.imageFile
+          form.append('type', 'construct')
+          form.append('file', this.imageFile)
           this.save(form)
         })
       } else {
