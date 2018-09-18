@@ -7,7 +7,7 @@
         <v-layout row wrap>
           <v-flex v-for="wTable in getWorkingTables" :key="wTable._id" xs4>
               <v-card class="study-card" >
-                <v-card-media
+                <v-img
                   src="https://images.unsplash.com/photo-1502404679462-d669245fc482?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3ef5d7093916f0ff49461a52fe234703&auto=format&fit=crop&w=4050&q=80"
                   height="200px"
                 >
@@ -39,7 +39,7 @@
                     <div class="display-1 pl-12 pt-12">{{ wTable.name }}</div>
                   </v-card-title>
                 </v-layout>
-                </v-card-media>
+                </v-img>
                   <v-list
                     subheader
                     three-line

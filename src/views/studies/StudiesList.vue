@@ -7,7 +7,7 @@
         <v-layout row wrap>
           <v-flex v-for="study in getStudies" :key="study._id" xs4>
               <v-card class="study-card" :light="true" >
-                <v-card-media
+                <v-img
                   src="https://images.unsplash.com/photo-1519419166318-4f5c601b8e6c?ixlib=rb-0.3.5&s=281a47878ba7292df40256a164dd3058&auto=format&fit=crop&w=3967&q=80"
                   height="200px"
                 >
@@ -40,7 +40,7 @@
                     <div class="display-1 pl-12 pt-12">{{ study.name }}</div>
                   </v-card-title>
                 </v-layout>
-                </v-card-media>
+                </v-img>
                   <v-list
                     subheader
                     three-line

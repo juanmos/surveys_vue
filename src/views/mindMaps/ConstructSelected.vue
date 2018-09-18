@@ -36,7 +36,7 @@
 
                                     <v-divider
                                     ></v-divider>
-                                    <constructs-child-component :constructDetailMode="true"></constructs-child-component>
+                                    <constructs-child-component @addChildNode="addChildNode" @deleteNode="deleteSelected" @editNode="editSelected" :constructDetailMode="true"></constructs-child-component>
                                 </template>
                             </v-list>
                         </v-tab-item>
@@ -54,7 +54,24 @@
 
                                     <v-divider
                                     ></v-divider>
-                                    <constructs-child-component></constructs-child-component>
+
+                                </template>
+                            </v-list>
+                        </v-tab-item>
+                        <v-tab>
+                            Imagenes y Videos
+                        </v-tab>
+                        <v-tab-item>
+                            <v-list two-line>
+                                <template>
+                                    <v-subheader
+                                    >
+                                    Imagenes y Videos
+                                    </v-subheader>
+                                        <construct-attachments></construct-attachments>
+                                    <v-divider
+                                    ></v-divider>
+
                                 </template>
                             </v-list>
                         </v-tab-item>
@@ -71,24 +88,7 @@
 
                                     <v-divider
                                     ></v-divider>
-                                    <constructs-child-component></constructs-child-component>
-                                </template>
-                            </v-list>
-                        </v-tab-item>
-                        <v-tab>
-                            Imagenes y Videos
-                        </v-tab>
-                        <v-tab-item>
-                            <v-list two-line>
-                                <template>
-                                    <v-subheader
-                                    >
-                                    Imagenes y Videos
-                                    </v-subheader>
 
-                                    <v-divider
-                                    ></v-divider>
-                                    <constructs-child-component></constructs-child-component>
                                 </template>
                             </v-list>
                         </v-tab-item>
@@ -99,7 +99,7 @@
                 <v-card
                    v-else
                   >
-                  <v-jumbotron>
+                  <v-responsive>
                         <v-container fill-height>
                         <v-layout align-center>
                             <v-flex>
@@ -110,7 +110,7 @@
                             </v-flex>
                         </v-layout>
                         </v-container>
-                    </v-jumbotron>
+                    </v-responsive>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -120,9 +120,27 @@
 <script>
 import {mapGetters} from 'vuex'
 import ConstructsChildComponent from './ConstructsChildComponent'
+import ConstructAttachments from './../mindMaps/ConstructAttachments'
 export default {
   data () {
     return {
+    }
+  },
+  methods: {
+    addChildNode (construct) {
+      let mutableConstruct = Object.assign({}, construct)
+      mutableConstruct.color = 'rgba(128,128,128,0.2)'
+      mutableConstruct.fromSelected = true
+      mutableConstruct.selected = this.getCurrentConstruct.key
+      this.$emit('addNode', mutableConstruct)
+    },
+    deleteSelected (item) {
+      let mutableItem = item
+      this.$emit('deleteNode', mutableItem)
+    },
+    editSelected (item) {
+      let mutableItem = item
+      this.$emit('editNode', mutableItem)
     }
   },
   computed: {
@@ -130,7 +148,7 @@ export default {
       'getCurrentConstruct'
     ])
   },
-  components: {ConstructsChildComponent}
+  components: {ConstructsChildComponent, ConstructAttachments}
 }
 </script>
 

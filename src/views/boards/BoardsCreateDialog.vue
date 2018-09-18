@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-
+import {mapGetters, mapActions} from 'vuex'
 import BoardsForm from './BoardsForm'
 export default {
   props: ['dialog', 'study_id'],
@@ -37,6 +36,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     create () {
       // method with feathers vuex to create an user
       const { Board } = this.$FeathersVuex
@@ -55,6 +58,8 @@ export default {
         }
       ]
       board.save().then((result) => {
+        this.setSnackMessage('Tematica Guardada')
+        this.setShowSnack(true)
       }, (err) => {
         console.log(err)
       })
