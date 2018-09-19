@@ -6,31 +6,53 @@
         <v-toolbar
           flat
         >
+           <!-- <mind-map-filter @sendFilters="applyFilters"></mind-map-filter> -->
           <v-spacer></v-spacer>
           <v-toolbar-items class="hidden-sm-and-down">
+            <v-tooltip :color=" filteredMode ? 'primary' : 'grey'" bottom>
+            <v-btn
+              flat
+              :loading="loading"
+              :disabled="loading"
+              slot="activator"
+              :color="filteredMode ? 'primary': 'black'"
+              @click.stop="changeFilteredMode"
+            >
+              <v-icon right dark>filter_list</v-icon>
+            </v-btn>
+            <span><b v-if="filteredMode">Filtro solo madres Activado</b> <b v-else>Filtro solo madres desactivado</b></span>
+            </v-tooltip>
+             <v-tooltip v-if="!hasMainConstruct" color="primary" bottom>
             <v-btn
               flat
               :loading="loading"
               :disabled="loading"
               @click.stop="addMainConstruct"
-              v-if="!hasMainConstruct"
+              slot="activator"
             >
-              constructo tematica
               <v-icon right dark>add</v-icon>
             </v-btn>
-            <v-btn
-              flat
-              :loading="loading"
-              :disabled="loading"
-              @click.stop="saveBoardChanges"
-            >
-              Guardar
-              <v-icon right dark>cloud_upload</v-icon>
-            </v-btn>
+            <span>Agregar constructo principal</span>
+             </v-tooltip>
+            <v-tooltip color="primary" bottom>
+              <v-btn
+                flat
+                :loading="loading"
+                :disabled="loading"
+                @click.stop="saveBoardChanges"
+                slot="activator"
+                v-if="!filteredMode"
+              >
+                <v-icon right dark>cloud_upload</v-icon>
+              </v-btn>
+              <span>Guardar Cambios</span>
+            </v-tooltip>
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram v-show="!filteredMode" ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          </diagram>
+          <diagram v-show="filteredMode" ref="diag2" v-bind:model-data="{nodeDataArray: filteredNodeDataArray , linkDataArray: filteredLinkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -91,6 +113,7 @@ import ConstructCategories from './../CounstructCategories'
 import ConstructsComponent from './../ConstructsComponet'
 import ConstructsChildComponent from './../ConstructsChildComponent'
 import ConstructSelected from './../ConstructSelected'
+import MindMapFilter from './../components/filters/MindMapFilter'
 export default {
   data () {
     return {
@@ -104,7 +127,8 @@ export default {
       newDataArray: null,
       snackbar: false,
       msgText: '',
-      selection: {}
+      selection: {},
+      filteredMode: false
     }
   },
   methods: {
@@ -265,6 +289,22 @@ export default {
     },
     addMainConstruct () {
       this.addNode({text: this.getCurrentBoard.name, main: true, color: '#B2DFDB'})
+    },
+    // after getting filter component data
+    applyFilters (filters) {
+      let filtersClone = Object.assign({}, filters)
+      if (filtersClone.showMothers) {
+        this.filteredMode = true
+        let resultMain = this.model.nodeDataArray.filter(construct => {
+          return construct.mother || construct.main
+        })
+        this.model.nodeDataArray = resultMain
+      } else {
+        this.filteredMode = false
+      }
+    },
+    changeFilteredMode () {
+      this.filteredMode = !this.filteredMode
     }
   },
   computed: {
@@ -316,7 +356,18 @@ export default {
         }).length !== 0 : false
     },
     ...mapState(['currentMapId']),
-    model () { return this.$refs.diag.model }
+    model () { return this.$refs.diag.model },
+    filteredNodeDataArray () {
+      return this.getCurrentBoard.nodeDataArray.filter(construct => construct.main || construct.mother)
+    },
+    filteredLinkDataArray () {
+      let mainConstruct = this.getCurrentBoard.nodeDataArray.filter(construct => construct.main)[0]
+      if (mainConstruct) {
+        return this.getCurrentBoard.linkDataArray.filter(link => Number(link.from) === Number(mainConstruct.key))
+      } else {
+        return []
+      }
+    }
   },
   watch: {
     newDataArray (val) {
@@ -325,7 +376,7 @@ export default {
       this.active = 2
     }
   },
-  components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected},
+  components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected, MindMapFilter},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
       const constructs = response.data || response

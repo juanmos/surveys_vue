@@ -1,11 +1,7 @@
 <template>
     <v-app id="inspire">
       <loading-component v-if="loading"></loading-component>
-      <div class="particles">
-           <particles-background></particles-background>
-      </div>
-       <v-content>
-         <v-container fluid fill-height>
+          <particles-background class="particles"></particles-background>
           <v-layout align-center justify-center>
                 <v-card
                   id="e3"
@@ -24,8 +20,6 @@
                   <snack-message v-if="logErr" :message="`USUARIO O CONTRASEÑA INVALIDO`" :type="'error'" ></snack-message>
                 </v-card>
           </v-layout>
-         </v-container>
-       </v-content>
      </v-app>
 </template>
 
@@ -69,9 +63,10 @@ export default {
     position:absolute;
     width: 100%; height: 100%;
     background-image: url("");
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-size: cover; background-position: 50% 50%;
-    background-color: #fff;
+    background-color: #BBDEFB;
+
   }
   .v-toolbar_title {
     display: none;
