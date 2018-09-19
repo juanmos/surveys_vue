@@ -179,6 +179,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
       var kanbanNodeDataArray = []
+      console.log('id', this.getCurrentBoard._id)
       if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
         var numColumn = this.getCurrentKanbanNodeData.filter(nodeData => (nodeData.col && nodeData.isGroup === true)).length
         this.getCurrentKanbanNodeData.forEach(function (element) {
@@ -246,4 +247,7 @@ export default {
 }
 </script>
 <style>
+textarea {
+    background-color: aliceblue !important;
+}
 </style>
