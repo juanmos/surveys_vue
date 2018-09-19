@@ -150,6 +150,7 @@ export default {
       var data = {text: val.text, mother: val.mother, color: val.color, main: val.main}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
+
       // also manipulate the Diagram by changing its Diagram.selection collection
       // this condition is to select the current created node (it doesnt apply when you have a node already selected)
       if (!val.fromSelected) {
@@ -165,15 +166,8 @@ export default {
           }
         )
       }
-      let msg = ''
-      if (val.mother) {
-        msg = 'Constructo Madre Creado'
-      } else if (val.main) {
-        msg = 'Constructo Principal Creado'
-      } else {
-        msg = 'Constructo Creado'
-      }
-      this.showMsg(msg)
+      // function that creates relations depending on construct type
+      this.postCreateRelations(val)
     },
     deleteNode (val) {
       console.log('llego arriba')
@@ -185,6 +179,54 @@ export default {
         model.removeNodeData(val)
         model.commitTransaction('Deleted Node')
       }
+    },
+    postCreateRelations (val) {
+      var model = this.model
+      // ******* adding datalinks depending on construct type and message (relation between mothers and theme) *****
+      let msg = ''
+      // datalinks when a mother construct is created
+      if (val.mother) {
+        console.log('mother creado y este es el dataarray', this.model.nodeDataArray)
+        let resultMain = this.model.nodeDataArray.filter(construct => {
+          return construct.main
+        })
+        console.log('resultMain', resultMain[0])
+        // if a main construct is created
+        if (resultMain[0]) {
+          model.addLinkData(
+            {
+              from: resultMain[0].key,
+              to: this.model.nodeDataArray[(this.model.nodeDataArray.length - 1)].key,
+              points: []
+            }
+          )
+        }
+        msg = 'Constructo Madre Creado'
+      } else if (val.main) {
+        console.log('este es el constructo main creado', this.model.nodeDataArray[(this.model.nodeDataArray.length - 1)].key)
+        let motherConstructs = this.model.nodeDataArray.filter(construct => {
+          return construct.mother
+        })
+        // if there are mother constructs created then create the relationship with the main created
+        if (motherConstructs.length > 0) {
+          motherConstructs.forEach(construct => {
+            model.addLinkData(
+              {
+                from: this.model.nodeDataArray[(this.model.nodeDataArray.length - 1)].key,
+                to: construct.key,
+                points: []
+              }
+            )
+          })
+        }
+        console.log('estos son los constructos madre', motherConstructs)
+        // datalinks when a main construct is created
+        msg = 'Constructo Principal Creado'
+      } else {
+        // datalinks when a simple construct is created (nothing to do for now...)
+        msg = 'Constructo Creado'
+      }
+      this.showMsg(msg)
     },
 
     // Here we modify VUE's view model directly, and
