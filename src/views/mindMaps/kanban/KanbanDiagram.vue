@@ -157,28 +157,41 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      this.cont++
-      var kanbanNodeDataArray = []
-      // var addNewButton = false
-      console.log('id', this.getCurrentBoard._id)
-      if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
-        var numColumn = this.getCurrentKanbanNodeData.filter(nodeData => (nodeData.col && nodeData.isGroup === true)).length
-        var position = 0
-        var that = this
-        this.getCurrentKanbanNodeData.forEach(function (element) {
-          position++
-          element['color'] = '0'
-          if (!element.col && element.isGroup === true && element.key !== 'idMainBuilder') {
-            numColumn++
-            element['col'] = numColumn
+      return this.getCurrentBoard.kanbanNodeDataArray.map(node => {
+        return {
+          col: node.col,
+          text: node.text,
+          isGroup: node.isGroup,
+          group: node.group,
+          key: node.key,
+          color: '0'
+        }
+      }).concat(
+        [
+          {
+            row: 1,
+            key: 'idMainBuilder',
+            text: 'CONSTRUCTOS',
+            isGroup: true,
+            colspan: 6,
+            toDelete: true
+          },
+          {
+            key: '-1',
+            group: 'idMainBuilder',
+            category: 'newbutton',
+            loc: '12 35.52284749830794',
+            toDelete: true
           }
-        })
-        kanbanNodeDataArray = this.getCurrentKanbanNodeData
-      } else {
-        // kanbanNodeDataArray.push(mainConstruct)
-        // kanbanNodeDataArray.push(buttonBuilder)
-      }
-      return kanbanNodeDataArray
+        ]
+      )
+      // var mainConstruct = {'key': 'idMainBuilder', 'text': 'CONSTRUCTOS', 'isGroup': true, 'row': 1, 'colspan': 6}
+      // var buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
+      // this.getCurrentKanbanNodeData.push(mainConstruct)
+      // this.getCurrentKanbanNodeData.push(buttonBuilder)
+    },
+    getKanbanDiagramOptions () {
+      return this.getCurrentBoard.kanbanNodeDataArray.filter(node => node.group === 'idMainBuilder').length > 0
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
@@ -208,8 +221,7 @@ export default {
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response
       console.log(boards)
-    }),
-    this.addOptionsDiagram()
+    })
   }
 }
 </script>
