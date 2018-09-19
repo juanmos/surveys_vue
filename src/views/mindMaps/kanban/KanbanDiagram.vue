@@ -124,11 +124,24 @@ export default {
         console.log(err)
       })
     },
-    addOptionsDiagram () {
-      var mainConstruct = {'key': 'idMainBuilder', 'text': 'CONSTRUCTOS', 'isGroup': true, 'row': 1, 'colspan': 6}
-      var buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
-      this.getCurrentKanbanNodeData.push(mainConstruct)
-      this.getCurrentKanbanNodeData.push(buttonBuilder)
+    getKanbanDiagramOptions () {
+      return this.getCurrentBoard.optionsKanban.filter(node => node.group === 'idMainBuilder').length > 0 ? this.getCurrentBoard.optionsKanban : [
+        {
+          row: 1,
+          key: 'idMainBuilder',
+          text: 'CONSTRUCTOS',
+          isGroup: true,
+          colspan: 6,
+          toDelete: true
+        },
+        {
+          key: '-1',
+          group: 'idMainBuilder',
+          category: 'newbutton',
+          loc: '12 35.52284749830794',
+          toDelete: true
+        }
+      ]
     }
   },
   computed: {
@@ -157,6 +170,7 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
+      var that = this
       return this.getCurrentBoard.kanbanNodeDataArray.map(node => {
         return {
           col: node.col,
@@ -167,31 +181,8 @@ export default {
           color: '0'
         }
       }).concat(
-        [
-          {
-            row: 1,
-            key: 'idMainBuilder',
-            text: 'CONSTRUCTOS',
-            isGroup: true,
-            colspan: 6,
-            toDelete: true
-          },
-          {
-            key: '-1',
-            group: 'idMainBuilder',
-            category: 'newbutton',
-            loc: '12 35.52284749830794',
-            toDelete: true
-          }
-        ]
+        that.getKanbanDiagramOptions()
       )
-      // var mainConstruct = {'key': 'idMainBuilder', 'text': 'CONSTRUCTOS', 'isGroup': true, 'row': 1, 'colspan': 6}
-      // var buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
-      // this.getCurrentKanbanNodeData.push(mainConstruct)
-      // this.getCurrentKanbanNodeData.push(buttonBuilder)
-    },
-    getKanbanDiagramOptions () {
-      return this.getCurrentBoard.kanbanNodeDataArray.filter(node => node.group === 'idMainBuilder').length > 0
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
