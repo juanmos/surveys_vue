@@ -58,7 +58,6 @@ export default {
       'setSnackMessage'
     ]),
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
-
     // this event listener is declared on the
     modelChanged  (e) {
       if (e.isTransactionFinished) { // show the model data in the page's TextArea
@@ -93,32 +92,14 @@ export default {
       var diagram = this.$refs.diag.diagram
       diagram.select(diagram.findNodeForData(data))
     },
-    addNodeBuilder (val) {
-      var model = this.model
-      var data = {text: val.text, group: '1', color: '0', loc: '671 23.52284749830794'}
-      model.addNodeData(data)
-      model.commitTransaction('added Node and Link')
-      // also manipulate the Diagram by changing its Diagram.selection collection
-      var diagram = this.$refs.diag.diagram
-      diagram.select(diagram.findNodeForData(data))
-    },
     deleteNode (val) {
       var model = this.model
-      model.removeNodeData(val)
-    },
-
-    // Here we modify VUE's view model directly, and
-    // then ask the GoJS Diagram to update everything from the data.
-    // This is less efficient than calling the appropriate GoJS Model methods.
-    // NOTE: Undo will not be able to restore all of the state properly!!
-    modifyStuff () {
-      var data = this.diagramData
-      data.nodeDataArray[0].color = 'red'
-      // Note here that because we do not have the GoJS Model,
-      // we cannot find out what values would be unique keys, for reference by the link data.
-      data.nodeDataArray.push({ key: ++this.counter2, text: this.counter2.toString(), color: 'orange' })
-      data.linkDataArray.push({ from: 2, to: this.counter2 })
-      this.updateDiagramFromData()
+      if (val.main) {
+        // this.showMsg('No se puede borrar constructo principal')
+      } else {
+        model.removeNodeData(val)
+        // model.commitTransaction('Deleted Node')
+      }
     },
     editNode (event) {
       let field = event.field
@@ -128,14 +109,6 @@ export default {
       model.setDataProperty(event, field, event[field])
       model.commitTransaction('edited text')
       this.saveBoardChanges()
-    },
-    editNodeBuilder (event) {
-      let field = event.field
-      delete event.field
-      let model = this.model
-      model.startTransaction()
-      model.setDataProperty(event, field, event[field])
-      model.commitTransaction('edited text')
     },
     saveBoardChanges () {
       const {Board} = this.$FeathersVuex
@@ -150,6 +123,12 @@ export default {
       }, (err) => {
         console.log(err)
       })
+    },
+    addOptionsDiagram () {
+      var mainConstruct = {'key': 'idMainBuilder', 'text': 'CONSTRUCTOS', 'isGroup': true, 'row': 1, 'colspan': 6}
+      var buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
+      this.getCurrentKanbanNodeData.push(mainConstruct)
+      this.getCurrentKanbanNodeData.push(buttonBuilder)
     }
   },
   computed: {
@@ -178,37 +157,41 @@ export default {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
-      var kanbanNodeDataArray = []
-      console.log('id', this.getCurrentBoard._id)
-      if (this.getCurrentBoard.hasOwnProperty('kanbanNodeDataArray') && this.getCurrentKanbanNodeData.length > 0) {
-        var numColumn = this.getCurrentKanbanNodeData.filter(nodeData => (nodeData.col && nodeData.isGroup === true)).length
-        this.getCurrentKanbanNodeData.forEach(function (element) {
-          element['color'] = '0'
-          if (!element.col && element.isGroup === true && element.key !== 'idMainBuilder') {
-            numColumn++
-            element['col'] = numColumn
-          }
-        })
-        var that = this
-        this.getCurrentKanbanOptions.forEach(function (option) {
-          if (that.getCurrentKanbanNodeData.includes(option) === false) {
-            that.getCurrentKanbanNodeData.push(option)
-          }
-        })
-        kanbanNodeDataArray = this.getCurrentKanbanNodeData
-      } else {
-        let mainConstruct = {
-          'key': 'idMainBuilder',
-          'text': 'CONSTRUCTOS',
-          'isGroup': true,
-          'row': 1,
-          'colspan': 6
+      return this.getCurrentBoard.kanbanNodeDataArray.map(node => {
+        return {
+          col: node.col,
+          text: node.text,
+          isGroup: node.isGroup,
+          group: node.group,
+          key: node.key,
+          color: '0'
         }
-        let buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
-        kanbanNodeDataArray.push(mainConstruct)
-        kanbanNodeDataArray.push(buttonBuilder)
-      }
-      return kanbanNodeDataArray
+      }).concat(
+        [
+          {
+            row: 1,
+            key: 'idMainBuilder',
+            text: 'CONSTRUCTOS',
+            isGroup: true,
+            colspan: 6,
+            toDelete: true
+          },
+          {
+            key: '-1',
+            group: 'idMainBuilder',
+            category: 'newbutton',
+            loc: '12 35.52284749830794',
+            toDelete: true
+          }
+        ]
+      )
+      // var mainConstruct = {'key': 'idMainBuilder', 'text': 'CONSTRUCTOS', 'isGroup': true, 'row': 1, 'colspan': 6}
+      // var buttonBuilder = {'key': -1, 'group': 'idMainBuilder', 'category': 'newbutton', 'loc': '12 35.52284749830794'}
+      // this.getCurrentKanbanNodeData.push(mainConstruct)
+      // this.getCurrentKanbanNodeData.push(buttonBuilder)
+    },
+    getKanbanDiagramOptions () {
+      return this.getCurrentBoard.kanbanNodeDataArray.filter(node => node.group === 'idMainBuilder').length > 0
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
@@ -235,10 +218,6 @@ export default {
   watch: {},
   components: {Diagram, ConstructsComponent},
   mounted () {
-    this.findMainConstructs({query: {removed: false}}).then(response => {
-      const constructs = response.data || response
-      console.log(constructs)
-    })
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response
       console.log(boards)
