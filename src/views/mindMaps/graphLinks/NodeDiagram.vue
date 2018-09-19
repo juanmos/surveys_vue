@@ -41,7 +41,6 @@
                 :disabled="loading"
                 @click.stop="saveBoardChanges"
                 slot="activator"
-                v-if="!filteredMode"
               >
                 <v-icon right dark>cloud_upload</v-icon>
               </v-btn>
@@ -52,7 +51,7 @@
         <span>
           <diagram v-show="!filteredMode" ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
-          <diagram v-show="filteredMode" ref="diag2" v-bind:model-data="{nodeDataArray: filteredNodeDataArray , linkDataArray: filteredLinkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram v-show="filteredMode" ref="diag2" v-bind:model-data="{nodeDataArray: filteredNodeDataArray , linkDataArray: filteredLinkDataArray}" v-on:model-changed="dummy"  style="width:100%; height:600px">
           </diagram>
         </span>
         <v-tabs
@@ -305,7 +304,8 @@ export default {
     },
     changeFilteredMode () {
       this.filteredMode = !this.filteredMode
-    }
+    },
+    dummy () {}
   },
   computed: {
     currentNodeText: {
