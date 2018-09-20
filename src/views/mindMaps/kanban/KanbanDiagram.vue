@@ -21,7 +21,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getKanbanDiagramData, linkDataArray: ''}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:750px">
+          <diagram ref="diag" v-bind:model-data="{nodeDataArray: getKanbanDiagramData, linkDataArray: ''}" v-on:model-changed="modelChanged" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
         </span>
       </v-card>
