@@ -4,15 +4,16 @@
             v-for="table in getTables"
             :key="table._id"
             class="action"
+            @click="selectCurrentDiagram(table.workingTable.component, table._board_id)"
             >
             <v-list-tile-avatar>
-                <v-icon v-if="table.workingTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>
-                <v-icon v-if="table.workingTable.type === 'Kanban'" :class="`teal lighten-1 white--text white--text`">view_carousel</v-icon>
-                <v-icon v-if="table.workingTable.type === 'Links'" :class="`lime lighten-1 white--text`">call_merge</v-icon>
-                <v-icon v-if="table.workingTable.type === 'Espiral'" :class="`brown lighten-1 white--text`">sync</v-icon>
+                <v-icon v-if="table.workingTable && table.workingTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>
+                <v-icon v-if="table.workingTable && table.workingTable.type === 'Kanban'" :class="`teal lighten-1 white--text white--text`">view_carousel</v-icon>
+                <v-icon v-if="table.workingTable && table.workingTable.type === 'Links'" :class="`lime lighten-1 white--text`">call_merge</v-icon>
+                <v-icon v-if="table.workingTable && table.workingTable.type === 'Espiral'" :class="`brown lighten-1 white--text`">sync</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content>
-                <v-list-tile-title>{{table.name}} - <span class="caption blue-grey--text">{{table.workingTable.name}}</span></v-list-tile-title>
+                <v-list-tile-title >{{table.name}} - <span v-if="table.workingTable" class="caption blue-grey--text">{{table.workingTable.name}}</span></v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-btn @click="dialogConfirm = true; currentItem = table" class="delete-btn" icon ripple>
@@ -74,6 +75,10 @@ export default {
   },
   methods: {
     ...mapActions('table-instances', { findTables: 'find' }),
+    ...mapActions([
+      'setCurrentDiagram',
+      'setCurrentMapId'
+    ]),
     deleteTable () {
       const {TableInstance} = this.$FeathersVuex
       const tableInstance = new TableInstance(this.currentItem)
@@ -82,12 +87,16 @@ export default {
         console.log('table eliminada', result)
         this.dialogConfirm = false
       })
+    },
+    selectCurrentDiagram (typeDiagram, id) {
+      this.setCurrentDiagram(typeDiagram)
+      this.setCurrentMapId(id)
     }
   },
   created () {
-    this.findTables({ query: {removed: false, _study_id: this.getStudyId} }).then(response => {
+    this.findTables({ query: {removed: false, _board_id: this.boardId} }).then(response => {
       const tables = response.data || response
-      console.log(tables)
+      console.log('tables cargadasss', tables)
     })
   }
 }

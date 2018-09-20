@@ -12,7 +12,7 @@
               <v-flex xs12>
                 <v-text-field
                   box
-                  color="blue-grey lighten-2"
+
                   label="Nombre"
                   :append-icon="'name'"
                   v-model="workingTable.name"
@@ -21,6 +21,7 @@
               </v-flex>
               <v-flex xs12>
                 <v-select
+                  @change="changeComponent"
                   label="Seleccione Tipo de Grafico"
                   v-model="workingTable.type"
                   :items="getGraphTypes"
@@ -35,7 +36,6 @@
                     v-model="workingTable.description"
                     label="Descripcion"
                     box
-                    color="blue-grey lighten-2"
                   ></v-textarea>
               </v-flex>
             </v-layout>
@@ -58,7 +58,9 @@ export default {
     return {
       workingTable: {
         name: '',
-        description: ''
+        description: '',
+        type: '',
+        component: ''
       },
       valid: false,
       name: '',
@@ -88,6 +90,11 @@ export default {
         console.log(cities)
       })
       console.log(this.study._country_id)
+    },
+    changeComponent () {
+      if (this.workingTable.type === 'Matriz') {
+        this.workingTable.component = 'MatrixComponent'
+      }
     }
   },
   computed: {

@@ -98,6 +98,7 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         description: '',
+        component: '',
         type: '',
         removed: false
       }

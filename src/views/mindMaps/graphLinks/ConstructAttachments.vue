@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import FileUploader from './../../components/FileUploader'
+import FileUploader from './../../../components/FileUploader'
 export default {
   data: () => ({
     show: false

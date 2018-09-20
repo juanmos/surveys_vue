@@ -120,7 +120,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import ConstructsChildComponent from './ConstructsChildComponent'
-import ConstructAttachments from './../mindMaps/ConstructAttachments'
+import ConstructAttachments from './ConstructAttachments'
 export default {
   data () {
     return {
