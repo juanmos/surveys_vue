@@ -64,7 +64,7 @@ export default {
         this.savedModelText = e.model.toJson()
         let newModel = JSON.parse(e.model.toJson())
         this.kanbanNodeDataArray = newModel.nodeDataArray
-        // console.log(this.kanbanNodeDataArray)
+        console.log(this.kanbanNodeDataArray)
         this.finisTransaction = false
       }
     },
@@ -116,6 +116,7 @@ export default {
       this.optionsBuilder = this.kanbanNodeDataArray.filter(nodeData => (nodeData.group === 'idMainBuilder' || nodeData.key === 'idMainBuilder'))
       board.kanbanNodeDataArray = this.kanbanNodeDataArray.filter(nodeData => (nodeData.key !== 'idMainBuilder' && nodeData.group !== 'idMainBuilder' && nodeData.category !== 'newbutton'))
       board.optionsKanban = this.optionsBuilder
+      // console.log('boarda save:', this.getCurrentBoard)
       board.patch({query: {kanban: true}}).then((result) => {
         this.setShowSnack(true)
         this.setSnackMessage('Mesa de trabajo guardada con éxito.')
@@ -140,6 +141,14 @@ export default {
           category: 'newbutton',
           loc: '12 35.52284749830794',
           toDelete: true
+        },
+        {
+          id: '-2',
+          text: this.getCurrentNameBoard,
+          description: 'Contructo Principal',
+          main: true,
+          color: '0',
+          group: 'idMainBuilder'
         }
       ]
     }
@@ -192,6 +201,9 @@ export default {
     },
     getCurrentKanbanOptions () {
       return this.getCurrentBoard.optionsKanban
+    },
+    getCurrentNameBoard () {
+      return this.getCurrentBoard.name
     },
     getMainConstructsBoard () {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data
