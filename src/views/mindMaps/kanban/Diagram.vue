@@ -926,6 +926,7 @@ export default {
          'SelectionCopied': relayoutDiagram, // defined above
          'animationManager.isEnabled': false,
          'undoManager.isEnabled': true,
+         'textEditingTool.starting': go.TextEditingTool.DoubleClick,
          'ModelChanged': function (e) { that.$emit('model-changed', e) },
          'ChangedSelection': function (e) { that.$emit('changed-selection', e) }
        })
@@ -1096,7 +1097,7 @@ export default {
          $(go.Panel, 'Horizontal', // this is hidden when the swimlane is collapsed
            new go.Binding('visible', 'isSubGraphExpanded').ofObject(),
            $(go.TextBlock, // the lane label
-             { font: '15px Lato, sans-serif', editable: true, margin: new go.Margin(2, 0, 0, 0) },
+             { font: '15px Lato, sans-serif', editable: true, isMultiline: false, margin: new go.Margin(2, 0, 0, 0) },
              new go.Binding('text', 'text').makeTwoWay())
          )
        ), // end Horizontal Panel
