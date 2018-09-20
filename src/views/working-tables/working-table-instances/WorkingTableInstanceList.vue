@@ -4,7 +4,7 @@
             v-for="table in getTables"
             :key="table._id"
             class="action"
-            @click="selectCurrentDiagram(table.workingTable.component, table._id)"
+            @click="selectCurrentDiagram(table.workingTable.component, table._board_id)"
             >
             <v-list-tile-avatar>
                 <v-icon v-if="table.workingTable && table.workingTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>

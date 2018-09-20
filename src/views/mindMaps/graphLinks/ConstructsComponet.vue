@@ -137,10 +137,6 @@ export default {
   },
   components: {ConstructDetail},
   mounted () {
-    this.findMainConstructs({query: {removed: false}}).then(response => {
-      const constructs = response.data || response
-      console.log(constructs)
-    })
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response
       console.log(boards)

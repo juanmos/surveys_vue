@@ -100,15 +100,18 @@
                                             </v-toolbar-items>
                                         </v-toolbar>
                                         <draggable v-model="itemsDebilita" :options="{group:'people'}" style="min-height: 50px">
-                                            <template v-for="item in itemsDebilita">
-                                                <v-flex :key="item.id">
-                                                    <v-card color="lime lighten-4">
-                                                        <v-card-title primary-title>
-                                                            {{item.title}}
-                                                        </v-card-title>
-                                                    </v-card>
-                                                </v-flex>
-                                            </template>
+                                            <v-layout row wrap>
+                                                <template v-for="item in itemsDebilita">
+                                                    <v-flex xs4 :key="item.id">
+                                                        <v-card color="lime lighten-4">
+                                                            <v-card-title primary-title>
+                                                                {{item.title}}
+                                                            </v-card-title>
+                                                        </v-card>
+                                                    </v-flex>
+                                                </template>
+                                            </v-layout>
+
                                         </draggable>
                                 </v-card>
                             </v-flex>
@@ -120,6 +123,7 @@
 </template>
 
 <script>
+import {mapState, mapGetters, mapActions} from 'vuex'
 import draggable from 'vuedraggable'
 export default {
   data () {
@@ -200,6 +204,29 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions([
+      'setCurrentConstructId'
+    ])
+  },
+  computed: {
+    ...mapState('boards', {loading: 'isPatchPending'}),
+    ...mapState(['currentMapId']),
+    ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    getCurrentBoard () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
+    getMainConstructs () {
+      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].nodeDataArray.filter(node => node.mother)
+    }
+  },
+  mounted () {
+    this.findBoards({query: {removed: false}}).then(response => {
+      const boards = response.data || response
+      console.log(boards)
+    })
   },
   components: {draggable}
 }
