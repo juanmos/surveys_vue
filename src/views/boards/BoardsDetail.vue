@@ -42,6 +42,7 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import BoardsCategories from './BoardsCategories'
 import NodeDiagram from './../mindMaps/graphLinks/NodeDiagram'
 import KanbanDiagram from './../mindMaps/kanban/KanbanDiagram'
+import MatrixComponent from './../mindMaps/matrixTable/MatrixComponent'
 export default {
   data () {
     return {
@@ -71,7 +72,7 @@ export default {
       console.log(boards)
     })
   },
-  components: {BoardsCategories, NodeDiagram, KanbanDiagram}
+  components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent}
 }
 </script>
 

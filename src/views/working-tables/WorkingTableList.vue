@@ -42,8 +42,6 @@
                         <v-avatar
                           slot="activator"
                           class="tableType"
-                          :tile="tile"
-                          :size="avatarSize"
                           color="grey lighten-4"
                           >
                             <v-icon v-if="wTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>

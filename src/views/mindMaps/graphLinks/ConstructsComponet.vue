@@ -86,7 +86,7 @@
 
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
-import ConstructDetail from './components/ConstructDetail'
+import ConstructDetail from './../components/ConstructDetail'
 export default {
   data () {
     return {

@@ -108,10 +108,10 @@
 import go from 'gojs'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import Diagram from './Diagram'
-import ConstructCategories from './../CounstructCategories'
-import ConstructsComponent from './../ConstructsComponet'
-import ConstructsChildComponent from './../ConstructsChildComponent'
-import ConstructSelected from './../ConstructSelected'
+import ConstructCategories from './CounstructCategories'
+import ConstructsComponent from './ConstructsComponet'
+import ConstructsChildComponent from './ConstructsChildComponent'
+import ConstructSelected from './ConstructSelected'
 import MindMapFilter from './../components/filters/MindMapFilter'
 export default {
   data () {
@@ -134,7 +134,9 @@ export default {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstruct'
+      'setCurrentConstruct',
+      'setShowSnack',
+      'setSnackMessage'
     ]),
     updateDiagramFromData () { this.$refs.diag.updateDiagramFromData() },
 
@@ -303,6 +305,8 @@ export default {
       }
     },
     changeFilteredMode () {
+      this.setShowSnack(true)
+      this.setSnackMessage('SE HA CAMBIADO LA VISUALIZACION')
       this.filteredMode = !this.filteredMode
     },
     dummy () {}
