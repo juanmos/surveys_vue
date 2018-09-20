@@ -140,6 +140,14 @@ export default {
           category: 'newbutton',
           loc: '12 35.52284749830794',
           toDelete: true
+        },
+        {
+          id: '-2',
+          text: this.getCurrentNameBoard,
+          description: 'Contructo Principal',
+          main: true,
+          color: '0',
+          group: 'idMainBuilder'
         }
       ]
     }
@@ -171,7 +179,7 @@ export default {
     ...mapState(['currentMapId', 'currentDiagram']),
     getKanbanDiagramData () {
       var that = this
-      return this.getCurrentBoard.kanbanNodeDataArray.map(node => {
+      return this.getCurrentBoard.kanbanNodeDataArray.filter(dataNode => (dataNode.group !== null)).map(node => {
         return {
           col: node.col,
           text: node.text,
@@ -186,6 +194,9 @@ export default {
     },
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+    },
+    getCurrentNameBoard () {
+      return this.getCurrentBoard.name
     },
     getCurrentKanbanNodeData () {
       return this.getCurrentBoard.kanbanNodeDataArray

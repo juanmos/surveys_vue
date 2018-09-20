@@ -57,6 +57,18 @@ export default {
           color: '#B2DFDB'
         }
       ]
+      board.kanbanNodeDataArray = [
+        {
+          id: '',
+          loc: '0 0',
+          text: this.requestData.name,
+          parent: '',
+          points: [],
+          description: 'Contructo Principal',
+          main: true,
+          group: null
+        }
+      ]
       board.save().then((result) => {
         this.setSnackMessage('Tematica Guardada')
         this.setShowSnack(true)
