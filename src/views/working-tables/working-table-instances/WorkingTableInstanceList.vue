@@ -4,7 +4,7 @@
             v-for="table in getTables"
             :key="table._id"
             class="action"
-            @click="selectCurrentDiagram(table.workingTable.component, table._board_id)"
+            @click="selectCurrentDiagram(table.workingTable.component, table._board_id, table._id)"
             >
             <v-list-tile-avatar>
                 <v-icon v-if="table.workingTable && table.workingTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>
@@ -77,7 +77,8 @@ export default {
     ...mapActions('table-instances', { findTables: 'find' }),
     ...mapActions([
       'setCurrentDiagram',
-      'setCurrentMapId'
+      'setCurrentMapId',
+      'setCurrentTableInstanceId'
     ]),
     deleteTable () {
       const {TableInstance} = this.$FeathersVuex
@@ -88,9 +89,10 @@ export default {
         this.dialogConfirm = false
       })
     },
-    selectCurrentDiagram (typeDiagram, id) {
+    selectCurrentDiagram (typeDiagram, idMap, id) {
       this.setCurrentDiagram(typeDiagram)
-      this.setCurrentMapId(id)
+      this.setCurrentMapId(idMap)
+      this.setCurrentTableInstanceId(id)
     }
   },
   created () {

@@ -7,15 +7,79 @@
                 fluid
                 grid-list-md
                 >
+                <span class="title">Constructos</span>
                 <v-layout row wrap>
                  <!-- convertir esto en dos componentes !-->
                   <v-flex
                     v-if="item"
-                    v-for="item in getChildsSwitchMode"
+                    v-for="item in getChildsSwitchMode.filter(construct => !construct.destruct)"
                     xs3
                     :key="item.key"
                     >
-                    <v-card color="blue-grey lighten-4">
+                    <v-card :color="item.destruct ? 'red lighten-4' : 'blue-grey lighten-4'">
+                        <v-card-title primary-title>
+                            <div class="headline">
+                                <v-edit-dialog
+                                    align= "center"
+                                    @save="edit(item.text, item, 'text')"
+                                > {{ item.text }}
+                                    <v-text-field
+                                    slot="input"
+                                    v-model="item.text"
+                                    label="Editar Nombre"
+                                    single-line
+                                    ></v-text-field>
+                                </v-edit-dialog>
+                            </div>
+                            <v-flex xs12 offset-sm2>
+                                <span class="grey--text">
+                                    <v-edit-dialog
+                                        align= "center"
+                                        @save="edit(item.description, item, 'description')"
+                                    >   <span v-if="item.description">{{ item.description }}</span>
+                                        <span v-else>Escriba una descripcion...</span>
+                                        <v-text-field
+                                        slot="input"
+                                        v-model="item.description"
+                                        label="Editar Descripcion"
+                                        single-line
+                                        ></v-text-field>
+                                    </v-edit-dialog>
+                                </span><br>
+                            </v-flex>
+                        </v-card-title>
+
+                        <div>
+                        </div>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn icon>
+                            <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
+                        </v-btn>
+                        <v-btn icon>
+                            <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+                </v-container>
+            </v-card>
+            <v-card flat>
+                <v-container
+                fluid
+                grid-list-md
+                >
+                <span class="title">Destructos</span>
+                <v-layout row wrap>
+                 <!-- convertir esto en dos componentes !-->
+                  <v-flex
+                    v-if="item"
+                    v-for="item in getChildsSwitchMode.filter(construct => construct.destruct)"
+                    xs3
+                    :key="item.key"
+                    >
+                    <v-card :color="item.destruct ? 'red lighten-4' : 'blue-grey lighten-4'">
                         <v-card-title primary-title>
                             <div class="headline">
                                 <v-edit-dialog
@@ -76,27 +140,21 @@
                     @keyup.enter="addConstruct"
                 ></v-text-field>
             </v-flex>
+            <v-flex xs12 sm4>
+              <v-switch
+                v-model="construct.destruct"
+                color="red lighten-2"
+                class="ml-40"
+                hide-details
+                label="Destructo"
+              ></v-switch>
+            </v-flex>
             <v-flex xs12 sm2>
                 <v-btn @click="addConstruct" icon>
                 <v-icon>send</v-icon>
                 </v-btn>
             </v-flex>
         </v-layout>
-
-   <!-- <v-card flat>
-        <v-card-actions>
-            <v-flex xs12 md6>
-            <v-text-field
-                box
-                color="blue-grey lighten-2"
-                v-model.lazy="currentNodeText"
-                v-bind:disabled="currentNode === null"
-            ></v-text-field>
-            </v-flex>
-            <v-btn @click="addNode" flat color="primary">Agregar Nodo</v-btn>
-            <v-btn @click="modifyStuff" flat color="primary">Modificar view model data</v-btn>
-        </v-card-actions>
-    </v-card> !-->
     <construct-detail @closed="showDetail = false" :dialog="showDetail"></construct-detail>
     </v-container>
 </template>
@@ -109,7 +167,8 @@ export default {
   data () {
     return {
       construct: {
-        loc: '0 0'
+        loc: '0 0',
+        destruct: false
       },
       showDetail: false
     }
@@ -150,7 +209,12 @@ export default {
     ]),
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
-      mutableConstruct.color = 'rgba(128,128,128,0.2)'
+      if (mutableConstruct.destruct) {
+        console.log('es un destructo')
+        mutableConstruct.color = '#FFCDD2'
+      } else {
+        mutableConstruct.color = 'rgba(128,128,128,0.2)'
+      }
       if (this.constructDetailMode) {
         // emiting different event when is inside the component construct selected
         this.$emit('addChildNode', mutableConstruct)
