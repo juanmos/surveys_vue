@@ -196,17 +196,11 @@ export default {
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
-    getCurrentNameBoard () {
-      return this.getCurrentBoard.name
-    },
     getCurrentKanbanNodeData () {
       return this.getCurrentBoard.kanbanNodeDataArray
     },
     getCurrentKanbanOptions () {
       return this.getCurrentBoard.optionsKanban
-    },
-    getCurrentNameBoard () {
-      return this.getCurrentBoard.name
     },
     getMainConstructsBoard () {
       return this.findConstructsInStore({query: {removed: false, _board_id: this.currentMapId}}).data

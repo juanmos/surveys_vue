@@ -172,7 +172,7 @@ export default {
       var model = this.model
       // model.startTransaction()
       // model.setDataProperty(model.findNodeDataForKey(4), 'color', 'purple')
-      var data = {text: val.text, mother: val.mother, color: val.color, main: val.main}
+      var data = {text: val.text, mother: val.mother, color: val.color, main: val.main, destruct: val.destruct}
       model.addNodeData(data)
       model.commitTransaction('added Node and Link')
 
@@ -247,8 +247,10 @@ export default {
         console.log('estos son los constructos madre', motherConstructs)
         // datalinks when a main construct is created
         msg = 'Constructo Principal Creado'
-      } else {
+      } else if (val.destruct) {
         // datalinks when a simple construct is created (nothing to do for now...)
+        msg = 'Destructo Creado'
+      } else {
         msg = 'Constructo Creado'
       }
       this.showMsg(msg)

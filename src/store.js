@@ -108,6 +108,9 @@ export default new Vuex.Store({
         name: '',
         _working_table_id: '',
         _board_id: '',
+        incorporates: [],
+        deletes: [],
+        weakens: [],
         removed: false
       }
     }),
@@ -132,6 +135,7 @@ export default new Vuex.Store({
   state: {
     studyId: null,
     currentMapId: null,
+    currentTableInstanceId: null,
     currentConstructId: null,
     currentConstruct: {},
     currentDiagram: null,
@@ -144,6 +148,9 @@ export default new Vuex.Store({
     },
     getCurrentMapId: (state) => {
       return state.currentMapId
+    },
+    getCurrentTableInstanceId: (state) => {
+      return state.currentTableInstanceId
     },
     getCurrentConstructId: (state) => {
       return state.currentConstructId
@@ -168,6 +175,9 @@ export default new Vuex.Store({
     setCurrentMapId (state, id) {
       state.currentMapId = id
     },
+    setCurrentTableInstanceId (state, id) {
+      state.currentTableInstanceId = id
+    },
     setCurrentConstructId (state, id) {
       state.currentConstructId = id
     },
@@ -190,6 +200,9 @@ export default new Vuex.Store({
     },
     setCurrentMapId: ({ commit }, id) => {
       commit('setCurrentMapId', id)
+    },
+    setCurrentTableInstanceId: ({ commit }, id) => {
+      commit('setCurrentTableInstanceId', id)
     },
     setCurrentConstructId: ({ commit }, id) => {
       commit('setCurrentConstructId', id)

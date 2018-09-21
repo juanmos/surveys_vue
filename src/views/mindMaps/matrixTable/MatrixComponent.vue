@@ -6,6 +6,7 @@
         flat
         >
         <!-- <mind-map-filter @sendFilters="applyFilters"></mind-map-filter> -->
+          <v-toolbar-title>{{getCurrentTable.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
         </v-toolbar-items>
@@ -40,8 +41,8 @@
                                     <v-toolbar-items class="hidden-sm-and-down">
                                     </v-toolbar-items>
                                     </v-toolbar>
-                                    <draggable v-model="itemsFortaleza" :options="{group:'people'}" style="min-height: 50px">
-                                            <template v-for="item in itemsFortaleza">
+                                    <draggable v-model="getCurrentStrengths" :options="{group:'people'}" style="min-height: 50px">
+                                            <template v-for="item in getCurrentStrengths">
                                                 <v-flex :key="item.id">
                                                     <v-card color="primary lighten-4">
                                                         <v-card-title primary-title>
@@ -63,8 +64,8 @@
                                         <v-toolbar-items class="hidden-sm-and-down">
                                         </v-toolbar-items>
                                       </v-toolbar>
-                                    <draggable v-model="itemsIncorporar" :options="{group:'people'}" style="min-height: 50px">
-                                            <template v-for="item in itemsIncorporar">
+                                    <draggable v-model="getCurrentIncorporates" :options="{group:'people'}" style="min-height: 50px">
+                                            <template v-for="item in getCurrentIncorporates">
                                                 <v-flex :key="item.id">
                                                     <v-card color="green lighten-4">
                                                         <v-card-title primary-title>
@@ -86,8 +87,8 @@
                                         <v-toolbar-items class="hidden-sm-and-down">
                                         </v-toolbar-items>
                                     </v-toolbar>
-                                    <draggable v-model="itemsEliminar" :options="{group:'people'}" style="min-height: 100px">
-                                            <template v-for="item in itemsEliminar">
+                                    <draggable v-model="getCurrentDeletes" :options="{group:'people'}" style="min-height: 100px">
+                                            <template v-for="item in getCurrentDeletes">
                                                 <v-flex :key="item.id">
                                                     <v-card color="red lighten-4">
                                                         <v-card-title primary-title>
@@ -109,9 +110,9 @@
                                             <v-toolbar-items class="hidden-sm-and-down">
                                             </v-toolbar-items>
                                         </v-toolbar>
-                                        <draggable v-model="itemsDebilita" :options="{group:'people'}" style="min-height: 50px">
+                                        <draggable v-model="getCurrentWeakens" :options="{group:'people'}" style="min-height: 50px">
                                             <v-layout row wrap>
-                                                <template v-for="item in itemsDebilita">
+                                                <template v-for="item in getCurrentWeakens">
                                                     <v-flex xs4 :key="item.id">
                                                         <v-card color="lime lighten-4">
                                                             <v-card-title primary-title>
@@ -139,13 +140,13 @@ export default {
   data () {
     return {
       constructValues: [],
-      itemsFortaleza: [
+      itemsStrengths: [
       ],
-      itemsIncorporar: [
+      itemsIncorporates: [
       ],
-      itemsEliminar: [
+      itemsDeletes: [
       ],
-      itemsDebilita: [
+      itemsWeakens: [
       ]
     }
   },
@@ -153,12 +154,22 @@ export default {
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
       'setCurrentConstructId'
-    ])
+    ]),
+    saveField (field, data) {
+      const {TableInstance} = this.$FeathersVuex
+      const tableInstance = new TableInstance(this.getCurrentTable)
+      tableInstance['field'] = data
+      tableInstance.save().then(res => {
+        console.log('esta es la respuesta', res)
+      })
+    }
   },
   computed: {
     ...mapState('boards', {loading: 'isPatchPending'}),
     ...mapState(['currentMapId']),
+    ...mapState(['currentTableInstanceId']),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters('table-instances', {findTablesInStore: 'find'}),
     ...mapGetters(
       [
         'getCurrentDiagram'
@@ -167,6 +178,65 @@ export default {
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
+    getCurrentTable () {
+      return this.findTablesInStore({query: {removed: false, _id: this.currentTableInstanceId}}).data[0]
+    },
+    getCurrentDeletes: {
+      get () {
+        return this.getCurrentTable.deletes
+      },
+      set (newVal) {
+        const {TableInstance} = this.$FeathersVuex
+        const tableInstance = new TableInstance(this.getCurrentTable)
+        tableInstance.deletes = newVal
+        console.log('esta sera la consulta...', tableInstance)
+        tableInstance.save().then(res => {
+          console.log('esta es la respuesta', res)
+        })
+      }
+    },
+    getCurrentStrengths: {
+      get () {
+        return this.getCurrentTable.strengths
+      },
+      set (newVal) {
+        const {TableInstance} = this.$FeathersVuex
+        const tableInstance = new TableInstance(this.getCurrentTable)
+        tableInstance.strengths = newVal
+        console.log('esta sera la consulta...', tableInstance)
+        tableInstance.save().then(res => {
+          console.log('esta es la respuesta', res)
+        })
+      }
+    },
+    getCurrentIncorporates: {
+      get () {
+        return this.getCurrentTable.incorporates
+      },
+      set (newVal) {
+        const {TableInstance} = this.$FeathersVuex
+        const tableInstance = new TableInstance(this.getCurrentTable)
+        tableInstance.incorporates = newVal
+        console.log('esta sera la consulta...', tableInstance)
+        tableInstance.save().then(res => {
+          console.log('esta es la respuesta', res)
+        })
+      }
+    },
+    getCurrentWeakens: {
+      get () {
+        return this.getCurrentTable.weakens
+      },
+      set (newVal) {
+        const {TableInstance} = this.$FeathersVuex
+        const tableInstance = new TableInstance(this.getCurrentTable)
+        tableInstance.weakens = newVal
+        console.log('esta sera la consulta...', tableInstance)
+        tableInstance.save().then(res => {
+          console.log('esta es la respuesta', res)
+        })
+      }
+    },
     constructs: {
       get () {
         return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].constructs
@@ -174,19 +244,33 @@ export default {
       set (val) {
         this.constructValues = val
       }
+    },
+    deletes: {
+      get () {
+        return this.getCurrentTable.deletes
+      },
+      set (val) {
+        this.itemsDeletes = val
+      }
     }
   },
   watch: {
     getCurrentDiagram (val) {
       this.constructValues = this.constructs
+    },
+    currentTableInstanceId (val) {
+      this.itemsDeletes = this.deletes
     }
   },
-  mounted () {
+  created () {
     this.findBoards({query: {removed: false}}).then(response => {
       const boards = response.data || response
       console.log(boards)
     })
     this.constructValues = this.constructs
+    this.itemsDeletes = this.deletes
+  },
+  updated () {
   },
   components: {draggable}
 }
