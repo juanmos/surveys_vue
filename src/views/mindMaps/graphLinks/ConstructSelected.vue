@@ -7,7 +7,10 @@
                   >
                     <v-card-title primary-title>
                     <v-layout justify-center>
-                        <h3 class="headline">{{getCurrentConstruct.text}}</h3>
+
+                        <h3 class="headline">
+                            {{getCurrentConstruct.text}}
+                        </h3>
                     </v-layout>
                     <v-chip v-if="getCurrentConstruct.mother" color="lime lighten-4" text-color="black">
                         <v-avatar>
