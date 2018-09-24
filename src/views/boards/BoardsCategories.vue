@@ -27,8 +27,28 @@
               </v-list-tile-avatar>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  {{ item.name }}
+                  <span v-show="!editMapName">{{item.name}}</span>
+                  <v-edit-dialog
+                      :ref="item._id"
+                      v-show="editMapName"
+                      align= "center"
+                      @save="edit(item.name, item, 'name')"
+                      @cancel="editMapName = false"
+                      @close="editMapName = false"
+                  > {{ item.name }}
+                      <v-text-field
+                      slot="input"
+                      v-model="item.name"
+                      label="Editar Nombre"
+                      single-line
+                      ></v-text-field>
+                  </v-edit-dialog>
+                  <v-tooltip :color="'grey'" bottom>
+                    <v-icon slot="activator" small @click.stop="enableEditName(item._id)" class="ml-3">edit</v-icon>
+                    <span>Editar nombre de mapa</span>
+                  </v-tooltip>
                 </v-list-tile-title>
+
               </v-list-tile-content>
             </v-list-tile>
               <v-list-tile
@@ -118,7 +138,8 @@ export default {
       dialogConfirm: false,
       currentItem: {},
       mutableBoards: [],
-      dialog: false
+      dialog: false,
+      editMapName: false
     }
   },
   methods: {
@@ -134,10 +155,7 @@ export default {
       const board = new Board(elem)
       board[field] = val
       board.patch().then((result) => {
-        this.find({ query: {removed: false} }).then(response => {
-          const boards = response.data || response
-          console.log(boards)
-        })
+        this.editMapName = false
       })
     },
     selectCurrentDiagram (typeDiagram, id) {
@@ -153,6 +171,10 @@ export default {
         console.log('board ha sido eliminada')
         this.dialogConfirm = false
       })
+    },
+    enableEditName (id) {
+      this.editMapName = true
+      this.$refs[id][0].$el.firstChild.click()
     }
   },
   watch: {
