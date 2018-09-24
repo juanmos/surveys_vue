@@ -67,6 +67,11 @@ const WorkingTableNew = resolve => {
     resolve(require('./views/working-tables/WorkingTableNew.vue'))
   }, 'workingTableNew')
 }
+const ClientHome = resolve => {
+  require.ensure(['./views/clients/ClientHome.vue'], () => {
+    resolve(require('./views/clients/ClientHome.vue'))
+  }, 'clients')
+}
 
 Vue.use(Router)
 
@@ -169,6 +174,11 @@ export default new Router({
           path: 'login',
           name: 'Login',
           component: Login
+        },
+        {
+          path: 'home',
+          name: 'Home',
+          component: ClientHome
         }
       ]
     },

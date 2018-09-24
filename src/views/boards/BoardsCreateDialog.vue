@@ -38,7 +38,8 @@ export default {
   methods: {
     ...mapActions([
       'setShowSnack',
-      'setSnackMessage'
+      'setSnackMessage',
+      'setCurrentMapId'
     ]),
     create () {
       // method with feathers vuex to create an user
@@ -70,6 +71,7 @@ export default {
         }
       ]
       board.save().then((result) => {
+        this.setCurrentMapId(result._id)
         this.setSnackMessage('Tematica Guardada')
         this.setShowSnack(true)
       }, (err) => {
