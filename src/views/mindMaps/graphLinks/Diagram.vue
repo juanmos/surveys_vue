@@ -65,6 +65,51 @@ export default {
           'ObjectSingleClicked': function (e) { self.$emit('object-clicked', e) },
           'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
         })
+      // To simplify this code we define a function for creating a context menu button:
+    function makeButton (text, action, visiblePredicate) {
+      return $('ContextMenuButton',
+        $(go.TextBlock, text),
+        { click: action },
+        // don't bother with binding GraphObject.visible if there's no predicate
+        visiblePredicate ? new go.Binding('visible', '', function (o, e) { return o.diagram ? visiblePredicate(o, e) : false }).ofObject() : {})
+    }
+    // a context menu is an Adornment with a bunch of buttons in them
+    var partContextMenu =
+      $(go.Adornment, 'Vertical',
+        makeButton('Cortar',
+          function (e, obj) { e.diagram.commandHandler.cutSelection() },
+          function (o) { return o.diagram.commandHandler.canCutSelection() }),
+        makeButton('Copiar',
+          function (e, obj) { e.diagram.commandHandler.copySelection() },
+          function (o) { return o.diagram.commandHandler.canCopySelection() }),
+        makeButton('Pegar',
+          function (e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.lastInput.documentPoint) },
+          function (o) { return o.diagram.commandHandler.canPasteSelection() }),
+        makeButton('Borrar',
+          function (e, obj) { e.diagram.commandHandler.deleteSelection() },
+          function (o) { return o.diagram.commandHandler.canDeleteSelection() }),
+        makeButton('Deshacer',
+          function (e, obj) { e.diagram.commandHandler.undo() },
+          function (o) { return o.diagram.commandHandler.canUndo() }),
+        makeButton('Rehacer',
+          function (e, obj) { e.diagram.commandHandler.redo() },
+          function (o) { return o.diagram.commandHandler.canRedo() }),
+        makeButton('Agrupar',
+          function (e, obj) { e.diagram.commandHandler.groupSelection() },
+          function (o) { return o.diagram.commandHandler.canGroupSelection() }),
+        makeButton('Desagrupar',
+          function (e, obj) { e.diagram.commandHandler.ungroupSelection() },
+          function (o) { return o.diagram.commandHandler.canUngroupSelection() })
+      )
+    function nodeInfo (d) { // Tooltip info for a node data object
+      var str = 'Constructo ' + d.key + ': ' + d.text + '\n'
+      if (d.destruct) {
+        str += 'Es un Destructo '
+      } else {
+        str += 'Es un constructo'
+      }
+      return str
+    }
     // Since we have only one main element, we don't have to declare a hide method,
     // we can set mainElement and GoJS will hide it automatically
     myDiagram.nodeTemplate =
@@ -91,10 +136,22 @@ export default {
             font: 'bold 14px sans-serif',
             stroke: '#333',
             margin: 6, // make some extra space for the shape around the text
-            isMultiline: true // don't allow newlines in text
+            isMultiline: true, // don't allow newlines in text
+            contextMenu: partContextMenu
           },
-          new go.Binding('text').makeTwoWay())
+          new go.Binding('text').makeTwoWay()),
+        { // this tooltip Adornment is shared by all nodes
+          toolTip:
+            $(go.Adornment, 'Auto',
+              $(go.Shape, { fill: '#FFFFCC' }),
+              $(go.TextBlock, { margin: 4 }, // the tooltip shows the result of calling nodeInfo(data)
+                new go.Binding('text', '', nodeInfo))
+            ),
+          // this context menu Adornment is shared by all nodes
+          contextMenu: partContextMenu
+        }
       )
+
     myDiagram.linkTemplate =
       $(go.Link,
         {
@@ -111,9 +168,38 @@ export default {
         ),
         $(go.Shape, // the arrowhead
           { toArrow: 'standard', stroke: null }),
-        $(go.Shape, { toArrow: 'OpenTriangle' })
+        $(go.Shape, { toArrow: 'OpenTriangle' }),
+        { // this tooltip Adornment is shared by all nodes
+          toolTip:
+            $(go.Adornment, 'Auto',
+              $(go.Shape, { fill: '#FFFFCC' }),
+              $(go.TextBlock, { margin: 4 }, // the tooltip shows the result of calling nodeInfo(data)
+                new go.Binding('text', '', nodeInfo))
+            ),
+          // this context menu Adornment is shared by all nodes
+          contextMenu: partContextMenu
+        }
       )
-
+    function diagramInfo (model) { // Tooltip info for the diagram's model
+      return 'Mapa Mental:\n' + model.nodeDataArray.length + ' Constructos, ' + model.linkDataArray.length + ' enlaces'
+    }
+    myDiagram.toolTip =
+      $(go.Adornment, 'Auto',
+        $(go.Shape, { fill: '#FFFFCC' }),
+        $(go.TextBlock, { margin: 4 },
+          new go.Binding('text', '', diagramInfo))
+      )
+    myDiagram.contextMenu = $(go.Adornment, 'Vertical',
+      makeButton('Pegar',
+        function (e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.lastInput.documentPoint) },
+        function (o) { return o.diagram.commandHandler.canPasteSelection() }),
+      makeButton('Deshacer',
+        function (e, obj) { e.diagram.commandHandler.undo() },
+        function (o) { return o.diagram.commandHandler.canUndo() }),
+      makeButton('Rehacer',
+        function (e, obj) { e.diagram.commandHandler.redo() },
+        function (o) { return o.diagram.commandHandler.canRedo() })
+    )
     this.diagram = myDiagram
     this.updateModel(this.modelData)
   }
