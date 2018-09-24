@@ -44,9 +44,14 @@
                                     <draggable v-model="getCurrentStrengths" :options="{group:'people'}" style="min-height: 50px">
                                             <template v-for="item in getCurrentStrengths">
                                                 <v-flex :key="item.id">
-                                                    <v-card color="primary lighten-4">
+                                                     <v-card class="item-card" color="primary lighten-4">
                                                         <v-card-title primary-title>
                                                             {{item.name}}
+                                                            <v-spacer></v-spacer>
+                                                            <v-tooltip class="delete-icon" bottom>
+                                                              <v-icon @click="deleteItem(item, 'strengths')" slot="activator" color="grey">cancel</v-icon>
+                                                              <span>Eliminar {{item.name}}</span>
+                                                            </v-tooltip>
                                                         </v-card-title>
                                                     </v-card>
                                                 </v-flex>
@@ -67,9 +72,14 @@
                                     <draggable v-model="getCurrentIncorporates" :options="{group:'people'}" style="min-height: 50px">
                                             <template v-for="item in getCurrentIncorporates">
                                                 <v-flex :key="item.id">
-                                                    <v-card color="green lighten-4">
+                                                    <v-card class="item-card" color="green lighten-4">
                                                         <v-card-title primary-title>
                                                             {{item.name}}
+                                                            <v-spacer></v-spacer>
+                                                            <v-tooltip class="delete-icon" bottom>
+                                                              <v-icon @click="deleteItem(item, 'incorporates')" slot="activator" color="grey">cancel</v-icon>
+                                                              <span>Eliminar {{item.name}}</span>
+                                                            </v-tooltip>
                                                         </v-card-title>
                                                     </v-card>
                                                 </v-flex>
@@ -90,9 +100,14 @@
                                     <draggable v-model="getCurrentDeletes" :options="{group:'people'}" style="min-height: 100px">
                                             <template v-for="item in getCurrentDeletes">
                                                 <v-flex :key="item.id">
-                                                    <v-card color="red lighten-4">
+                                                    <v-card class="item-card" color="red lighten-4">
                                                         <v-card-title primary-title>
                                                             {{item.name}}
+                                                            <v-spacer></v-spacer>
+                                                            <v-tooltip class="delete-icon" bottom>
+                                                              <v-icon  @click="deleteItem(item, 'deletes')" slot="activator" color="grey">cancel</v-icon>
+                                                              <span>Eliminar {{item.name}}</span>
+                                                            </v-tooltip>
                                                         </v-card-title>
                                                     </v-card>
                                                 </v-flex>
@@ -111,18 +126,20 @@
                                             </v-toolbar-items>
                                         </v-toolbar>
                                         <draggable v-model="getCurrentWeakens" :options="{group:'people'}" style="min-height: 50px">
-                                            <v-layout row wrap>
-                                                <template v-for="item in getCurrentWeakens">
-                                                    <v-flex xs4 :key="item.id">
-                                                        <v-card color="lime lighten-4">
-                                                            <v-card-title primary-title>
-                                                                {{item.name}}
-                                                            </v-card-title>
-                                                        </v-card>
-                                                    </v-flex>
-                                                </template>
-                                            </v-layout>
-
+                                            <template v-for="item in getCurrentWeakens">
+                                                <v-flex :key="item.id">
+                                                    <v-card class="item-card" color="lime lighten-4">
+                                                    <v-card-title primary-title>
+                                                        {{item.name}}
+                                                        <v-spacer></v-spacer>
+                                                        <v-tooltip class="delete-icon" bottom>
+                                                          <v-icon  @click="deleteItem(item, 'weakens')" slot="activator" color="grey">cancel</v-icon>
+                                                          <span>Eliminar {{item.name}}</span>
+                                                        </v-tooltip>
+                                                    </v-card-title>
+                                                </v-card>
+                                                </v-flex>
+                                            </template>
                                         </draggable>
                                 </v-card>
                             </v-flex>
@@ -153,7 +170,9 @@ export default {
   methods: {
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstructId'
+      'setCurrentConstructId',
+      'setShowSnack',
+      'setSnackMessage'
     ]),
     saveField (field, data) {
       const {TableInstance} = this.$FeathersVuex
@@ -161,6 +180,17 @@ export default {
       tableInstance['field'] = data
       tableInstance.save().then(res => {
         console.log('esta es la respuesta', res)
+      })
+    },
+    deleteItem (item, field) {
+      const {TableInstance} = this.$FeathersVuex
+      const tableInstance = new TableInstance(this.getCurrentTable)
+      tableInstance[field] = [
+        item
+      ]
+      tableInstance.save({query: { field, method: 'pull' }}).then((result) => {
+        this.setSnackMessage('Elemento Borrado')
+        this.setShowSnack(true)
       })
     }
   },
@@ -276,6 +306,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .delete-icon {
+    opacity: 0
+  }
+  .item-card:hover .delete-icon {
+    opacity: 1
+  }
 </style>
