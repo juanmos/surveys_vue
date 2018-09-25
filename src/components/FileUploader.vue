@@ -20,7 +20,9 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
+import axios from 'axios'
+const enviroment = require('./../../config/enviroment.json')
 export default {
   data () {
     return {
@@ -51,7 +53,7 @@ export default {
           this.imageUrl = fr.result
           this.imageFile = file
           form.append('type', 'construct')
-          form.append('file', this.imageFile)
+          form.append('file', file)
           this.save(form)
         })
       } else {
@@ -61,14 +63,27 @@ export default {
       }
     },
     save (req) {
-      const {Upload} = this.$FeathersVuex
-      const upload = new Upload(req)
-      upload.save({headers: {
-        'content-type': 'multipart/form-data'
+      let axiosIntance = axios.create({
+        baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
+      })
+      axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
+      axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
+      axiosIntance.post('uploads', req, {headers: {
+        'Content-Type': 'multipart/form-data'
       }}).then((result) => {
-        console.log('guardado', result)
+        this.$emit('fileCreated', result.data)
+        this.imageName = ''
+        this.setShowSnack(true)
+        this.setSnackMessage('Imagen Guardada')
+      }).catch((err) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Error al Guardar')
+        console.log(err)
       })
     }
+  },
+  computed: {
+    ...mapState('auth', { accessToken: 'accessToken' })
   }
 }
 </script>

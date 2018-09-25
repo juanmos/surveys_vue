@@ -118,6 +118,7 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         filename: '',
+        path: '',
         _construct_id: '',
         description: '',
         type: '',

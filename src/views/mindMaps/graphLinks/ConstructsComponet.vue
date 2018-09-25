@@ -51,7 +51,7 @@
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn icon>
-                            <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
+                            <v-icon @click="detailConstruct(item)" color="grey">visibility</v-icon>
                         </v-btn>
                         <v-btn icon>
                             <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
@@ -112,7 +112,8 @@ export default {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstructId'
+      'setCurrentConstructId',
+      'setCurrentConstruct'
     ]),
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
@@ -130,9 +131,9 @@ export default {
     deleteConstruct (item) {
       this.$emit('deleteNode', item)
     },
-    detailConstruct (id) {
+    detailConstruct (item) {
       this.showDetail = !this.showDetail
-      this.setCurrentConstructId(id)
+      this.setCurrentConstruct(item)
     }
   },
   components: {ConstructDetail},

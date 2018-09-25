@@ -132,7 +132,7 @@ export default {
   methods: {
     addChildNode (construct) {
       let mutableConstruct = Object.assign({}, construct)
-      mutableConstruct.color = 'rgba(128,128,128,0.2)'
+      mutableConstruct.color = construct.color
       mutableConstruct.fromSelected = true
       mutableConstruct.selected = this.getCurrentConstruct.key
       this.$emit('addNode', mutableConstruct)
