@@ -127,6 +127,10 @@ export default {
   },
   methods: {
     ...mapActions('regions', { findRegions: 'find' }),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     goToNew () {
       this.$router.push('/new-region')
     },
@@ -135,10 +139,9 @@ export default {
       const region = new Region(elem)
       region[field] = val
       region.patch().then((result) => {
-        this.findRegions({ query: {removed: false} }).then(response => {
-          const regions = response.data || response
-          console.log(regions)
-        })
+        this.getData()
+        this.setSnackMessage('Region Editada')
+        this.setShowSnack(true)
       })
     },
     del (element) {
@@ -146,10 +149,9 @@ export default {
       const region = new Region(element)
       region.removed = true
       region.patch().then((result) => {
-        this.findRegions({ query: {removed: false} }).then(response => {
-          const regions = response.data || response
-          console.log(regions)
-        })
+        this.getData()
+        this.setSnackMessage('Region Eliminada')
+        this.setShowSnack(true)
       })
     },
     save (val) {
