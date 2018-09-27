@@ -150,7 +150,6 @@ export default {
       'setCurrentDiagram'
     ]),
     edit (val, elem, field) {
-      console.log(val, elem, field)
       const {Board} = this.$FeathersVuex
       const board = new Board(elem)
       board[field] = val
@@ -163,12 +162,10 @@ export default {
       this.setCurrentMapId(id)
     },
     deleteBoard (item) {
-      console.log(item)
       const {Board} = this.$FeathersVuex
       const board = new Board(item)
       board.removed = true
       board.patch().then((result) => {
-        console.log('board ha sido eliminada')
         this.dialogConfirm = false
       })
     },
@@ -181,12 +178,8 @@ export default {
   },
   created () {
     this.findBoards({ query: {removed: false, _study_id: this.getStudyId} }).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
     this.findTables({ query: {removed: false, _study_id: this.getStudyId} }).then(response => {
-      const tables = response.data || response
-      console.log(tables)
     })
   },
   computed: {

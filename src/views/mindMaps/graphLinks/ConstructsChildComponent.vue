@@ -12,11 +12,11 @@
                  <!-- convertir esto en dos componentes !-->
                   <v-flex
                     v-if="item"
-                    v-for="item in getChildsSwitchMode.filter(construct => !construct.destruct)"
+                    v-for="item in getChildsSwitchMode.filter(construct => construct && !construct.destruct)"
                     xs3
                     :key="item.key"
                     >
-                    <v-card :color="item.destruct ? 'red lighten-4' : 'blue-grey lighten-4'">
+                    <v-card :color="item ? item.destruct ? 'red lighten-4': 'blue-grey lighten-4' : 'blue-grey lighten-4'">
                         <v-card-title primary-title>
                             <div class="headline">
                                 <v-edit-dialog
@@ -54,7 +54,7 @@
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn icon>
-                            <v-icon @click="detailConstruct(item._id)" color="grey">visibility</v-icon>
+                            <v-icon @click="detailConstruct(item)" color="grey">visibility</v-icon>
                         </v-btn>
                         <v-btn icon>
                             <v-icon @click="deleteConstruct(item)" :color="'grey'">delete</v-icon>
@@ -79,7 +79,7 @@
                     xs3
                     :key="item.key"
                     >
-                    <v-card :color="item.destruct ? 'red lighten-4' : 'blue-grey lighten-4'">
+                    <v-card :color="item ? item.destruct ? 'red lighten-4': 'blue-grey lighten-4' : 'blue-grey lighten-4'">
                         <v-card-title primary-title>
                             <div class="headline">
                                 <v-edit-dialog
@@ -205,12 +205,12 @@ export default {
     ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstructId'
+      'setCurrentConstructId',
+      'setCurrentConstruct'
     ]),
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
-      if (mutableConstruct.destruct) {
-        console.log('es un destructo')
+      if (mutableConstruct && mutableConstruct.destruct) {
         mutableConstruct.color = '#FFCDD2'
       } else {
         mutableConstruct.color = 'rgba(128,128,128,0.2)'
@@ -232,20 +232,16 @@ export default {
     deleteConstruct (item) {
       this.$emit('deleteNode', item)
     },
-    detailConstruct (id) {
+    detailConstruct (item) {
       this.showDetail = !this.showDetail
-      this.setCurrentConstructId(id)
+      this.setCurrentConstruct(item)
     }
   },
   components: {ConstructDetail},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
-      const constructs = response.data || response
-      console.log(constructs)
     })
     this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
   }
 }

@@ -72,6 +72,16 @@ const ClientHome = resolve => {
     resolve(require('./views/clients/ClientHome.vue'))
   }, 'clients')
 }
+const RegionList = resolve => {
+  require.ensure(['./views/regions/RegionList.vue'], () => {
+    resolve(require('./views/regions/RegionList.vue'))
+  }, 'regions')
+}
+const RegionNew = resolve => {
+  require.ensure(['./views/regions/RegionNew.vue'], () => {
+    resolve(require('./views/regions/RegionNew.vue'))
+  }, 'regions')
+}
 
 Vue.use(Router)
 
@@ -137,6 +147,16 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'regions',
+          name: 'Regions',
+          component: RegionList
+        },
+        {
+          path: 'new-region',
+          name: 'NewRegion',
+          component: RegionNew
         }
       ]
     },

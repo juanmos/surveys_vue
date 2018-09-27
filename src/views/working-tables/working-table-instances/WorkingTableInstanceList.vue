@@ -85,7 +85,6 @@ export default {
       const tableInstance = new TableInstance(this.currentItem)
       tableInstance.removed = true
       tableInstance.save().then(result => {
-        console.log('table eliminada', result)
         this.dialogConfirm = false
       })
     },
@@ -97,8 +96,6 @@ export default {
   },
   created () {
     this.findTables({ query: {removed: false, _board_id: this.boardId} }).then(response => {
-      const tables = response.data || response
-      console.log('tables cargadasss', tables)
     })
   }
 }

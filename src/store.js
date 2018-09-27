@@ -118,10 +118,17 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         filename: '',
+        path: '',
         _construct_id: '',
         description: '',
         type: '',
         removed: false
+      }
+    }),
+    service('regions', {
+      instanceDefaults: {
+        name: '',
+        _country_id: ''
       }
     }),
     service('uploads', {

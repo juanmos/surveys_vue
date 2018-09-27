@@ -4,18 +4,10 @@
           <particles-background class="particles"></particles-background>
           <v-layout align-center justify-center>
                 <v-card
-                  id="e3"
+                  color="pink"
                   style="min-width: 400px; margin: auto; margin-top: 10%;"
-                  class="appear"
+                  class="appear elevation-20"
                 >
-                  <v-toolbar
-                    color="blue"
-                    light
-                    dense
-                  >
-                  <v-toolbar-title class="white--text">Mapas Mentales</v-toolbar-title>
-                   <v-spacer></v-spacer>.
-                  </v-toolbar>
                   <login-form @dataSubmited="auth($event)"></login-form>
                   <snack-message v-if="logErr" :message="`USUARIO O CONTRASEÑA INVALIDO`" :type="'error'" ></snack-message>
                 </v-card>

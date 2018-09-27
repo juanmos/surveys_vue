@@ -1,7 +1,8 @@
 <template>
     <v-card>
       <div class="logo">
-        <img src="https://via.placeholder.com/100x100" alt="Logo">
+         <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
+         <div class="title grey--text text--lighten-1 text-capitalize">MAPAS MENTALES</div>
       </div>
       <v-container
         fluid

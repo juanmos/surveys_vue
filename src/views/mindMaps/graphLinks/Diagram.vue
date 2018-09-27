@@ -103,7 +103,7 @@ export default {
       )
     function nodeInfo (d) { // Tooltip info for a node data object
       var str = 'Constructo ' + d.key + ': ' + d.text + '\n'
-      if (d.destruct) {
+      if (d && d.destruct) {
         str += 'Es un Destructo '
       } else {
         str += 'Es un constructo'

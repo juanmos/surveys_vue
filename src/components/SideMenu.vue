@@ -23,6 +23,19 @@
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
         </router-link>
+        <v-divider inset></v-divider>
+        <v-subheader>Configuracion</v-subheader>
+
+        <v-list-tile :to="'/regions'">
+          <v-list-tile-action>
+            <v-icon v-html="'map'"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="'Regiones'"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider inset></v-divider>
+
         <v-list-tile @click="exit">
           <v-list-tile-action>
             <v-icon v-html="'input'"></v-icon>

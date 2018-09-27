@@ -11,7 +11,7 @@
             <v-btn icon dark @click.native="emitClose()">
               <v-icon>close</v-icon>
             </v-btn>
-            <v-toolbar-title class="text-uppercase">Detalle : {{getCurrentConstruct ? getCurrentConstruct.name : '' }}</v-toolbar-title>
+            <v-toolbar-title class="text-uppercase">Detalle : {{currentConstruct.text}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-menu bottom right offset-y>
               <v-btn slot="activator" dark icon>
@@ -31,14 +31,12 @@
             <v-tab
               ripple
             >
-              Descripcion
+              Imagenes y Videos
 
             </v-tab>
             <v-tab-item
             >
-              <v-card flat>
-
-              </v-card>
+              <construct-attachments></construct-attachments>
             </v-tab-item>
             <v-tab
               ripple
@@ -52,30 +50,6 @@
 
               </v-card>
             </v-tab-item>
-            <v-tab
-              ripple
-            >
-              Imagenes y Videos
-
-            </v-tab>
-            <v-tab-item
-            >
-              <v-card flat>
-
-              </v-card>
-            </v-tab-item>
-            <v-tab
-              ripple
-            >
-             Analisis & Conclusiones
-
-            </v-tab>
-            <v-tab-item
-            >
-              <v-card flat>
-                descripcion
-              </v-card>
-            </v-tab-item>
           </v-tabs>
           <div style="flex: 1 1 auto;"></div>
         </v-card>
@@ -83,7 +57,8 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex'
+import ConstructAttachments from './../graphLinks/ConstructAttachments'
 export default {
   props: ['dialog'],
   data () {
@@ -125,26 +100,13 @@ export default {
       this.active = (active < 2 ? active + 1 : 0)
     }
   },
+  components: {ConstructAttachments},
   computed: {
     ...mapState('boards', {loading: 'isFindPending'}),
     ...mapState([
       'currentMapId',
-      'currentConstructId'
-    ]),
-    ...mapGetters('boards', {findBoardsInStore: 'find'}),
-    getBoard () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
-    },
-    getCategories () {
-      return this.getBoard ? this.getBoard.constructCategories : []
-    },
-    getConstructs () {
-      return this.getBoard ? this.getBoard.constructs : []
-    },
-    getCurrentConstruct () {
-      return this.getBoard ? this.getBoard.constructs.filter(construct => construct._id === this.currentConstructId)[0] : {}
-    },
-    ...mapState(['currentMapId'])
+      'currentConstruct'
+    ])
   },
   watch: {
     dialog (val) {
