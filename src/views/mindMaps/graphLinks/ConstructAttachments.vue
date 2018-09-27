@@ -13,8 +13,8 @@
             >
               <v-card tile class="d-flex image-card">
                 <v-img
-                  :src="`http://localhost:3033/${image.path}`"
-                  :lazy-src="`http://localhost:3033/${image.path}`"
+                  :src="`${urlEnviroment}${image.path}`"
+                  :lazy-src="`${urlEnviroment}${image.path}`"
                   aspect-ratio="1"
                   class="grey lighten-2"
                 >
@@ -61,9 +61,11 @@
 <script>
 import {mapState, mapActions, mapGetters} from 'vuex'
 import FileUploader from './../../../components/FileUploader'
+const enviroment = require('./../../../../config/enviroment.json')
 export default {
   data: () => ({
-    show: false
+    show: false,
+    urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase
   }),
   methods: {
     ...mapActions('construct-images', {findConstructImages: 'find'}),
