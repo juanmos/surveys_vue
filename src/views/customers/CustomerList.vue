@@ -7,7 +7,7 @@
               <v-subheader>Listado de Clientes</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getCustomers"
+                  :items="clients"
                   hide-actions
                   item-key="name"
                 >
@@ -126,9 +126,18 @@
                     </tr>
                   </template>
                 </v-data-table>
-                <div class="text-xs-center pt-2">
-                  <v-pagination v-model="page" :length="pages"></v-pagination>
-                </div>
+                <v-layout justify-center>
+                  <v-flex xs8>
+                    <v-card flat>
+                      <v-card-text>
+                        <v-pagination
+                          v-model="page"
+                          :length="getLength"
+                        ></v-pagination>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
                 <v-btn
                 absolute
                 dark
@@ -194,7 +203,11 @@ export default {
       message: '',
       showMsg: false,
       msgType: 'error',
-      page: 1
+      page: 1,
+      limit: 10,
+      total: 1,
+      loaded: false,
+      clients: []
     }
   },
   methods: {
@@ -244,9 +257,11 @@ export default {
       console.log('Dialog closed', val)
     },
     getData () {
-      this.findCustomers({ query: {removed: false} }).then(response => {
-        const customers = response
-        console.log(customers)
+      this.findCustomers({query: {removed: false, $skip: (this.page * this.limit), $limit: this.limit}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.clients = response.data
       })
     }
   },
@@ -254,19 +269,8 @@ export default {
     ...mapState('customers', {loading: 'isFindPending'}),
     ...mapState('customers', { paginationVal: 'pagination' }),
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
-    getCustomers () {
-      return this.findCustomersInStore({query: {removed: false}}).data
-    },
-    pages () {
-      if (this.paginationVal.default) {
-        if (this.paginationVal.default.limit == null ||
-          this.paginationVal.default.total == null
-        ) {
-          return 0
-        } else {
-          return Math.ceil(this.paginationVal.default.total / this.paginationVal.default.limit)
-        }
-      }
+    getLength () {
+      return Math.round((this.total / this.limit))
     }
   },
   watch: {

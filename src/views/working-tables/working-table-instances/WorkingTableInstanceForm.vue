@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     sendData () {
-      console.log('en el form', this.tableInstance)
       this.$emit('dataUpdated', this.tableInstance)
     },
     ...mapActions('working-tables', { findTables: 'find' })
@@ -59,8 +58,6 @@ export default {
   },
   created () {
     this.findTables({ query: {removed: false} }).then(response => {
-      const tables = response.data || response
-      console.log(tables)
     })
   }
 }

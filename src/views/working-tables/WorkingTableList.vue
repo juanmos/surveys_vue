@@ -206,7 +206,6 @@ export default {
       this.$router.push('/working-table-new')
     },
     edit (val, elem, field) {
-      console.log(val, elem, field)
       const {WorkingTable} = this.$FeathersVuex
       const wTable = new WorkingTable(elem)
       wTable[field] = val
@@ -238,8 +237,6 @@ export default {
   },
   created () {
     this.findWorkingTables({ query: {removed: false} }).then(response => {
-      const studies = response.data || response
-      console.log(studies)
     })
   },
   components: {LoadingComponent, EditableField}

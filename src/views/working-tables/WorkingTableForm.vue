@@ -86,8 +86,6 @@ export default {
     },
     updateCities () {
       this.findCities({ query: {removed: false, _country_id: this.study._country_id} }).then(response => {
-        const cities = response.data || response
-        console.log(cities)
       })
       console.log(this.study._country_id)
     },
@@ -132,16 +130,10 @@ export default {
       console.log(users)
     })
     this.findClients({ query: {removed: false} }).then(response => {
-      const clients = response.data || response
-      console.log(clients)
     })
     this.findCountries({ query: {removed: false} }).then(response => {
-      const countries = response.data || response
-      console.log(countries)
     })
     this.findContacts({ query: {removed: false} }).then(response => {
-      const contacts = response.data || response
-      console.log(contacts)
     })
   }
 }

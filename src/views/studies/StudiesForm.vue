@@ -27,15 +27,14 @@
                   :items="getCountries"
                   item-text="name"
                   item-value="_id"
-                  @change="updateCities"
                   box
                 ></v-select>
               </v-flex>
               <v-flex xs12 md6>
                 <v-select
-                  label="Ciudad"
-                  v-model="study._city_id"
-                  :items="getCities"
+                  label="Regiones"
+                  v-model="study.regions"
+                  :items="getRegions"
                   item-text="name"
                   item-value="_id"
                   box
@@ -43,15 +42,43 @@
                 ></v-select>
               </v-flex>
               <v-flex xs12>
-                <v-select
-                  label="Cliente"
+                <v-autocomplete
                   v-model="study._customer_id"
                   :items="getClients"
+                  box
+                  chips
+                  color="blue-grey lighten-2"
+                  label="Cliente"
                   item-text="name"
                   item-value="_id"
-                  box
-                  required
-                ></v-select>
+                >
+                  <template
+                    slot="selection"
+                    slot-scope="data"
+                  >
+                    <v-chip
+                      :selected="data.selected"
+                      class="chip--select-multi"
+                      @input="data.parent.selectItem(data.item)"
+                    >
+                      {{ data.item.name }}
+                    </v-chip>
+                  </template>
+                  <template
+                    slot="item"
+                    slot-scope="data"
+                  >
+                    <template v-if="typeof data.item !== 'object'">
+                      <v-list-tile-content v-text="data.item"></v-list-tile-content>
+                    </template>
+                    <template v-else>
+                      <v-list-tile-content>
+                        <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
+                        <v-list-tile-sub-title v-html="data.item.group"></v-list-tile-sub-title>
+                      </v-list-tile-content>
+                    </template>
+                  </template>
+                </v-autocomplete>
               </v-flex>
               <v-flex xs12>
                 <v-card-title primary-title>
@@ -100,9 +127,6 @@
                       class="chip--select-multi"
                       @input="data.parent.selectItem(data.item)"
                     >
-                      <v-avatar>
-                        <img :src="data.item.avatar">
-                      </v-avatar>
                       {{ data.item.name }}
                     </v-chip>
                   </template>
@@ -114,9 +138,6 @@
                       <v-list-tile-content v-text="data.item"></v-list-tile-content>
                     </template>
                     <template v-else>
-                      <v-list-tile-avatar>
-                        <img :src="data.item.avatar">
-                      </v-list-tile-avatar>
                       <v-list-tile-content>
                         <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
                         <v-list-tile-sub-title v-html="data.item.group"></v-list-tile-sub-title>
@@ -163,10 +184,11 @@ export default {
         name: '',
         description: '',
         _user_id: '',
-        memberIds: ['Sandra Adams', 'Britta Holt'],
+        memberIds: [],
         sub_studies: [],
         geographical_scope: '',
-        _customer_id: ''
+        _customer_id: '',
+        regions: []
       },
       valid: false,
       name: '',
@@ -175,33 +197,25 @@ export default {
       showPass: false,
       rules: validations,
       autoUpdate: true,
-      isUpdating: false,
-      title: 'The summer breeze'
+      isUpdating: false
     }
   },
   methods: {
     ...mapActions('users', { findUsers: 'find' }),
     ...mapActions('customers', { findClients: 'find' }),
     ...mapActions('countries', { findCountries: 'find' }),
-    ...mapActions('cities', { findCities: 'find' }),
+    ...mapActions('regions', { findRegions: 'find' }),
     ...mapActions('customer-contacts', { findContacts: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.study)
       }
-    },
-    updateCities () {
-      this.findCities({ query: {removed: false, _country_id: this.study._country_id} }).then(response => {
-        const cities = response.data || response
-        console.log(cities)
-      })
-      console.log(this.study._country_id)
     }
   },
   computed: {
     ...mapGetters('users', {findUsersInStore: 'find'}),
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
-    ...mapGetters('cities', {findCitiesInStore: 'find'}),
+    ...mapGetters('regions', {findRegionsInStore: 'find'}),
     ...mapGetters('countries', {findCountriesInStore: 'find'}),
     ...mapGetters('customer-contacts', {findContactsInStore: 'find'}),
     getUsers () {
@@ -210,8 +224,8 @@ export default {
     getClients () {
       return this.findCustomersInStore({query: {removed: false}}).data
     },
-    getCities () {
-      return this.findCitiesInStore({query: {removed: false, _country_id: this.study._country_id}}).data
+    getRegions () {
+      return this.findRegionsInStore({query: {removed: false, _country_id: this.study._country_id}}).data
     },
     getCountries () {
       return this.findCountriesInStore({query: {removed: false}}).data
@@ -243,6 +257,8 @@ export default {
     this.findContacts({ query: {removed: false} }).then(response => {
       const contacts = response.data || response
       console.log(contacts)
+    })
+    this.findRegions({ query: {removed: false} }).then(response => {
     })
   }
 }

@@ -125,6 +125,12 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('regions', {
+      instanceDefaults: {
+        name: '',
+        _country_id: ''
+      }
+    }),
     service('uploads', {
       instanceDefaults: {
         file: '',

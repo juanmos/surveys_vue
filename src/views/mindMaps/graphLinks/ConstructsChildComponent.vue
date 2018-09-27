@@ -211,7 +211,6 @@ export default {
     addConstruct () {
       let mutableConstruct = Object.assign({}, this.construct)
       if (mutableConstruct && mutableConstruct.destruct) {
-        console.log('es un destructo')
         mutableConstruct.color = '#FFCDD2'
       } else {
         mutableConstruct.color = 'rgba(128,128,128,0.2)'
@@ -241,12 +240,8 @@ export default {
   components: {ConstructDetail},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
-      const constructs = response.data || response
-      console.log(constructs)
     })
     this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
   }
 }

@@ -67,9 +67,7 @@ export default {
   },
   mounted () {
     this.findBoards({ query: {removed: false, _study_id: this.$route.params.id} }).then(response => {
-      const boards = response.data || response
       this.setStudyId(this.$route.params.id)
-      console.log(boards)
     })
   },
   components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent}

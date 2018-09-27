@@ -179,7 +179,6 @@ export default {
       const tableInstance = new TableInstance(this.getCurrentTable)
       tableInstance['field'] = data
       tableInstance.save().then(res => {
-        console.log('esta es la respuesta', res)
       })
     },
     deleteItem (item, field) {
@@ -219,9 +218,7 @@ export default {
         const {TableInstance} = this.$FeathersVuex
         const tableInstance = new TableInstance(this.getCurrentTable)
         tableInstance.deletes = newVal
-        console.log('esta sera la consulta...', tableInstance)
         tableInstance.save().then(res => {
-          console.log('esta es la respuesta', res)
         })
       }
     },
@@ -233,9 +230,7 @@ export default {
         const {TableInstance} = this.$FeathersVuex
         const tableInstance = new TableInstance(this.getCurrentTable)
         tableInstance.strengths = newVal
-        console.log('esta sera la consulta...', tableInstance)
         tableInstance.save().then(res => {
-          console.log('esta es la respuesta', res)
         })
       }
     },
@@ -247,9 +242,7 @@ export default {
         const {TableInstance} = this.$FeathersVuex
         const tableInstance = new TableInstance(this.getCurrentTable)
         tableInstance.incorporates = newVal
-        console.log('esta sera la consulta...', tableInstance)
         tableInstance.save().then(res => {
-          console.log('esta es la respuesta', res)
         })
       }
     },
@@ -261,9 +254,7 @@ export default {
         const {TableInstance} = this.$FeathersVuex
         const tableInstance = new TableInstance(this.getCurrentTable)
         tableInstance.weakens = newVal
-        console.log('esta sera la consulta...', tableInstance)
         tableInstance.save().then(res => {
-          console.log('esta es la respuesta', res)
         })
       }
     },
@@ -294,8 +285,6 @@ export default {
   },
   created () {
     this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
     this.constructValues = this.constructs
     this.itemsDeletes = this.deletes

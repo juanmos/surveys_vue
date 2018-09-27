@@ -150,16 +150,13 @@ export default {
       }
     },
     objectClicked  (e) {
-      console.log('clickedddd', e.diagram.selection.first())
       this.selection = e.diagram.selection.first()
     },
     changedSelection (e) {
       let node = e.diagram.selection.first()
       if (node) {
-        console.log('asignando current construct', node.data)
         setTimeout(() => {
           this.setCurrentConstruct(node.data)
-          console.log(node.data)
         }, 0)
       }
     },
@@ -193,10 +190,9 @@ export default {
       }
       // function that creates relations depending on construct type
       this.postCreateRelations(val)
+      // testing saving after adding node
     },
     deleteNode (val) {
-      console.log('llego arriba')
-      console.log('este es el val de arriba', val)
       var model = this.model
       if (val.main) {
         this.showMsg('No se puede borrar constructo principal')
@@ -211,11 +207,9 @@ export default {
       let msg = ''
       // datalinks when a mother construct is created
       if (val.mother) {
-        console.log('mother creado y este es el dataarray', this.model.nodeDataArray)
         let resultMain = this.model.nodeDataArray.filter(construct => {
           return construct.main
         })
-        console.log('resultMain', resultMain[0])
         // if a main construct is created
         if (resultMain[0]) {
           model.addLinkData(
@@ -228,7 +222,6 @@ export default {
         }
         msg = 'Constructo Madre Creado'
       } else if (val.main) {
-        console.log('este es el constructo main creado', this.model.nodeDataArray[(this.model.nodeDataArray.length - 1)].key)
         let motherConstructs = this.model.nodeDataArray.filter(construct => {
           return construct.mother
         })
@@ -244,7 +237,6 @@ export default {
             )
           })
         }
-        console.log('estos son los constructos madre', motherConstructs)
         // datalinks when a main construct is created
         msg = 'Constructo Principal Creado'
       } else if (val && val.destruct) {
@@ -385,12 +377,8 @@ export default {
   components: {Diagram, ConstructCategories, ConstructsComponent, ConstructsChildComponent, ConstructSelected, MindMapFilter},
   mounted () {
     this.findMainConstructs({query: {removed: false}}).then(response => {
-      const constructs = response.data || response
-      console.log(constructs)
     })
     this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
     this.setCurrentConstruct({name: 'Juan Garcia'})
   }

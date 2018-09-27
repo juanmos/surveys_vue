@@ -139,8 +139,6 @@ export default {
   components: {ConstructDetail},
   mounted () {
     this.findBoards({query: {removed: false}}).then(response => {
-      const boards = response.data || response
-      console.log(boards)
     })
   }
 }
