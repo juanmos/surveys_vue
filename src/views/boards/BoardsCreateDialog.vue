@@ -45,31 +45,6 @@ export default {
       // method with feathers vuex to create an user
       const { Board } = this.$FeathersVuex
       const board = new Board({_study_id: this.getStudyId, ...this.requestData})
-      board.nodeDataArray = [
-        {
-          id: '',
-          loc: '0 0',
-          text: this.requestData.name,
-          parent: '',
-          points: [],
-          description: 'Contructo Principal',
-          main: true,
-          mother: false,
-          color: '#B2DFDB'
-        }
-      ]
-      board.kanbanNodeDataArray = [
-        {
-          id: '',
-          loc: '0 0',
-          text: this.requestData.name,
-          parent: '',
-          points: [],
-          description: 'Contructo Principal',
-          main: true,
-          group: null
-        }
-      ]
       board.save().then((result) => {
         this.setCurrentMapId(result._id)
         this.setSnackMessage('Tematica Guardada')

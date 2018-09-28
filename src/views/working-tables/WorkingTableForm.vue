@@ -20,23 +20,45 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
+                 <v-textarea
+                    v-model="workingTable.description"
+                    label="Descripcion"
+                    box
+                  ></v-textarea>
+              </v-flex>
+              <v-flex xs12>
                 <v-select
                   @change="changeComponent"
                   label="Seleccione Tipo de Grafico"
                   v-model="workingTable.type"
                   :items="getGraphTypes"
                   item-text="name"
-                  item-value="_id"
+                  item-value="name"
                   box
                   required
                 ></v-select>
               </v-flex>
-              <v-flex xs12>
-                 <v-textarea
-                    v-model="workingTable.description"
-                    label="Descripcion"
-                    box
-                  ></v-textarea>
+              <v-flex xs6 offset-xs3>
+                <v-card dark>
+                  <v-card-text>
+                    <v-img
+                        :src="getCurrentImage"
+                        aspect-ratio="0.5"
+                        class="grey lighten-2"
+                        max-height="400"
+                      >
+                        <v-layout
+                          slot="placeholder"
+                          fill-height
+                          align-center
+                          justify-center
+                          ma-0
+                        >
+                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-layout>
+                    </v-img>
+                  </v-card-text>
+                </v-card>
               </v-flex>
             </v-layout>
           </v-container>
@@ -59,7 +81,7 @@ export default {
       workingTable: {
         name: '',
         description: '',
-        type: '',
+        type: null,
         component: ''
       },
       valid: false,
@@ -114,7 +136,32 @@ export default {
       return this.findCountriesInStore({query: {removed: false}}).data
     },
     getGraphTypes () {
-      return ['Kanban', 'Links', 'Espiral', 'Matriz']
+      return [
+        {
+          name: 'Kanban',
+          image: require('./../../assets/kanban-chart.png')
+        },
+        {
+          name: 'Serpentina',
+          image: require('./../../assets/serpentina-chart.png')
+        },
+        {
+          name: 'Mapa de Actores',
+          image: require('./../../assets/org-chart.png')
+        },
+        {
+          name: 'Espiral',
+          image: require('./../../assets/espiral-chart.png')
+        }
+      ]
+    },
+    getCurrentImage () {
+      if (this.workingTable.type) {
+        let image = this.getGraphTypes.filter(graph => graph.name === this.workingTable.type)[0]
+        return image.image
+      } else {
+        return require('./../../assets/placeholder.png')
+      }
     }
   },
   watch: {

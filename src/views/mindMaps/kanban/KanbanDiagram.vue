@@ -187,7 +187,8 @@ export default {
           isGroup: node.isGroup,
           group: node.group,
           key: node.key,
-          color: '0'
+          color: '0',
+          main: node.main
         }
       }).concat(
         that.getKanbanDiagramOptions()

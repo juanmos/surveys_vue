@@ -166,6 +166,7 @@ export default {
       const board = new Board(item)
       board.removed = true
       board.patch().then((result) => {
+        this.setCurrentDiagram = ''
         this.dialogConfirm = false
       })
     },
