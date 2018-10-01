@@ -101,17 +101,17 @@
           </v-flex>
         </v-layout>
         <v-layout justify-center>
-                  <v-flex xs8>
-                    <v-card flat>
-                      <v-card-text>
-                        <v-pagination
-                          v-model="page"
-                          :length="getLength"
-                        ></v-pagination>
-                      </v-card-text>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
+          <v-flex xs8>
+            <v-card flat>
+              <v-card-text>
+                <v-pagination
+                  v-model="page"
+                  :length="getLength"
+                ></v-pagination>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
         <v-btn
           absolute
           dark
@@ -138,7 +138,7 @@ export default {
   data () {
     return {
       page: 1,
-      limit: 10,
+      limit: 20,
       total: 1,
       query: {
       },
