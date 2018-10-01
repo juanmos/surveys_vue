@@ -9,7 +9,7 @@
                   class="appear elevation-20"
                 >
                   <login-form @dataSubmited="auth($event)"></login-form>
-                  <snack-message v-if="logErr" :message="`USUARIO O CONTRASEÑA INVALIDO`" :type="'error'" ></snack-message>
+                  <snack-message></snack-message>
                 </v-card>
           </v-layout>
      </v-app>
@@ -32,10 +32,18 @@ export default {
   }),
   methods: {
     ...mapActions('auth', ['authenticate']),
+    ...mapActions([
+      'setShowSnack',
+      'setSnackMessage'
+    ]),
     auth (credentials) {
       this.authenticate(credentials).then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Bienvenido a mapas mentales')
         this.$router.push('/')
       }, (err) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Usuario o contraseña invalidos')
         console.log(err)
       })
     }

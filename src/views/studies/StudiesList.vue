@@ -100,6 +100,18 @@
                 </v-card>
           </v-flex>
         </v-layout>
+        <v-layout justify-center>
+                  <v-flex xs8>
+                    <v-card flat>
+                      <v-card-text>
+                        <v-pagination
+                          v-model="page"
+                          :length="getLength"
+                        ></v-pagination>
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
         <v-btn
           absolute
           dark
@@ -125,6 +137,9 @@ import LoadingComponent from './../../components/docaration/LoadingComponent'
 export default {
   data () {
     return {
+      page: 1,
+      limit: 10,
+      total: 1,
       query: {
       },
       headers: [
@@ -193,13 +208,27 @@ export default {
     ...mapState('studies', {loading: 'isFindPending'}),
     ...mapGetters('studies', {findStudiesInStore: 'find'}),
     getStudies () {
-      return this.findStudiesInStore({query: {removed: false, ...this.query}}).data
+      return this.findStudiesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
+    getLength () {
+      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
+    },
+    getSkip () {
+      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+    }
+  },
+  watch: {
+    page () {
+      this.findStudies({ query: {removed: false, $skip: (this.page * this.limit), $limit: this.limit} }).then(response => {
+        this.total = response.total
+        this.limit = response.limit
+      })
     }
   },
   created () {
-    this.findStudies({ query: {removed: false} }).then(response => {
-      const studies = response.data || response
-      console.log(studies)
+    this.findStudies({ query: {removed: false, $skip: this.getSkip, $limit: this.limit} }).then(response => {
+      this.total = response.total
+      this.limit = response.limit
     })
   },
   components: {LoadingComponent, EditableField}

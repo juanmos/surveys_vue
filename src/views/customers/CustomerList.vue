@@ -203,7 +203,7 @@ export default {
       message: '',
       showMsg: false,
       msgType: 'error',
-      page: 1,
+      page: 0,
       limit: 10,
       total: 1,
       loaded: false,
@@ -262,6 +262,7 @@ export default {
         this.total = response.total
         this.loaded = true
         this.clients = response.data
+        console.log('estos son los clientes', this.clients)
       })
     }
   },
