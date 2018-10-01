@@ -7,7 +7,7 @@
               <v-subheader>Listado de Regiones</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="regions"
+                  :items="getRegions"
                   hide-actions
                   item-key="name"
                 >
@@ -187,17 +187,29 @@ export default {
     ...mapState('regions', {loading: 'isFindPending'}),
     ...mapState('regions', { paginationVal: 'pagination' }),
     ...mapGetters('regions', {findRegionsInStore: 'find'}),
+    getRegions () {
+      return this.findRegionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
     getLength () {
-      return Math.round((this.total / this.limit))
+      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
+    },
+    getSkip () {
+      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
     }
   },
   watch: {
-    page (val) {
-      this.getData()
+    page () {
+      this.findRegions({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+      })
     }
   },
   created () {
-    this.getData()
+    this.findRegions({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+    })
   },
   components: {LoadingComponent, EditableField}
 }

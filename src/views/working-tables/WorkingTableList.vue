@@ -109,6 +109,18 @@
                 </v-card>
           </v-flex>
         </v-layout>
+        <v-layout justify-center>
+          <v-flex xs8>
+            <v-card flat>
+              <v-card-text>
+                <v-pagination
+                  v-model="page"
+                  :length="getLength"
+                ></v-pagination>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
         <v-btn
           absolute
           dark
@@ -168,6 +180,9 @@ export default {
     return {
       query: {
       },
+      page: 1,
+      limit: 20,
+      total: 1,
       headers: [
         {
           text: 'Nombre',
@@ -232,11 +247,17 @@ export default {
     ...mapState('working-tables', {loading: 'isFindPending'}),
     ...mapGetters('working-tables', {findWorkingTablesInStore: 'find'}),
     getWorkingTables () {
-      return this.findWorkingTablesInStore({query: {removed: false, ...this.query}}).data
+      return this.findWorkingTablesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
+    getLength () {
+      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
+    },
+    getSkip () {
+      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
     }
   },
   created () {
-    this.findWorkingTables({ query: {removed: false} }).then(response => {
+    this.findWorkingTables({ query: {removed: false, $skip: this.getSkip, $limit: this.limit} }).then(response => {
     })
   },
   components: {LoadingComponent, EditableField}

@@ -7,7 +7,7 @@
               <v-subheader>Listado de Clientes</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="clients"
+                  :items="getCustomers"
                   hide-actions
                   item-key="name"
                 >
@@ -203,11 +203,12 @@ export default {
       message: '',
       showMsg: false,
       msgType: 'error',
-      page: 0,
-      limit: 10,
+      page: 1,
+      limit: 20,
       total: 1,
       loaded: false,
-      clients: []
+      clients: [],
+      query: {}
     }
   },
   methods: {
@@ -255,32 +256,39 @@ export default {
     },
     close (val) {
       console.log('Dialog closed', val)
-    },
-    getData () {
-      this.findCustomers({query: {removed: false, $skip: (this.page * this.limit), $limit: this.limit}}).then(response => {
-        this.limit = response.limit
-        this.total = response.total
-        this.loaded = true
-        this.clients = response.data
-        console.log('estos son los clientes', this.clients)
-      })
     }
   },
   computed: {
     ...mapState('customers', {loading: 'isFindPending'}),
     ...mapState('customers', { paginationVal: 'pagination' }),
     ...mapGetters('customers', {findCustomersInStore: 'find'}),
+    getCustomers () {
+      return this.findCustomersInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
     getLength () {
-      return Math.round((this.total / this.limit))
+      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
+    },
+    getSkip () {
+      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
     }
   },
   watch: {
-    page (val) {
-      this.getData()
+    page () {
+      this.findCustomers({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        console.log('estos son los clientes', this.clients)
+      })
     }
   },
   created () {
-    this.getData()
+    this.findCustomers({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.clients = response.data
+      console.log('estos son los clientes', this.clients)
+    })
   },
   components: {LoadingComponent, EditableField}
 }

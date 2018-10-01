@@ -65,6 +65,18 @@
                 </td>
                 </template>
             </v-data-table>
+            <v-layout justify-center>
+              <v-flex xs8>
+                <v-card flat>
+                  <v-card-text>
+                    <v-pagination
+                      v-model="page"
+                      :length="getLength"
+                    ></v-pagination>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
                 <v-btn
                 absolute
                 dark
@@ -79,6 +91,7 @@
                 </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
+
             </v-card>
         </v-flex>
         </v-layout>
@@ -95,6 +108,9 @@ import {validations} from './../../utils/validations'
 export default {
   data () {
     return {
+      page: 1,
+      limit: 20,
+      total: 1,
       headers: [
         {
           text: 'Nombre',
@@ -159,12 +175,26 @@ export default {
     ...mapGetters('users', {findUsersInStore: 'find'}),
     getUsers () {
       return this.findUsersInStore({query: {removed: false}}).data
+    },
+    getLength () {
+      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
+    },
+    getSkip () {
+      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+    }
+  },
+  watch: {
+    page () {
+      this.findUsers({ query: {removed: false} }).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+      })
     }
   },
   created () {
     this.findUsers({ query: {removed: false} }).then(response => {
-      const users = response.data || response
-      console.log(users)
+      this.limit = response.limit
+      this.total = response.total
     })
   },
   components: {LoadingComponent, EditableField}
