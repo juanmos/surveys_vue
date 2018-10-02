@@ -1,6 +1,5 @@
 <template>
     <div>
-        hola este es el dashboard
     </div>
 </template>
 

@@ -49,7 +49,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <span>
-          <diagram v-show="!filteredMode" ref="diag" v-bind:model-data="{nodeDataArray: getCurrentBoard.nodeDataArray , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
+          <diagram v-show="!filteredMode" ref="diag" v-bind:model-data="{nodeDataArray: getNodeDataArray  , linkDataArray: getCurrentBoard.linkDataArray}" v-on:model-changed="modelChanged" v-on:object-clicked="objectClicked" v-on:changed-selection="changedSelection" style="width:100%; height:600px">
           </diagram>
           <diagram v-show="filteredMode" ref="diag2" v-bind:model-data="{nodeDataArray: filteredNodeDataArray , linkDataArray: filteredLinkDataArray}" v-on:model-changed="dummy"  style="width:100%; height:600px">
           </diagram>
@@ -365,6 +365,9 @@ export default {
       } else {
         return []
       }
+    },
+    getNodeDataArray () {
+      return this.getCurrentBoard.nodeDataArray
     }
   },
   watch: {
