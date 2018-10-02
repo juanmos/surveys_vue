@@ -62,6 +62,7 @@
                 </v-list-tile-content>
 
               </v-list-tile>
+
               <v-list-tile
                 @click="selectCurrentDiagram('NodeDiagram', item._id)"
               >
@@ -70,6 +71,17 @@
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title>Mapa Mental</v-list-tile-title>
+                </v-list-tile-content>
+
+              </v-list-tile>
+              <v-list-tile
+                @click="selectCurrentDiagram('NodeGroupDiagram', item._id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon :class="`yellow lighten-1 white--text`">category</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>test agrupado</v-list-tile-title>
                 </v-list-tile-content>
 
               </v-list-tile>

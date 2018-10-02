@@ -43,6 +43,7 @@ import BoardsCategories from './BoardsCategories'
 import NodeDiagram from './../mindMaps/graphLinks/NodeDiagram'
 import KanbanDiagram from './../mindMaps/kanban/KanbanDiagram'
 import MatrixComponent from './../mindMaps/matrixTable/MatrixComponent'
+import NodeGroupDiagram from './../mindMaps/graphGroupLinks/NodeGroupDiagram'
 export default {
   data () {
     return {
@@ -70,7 +71,7 @@ export default {
       this.setStudyId(this.$route.params.id)
     })
   },
-  components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent}
+  components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent, NodeGroupDiagram}
 }
 </script>
 
