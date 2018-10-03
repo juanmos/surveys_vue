@@ -35,7 +35,7 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions, mapState} from 'vuex'
 export default {
   data () {
     return {
@@ -48,12 +48,21 @@ export default {
     sendData () {
       this.$emit('dataUpdated', this.tableInstance)
     },
+    clearData () {
+      this.tableInstance = {}
+    },
     ...mapActions('working-tables', { findTables: 'find' })
   },
   computed: {
     ...mapGetters('working-tables', {findWorkingInStore: 'find'}),
+    ...mapState('table-instances', {creating: 'isCreatePending'}),
     getTables () {
       return this.findWorkingInStore({query: {removed: false}}).data
+    }
+  },
+  watch: {
+    creating (val) {
+      this.clearData()
     }
   },
   created () {

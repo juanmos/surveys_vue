@@ -266,19 +266,57 @@ export default {
     },
     getDiagramData () {
       return {
+        nodeParentKeyProperty: 'next',
         nodeDataArray: [
-          { 'key': -1, 'text': 'Operating', 'category': 'Super' },
-          { 'key': -2, 'text': 'Drying', 'category': 'Super', 'supers': [-1] },
-          { 'key': -3, 'text': 'Non Drying', 'category': 'Super' },
-
-          { 'key': 1, 'loc': '100 100', 'text': 'Starting.End', 'supers': [-2] },
-          { 'key': 2, 'loc': '250 100', 'text': 'Running', 'supers': [-2] },
-          { 'key': 3, 'loc': '100 200', 'text': 'Starting.Init', 'supers': [-1, -3] },
-          { 'key': 4, 'loc': '250 200', 'text': 'Washing', 'supers': [-1, -3] },
-          { 'key': 5, 'loc': '100 300', 'text': 'Stopped', 'supers': [-3] },
-          { 'key': 6, 'loc': '250 300', 'text': 'Stopping', 'supers': [-3] }
-        ],
-        linkDataArray: []
+          { key: 'Alpha', next: 'Beta', color: 'coral' },
+          { key: 'Beta', next: 'Gamma', color: 'tomato' },
+          { key: 'Gamma', next: 'Delta', color: 'goldenrod' },
+          { key: 'Delta', next: 'Epsilon', color: 'orange' },
+          { key: 'Epsilon', next: 'Zeta', color: 'coral' },
+          { key: 'Zeta', next: 'Eta', color: 'tomato' },
+          { key: 'Eta', next: 'Theta', color: 'goldenrod' },
+          { key: 'Theta', next: 'Iota', color: 'orange' },
+          { key: 'Iota', next: 'Kappa', color: 'coral' },
+          { key: 'Kappa', next: 'Lambda', color: 'tomato' },
+          { key: 'Lambda', next: 'Mu', color: 'goldenrod' },
+          { key: 'Mu', next: 'Nu', color: 'orange' },
+          { key: 'Nu', next: 'Xi', color: 'coral' },
+          { key: 'Xi', next: 'Omicron', color: 'tomato' },
+          { key: 'Omicron', next: 'Pi', color: 'goldenrod' },
+          { key: 'Pi', next: 'Rho', color: 'orange' },
+          { key: 'Rho', next: 'Sigma', color: 'coral' },
+          { key: 'Sigma', next: 'Tau', color: 'tomato' },
+          { key: 'Tau', next: 'Upsilon', color: 'goldenrod' },
+          { key: 'Upsilon', next: 'Phi', color: 'orange' },
+          { key: 'Phi', next: 'Chi', color: 'coral' },
+          { key: 'Chi', next: 'Psi', color: 'tomato' },
+          { key: 'Psi', next: 'Omega', color: 'goldenrod' },
+          { key: 'Omega', next: 'Alpha2', color: 'orange' },
+          { key: 'Alpha2', next: 'Beta2', color: 'coral' },
+          { key: 'Beta2', next: 'Gamma2', color: 'tomato' },
+          { key: 'Gamma2', next: 'Delta2', color: 'goldenrod' },
+          { key: 'Delta2', next: 'Epsilon2', color: 'orange' },
+          { key: 'Epsilon2', next: 'Zeta2', color: 'coral' },
+          { key: 'Zeta2', next: 'Eta2', color: 'tomato' },
+          { key: 'Eta2', next: 'Theta2', color: 'goldenrod' },
+          { key: 'Theta2', next: 'Iota2', color: 'orange' },
+          { key: 'Iota2', next: 'Kappa2', color: 'coral' },
+          { key: 'Kappa2', next: 'Lambda2', color: 'tomato' },
+          { key: 'Lambda2', next: 'Mu2', color: 'goldenrod' },
+          { key: 'Mu2', next: 'Nu2', color: 'orange' },
+          { key: 'Nu2', next: 'Xi2', color: 'coral' },
+          { key: 'Xi2', next: 'Omicron2', color: 'tomato' },
+          { key: 'Omicron2', next: 'Pi2', color: 'goldenrod' },
+          { key: 'Pi2', next: 'Rho2', color: 'orange' },
+          { key: 'Rho2', next: 'Sigma2', color: 'coral' },
+          { key: 'Sigma2', next: 'Tau2', color: 'tomato' },
+          { key: 'Tau2', next: 'Upsilon2', color: 'goldenrod' },
+          { key: 'Upsilon2', next: 'Phi2', color: 'orange' },
+          { key: 'Phi2', next: 'Chi2', color: 'coral' },
+          { key: 'Chi2', next: 'Psi2', color: 'tomato' },
+          { key: 'Psi2', next: 'Omega2', color: 'goldenrod' },
+          { key: 'Omega2', color: 'orange' }
+        ]
       }
     },
     hasMainConstruct () {
@@ -315,7 +353,6 @@ export default {
     })
     this.findBoards({query: {removed: false}}).then(response => {
     })
-    this.setCurrentConstruct({name: 'Juan Garcia'})
   }
 }
 </script>

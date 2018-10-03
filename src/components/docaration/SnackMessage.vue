@@ -37,7 +37,6 @@ export default {
   watch: {
     showSnack (val) {
       if (val === true) {
-        console.log('es true')
         setTimeout(() => {
           this.setShowSnack(false)
         }, 3000)

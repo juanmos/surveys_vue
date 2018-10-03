@@ -27,14 +27,21 @@
 import {mapState, mapActions} from 'vuex'
 
 import WorkingTableForm from './WorkingTableForm'
+import defaultData from './../mindMaps/defaultData'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
+  data () {
+    return {
+      defaultDataFile: defaultData
+    }
+  },
   methods: {
     ...mapActions([
       'setShowSnack',
       'setSnackMessage'
     ]),
     create (values) {
+      console.log('esto se va a guardar', {values})
       // method with feathers vuex to create an WorkingTables
       const { WorkingTable } = this.$FeathersVuex
       const wTable = new WorkingTable(values)
@@ -44,6 +51,8 @@ export default {
         this.goToList()
       }, (err) => {
         console.log(err)
+      }).then(() => {
+        console.log('para default', values)
       })
     },
     goToList () {

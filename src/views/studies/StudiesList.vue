@@ -182,7 +182,6 @@ export default {
       return this.$store.dispatch('studies/find', params)
     },
     edit (val, elem, field) {
-      console.log(val, elem, field)
       const {Study} = this.$FeathersVuex
       const study = new Study(elem)
       study[field] = val

@@ -137,6 +137,12 @@ export default new Vuex.Store({
         type: ''
       }
     }),
+    service('graph-defaults', {
+      instanceDefaults: {
+        type: '',
+        nodeDataArray: []
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

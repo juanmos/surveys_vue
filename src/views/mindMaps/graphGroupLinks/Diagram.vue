@@ -53,14 +53,15 @@ export default {
       $(go.Diagram, this.$el,
         {
           initialContentAlignment: go.Spot.Center,
+          // allows grouping with ctl g
+          'commandHandler.archetypeGroupData': { text: 'Grupo test', isGroup: true, color: 'blue' },
           // have mouse wheel events zoom in and out instead of scroll up and down
           'toolManager.mouseWheelBehavior': go.ToolManager.WheelZoom,
           // disable animation
-          'animationManager.isEnabled': false,
+          'animationManager.isEnabled': true,
           // support double-click in background creating a new node
           'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo' },
           // allows grouping with ctl g
-          'commandHandler.archetypeGroupData': { text: 'Group', isGroup: true, color: 'blue' },
           'undoManager.isEnabled': true,
           // Model ChangedEvents get passed up to component users
           'ModelChanged': function (e) { self.$emit('model-changed', e) },

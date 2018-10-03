@@ -74,17 +74,6 @@
                 </v-list-tile-content>
 
               </v-list-tile>
-              <v-list-tile
-                @click="selectCurrentDiagram('NodeGroupDiagram', item._id)"
-              >
-                <v-list-tile-avatar>
-                  <v-icon :class="`yellow lighten-1 white--text`">category</v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>test agrupado</v-list-tile-title>
-                </v-list-tile-content>
-
-              </v-list-tile>
               <v-subheader class="grey lighten-5">Mesas Personalizadas  <working-table-create-dialog :boardId="item._id"></working-table-create-dialog> </v-subheader>
               <working-table-instance-list :boardId="item._id"></working-table-instance-list>
               <v-divider ></v-divider>
