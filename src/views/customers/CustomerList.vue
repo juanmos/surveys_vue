@@ -277,7 +277,6 @@ export default {
       this.findCustomers({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
-        console.log('estos son los clientes', this.clients)
       })
     }
   },
@@ -287,7 +286,6 @@ export default {
       this.total = response.total
       this.loaded = true
       this.clients = response.data
-      console.log('estos son los clientes', this.clients)
     })
   },
   components: {LoadingComponent, EditableField}

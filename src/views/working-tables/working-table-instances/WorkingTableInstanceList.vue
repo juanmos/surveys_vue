@@ -7,16 +7,13 @@
             @click="selectCurrentDiagram(table.workingTable.component, table._board_id, table._id)"
             >
             <v-list-tile-avatar>
-                <v-icon v-if="table.workingTable && table.workingTable.type === 'Matriz'" :class="`blue-grey lighten-1 white--text`">view_module</v-icon>
-                <v-icon v-if="table.workingTable && table.workingTable.type === 'Kanban'" :class="`teal lighten-1 white--text white--text`">view_carousel</v-icon>
-                <v-icon v-if="table.workingTable && table.workingTable.type === 'Links'" :class="`lime lighten-1 white--text`">call_merge</v-icon>
-                <v-icon v-if="table.workingTable && table.workingTable.type === 'Espiral'" :class="`brown lighten-1 white--text`">sync</v-icon>
+                <v-icon v-if="table.workingTable" v-html="table.workingTable.icon" :class="`blue-grey lighten-1 white--text`"></v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content>
                 <v-list-tile-title >{{table.name}} - <span v-if="table.workingTable" class="caption blue-grey--text">{{table.workingTable.name}}</span></v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn @click="dialogConfirm = true; currentItem = table" class="delete-btn" icon ripple>
+              <v-btn @click.stop="dialogConfirm = true; currentItem = table" class="delete-btn" icon ripple>
                 <v-icon color="grey lighten-1">cancel</v-icon>
               </v-btn>
             </v-list-tile-action>
@@ -28,7 +25,6 @@
             >
             <v-card>
                 <v-card-title class="headline">¿Esta usted completamente seguro?</v-card-title>
-
                 <v-card-text>
                     Si borra esta mesa de trabajo perdera todo el trabajo realizado
                 </v-card-text>

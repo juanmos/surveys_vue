@@ -61,9 +61,10 @@ export default {
           'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo' },
           'undoManager.isEnabled': true,
           // Model ChangedEvents get passed up to component users
-          'ModelChanged': function (e) { self.$emit('model-changed', e) },
+          'ModelChanged': (e) => { this.$emit('model-changed', e) },
           'ObjectSingleClicked': function (e) { self.$emit('object-clicked', e) },
           'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
+
         })
       // To simplify this code we define a function for creating a context menu button:
     function makeButton (text, action, visiblePredicate) {

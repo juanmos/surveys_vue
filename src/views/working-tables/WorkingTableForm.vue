@@ -12,7 +12,6 @@
               <v-flex xs12>
                 <v-text-field
                   box
-
                   label="Nombre"
                   :append-icon="'name'"
                   v-model="workingTable.name"
@@ -24,6 +23,7 @@
                     v-model="workingTable.description"
                     label="Descripcion"
                     box
+                    required
                   ></v-textarea>
               </v-flex>
               <v-flex xs12>
@@ -39,7 +39,7 @@
                 ></v-select>
               </v-flex>
               <v-flex xs6 offset-xs3>
-                <v-card dark>
+                <v-card color="grey"  class="lighten-2">
                   <v-card-text>
                     <v-img
                         :src="getCurrentImage"
@@ -65,7 +65,7 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Mesa</v-btn>
+            <v-btn type="submit" :disabled="!valid" small color="info">Guardar Mesa</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -79,10 +79,10 @@ export default {
   data (vm) {
     return {
       workingTable: {
-        name: '',
-        description: '',
+        name: null,
+        description: null,
         type: null,
-        component: ''
+        component: null
       },
       valid: false,
       name: '',
@@ -112,9 +112,9 @@ export default {
       console.log(this.study._country_id)
     },
     changeComponent () {
-      if (this.workingTable.type === 'Matriz') {
-        this.workingTable.component = 'MatrixComponent'
-      }
+      let graph = this.getGraphTypes.filter(graph => graph.name === this.workingTable.type)[0]
+      this.workingTable.component = graph.component
+      this.workingTable.icon = graph.icon
     }
   },
   computed: {
@@ -138,6 +138,24 @@ export default {
     getGraphTypes () {
       return [
         {
+          name: 'Mapa mental con agrupaciones',
+          image: require('./../../assets/group-chart.png'),
+          component: 'NodeGroupDiagram',
+          icon: 'aspect_ratio'
+        },
+        {
+          name: 'Matriz Estrategica',
+          image: require('./../../assets/matriz-estrategica.png'),
+          component: 'MatrixComponent',
+          icon: 'view_module'
+        },
+        {
+          name: 'Matriz Foda',
+          image: require('./../../assets/matriz-estrategica.png'),
+          component: 'FodaMatrixComponent',
+          icon: 'view_module'
+        },
+        {
           name: 'Kanban',
           image: require('./../../assets/kanban-chart.png')
         },
@@ -151,7 +169,9 @@ export default {
         },
         {
           name: 'Espiral',
-          image: require('./../../assets/espiral-chart.png')
+          image: require('./../../assets/espiral-chart.png'),
+          component: 'SpiralLinkDiagram',
+          icon: 'sync'
         }
       ]
     },
@@ -173,8 +193,6 @@ export default {
   },
   created () {
     this.findUsers({ query: {removed: false} }).then(response => {
-      const users = response.data || response
-      console.log(users)
     })
     this.findClients({ query: {removed: false} }).then(response => {
     })

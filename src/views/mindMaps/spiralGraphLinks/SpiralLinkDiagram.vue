@@ -8,6 +8,18 @@
         >
            <!-- <mind-map-filter @sendFilters="applyFilters"></mind-map-filter> -->
           <v-spacer></v-spacer>
+          <v-tooltip color="primary" bottom>
+              <v-btn
+                flat
+                :loading="loading"
+                :disabled="loading"
+                @click.stop="saveBoardChanges"
+                slot="activator"
+              >
+                <v-icon right dark>cloud_upload</v-icon>
+              </v-btn>
+              <span>Guardar Cambios</span>
+            </v-tooltip>
           <v-toolbar-items class="hidden-sm-and-down">
           </v-toolbar-items>
         </v-toolbar>
@@ -56,8 +68,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions('graph-defaults', { findGraphDefaults: 'find' }),
     ...mapActions([
       'setCurrentConstruct',
       'setShowSnack',
@@ -187,11 +199,12 @@ export default {
       this.updateDiagramFromData()
     },
     saveBoardChanges () {
-      const {Board} = this.$FeathersVuex
-      let board = new Board(this.getCurrentBoard)
-      board.nodeDataArray = this.newDataArray
-      board.linkDataArray = this.newLinkDataArray
-      board.patch({query: {node: true}}).then((result) => {
+      const {TableInstance} = this.$FeathersVuex
+      let tableInstance = new TableInstance(this.getCurrentTable)
+      tableInstance.nodeDataArray = this.newDataArray
+      tableInstance.patch().then((result) => {
+        this.setSnackMessage('Guardado grafico espiral')
+        this.setShowSnack(true)
       })
     },
     editNode (event) {
@@ -250,35 +263,34 @@ export default {
         }
       }
     },
-    ...mapState('main-constructs', {loading: 'isFindPending'}),
-    ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
+    ...mapGetters('graph-defaults', {findDefaultsInStore: 'find'}),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters('table-instances', {findTablesInStore: 'find'}),
     ...mapState('boards', {loading: 'isFindPending'}),
-    ...mapState(['currentMapId', 'currentDiagram']),
+    ...mapState(['currentMapId', 'currentDiagram', 'currentTableInstanceId']),
     ...mapGetters([
       'getCurrentConstruct'
     ]),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
+    getCurrentTable () {
+      return this.findTablesInStore({query: {removed: false, _id: this.currentTableInstanceId}}).data[0]
+    },
+    getDataArray () {
+      return this.getCurrentTable.nodeDataArray
+    },
     getCurrentNodeData () {
       return this.getCurrentBoard.nodeDataArray
     },
+    getDefaultData () {
+      return this.findDefaultsInStore({query: {component: 'SpiralLinkDiagram'}}).data[0]
+    },
     getDiagramData () {
-      return {
-        nodeDataArray: [
-          { 'key': -1, 'text': 'Operating', 'category': 'Super' },
-          { 'key': -2, 'text': 'Drying', 'category': 'Super', 'supers': [-1] },
-          { 'key': -3, 'text': 'Non Drying', 'category': 'Super' },
-
-          { 'key': 1, 'loc': '100 100', 'text': 'Starting.End', 'supers': [-2] },
-          { 'key': 2, 'loc': '250 100', 'text': 'Running', 'supers': [-2] },
-          { 'key': 3, 'loc': '100 200', 'text': 'Starting.Init', 'supers': [-1, -3] },
-          { 'key': 4, 'loc': '250 200', 'text': 'Washing', 'supers': [-1, -3] },
-          { 'key': 5, 'loc': '100 300', 'text': 'Stopped', 'supers': [-3] },
-          { 'key': 6, 'loc': '250 300', 'text': 'Stopping', 'supers': [-3] }
-        ],
-        linkDataArray: []
+      if (this.getDataArray) {
+        return { nodeParentKeyProperty: 'next', nodeDataArray: this.getDataArray }
+      } else {
+        return this.getDefaultData ? { nodeParentKeyProperty: 'next', nodeDataArray: this.getDefaultData.nodeDataArray } : []
       }
     },
     hasMainConstruct () {
@@ -288,7 +300,6 @@ export default {
           return construct.main
         }).length !== 0 : false
     },
-    ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model },
     filteredNodeDataArray () {
       return this.getCurrentBoard.nodeDataArray.filter(construct => construct.main || construct.mother)
@@ -311,11 +322,10 @@ export default {
   },
   components: {Diagram, MindMapFilter},
   mounted () {
-    this.findMainConstructs({query: {removed: false}}).then(response => {
-    })
     this.findBoards({query: {removed: false}}).then(response => {
     })
-    this.setCurrentConstruct({name: 'Juan Garcia'})
+    this.findGraphDefaults({query: {component: 'SpiralLinkDiagram'}}).then((result) => {
+    })
   }
 }
 </script>
