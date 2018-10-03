@@ -94,6 +94,12 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('graph-defaults', {
+      instanceDefaults: {
+        component: '',
+        nodeDataArray: []
+      }
+    }),
     service('working-tables', {
       instanceDefaults: {
         name: '',
@@ -109,8 +115,11 @@ export default new Vuex.Store({
         _working_table_id: '',
         _board_id: '',
         incorporates: [],
+        nodeDataArray: [],
         deletes: [],
         weakens: [],
+        threats: [],
+        opportunities: [],
         removed: false
       }
     }),
@@ -135,12 +144,6 @@ export default new Vuex.Store({
       instanceDefaults: {
         file: '',
         type: ''
-      }
-    }),
-    service('graph-defaults', {
-      instanceDefaults: {
-        type: '',
-        nodeDataArray: []
       }
     }),
     auth({ userService: 'users' })

@@ -8,6 +8,18 @@
         >
            <!-- <mind-map-filter @sendFilters="applyFilters"></mind-map-filter> -->
           <v-spacer></v-spacer>
+          <v-tooltip color="primary" bottom>
+              <v-btn
+                flat
+                :loading="loading"
+                :disabled="loading"
+                @click.stop="saveBoardChanges"
+                slot="activator"
+              >
+                <v-icon right dark>cloud_upload</v-icon>
+              </v-btn>
+              <span>Guardar Cambios</span>
+            </v-tooltip>
           <v-toolbar-items class="hidden-sm-and-down">
           </v-toolbar-items>
         </v-toolbar>
@@ -56,8 +68,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('main-constructs', { findMainConstructs: 'find' }),
     ...mapActions('boards', { findBoards: 'find' }),
+    ...mapActions('graph-defaults', { findGraphDefaults: 'find' }),
     ...mapActions([
       'setCurrentConstruct',
       'setShowSnack',
@@ -187,11 +199,12 @@ export default {
       this.updateDiagramFromData()
     },
     saveBoardChanges () {
-      const {Board} = this.$FeathersVuex
-      let board = new Board(this.getCurrentBoard)
-      board.nodeDataArray = this.newDataArray
-      board.linkDataArray = this.newLinkDataArray
-      board.patch({query: {node: true}}).then((result) => {
+      const {TableInstance} = this.$FeathersVuex
+      let tableInstance = new TableInstance(this.getCurrentTable)
+      tableInstance.nodeDataArray = this.newDataArray
+      tableInstance.patch().then((result) => {
+        this.setSnackMessage('Guardado grafico espiral')
+        this.setShowSnack(true)
       })
     },
     editNode (event) {
@@ -250,73 +263,34 @@ export default {
         }
       }
     },
-    ...mapState('main-constructs', {loading: 'isFindPending'}),
-    ...mapGetters('main-constructs', {findConstructsInStore: 'find'}),
+    ...mapGetters('graph-defaults', {findDefaultsInStore: 'find'}),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
+    ...mapGetters('table-instances', {findTablesInStore: 'find'}),
     ...mapState('boards', {loading: 'isFindPending'}),
-    ...mapState(['currentMapId', 'currentDiagram']),
+    ...mapState(['currentMapId', 'currentDiagram', 'currentTableInstanceId']),
     ...mapGetters([
       'getCurrentConstruct'
     ]),
     getCurrentBoard () {
       return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
     },
+    getCurrentTable () {
+      return this.findTablesInStore({query: {removed: false, _id: this.currentTableInstanceId}}).data[0]
+    },
+    getDataArray () {
+      return this.getCurrentTable.nodeDataArray
+    },
     getCurrentNodeData () {
       return this.getCurrentBoard.nodeDataArray
     },
+    getDefaultData () {
+      return this.findDefaultsInStore({query: {component: 'SpiralLinkDiagram'}}).data[0]
+    },
     getDiagramData () {
-      return {
-        nodeParentKeyProperty: 'next',
-        nodeDataArray: [
-          { key: 'Alpha', next: 'Beta', color: 'coral' },
-          { key: 'Beta', next: 'Gamma', color: 'tomato' },
-          { key: 'Gamma', next: 'Delta', color: 'goldenrod' },
-          { key: 'Delta', next: 'Epsilon', color: 'orange' },
-          { key: 'Epsilon', next: 'Zeta', color: 'coral' },
-          { key: 'Zeta', next: 'Eta', color: 'tomato' },
-          { key: 'Eta', next: 'Theta', color: 'goldenrod' },
-          { key: 'Theta', next: 'Iota', color: 'orange' },
-          { key: 'Iota', next: 'Kappa', color: 'coral' },
-          { key: 'Kappa', next: 'Lambda', color: 'tomato' },
-          { key: 'Lambda', next: 'Mu', color: 'goldenrod' },
-          { key: 'Mu', next: 'Nu', color: 'orange' },
-          { key: 'Nu', next: 'Xi', color: 'coral' },
-          { key: 'Xi', next: 'Omicron', color: 'tomato' },
-          { key: 'Omicron', next: 'Pi', color: 'goldenrod' },
-          { key: 'Pi', next: 'Rho', color: 'orange' },
-          { key: 'Rho', next: 'Sigma', color: 'coral' },
-          { key: 'Sigma', next: 'Tau', color: 'tomato' },
-          { key: 'Tau', next: 'Upsilon', color: 'goldenrod' },
-          { key: 'Upsilon', next: 'Phi', color: 'orange' },
-          { key: 'Phi', next: 'Chi', color: 'coral' },
-          { key: 'Chi', next: 'Psi', color: 'tomato' },
-          { key: 'Psi', next: 'Omega', color: 'goldenrod' },
-          { key: 'Omega', next: 'Alpha2', color: 'orange' },
-          { key: 'Alpha2', next: 'Beta2', color: 'coral' },
-          { key: 'Beta2', next: 'Gamma2', color: 'tomato' },
-          { key: 'Gamma2', next: 'Delta2', color: 'goldenrod' },
-          { key: 'Delta2', next: 'Epsilon2', color: 'orange' },
-          { key: 'Epsilon2', next: 'Zeta2', color: 'coral' },
-          { key: 'Zeta2', next: 'Eta2', color: 'tomato' },
-          { key: 'Eta2', next: 'Theta2', color: 'goldenrod' },
-          { key: 'Theta2', next: 'Iota2', color: 'orange' },
-          { key: 'Iota2', next: 'Kappa2', color: 'coral' },
-          { key: 'Kappa2', next: 'Lambda2', color: 'tomato' },
-          { key: 'Lambda2', next: 'Mu2', color: 'goldenrod' },
-          { key: 'Mu2', next: 'Nu2', color: 'orange' },
-          { key: 'Nu2', next: 'Xi2', color: 'coral' },
-          { key: 'Xi2', next: 'Omicron2', color: 'tomato' },
-          { key: 'Omicron2', next: 'Pi2', color: 'goldenrod' },
-          { key: 'Pi2', next: 'Rho2', color: 'orange' },
-          { key: 'Rho2', next: 'Sigma2', color: 'coral' },
-          { key: 'Sigma2', next: 'Tau2', color: 'tomato' },
-          { key: 'Tau2', next: 'Upsilon2', color: 'goldenrod' },
-          { key: 'Upsilon2', next: 'Phi2', color: 'orange' },
-          { key: 'Phi2', next: 'Chi2', color: 'coral' },
-          { key: 'Chi2', next: 'Psi2', color: 'tomato' },
-          { key: 'Psi2', next: 'Omega2', color: 'goldenrod' },
-          { key: 'Omega2', color: 'orange' }
-        ]
+      if (this.getDataArray) {
+        return { nodeParentKeyProperty: 'next', nodeDataArray: this.getDataArray }
+      } else {
+        return this.getDefaultData ? { nodeParentKeyProperty: 'next', nodeDataArray: this.getDefaultData.nodeDataArray } : []
       }
     },
     hasMainConstruct () {
@@ -326,7 +300,6 @@ export default {
           return construct.main
         }).length !== 0 : false
     },
-    ...mapState(['currentMapId']),
     model () { return this.$refs.diag.model },
     filteredNodeDataArray () {
       return this.getCurrentBoard.nodeDataArray.filter(construct => construct.main || construct.mother)
@@ -349,9 +322,9 @@ export default {
   },
   components: {Diagram, MindMapFilter},
   mounted () {
-    this.findMainConstructs({query: {removed: false}}).then(response => {
-    })
     this.findBoards({query: {removed: false}}).then(response => {
+    })
+    this.findGraphDefaults({query: {component: 'SpiralLinkDiagram'}}).then((result) => {
     })
   }
 }

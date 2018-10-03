@@ -43,6 +43,7 @@ import BoardsCategories from './BoardsCategories'
 import NodeDiagram from './../mindMaps/graphLinks/NodeDiagram'
 import KanbanDiagram from './../mindMaps/kanban/KanbanDiagram'
 import MatrixComponent from './../mindMaps/matrixTable/MatrixComponent'
+import FodaMatrixComponent from './../mindMaps/fodaMatrixTable/FodaMatrixComponent'
 import NodeGroupDiagram from './../mindMaps/graphGroupLinks/NodeGroupDiagram'
 import SpiralLinkDiagram from './../mindMaps/spiralGraphLinks/SpiralLinkDiagram'
 export default {
@@ -72,7 +73,7 @@ export default {
       this.setStudyId(this.$route.params.id)
     })
   },
-  components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent, NodeGroupDiagram, SpiralLinkDiagram}
+  components: {BoardsCategories, NodeDiagram, KanbanDiagram, MatrixComponent, NodeGroupDiagram, SpiralLinkDiagram, FodaMatrixComponent}
 }
 </script>
 

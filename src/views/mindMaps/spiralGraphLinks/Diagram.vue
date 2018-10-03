@@ -238,6 +238,7 @@ export default {
       }
     })
     // finishing pre configured library
+    var self = this
     var myDiagram =
       $(go.Diagram, this.$el, // create a Diagram for the DIV HTML element
         {
@@ -248,7 +249,10 @@ export default {
           // allow double-click in background to create a new node
           'clickCreatingTool.archetypeNodeData': { key: 'Cambiar..', color: 'goldenrod' },
           // enable undo & redo
-          'undoManager.isEnabled': true
+          'undoManager.isEnabled': true,
+          'ModelChanged': function (e) { self.$emit('model-changed', e) },
+          'ObjectSingleClicked': function (e) { self.$emit('object-clicked', e) },
+          'ChangedSelection': function (e) { self.$emit('changed-selection', e) }
 
         })
     myDiagram.nodeTemplate =

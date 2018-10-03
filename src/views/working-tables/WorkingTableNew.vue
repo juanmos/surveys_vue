@@ -52,7 +52,13 @@ export default {
       }, (err) => {
         console.log(err)
       }).then(() => {
-        console.log('para default', values)
+        console.log('la configuracion para este componente', this.defaultDataFile, 'y este es el componente que se manda a cambiar', values.component)
+        const { GraphDefault } = this.$FeathersVuex
+        let defaultValues = new GraphDefault({
+          component: values.component,
+          nodeDataArray: this.defaultDataFile[values.component]
+        })
+        return defaultValues.save()
       })
     },
     goToList () {
@@ -62,6 +68,8 @@ export default {
   computed: {
     ...mapState('working-tables', {loading: 'isCreatePending'}),
     ...mapState('auth', {user: 'user'})
+  },
+  created () {
   },
   components: {WorkingTableForm, LoadingComponent}
 }

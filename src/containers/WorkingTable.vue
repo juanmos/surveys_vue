@@ -11,9 +11,8 @@
       <v-avatar
           :tile="true"
           :size="50"
-          color="grey lighten-4"
         >
-          <img src="https://via.placeholder.com/50x50" alt="avatar">
+          <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
       </v-avatar>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>

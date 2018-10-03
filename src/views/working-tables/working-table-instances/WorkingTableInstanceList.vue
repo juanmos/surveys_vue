@@ -13,7 +13,7 @@
                 <v-list-tile-title >{{table.name}} - <span v-if="table.workingTable" class="caption blue-grey--text">{{table.workingTable.name}}</span></v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn @click="dialogConfirm = true; currentItem = table" class="delete-btn" icon ripple>
+              <v-btn @click.stop="dialogConfirm = true; currentItem = table" class="delete-btn" icon ripple>
                 <v-icon color="grey lighten-1">cancel</v-icon>
               </v-btn>
             </v-list-tile-action>

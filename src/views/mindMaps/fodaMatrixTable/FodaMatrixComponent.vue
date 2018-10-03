@@ -125,8 +125,8 @@
                                             <v-toolbar-items class="hidden-sm-and-down">
                                             </v-toolbar-items>
                                         </v-toolbar>
-                                        <draggable v-model="getCurrentWeakens" :options="{group:'people'}" style="min-height: 50px">
-                                            <template v-for="item in getCurrentWeakens">
+                                        <draggable v-model="getCurrentThreats" :options="{group:'people'}" style="min-height: 50px">
+                                            <template v-for="item in getCurrentThreats">
                                                 <v-flex :key="item.id">
                                                     <v-card class="item-card" color="lime lighten-4">
                                                     <v-card-title primary-title>
@@ -163,7 +163,7 @@ export default {
       ],
       itemsDeletes: [
       ],
-      itemsWeakens: [
+      itemsThreats: [
       ]
     }
   },
@@ -246,14 +246,14 @@ export default {
         })
       }
     },
-    getCurrentWeakens: {
+    getCurrentThreats: {
       get () {
-        return this.getCurrentTable.weakens
+        return this.getCurrentTable.threats
       },
       set (newVal) {
         const {TableInstance} = this.$FeathersVuex
         const tableInstance = new TableInstance(this.getCurrentTable)
-        tableInstance.weakens = newVal
+        tableInstance.threats = newVal
         tableInstance.save().then(res => {
         })
       }

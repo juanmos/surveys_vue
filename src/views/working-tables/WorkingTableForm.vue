@@ -150,6 +150,12 @@ export default {
           icon: 'view_module'
         },
         {
+          name: 'Matriz Foda',
+          image: require('./../../assets/matriz-estrategica.png'),
+          component: 'FodaMatrixComponent',
+          icon: 'view_module'
+        },
+        {
           name: 'Kanban',
           image: require('./../../assets/kanban-chart.png')
         },
