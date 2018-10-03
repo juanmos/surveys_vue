@@ -287,7 +287,7 @@ export default {
       return this.findDefaultsInStore({query: {component: 'SpiralLinkDiagram'}}).data[0]
     },
     getDiagramData () {
-      if (this.getDataArray) {
+      if (this.getDataArray.length > 0) {
         return { nodeParentKeyProperty: 'next', nodeDataArray: this.getDataArray }
       } else {
         return this.getDefaultData ? { nodeParentKeyProperty: 'next', nodeDataArray: this.getDefaultData.nodeDataArray } : []
