@@ -15,12 +15,12 @@
              <v-layout row wrap>
                     <v-flex d-flex xs12 sm2 md2>
                         <v-card color="grey lighten-5">
-                        <v-card-title primary class="title">Constructos</v-card-title>
+                        <v-card-title primary class="title">Constructos Madre</v-card-title>
                         <draggable v-model="constructValues" :options="{group:'people'}" style="min-height: 50px">
                             <template v-for="item in constructValues">
                                 <v-flex :key="item.id">
-                                    <v-card color="grey lighten-3">
-                                        <v-card-title primary-title>
+                                    <v-card color="lime lighten-3">
+                                        <v-card-title @click="constructMotherSelected = item" primary-title>
                                             {{item.name}}
                                         </v-card-title>
                                     </v-card>
@@ -44,7 +44,7 @@
                                     <draggable v-model="getCurrentStrengths" :options="{group:'people'}" style="min-height: 50px">
                                             <template v-for="item in getCurrentStrengths">
                                                 <v-flex :key="item.id">
-                                                     <v-card class="item-card" color="primary lighten-4">
+                                                     <v-card  class="item-card" color="primary lighten-4">
                                                         <v-card-title primary-title>
                                                             {{item.name}}
                                                             <v-spacer></v-spacer>
@@ -146,6 +146,24 @@
                         </v-layout>
                     </v-flex>
                 </v-layout>
+                <v-layout row wrap>
+                    <v-flex d-flex xs12 sm12 md12>
+                        <v-card color="grey lighten-5">
+                        <v-card-title primary class="title">Constructos Hijos</v-card-title>
+                        <draggable v-model="getSelectedChilds" :options="{group:'people'}" style="min-height: 50px">
+                            <template v-for="item in getSelectedChilds">
+                                <v-flex :key="item.id">
+                                    <v-card color="grey lighten-3">
+                                        <v-card-title primary-title>
+                                            {{item.text}}
+                                        </v-card-title>
+                                    </v-card>
+                                </v-flex>
+                            </template>
+                        </draggable>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
         </v-container>
     </v-card>
 </template>
@@ -164,13 +182,14 @@ export default {
       itemsDeletes: [
       ],
       itemsWeakens: [
-      ]
+      ],
+      constructMotherSelected: null
     }
   },
   methods: {
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions([
-      'setCurrentConstructId',
+      'setCurrentConstruct',
       'setShowSnack',
       'setSnackMessage'
     ]),
@@ -195,20 +214,37 @@ export default {
   },
   computed: {
     ...mapState('boards', {loading: 'isPatchPending'}),
-    ...mapState(['currentMapId']),
-    ...mapState(['currentTableInstanceId']),
+    ...mapState(['currentMapId', 'currentTableInstanceId', 'currentConstruct']),
     ...mapGetters('boards', {findBoardsInStore: 'find'}),
     ...mapGetters('table-instances', {findTablesInStore: 'find'}),
     ...mapGetters(
       [
-        'getCurrentDiagram'
+        'getCurrentDiagram',
+        'getCurrentConstruct'
       ]
     ),
     getCurrentBoard () {
-      return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0]
+      if (this.getCurrentTable) {
+        return this.findBoardsInStore({query: {removed: false, _id: this.getCurrentTable._board_id}}).data[0]
+      } else {
+        return null
+      }
     },
     getCurrentTable () {
       return this.findTablesInStore({query: {removed: false, _id: this.currentTableInstanceId}}).data[0]
+    },
+    getChildConstructs () {
+      // Returned different Values depending on constructDetailModel (childs for an specific mother)
+      return this.getCurrentBoard.nodeDataArray.filter(node => !node.mother && !node.main)
+    },
+    getCurrentChilds () {
+      if (this.constructMotherSelected) {
+        return this.getCurrentBoard.linkDataArray.filter(link => Number(link.from) === Number(this.constructMotherSelected.key)).map((link) => {
+          return this.getChildConstructs.filter(construct => Number(construct.key) === Number(link.to))[0]
+        })
+      } else {
+        return []
+      }
     },
     getCurrentDeletes: {
       get () {
@@ -258,6 +294,13 @@ export default {
         })
       }
     },
+    getSelectedChilds: {
+      get () {
+        return this.getCurrentChilds
+      },
+      set (newVal) {
+      }
+    },
     constructs: {
       get () {
         return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].constructs
@@ -286,7 +329,7 @@ export default {
   created () {
     this.findBoards({query: {removed: false}}).then(response => {
     })
-    this.constructValues = this.constructs
+    this.constructValues = this.constructs.filter(construct => construct.mother)
     this.itemsDeletes = this.deletes
   },
   updated () {
