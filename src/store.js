@@ -116,6 +116,7 @@ export default new Vuex.Store({
         _board_id: '',
         incorporates: [],
         nodeDataArray: [],
+        linkDataArray: [],
         deletes: [],
         weakens: [],
         threats: [],
