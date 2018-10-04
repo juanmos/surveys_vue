@@ -54,7 +54,7 @@ export default {
         {
           initialContentAlignment: go.Spot.Center,
           // allows grouping with ctl g
-          'commandHandler.archetypeGroupData': { text: 'Grupo test', isGroup: true, color: 'blue' },
+          'commandHandler.archetypeGroupData': { text: 'Cambiar nombre...', isGroup: true, color: 'grey' },
           // have mouse wheel events zoom in and out instead of scroll up and down
           'toolManager.mouseWheelBehavior': go.ToolManager.WheelZoom,
           // disable animation
@@ -140,7 +140,8 @@ export default {
             stroke: '#333',
             margin: 6, // make some extra space for the shape around the text
             isMultiline: true, // don't allow newlines in text
-            contextMenu: partContextMenu
+            contextMenu: partContextMenu,
+            editable: true
           },
           new go.Binding('text').makeTwoWay()),
         { // this tooltip Adornment is shared by all nodes
@@ -165,24 +166,65 @@ export default {
           relinkableFrom: true,
           relinkableTo: true
         },
-        new go.Binding('points').makeTwoWay(),
-        new go.Binding('curviness'),
-        $(go.Shape, { strokeWidth: 1.5 }
+        $(go.Shape, { strokeWidth: 1.5, stroke: 'grey' })
+      )
+    // Groups consist of a title in the color given by the group node data
+    // above a translucent gray rectangle surrounding the member parts
+    myDiagram.groupTemplate =
+      $(go.Group, 'Vertical',
+        { selectionObjectName: 'PANEL', // selection handle goes around shape, not label
+          ungroupable: true }, // enable Ctrl-Shift-G to ungroup a selected Group
+        $(go.TextBlock,
+          {
+            font: 'bold 19px sans-serif',
+            isMultiline: true, // don't allow newlines in text
+            editable: true, // allow in-place editing by user
+            margin: 5
+          },
+          new go.Binding('text', 'text').makeTwoWay(),
+          new go.Binding('stroke', 'color')),
+        $(go.Panel, 'Auto',
+          { name: 'PANEL' },
+          $(go.Shape, 'Rectangle', // the rectangular shape around the members
+            {
+              fill: 'rgba(128,128,128,0.2)',
+              stroke: 'gray',
+              strokeWidth: 3,
+              portId: '',
+              cursor: 'pointer', // the Shape is the port, not the whole Node
+              // allow all kinds of links from and to this port
+              fromLinkable: true,
+              fromLinkableSelfNode: true,
+              fromLinkableDuplicates: true,
+              toLinkable: true,
+              toLinkableSelfNode: true,
+              toLinkableDuplicates: true
+            }),
+          $(go.Placeholder, { margin: 10, background: 'transparent' }) // represents where the members are
         ),
-        $(go.Shape, // the arrowhead
-          { toArrow: 'standard', stroke: null }),
-        $(go.Shape, { toArrow: 'OpenTriangle' }),
-        { // this tooltip Adornment is shared by all nodes
+        { // this tooltip Adornment is shared by all groups
           toolTip:
             $(go.Adornment, 'Auto',
               $(go.Shape, { fill: '#FFFFCC' }),
-              $(go.TextBlock, { margin: 4 }, // the tooltip shows the result of calling nodeInfo(data)
-                new go.Binding('text', '', nodeInfo))
+              $(go.TextBlock, { margin: 4 },
+                // bind to tooltip, not to Group.data, to allow access to Group properties
+                new go.Binding('text', '', groupInfo).ofObject())
             ),
-          // this context menu Adornment is shared by all nodes
+          // the same context menu Adornment is shared by all groups
           contextMenu: partContextMenu
         }
       )
+    // showing info about the group
+    function groupInfo (adornment) { // takes the tooltip or context menu, not a group node data object
+      var g = adornment.adornedPart // get the Group that the tooltip adorns
+      var mems = g.memberParts.count
+      var links = 0
+      g.memberParts.each(function (part) {
+        if (part instanceof go.Link) links++
+      })
+      return 'Group ' + g.data.key + ': ' + g.data.text + '\n' + mems + ' members including ' + links + ' links'
+    }
+    // info about the diagram
     function diagramInfo (model) { // Tooltip info for the diagram's model
       return 'Mapa Mental:\n' + model.nodeDataArray.length + ' Constructos, ' + model.linkDataArray.length + ' enlaces'
     }
