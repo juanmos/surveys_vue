@@ -60,7 +60,7 @@ export default {
           // disable animation
           'animationManager.isEnabled': true,
           // support double-click in background creating a new node
-          'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo' },
+          'clickCreatingTool.archetypeNodeData': { text: 'Nuevo Constructo', color: '#E6EE9C' },
           // allows grouping with ctl g
           'undoManager.isEnabled': true,
           // Model ChangedEvents get passed up to component users
