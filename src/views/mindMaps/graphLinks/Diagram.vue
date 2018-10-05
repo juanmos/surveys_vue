@@ -165,10 +165,10 @@ export default {
         },
         new go.Binding('points').makeTwoWay(),
         new go.Binding('curviness'),
-        $(go.Shape, { strokeWidth: 1.5 }
+        $(go.Shape, { strokeWidth: 3, stroke: 'grey' }
         ),
         $(go.Shape, // the arrowhead
-          { toArrow: 'standard', stroke: null }),
+          { toArrow: 'standard', stroke: 'grey' }),
         $(go.Shape, { toArrow: 'OpenTriangle' }),
         { // this tooltip Adornment is shared by all nodes
           toolTip:
