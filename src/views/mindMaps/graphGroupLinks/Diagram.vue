@@ -166,7 +166,7 @@ export default {
           relinkableFrom: true,
           relinkableTo: true
         },
-        $(go.Shape, { strokeWidth: 1.5, stroke: 'grey' })
+        $(go.Shape, { strokeWidth: 3, stroke: 'grey' })
       )
     // Groups consist of a title in the color given by the group node data
     // above a translucent gray rectangle surrounding the member parts

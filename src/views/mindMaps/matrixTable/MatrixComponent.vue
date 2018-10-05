@@ -147,15 +147,31 @@
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap>
-                    <v-flex d-flex xs12 sm12 md12>
+                    <v-flex d-flex xs12 sm6 md6>
                         <v-card color="grey lighten-5">
-                        <v-card-title primary class="title">Constructos Hijos</v-card-title>
-                        <draggable v-model="getSelectedChilds" :options="{group:'people'}" style="min-height: 50px">
-                            <template v-for="item in getSelectedChilds">
+                        <v-card-title primary class="title">Constructos <span class="grey--text ml-2 caption">({{constructItemsChild.length}})</span></v-card-title>
+                        <draggable v-model="constructItemsChild" :options="{group:'people'}" style="min-height: 50px">
+                            <template v-for="item in constructItemsChild">
                                 <v-flex :key="item.id">
                                     <v-card color="grey lighten-3">
                                         <v-card-title primary-title>
-                                            {{item.text}}
+                                            {{item.name}}
+                                        </v-card-title>
+                                    </v-card>
+                                </v-flex>
+                            </template>
+                        </draggable>
+                        </v-card>
+                    </v-flex>
+                    <v-flex d-flex xs12 sm6 md6>
+                        <v-card color="grey lighten-5">
+                        <v-card-title primary class="title">Destructos <span class="grey--text ml-2 caption">({{destructItemsChild.length}})</span></v-card-title>
+                        <draggable v-model="destructItemsChild" :options="{group:'people'}" style="min-height: 50px">
+                            <template v-for="item in destructItemsChild">
+                                <v-flex :key="item.id">
+                                    <v-card color="red lighten-4">
+                                        <v-card-title primary-title>
+                                            {{item.name}}
                                         </v-card-title>
                                     </v-card>
                                 </v-flex>
@@ -183,6 +199,9 @@ export default {
       ],
       itemsWeakens: [
       ],
+      itemsConstructChild: [],
+      destructItemsChild: [],
+      constructItemsChild: [],
       constructMotherSelected: null
     }
   },
@@ -203,10 +222,9 @@ export default {
     deleteItem (item, field) {
       const {TableInstance} = this.$FeathersVuex
       const tableInstance = new TableInstance(this.getCurrentTable)
-      tableInstance[field] = [
-        item
-      ]
-      tableInstance.save({query: { field, method: 'pull' }}).then((result) => {
+      let query = tableInstance[field].length === 1 ? {} : { method: 'pull', field }
+      tableInstance[field] = tableInstance[field].length === 1 ? [] : [ item ]
+      tableInstance.save({query}).then((result) => {
         this.setSnackMessage('Elemento Borrado')
         this.setShowSnack(true)
       })
@@ -294,13 +312,6 @@ export default {
         })
       }
     },
-    getSelectedChilds: {
-      get () {
-        return this.getCurrentChilds
-      },
-      set (newVal) {
-      }
-    },
     constructs: {
       get () {
         return this.findBoardsInStore({query: {removed: false, _id: this.currentMapId}}).data[0].constructs
@@ -321,6 +332,14 @@ export default {
   watch: {
     getCurrentDiagram (val) {
       this.constructValues = this.constructs
+    },
+    constructMotherSelected (val) {
+      this.constructItemsChild = this.getCurrentChilds.filter(construct => !construct.destruct).map(construct => {
+        return {...construct, name: construct.text}
+      })
+      this.destructItemsChild = this.getCurrentChilds.filter(construct => construct.destruct).map(construct => {
+        return {...construct, name: construct.text}
+      })
     },
     currentTableInstanceId (val) {
       this.itemsDeletes = this.deletes
