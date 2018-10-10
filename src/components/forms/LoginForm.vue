@@ -2,7 +2,7 @@
     <v-card>
       <div class="logo">
          <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
-         <div class="title grey--text text--lighten-1 text-capitalize">MAPAS MENTALES</div>
+         <div class="title grey--text text--lighten-1 text-capitalize">ENCUESTAS</div>
       </div>
       <v-container
         fluid
@@ -37,6 +37,8 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn :disabled="!valid" @click="sendData" flat small color="blue">Entrar</v-btn>
+        <v-spacer></v-spacer>
+        <a href="http://127.0.0.1:3023/auth/propraxis">Single Sign-On</a>
       </v-card-actions>
     </v-card>
 </template>

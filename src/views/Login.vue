@@ -1,4 +1,5 @@
 <template>
+
     <v-app id="inspire">
       <loading-component v-if="loading"></loading-component>
           <particles-background class="particles"></particles-background>
@@ -46,6 +47,17 @@ export default {
         this.setSnackMessage('Usuario o contraseña invalidos')
         console.log(err)
       })
+    },
+    getQueryVariable (variable) {
+      let query = window.location.search.substring(1)
+      let vars = query.split('&')
+      for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split('=')
+        if (decodeURIComponent(pair[0]) === variable) {
+          return decodeURIComponent(pair[1])
+        }
+      }
+      console.log('Query variable %s not found', variable)
     }
   },
   computed: {
@@ -53,6 +65,14 @@ export default {
       loading: 'isAuthenticatePending',
       logErr: 'errorOnAuthenticate'
     })
+  },
+  created () {
+    let token = this.getQueryVariable('token')
+    if (token) {
+      console.log('token---', token)
+      window.localStorage.setItem('feathers-jwt', token)
+      this.$router.push('/')
+    }
   },
   components: {ParticlesBackground, LoginForm, LoadingComponent, SnackMessage}
 }

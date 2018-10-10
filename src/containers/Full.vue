@@ -60,7 +60,7 @@ export default {
   name: 'App',
   data () {
     return {
-      title: 'Mapas Mentales',
+      title: 'ENCUESTAS',
       clipped: true,
       drawer: true,
       fixed: false,

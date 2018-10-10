@@ -7,35 +7,10 @@ const Full = resolve => {
     resolve(require('./containers/Full.vue'))
   }, 'full')
 }
-const WorkingTable = resolve => {
-  require.ensure(['./containers/WorkingTable.vue'], () => {
-    resolve(require('./containers/WorkingTable.vue'))
-  }, 'worgingTable')
-}
 const Login = resolve => {
   require.ensure(['./views/Login.vue'], () => {
     resolve(require('./views/Login.vue'))
   }, 'login')
-}
-const UserList = resolve => {
-  require.ensure(['./views/users/UserList.vue'], () => {
-    resolve(require('./views/users/UserList.vue'))
-  }, 'users')
-}
-const UserNew = resolve => {
-  require.ensure(['./views/users/UserNew.vue'], () => {
-    resolve(require('./views/users/UserNew.vue'))
-  }, 'users')
-}
-const StudiesList = resolve => {
-  require.ensure(['./views/studies/StudiesList.vue'], () => {
-    resolve(require('./views/studies/StudiesList.vue'))
-  }, 'studies')
-}
-const StudiesNew = resolve => {
-  require.ensure(['./views/studies/StudiesNew.vue'], () => {
-    resolve(require('./views/studies/StudiesNew.vue'))
-  }, 'studies')
 }
 const CustomerNew = resolve => {
   require.ensure(['./views/customers/CustomerNew.vue'], () => {
@@ -51,21 +26,6 @@ const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
     resolve(require('./views/Dashboard.vue'))
   }, 'login')
-}
-const BoardsDetail = resolve => {
-  require.ensure(['./views/boards/BoardsDetail.vue'], () => {
-    resolve(require('./views/boards/BoardsDetail.vue'))
-  }, 'boards')
-}
-const WorkingTableList = resolve => {
-  require.ensure(['./views/working-tables/WorkingTableList.vue'], () => {
-    resolve(require('./views/working-tables/WorkingTableList.vue'))
-  }, 'workingTableList')
-}
-const WorkingTableNew = resolve => {
-  require.ensure(['./views/working-tables/WorkingTableNew.vue'], () => {
-    resolve(require('./views/working-tables/WorkingTableNew.vue'))
-  }, 'workingTableNew')
 }
 const ClientHome = resolve => {
   require.ensure(['./views/clients/ClientHome.vue'], () => {
@@ -109,36 +69,6 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'users',
-          name: 'Users',
-          component: UserList
-        },
-        {
-          path: 'new-user',
-          name: 'NewUsers',
-          component: UserNew
-        },
-        {
-          path: 'studies',
-          name: 'Studies',
-          component: StudiesList
-        },
-        {
-          path: 'new-studies',
-          name: 'NewStudies',
-          component: StudiesNew
-        },
-        {
-          path: 'working-tables',
-          name: 'WorkingTableList',
-          component: WorkingTableList
-        },
-        {
-          path: 'working-table-new',
-          name: 'WorkingTableNew',
-          component: WorkingTableNew
-        },
-        {
           path: 'customers',
           name: 'Customers',
           component: CustomerList
@@ -157,28 +87,6 @@ export default new Router({
           path: 'new-region',
           name: 'NewRegion',
           component: RegionNew
-        }
-      ]
-    },
-    {
-      path: '/mesa-trabajo',
-      name: 'mesaTrabajo',
-      redirect: '/',
-      component: WorkingTable,
-      beforeEnter (to, from, next) {
-        store.dispatch('auth/authenticate').then(() => {
-          next()
-        }).catch((err) => {
-          console.log(err)
-          next('/pages/login')
-        })
-      },
-      children: [
-        {
-          path: 'boards/:id',
-          name: 'BoardsDetail',
-          props: true,
-          component: BoardsDetail
         }
       ]
     },
