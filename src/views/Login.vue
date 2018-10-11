@@ -69,7 +69,6 @@ export default {
   created () {
     let token = this.getQueryVariable('token')
     if (token) {
-      console.log('token---', token)
       window.localStorage.setItem('feathers-jwt', token)
       this.$router.push('/')
     }

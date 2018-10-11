@@ -8,9 +8,9 @@
   },
   "CORE-PRODUCTION": {
     "host": "localhost",
-    "port": 8082,
+    "port": 8080,
     "backend": {
-      "urlBase": "http://api-mind-map.propraxis.ec/"
+      "urlBase": "http://api-polls.propraxis.ec/"
     }
   },
   "currentEnviroment": "CORE-DEVELOPMENT"

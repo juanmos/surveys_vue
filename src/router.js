@@ -27,11 +27,6 @@ const Dashboard = resolve => {
     resolve(require('./views/Dashboard.vue'))
   }, 'login')
 }
-const ClientHome = resolve => {
-  require.ensure(['./views/clients/ClientHome.vue'], () => {
-    resolve(require('./views/clients/ClientHome.vue'))
-  }, 'clients')
-}
 const RegionList = resolve => {
   require.ensure(['./views/regions/RegionList.vue'], () => {
     resolve(require('./views/regions/RegionList.vue'))
@@ -102,11 +97,6 @@ export default new Router({
           path: 'login',
           name: 'Login',
           component: Login
-        },
-        {
-          path: 'home',
-          name: 'Home',
-          component: ClientHome
         }
       ]
     },
