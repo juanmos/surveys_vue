@@ -31,6 +31,13 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('category-poll', {
+      instanceDefaults: {
+        name: '',
+        type: ''
+      },
+      debug: true
+    }),
     service('studies', {
       instanceDefaults: {
         name: '',

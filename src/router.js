@@ -37,6 +37,17 @@ const RegionNew = resolve => {
     resolve(require('./views/regions/RegionNew.vue'))
   }, 'regions')
 }
+const CategoryPollList = resolve => {
+  require.ensure(['./views/category_poll/categorypoll-list.vue'], () => {
+    resolve(require('./views/category_poll/categorypoll-list.vue'))
+  }, 'category-poll')
+}
+const CategoryPollNew = resolve => {
+  // cambiar despues
+  require.ensure(['./views/category_poll/categorypoll-new.vue'], () => {
+    resolve(require('./views/category_poll/categorypoll-new.vue'))
+  }, 'category-poll')
+}
 
 Vue.use(Router)
 
@@ -72,6 +83,16 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'new-categorypoll',
+          name: 'NewCategoryPoll',
+          component: CategoryPollNew
+        },
+        {
+          path: 'categorypoll-list',
+          name: 'CategoryPollList',
+          component: CategoryPollList
         },
         {
           path: 'regions',
