@@ -74,16 +74,17 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Esta seguro que desea eliminar la categoría?</v-card-title>
+                                <v-card-title class="headline">Eliminar categoría</v-card-title>
 
                                 <v-card-text>
+                                  Esta seguro que desea eliminar la categoría?
                                 </v-card-text>
 
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
 
                                   <v-btn
-                                    color="green darken-1"
+                                    color="red darken-4"
                                     flat="flat"
                                     @click="dialog = false"
                                   >
@@ -91,7 +92,7 @@
                                   </v-btn>
 
                                   <v-btn
-                                    color="green darken-1"
+                                    color="teal darken-3"
                                     flat="flat"
                                     @click="dialog = false, del(props.item)"
                                   >
