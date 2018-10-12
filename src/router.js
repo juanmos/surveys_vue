@@ -37,6 +37,16 @@ const RegionNew = resolve => {
     resolve(require('./views/regions/RegionNew.vue'))
   }, 'regions')
 }
+const CProjectList = resolve => {
+  require.ensure(['./views/category-projects/CProjectList.vue'], () => {
+    resolve(require('./views/category-projects/CProjectList.vue'))
+  }, 'category-projects')
+}
+const CProjectNew = resolve => {
+  require.ensure(['./views/category-projects/CProjectNew.vue'], () => {
+    resolve(require('./views/category-projects/CProjectNew.vue'))
+  }, 'category-projects')
+}
 
 Vue.use(Router)
 
@@ -82,6 +92,16 @@ export default new Router({
           path: 'new-region',
           name: 'NewRegion',
           component: RegionNew
+        },
+        {
+          path: 'category-project',
+          name: 'CProjectList',
+          component: CProjectList
+        },
+        {
+          path: 'category-project-new',
+          name: 'CProjectNew',
+          component: CProjectNew
         }
       ]
     },
