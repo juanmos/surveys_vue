@@ -5,7 +5,7 @@
         <v-flex xs12>
             <v-card :flat="true">
                 <v-subheader>Nueva Categoría</v-subheader>
-                <c-project-form @dataSubmited="create"></c-project-form>
+                <category-project-form @dataSubmited="create"></category-project-form>
                 <v-btn
                 absolute
                 dark
@@ -27,7 +27,7 @@
 <script>
 import {mapState} from 'vuex'
 
-import CProjectForm from './CProjectForm'
+import CategoryProjectForm from './CategoryProjectForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapState('category-project', {loading: 'isCreatePending'})
   },
-  components: {CProjectForm, LoadingComponent}
+  components: {CategoryProjectForm, LoadingComponent}
 }
 </script>
 

@@ -206,14 +206,14 @@ export default {
       console.log('Dialog closed', val)
     },
     edit (val, elem, field) {
-      if (val === '') {
+      if (val !== '') {
         const {CategoryProject} = this.$FeathersVuex
         const category = new CategoryProject(elem)
         category[field] = val
         category.patch().then((result) => {
           this.findProjects({ query: {removed: false} }).then(response => {
             const category = response.data || response
-            console.log(category)
+            console.log('edit ', category)
           })
         })
       }
