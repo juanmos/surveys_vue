@@ -73,7 +73,6 @@ export default {
   },
   created () {
     this.urlAuth = enviroment[enviroment.currentEnviroment].urlAuth
-    console.log('url----', this.urlAuth)
   }
 }
 </script>
