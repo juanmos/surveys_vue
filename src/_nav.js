@@ -9,6 +9,11 @@ export default {
       icon: 'group',
       url: '/customers',
       title: 'Clientes'
+    },
+    {
+      icon: 'category',
+      url: '/category-project',
+      title: 'Categorías de encuesta'
     }
   ]
 }

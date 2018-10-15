@@ -147,6 +147,12 @@ export default new Vuex.Store({
         type: ''
       }
     }),
+    service('category-project', {
+      instanceDefaults: {
+        name: '',
+        description: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
