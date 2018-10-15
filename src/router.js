@@ -37,14 +37,14 @@ const RegionNew = resolve => {
     resolve(require('./views/regions/RegionNew.vue'))
   }, 'regions')
 }
-const CProjectList = resolve => {
-  require.ensure(['./views/category-projects/CProjectList.vue'], () => {
-    resolve(require('./views/category-projects/CProjectList.vue'))
+const CategoryProjectList = resolve => {
+  require.ensure(['./views/category-projects/CategoryProjectList.vue'], () => {
+    resolve(require('./views/category-projects/CategoryProjectList.vue'))
   }, 'category-projects')
 }
-const CProjectNew = resolve => {
-  require.ensure(['./views/category-projects/CProjectNew.vue'], () => {
-    resolve(require('./views/category-projects/CProjectNew.vue'))
+const CategoryProjectNew = resolve => {
+  require.ensure(['./views/category-projects/CategoryProjectNew.vue'], () => {
+    resolve(require('./views/category-projects/CategoryProjectNew.vue'))
   }, 'category-projects')
 }
 
@@ -95,13 +95,13 @@ export default new Router({
         },
         {
           path: 'category-project',
-          name: 'CProjectList',
-          component: CProjectList
+          name: 'CategoryProjectList',
+          component: CategoryProjectList
         },
         {
           path: 'category-project-new',
-          name: 'CProjectNew',
-          component: CProjectNew
+          name: 'CategoryProjectNew',
+          component: CategoryProjectNew
         }
       ]
     },
