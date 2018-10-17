@@ -8,7 +8,6 @@
             <v-data-table
                   :headers="headers"
                   :items="getCategories"
-                  :small="small"
                   hide-actions
                   item-key="name"
                   striped hover
@@ -35,24 +34,6 @@
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-                      <!-- <td class="text-xs-left">
-                        <v-edit-dialog
-                          :return-value.sync="props.item.type"
-                          lazy
-                          @save="edit(props.item.type, props.item, 'type')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.type }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.type"
-                            label="Editar Tipo"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                        </td>ddddd  -->
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -67,10 +48,10 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile>
+                            <v-list-tile @click="goToAddcodes(props.item._id, props.item.name)">
                               <v-list-tile-title>Añadir Códigos</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="dialog = true">
+                            <v-list-tile @click="dialog = true; itemSelected= props.item; itemSelectedname= props.item.name;">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
                           </v-list>
@@ -80,7 +61,7 @@
                           max-heigth="500"
                         >
                           <v-card>
-                            <v-card-title class="headline">Está seguro que desea eliminar la Categoría: {{ props.item.name }}</v-card-title>
+                            <v-card-title class="headline">Está seguro que desea eliminar la Categoría: {{ itemSelectedname }}</v-card-title>
 
                             <v-card-text>
                               Si elimina la Categoría los códigos también serán eliminados
@@ -100,7 +81,7 @@
                               <v-btn
                                 color="green darken-1"
                                 flat="flat"
-                                @click="dialog = false, del(props.item)"
+                                @click="dialog = false, del()"
                               >
                                 SI
                               </v-btn>
@@ -160,10 +141,6 @@ export default {
           sortable: false,
           value: 'name'
         },
-        /* { text: 'Tipo',
-          value: 'type',
-          sortable: false
-        }, */
         {
           text: 'Acciones',
           align: 'center',
@@ -175,6 +152,8 @@ export default {
       message: '',
       showMsg: false,
       msgType: 'error',
+      itemSelected: null,
+      itemSelectedname: null,
       page: 1,
       limit: 20,
       total: 1,
@@ -189,6 +168,11 @@ export default {
     goToNew () {
       this.$router.push('/new-categorypoll')
     },
+    goToAddcodes (val, val2) {
+      this.$router.push({path: '/categorypoll-formaddcodes/' + val + '/' + val2})
+      // this.$router.push({path: '/categorypoll-formaddcodes/' + {id: val, nombre: 'holii'}})
+      // { path: '/user', params: { userId }}
+    },
     edit (val, elem, field) {
       const {CategoryPoll} = this.$FeathersVuex
       const CategoryPollF = new CategoryPoll(elem)
@@ -200,9 +184,9 @@ export default {
         })
       })
     },
-    del (element) {
+    del () {
       const {CategoryPoll} = this.$FeathersVuex
-      const CategoryPollF = new CategoryPoll(element)
+      const CategoryPollF = new CategoryPoll(this.itemSelected)
       CategoryPollF.removed = true
       CategoryPollF.patch().then((result) => {
         this.findCategory({ query: {removed: false} }).then(response => {

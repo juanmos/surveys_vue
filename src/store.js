@@ -38,6 +38,14 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('codescategorypolls', {
+      instanceDefaults: {
+        code: '',
+        name: '',
+        _categorypoll_id: ''
+      },
+      debug: true
+    }),
     service('studies', {
       instanceDefaults: {
         name: '',

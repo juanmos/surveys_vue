@@ -48,6 +48,12 @@ const CategoryPollNew = resolve => {
     resolve(require('./views/category_poll/categorypoll-new.vue'))
   }, 'category-poll')
 }
+const CategoryPollAddCode = resolve => {
+  // cambiar despues
+  require.ensure(['./views/category_poll/categorypoll-formaddcodes.vue'], () => {
+    resolve(require('./views/category_poll/categorypoll-formaddcodes.vue'))
+  }, 'codescategorypolls')
+}
 
 Vue.use(Router)
 
@@ -93,6 +99,12 @@ export default new Router({
           path: 'categorypoll-list',
           name: 'CategoryPollList',
           component: CategoryPollList
+        },
+        {
+          path: 'categorypoll-formaddcodes/:category_id/:category_name',
+          name: 'CategoryPollAddCode',
+          component: CategoryPollAddCode,
+          props: true
         },
         {
           path: 'regions',
