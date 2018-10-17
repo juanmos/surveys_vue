@@ -46,6 +46,7 @@ const CategoryProjectNew = resolve => {
   require.ensure(['./views/category-projects/CategoryProjectNew.vue'], () => {
     resolve(require('./views/category-projects/CategoryProjectNew.vue'))
   }, 'category-projects')
+}
 const RolesList = resolve => {
   require.ensure(['./views/roles/RolesList.vue'], () => {
     resolve(require('./views/roles/RolesList.vue'))
