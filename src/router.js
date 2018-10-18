@@ -47,6 +47,16 @@ const CategoryProjectNew = resolve => {
     resolve(require('./views/category-projects/CategoryProjectNew.vue'))
   }, 'category-projects')
 }
+const RolesList = resolve => {
+  require.ensure(['./views/roles/RolesList.vue'], () => {
+    resolve(require('./views/roles/RolesList.vue'))
+  }, 'roles')
+}
+const RolesNew = resolve => {
+  require.ensure(['./views/roles/RolesNew.vue'], () => {
+    resolve(require('./views/roles/RolesNew.vue'))
+  }, 'roles')
+}
 
 Vue.use(Router)
 
@@ -102,6 +112,16 @@ export default new Router({
           path: 'category-project-new',
           name: 'CategoryProjectNew',
           component: CategoryProjectNew
+        },
+        {
+          path: 'roles',
+          name: 'Roles',
+          component: RolesList
+        },
+        {
+          path: 'new-roles',
+          name: 'NewRoles',
+          component: RolesNew
         }
       ]
     },
