@@ -34,7 +34,7 @@ export default {
     create (values) {
       // method with feathers vuex to create an category project
       const { MenuItem } = this.$FeathersVuex
-      const category = new MenuItem(values)
+      let category = new MenuItem(values)
       category.save().then((result) => {
         this.setSnackMessage('Registro creado')
         this.setShowSnack(true)

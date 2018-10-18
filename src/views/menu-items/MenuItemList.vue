@@ -183,7 +183,7 @@ export default {
         {
           text: 'Nombre',
           align: 'left',
-          sortable: true,
+          sortable: false,
           value: 'name'
         },
         { text: 'Icono',
@@ -252,7 +252,7 @@ export default {
     edit (val, elem, field) {
       if (val !== '') {
         const {MenuItem} = this.$FeathersVuex
-        const menuitem = new MenuItem(elem)
+        let menuitem = new MenuItem(elem)
         menuitem[field] = val
         menuitem.patch().then((result) => {
           this.findMenuItems({ query: {removed: false} }).then(response => {
@@ -281,7 +281,7 @@ export default {
           const menuitem = response.data || response
           console.log(menuitem)
           this.setSnackColor('success')
-          this.setSnackMessage('Registro modificado')
+          this.setSnackMessage('Registro eliminado')
           this.setShowSnack(true)
         })
       }, (err) => {
