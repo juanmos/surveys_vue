@@ -38,18 +38,20 @@
         <v-spacer></v-spacer>
         <v-btn :disabled="!valid" @click="sendData" flat small color="blue">Entrar</v-btn>
         <v-spacer></v-spacer>
-        <a href="http://127.0.0.1:3023/auth/propraxis">Single Sign-On</a>
+        <a v-bind:href="getUrl">Single Sign-On</a>
       </v-card-actions>
     </v-card>
 </template>
 
 <script>
 import {validations} from './../../utils/validations'
+const enviroment = require('./../../../config/enviroment')
 export default {
   data: () => ({
     valid: false,
     email: '',
     password: '',
+    urlAuth: '',
     showPass: false,
     rules: validations
   }),
@@ -63,6 +65,14 @@ export default {
         })
       }
     }
+  },
+  computed: {
+    getUrl () {
+      return this.urlAuth
+    }
+  },
+  created () {
+    this.urlAuth = enviroment[enviroment.currentEnviroment].urlAuth
   }
 }
 </script>

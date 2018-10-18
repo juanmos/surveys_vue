@@ -11,11 +11,11 @@ try {
 if (!enviroment) {
   throw new Error(`Por Favor especificar enviroment: prod o dev`)
 } else if (enviroment === 'prod') {
-  config.currentEnviroment = 'CORE-PRODUCTION'
+  config.currentEnviroment = 'CORE-PROD'
   fs.writeFileSync('./config/enviroment.json', JSON.stringify(config))
   console.log('Enviroment cambiado con exito a produccion ****MAPAS MENTALES***!!!')
 } else if (enviroment === 'dev') {
-  config.currentEnviroment = 'CORE-DEVELOPMENT'
+  config.currentEnviroment = 'CORE-DEV'
   fs.writeFileSync('./config/enviroment.json', JSON.stringify(config))
   console.log('Enviroment cambiado con exito a desarrollo ****MAPAS MENTALES***!!!')
 }

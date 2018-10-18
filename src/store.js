@@ -157,10 +157,23 @@ export default new Vuex.Store({
         _country_id: ''
       }
     }),
+    service('roles', {
+      instanceDefaults: {
+        code: '',
+        name: '',
+        description: ''
+      }
+    }),
     service('uploads', {
       instanceDefaults: {
         file: '',
         type: ''
+      }
+    }),
+    service('category-project', {
+      instanceDefaults: {
+        name: '',
+        description: ''
       }
     }),
     auth({ userService: 'users' })

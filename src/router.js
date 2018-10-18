@@ -54,6 +54,26 @@ const CategoryPollAddCode = resolve => {
     resolve(require('./views/category_poll/categorypoll-formaddcodes.vue'))
   }, 'codescategorypolls')
 }
+const CategoryProjectList = resolve => {
+  require.ensure(['./views/category-projects/CategoryProjectList.vue'], () => {
+    resolve(require('./views/category-projects/CategoryProjectList.vue'))
+  }, 'category-projects')
+}
+const CategoryProjectNew = resolve => {
+  require.ensure(['./views/category-projects/CategoryProjectNew.vue'], () => {
+    resolve(require('./views/category-projects/CategoryProjectNew.vue'))
+  }, 'category-projects')
+}
+const RolesList = resolve => {
+  require.ensure(['./views/roles/RolesList.vue'], () => {
+    resolve(require('./views/roles/RolesList.vue'))
+  }, 'roles')
+}
+const RolesNew = resolve => {
+  require.ensure(['./views/roles/RolesNew.vue'], () => {
+    resolve(require('./views/roles/RolesNew.vue'))
+  }, 'roles')
+}
 
 Vue.use(Router)
 
@@ -115,6 +135,26 @@ export default new Router({
           path: 'new-region',
           name: 'NewRegion',
           component: RegionNew
+        },
+        {
+          path: 'category-project',
+          name: 'CategoryProjectList',
+          component: CategoryProjectList
+        },
+        {
+          path: 'category-project-new',
+          name: 'CategoryProjectNew',
+          component: CategoryProjectNew
+        },
+        {
+          path: 'roles',
+          name: 'Roles',
+          component: RolesList
+        },
+        {
+          path: 'new-roles',
+          name: 'NewRoles',
+          component: RolesNew
         }
       ]
     },
