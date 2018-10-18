@@ -47,7 +47,21 @@ const CategoryProjectNew = resolve => {
     resolve(require('./views/category-projects/CategoryProjectNew.vue'))
   }, 'category-projects')
 }
-
+const MenuItemList = resolve => {
+  require.ensure(['./views/menu-items/MenuItemList.vue'], () => {
+    resolve(require('./views/menu-items/MenuItemList.vue'))
+  }, 'menu-items')
+}
+const MenuItemNew = resolve => {
+  require.ensure(['./views/menu-items/MenuItemNew.vue'], () => {
+    resolve(require('./views/menu-items/MenuItemNew.vue'))
+  }, 'menu-items')
+}
+const MenuIconList = resolve => {
+  require.ensure(['./views/menu-items/MenuIconList.vue'], () => {
+    resolve(require('./views/menu-items/MenuIconList.vue'))
+  }, 'menu-items')
+}
 Vue.use(Router)
 
 export default new Router({
@@ -102,6 +116,21 @@ export default new Router({
           path: 'category-project-new',
           name: 'CategoryProjectNew',
           component: CategoryProjectNew
+        },
+        {
+          path: 'menu-item',
+          name: 'MenuItemList',
+          component: MenuItemList
+        },
+        {
+          path: 'menu-icon-list',
+          name: 'MenuIconList',
+          component: MenuIconList
+        },
+        {
+          path: 'menu-item-new',
+          name: 'MenuItemnew',
+          component: MenuItemNew
         }
       ]
     },
