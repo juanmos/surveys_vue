@@ -126,7 +126,7 @@ export default {
         },
         { text: 'Nombre',
           value: 'name',
-          sortable: false
+          sortable: true
         },
         {
           text: 'Descripción',
