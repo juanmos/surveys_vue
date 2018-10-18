@@ -59,7 +59,7 @@
            </v-card>
             <v-data-table
                   :headers="headers"
-                  :items="getCodes"
+                  :items="getCodes, codes_generales"
                   hide-actions
                   item-key="name"
                   striped hover
@@ -70,7 +70,7 @@
                   <tr @click="props.expanded = !props.expanded">
                     <td class="text-xs-center">
                       <v-edit-dialog
-                          :return-value.sync="props.item.name"
+                          :return-value.sync="props.item.code"
                           lazy
                           @save="edit(props.item.code, props.item, 'code')"
                           @cancel="cancel"
@@ -83,6 +83,8 @@
                             label="Editar Código"
                             single-line
                             counter
+                            mask="####"
+                            :rules="rules.nameRules"
                           ></v-text-field>
                         </v-edit-dialog></td>
                     <td>
@@ -100,6 +102,7 @@
                             label="Editar Descripción"
                             single-line
                             counter
+                            :rules="rules.nameRules"
                           ></v-text-field>
                         </v-edit-dialog>
                     </td>
@@ -143,6 +146,17 @@
                   </tr>
                 </template>
                 </v-data-table>
+                <v-spacer></v-spacer>
+                <hr>
+                <table item-key="name" class="v-datatable v-table theme--light" v-if="codes_generales">
+            <tbody>
+                <tr v-for="(item) in codes_generales" :key = "item.code">
+                    <td class="text-xs-left">{{ item.code }}</td>
+                    <td class="text-xs-left">{{ item.name }}</td>
+                    <td class="text-xs-left"></td>
+                </tr>
+            </tbody>
+        </table>
           </v-flex>
         </v-layout>
       </v-container>
@@ -164,8 +178,8 @@ export default {
         {
           text: 'Código',
           align: 'center',
-          sortable: false,
-          value: 'name'
+          sortable: true,
+          value: 'code'
         },
         {
           text: 'Descripción',
@@ -181,6 +195,9 @@ export default {
         }
       ],
       categories: [],
+      codes_generales: [],
+      category_consult: {},
+      test: false,
       message: '',
       showMsg: false,
       msgType: 'error',
@@ -192,22 +209,38 @@ export default {
       itemSelected: null,
       itemSelectedname: null,
       query: {},
+      query2: {},
       valid: false,
       rules: validations,
       dialog: false
     }
   },
   methods: {
+    ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('codescategorypolls', { findCodes: 'find' }),
+    ...mapActions('category-poll', { findCategory: 'find' }),
     createcode () {
-      const { Codescategorypoll } = this.$FeathersVuex
-      let codecategory = new Codescategorypoll(this.codescategory)
-      codecategory.save().then((res) => {
-        this.findCodes({ query: { $limit: null } }).then(res => {
-          console.log('dato final', res.data)
-          this.limpiarCampos()
+      if (parseFloat(this.codescategory.code) > 90 && this.category_consult[0]._iscodegeneral === false) {
+        alert('No se pueden ingresar valores mayores a 90 ya que son de códigos generales')
+        this.limpiarCampos()
+      } else {
+        const { Codescategorypoll } = this.$FeathersVuex
+        let codecategory = new Codescategorypoll(this.codescategory)
+        codecategory.save().then((res) => {
+          this.findCodes({ query: { $limit: null } }).then(res => {
+            // console.log('dato final', res.data)
+            this.setSnackMessage('Registro Ingresado')
+            // this.setSnackColor('success')
+            this.setShowSnack(true)
+            this.limpiarCampos()
+          })
+        }, (err) => {
+          this.setSnackMessage('Error al guardar')
+          this.setShowSnack(true)
+          this.setSnackColor('error')
+          console.log(err)
         })
-      })
+      }
     },
     edit (val, elem, field) {
       const { Codescategorypoll } = this.$FeathersVuex
@@ -217,6 +250,9 @@ export default {
         this.findCodes({ query: {removed: false} }).then(response => {
           const codescategoriesR = response.data || response
           console.log(codescategoriesR)
+          this.setSnackMessage('Registro Modificado')
+          // this.setSnackColor('success')
+          this.setShowSnack(true)
         })
       })
     },
@@ -229,6 +265,9 @@ export default {
         this.findCodes({ query: {removed: false} }).then(response => {
           const categoriesR = response.data || response
           console.log(categoriesR)
+          this.setSnackMessage('Registro Eliminado')
+          // this.setSnackColor('success')
+          this.setShowSnack(true)
         })
       })
     },
@@ -237,10 +276,9 @@ export default {
       this.codescategory.name = ''
     },
     goToList () {
-      this.$router.push('/categorypoll-list')
+      this.$router.push('/categorypoll-list/0')
     },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
@@ -264,15 +302,29 @@ export default {
     this.category_id = this.$route.params.category_id
     this.findCodes({removed: false, ...this.query}).then(response => {
       this.categories = response.data
-      console.log(' created: ', this.categories)
+    })
+    // CONSULTA DE A LA CATEGORÍA PARA SABER SI CONTIENE CODIGOS GENERALES O NO
+    this.findCategory({query: {_id: this.category_id, ...this.query}}).then(response => {
+      this.category_consult = response.data
+      if (this.category_consult[0]._contains_codegeneral === true) {
+        // CONSULTA DE LOS CODIGOS EN CASO DE QUE SEA TRUE EL CAMPO
+        this.findCategory({query: {_iscodegeneral: true, ...this.query}}).then(response => {
+          this.findCodes({query: {_categorypoll_id: response.data[0]._id, ...this.query}}).then(response => {
+            this.codes_generales = response.data
+          })
+        })
+      } else {
+        // NO CONTIEN CODIGOS GENERALES
+      }
     })
   },
   computed: {
     ...mapState('codescategorypolls', {loading: 'isCreatePending'}),
     ...mapGetters('codescategorypolls', {findCodesInStore: 'find'}),
+    ...mapGetters('category-poll', { findMainCategory: 'find' }),
     getCodes () {
-      console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
-      return this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
+      // console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
+      return this.findCodesInStore({query: {removed: false, $sort: {code: -1}, _categorypoll_id: this.category_id, ...this.query}}).data
     }
   }
 }

@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Categorias</v-subheader>
+              <v-subheader>Listado de Categorías</v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getCategories"
@@ -49,7 +49,10 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="goToAddcodes(props.item._id, props.item.name)">
-                              <v-list-tile-title>Añadir Códigos</v-list-tile-title>
+                              <v-list-tile-title>Añadir códigos</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="itemSelected= props.item; itemSelectedname= props.item.name; editCodeGeneral(props.item._id, props.item.name)">
+                              <v-list-tile-title>Usa/No usa códigos generales</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="dialog = true; itemSelected= props.item; itemSelectedname= props.item.name;">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
@@ -160,10 +163,12 @@ export default {
       loaded: false,
       clients: [],
       query: {},
-      dialog: false
+      dialog: false,
+      bandgeneral: false
     }
   },
   methods: {
+    ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('category-poll', { findCategory: 'find' }),
     goToNew () {
       this.$router.push('/new-categorypoll')
@@ -173,15 +178,48 @@ export default {
       // this.$router.push({path: '/categorypoll-formaddcodes/' + {id: val, nombre: 'holii'}})
       // { path: '/user', params: { userId }}
     },
+    editCodeGeneral () {
+      const {CategoryPoll} = this.$FeathersVuex
+      const CategoryPollF = new CategoryPoll(this.itemSelected)
+      console.log('antes de cambiar ', CategoryPollF._contains_codegeneral)
+      if (CategoryPollF._contains_codegeneral === true) {
+        this.message = 'La categoría ya no acepta códigos generales'
+        CategoryPollF._contains_codegeneral = false
+      } else {
+        this.message = 'La categoría ya acepta códigos generales'
+        CategoryPollF._contains_codegeneral = true
+      }
+      CategoryPollF.patch().then((result) => {
+        this.findCategory({ query: {removed: false} }).then(response => {
+          // const categoriesR = response.data || response
+          // console.log(categoriesR)
+          this.setSnackMessage(this.message)
+          this.setShowSnack(true)
+        })
+      }, (err) => {
+        this.setSnackMessage('Error al editar')
+        this.setShowSnack(true)
+        // this.setSnackColor('error')
+        console.log(err)
+      })
+    },
     edit (val, elem, field) {
       const {CategoryPoll} = this.$FeathersVuex
       const CategoryPollF = new CategoryPoll(elem)
       CategoryPollF[field] = val
       CategoryPollF.patch().then((result) => {
         this.findCategory({ query: {removed: false} }).then(response => {
-          const categoriesR = response.data || response
-          console.log(categoriesR)
+          // const categoriesR = response.data || response
+          // console.log(categoriesR)
+          this.setSnackMessage('Registro modificado')
+          // this.setSnackColor('success')
+          this.setShowSnack(true)
         })
+      }, (err) => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
+        console.log(err)
       })
     },
     del () {
@@ -190,13 +228,26 @@ export default {
       CategoryPollF.removed = true
       CategoryPollF.patch().then((result) => {
         this.findCategory({ query: {removed: false} }).then(response => {
-          const categoriesR = response.data || response
-          console.log(categoriesR)
+          // const categoriesR = response.data || response
+          // console.log(categoriesR)
+          this.setSnackMessage('Registro Eliminado')
+          this.setShowSnack(true)
         })
+      }, (err) => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        // this.setSnackColor('error')
+        console.log(err)
       })
     },
+    getband () {
+      if (this.$route.params.isgeneral === '1') {
+        this.bandgeneral = true
+      } else {
+        this.bandgeneral = false
+      }
+    },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
@@ -212,7 +263,7 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
+      // console.log('Dialog closed', val)
     }
   },
   computed: {
@@ -220,8 +271,8 @@ export default {
     ...mapState('category-poll', { paginationVal: 'pagination' }),
     ...mapGetters('category-poll', {findCategoriesInStore: 'find'}),
     getCategories () {
-      console.log('Trae el get , ', this.findCategoriesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findCategoriesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      // console.log(this.findCategoriesInStore({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
+      return this.findCategoriesInStore({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -231,26 +282,38 @@ export default {
     }
   },
   watch: {
+    '$route' (to, from) { // react to route changes...
+      this.getband()
+      this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.categories = response.data
+      })
+    },
     page () {
-      this.findCategory({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.getband()
+      this.findCategory({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.getband()
+    this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
       this.categories = response.data
-      console.log(' created: ', this.categories)
     })
   },
   components: {LoadingComponent, EditableField}
 }
 </script>
 
-<style scoped>
-
+<style>
+.v-datatable{
+    overflow: hidden;
+  }
 </style>

@@ -96,7 +96,7 @@ export default new Router({
           component: CategoryPollNew
         },
         {
-          path: 'categorypoll-list',
+          path: 'categorypoll-list/:isgeneral',
           name: 'CategoryPollList',
           component: CategoryPollList
         },

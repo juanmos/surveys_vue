@@ -12,8 +12,10 @@
             @submit.prevent="sendData"
             @keydown.prevent.enter
             >
-            <v-flex xs5>
-                <v-text-field
+            <v-container fluid grid-list-xl>
+             <v-layout row justify-left>
+            <v-flex xs6>
+              <v-text-field
                   v-model="category.name"
                   :rules="rules.nameRules"
                   label="Descipción de la Categoría"
@@ -22,7 +24,13 @@
                   required
                 ></v-text-field>
             </v-flex>
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Categoría</v-btn>
+            <v-flex xs4>
+              <input type="checkbox" id="checkbox" v-model="category._contains_codegeneral">
+              <label for="checkbox">      Contiene Códigos Generales     <v-icon color="blue" title="La categoría siempre va a tener los códigos generales" small>info</v-icon></label>
+            </v-flex>
+          </v-layout>
+          </v-container>
+          <v-btn type="submit" :disabled="!valid" small color="info">Guardar Categoría</v-btn>
             </v-form>
           </v-flex>
         </v-layout>
@@ -36,7 +44,8 @@ export default {
   data: (vm) => ({
     category: {
       name: '',
-      removed: false
+      removed: false,
+      _contains_codegeneral: false
     },
     valid: false,
     rules: validations

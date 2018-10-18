@@ -40,7 +40,7 @@ export default {
       })
     },
     goToList () {
-      this.$router.push('/categorypoll-list')
+      this.$router.push('/categorypoll-list/0')
     }
   },
   computed: {

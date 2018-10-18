@@ -34,7 +34,8 @@ export default new Vuex.Store({
     service('category-poll', {
       instanceDefaults: {
         name: '',
-        type: ''
+        type: '',
+        _contains_codegeneral: false
       },
       debug: true
     }),
