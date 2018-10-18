@@ -37,8 +37,7 @@ export default {
     create (values) {
       // method with feathers vuex to create an roles
       const { Role } = this.$FeathersVuex
-      const saverol = new Role(values)
-      // console.log(roles1);
+      let saverol = new Role(values)
       saverol.save().then((result) => {
         this.setSnackMessage('Rol guardado')
         this.setShowSnack(true)

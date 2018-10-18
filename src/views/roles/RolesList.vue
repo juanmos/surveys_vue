@@ -166,7 +166,7 @@ export default {
     },
     edit (val, elem, field) {
       const {Role} = this.$FeathersVuex
-      const roles = new Role(elem)
+      let roles = new Role(elem)
       roles[field] = val
       roles.patch().then((result) => {
         this.getData()
@@ -176,7 +176,7 @@ export default {
     },
     del (element) {
       const {Role} = this.$FeathersVuex
-      const roles = new Role(element)
+      let roles = new Role(element)
       roles.removed = true
       roles.patch().then((result) => {
         this.getData()
@@ -185,7 +185,6 @@ export default {
       })
     },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
