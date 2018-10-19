@@ -31,10 +31,10 @@
                 <v-list-tile-title> <v-icon v-html="'category'"></v-icon> Categorías & Códigos</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="'/categorypoll-list/0'">
+            <v-list-tile :to="'/CategoryPollList/0'">
                 <v-list-tile-action>Categorías</v-list-tile-action>
               </v-list-tile>
-              <v-list-tile :to="'/categorypoll-list/1'">
+              <v-list-tile :to="'/CategoryPollList/1'">
                 <v-list-tile-action>Categorías Generales</v-list-tile-action>
               </v-list-tile>
         </v-list-group>

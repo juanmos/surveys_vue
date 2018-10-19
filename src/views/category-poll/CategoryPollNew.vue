@@ -26,7 +26,7 @@
 <script>
 import {mapState} from 'vuex'
 
-import CategoryForm from './categorypoll-form'
+import CategoryForm from './CategoryPollForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
@@ -40,7 +40,7 @@ export default {
       })
     },
     goToList () {
-      this.$router.push('/categorypoll-list/0')
+      this.$router.push('/CategoryPollList/0')
     }
   },
   computed: {

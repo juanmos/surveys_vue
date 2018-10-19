@@ -71,9 +71,7 @@
                     <td class="text-xs-center">
                       <v-edit-dialog
                           :return-value.sync="props.item.code"
-                          lazy
                           @save="edit(props.item.code, props.item, 'code')"
-                          @cancel="cancel"
                           @open="open"
                           @close="close"
                         > {{ props.item.code }}
@@ -84,13 +82,11 @@
                             single-line
                             counter
                             mask="####"
-                            :rules="rules.nameRules"
                           ></v-text-field>
                         </v-edit-dialog></td>
-                    <td>
+                    <td class="text-xs-center">
                       <v-edit-dialog
                           :return-value.sync="props.item.name"
-                          lazy
                           @save="edit(props.item.name, props.item, 'name')"
                           @cancel="cancel"
                           @open="open"
@@ -152,8 +148,9 @@
             <tbody>
                 <tr v-for="(item) in codes_generales" :key = "item.code">
                     <td class="text-xs-left">{{ item.code }}</td>
-                    <td class="text-xs-left">{{ item.name }}</td>
-                    <td class="text-xs-left"></td>
+                    <td class="text-xs-center">{{ item.name }}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
@@ -178,7 +175,7 @@ export default {
         {
           text: 'Código',
           align: 'center',
-          sortable: true,
+          sortable: false,
           value: 'code'
         },
         {
@@ -243,18 +240,23 @@ export default {
       }
     },
     edit (val, elem, field) {
-      const { Codescategorypoll } = this.$FeathersVuex
-      let codecategory = new Codescategorypoll(elem)
-      codecategory[field] = val
-      codecategory.patch().then((result) => {
-        this.findCodes({ query: {removed: false} }).then(response => {
-          const codescategoriesR = response.data || response
-          console.log(codescategoriesR)
-          this.setSnackMessage('Registro Modificado')
-          // this.setSnackColor('success')
-          this.setShowSnack(true)
+      if (parseFloat(val) > 90 && this.category_consult[0]._iscodegeneral === false) {
+        alert('No se pueden ingresar valores mayores a 90 ya que son de códigos generales')
+        this.limpiarCampos()
+      } else {
+        const { Codescategorypoll } = this.$FeathersVuex
+        let codecategory = new Codescategorypoll(elem)
+        codecategory[field] = val
+        codecategory.patch().then((result) => {
+          this.findCodes({ query: {removed: false} }).then(response => {
+            const codescategoriesR = response.data || response
+            console.log(codescategoriesR)
+            this.setSnackMessage('Registro Modificado')
+            // this.setSnackColor('success')
+            this.setShowSnack(true)
+          })
         })
-      })
+      }
     },
     del () {
       // console.log(this.itemSelected)
@@ -324,7 +326,7 @@ export default {
     ...mapGetters('category-poll', { findMainCategory: 'find' }),
     getCodes () {
       // console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
-      return this.findCodesInStore({query: {removed: false, $sort: {code: -1}, _categorypoll_id: this.category_id, ...this.query}}).data
+      return this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
     }
   }
 }

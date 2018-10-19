@@ -38,21 +38,21 @@ const RegionNew = resolve => {
   }, 'regions')
 }
 const CategoryPollList = resolve => {
-  require.ensure(['./views/category_poll/categorypoll-list.vue'], () => {
-    resolve(require('./views/category_poll/categorypoll-list.vue'))
+  require.ensure(['./views/category-poll/CategoryPollList.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollList.vue'))
   }, 'category-poll')
 }
 const CategoryPollNew = resolve => {
   // cambiar despues
-  require.ensure(['./views/category_poll/categorypoll-new.vue'], () => {
-    resolve(require('./views/category_poll/categorypoll-new.vue'))
+  require.ensure(['./views/category-poll/CategoryPollNew.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollNew.vue'))
   }, 'category-poll')
 }
 const CategoryPollAddCode = resolve => {
   // cambiar despues
-  require.ensure(['./views/category_poll/categorypoll-formaddcodes.vue'], () => {
-    resolve(require('./views/category_poll/categorypoll-formaddcodes.vue'))
-  }, 'codescategorypolls')
+  require.ensure(['./views/category-poll/CategoryPollFormAddCodes.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollFormAddCodes.vue'))
+  }, 'codes-category-polls')
 }
 const CategoryProjectList = resolve => {
   require.ensure(['./views/category-projects/CategoryProjectList.vue'], () => {
@@ -111,17 +111,17 @@ export default new Router({
           component: CustomerNew
         },
         {
-          path: 'new-categorypoll',
+          path: 'CategoryPollNew',
           name: 'NewCategoryPoll',
           component: CategoryPollNew
         },
         {
-          path: 'categorypoll-list/:isgeneral',
+          path: 'CategoryPollList/:isgeneral',
           name: 'CategoryPollList',
           component: CategoryPollList
         },
         {
-          path: 'categorypoll-formaddcodes/:category_id/:category_name',
+          path: 'CategoryPollFormAddCodes/:category_id/:category_name',
           name: 'CategoryPollAddCode',
           component: CategoryPollAddCode,
           props: true

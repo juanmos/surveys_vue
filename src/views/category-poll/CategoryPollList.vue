@@ -171,10 +171,10 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('category-poll', { findCategory: 'find' }),
     goToNew () {
-      this.$router.push('/new-categorypoll')
+      this.$router.push('/CategoryPollNew')
     },
     goToAddcodes (val, val2) {
-      this.$router.push({path: '/categorypoll-formaddcodes/' + val + '/' + val2})
+      this.$router.push({path: '/CategoryPollFormAddCodes/' + val + '/' + val2})
       // this.$router.push({path: '/categorypoll-formaddcodes/' + {id: val, nombre: 'holii'}})
       // { path: '/user', params: { userId }}
     },
