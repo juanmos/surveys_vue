@@ -41,12 +41,20 @@
             </v-list-tile>
 
             <v-list-tile  :to="'/roles'">
-
               <v-list-tile-action>
                 <v-icon v-html="'supervised_user_circle'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title v-text="'Roles'"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+            <v-list-tile  :to="'/permission'">
+              <v-list-tile-action>
+                <v-icon v-html="'lock_open'"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="'Permisos'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
 

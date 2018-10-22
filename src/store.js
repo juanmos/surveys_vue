@@ -148,6 +148,13 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('permission', {
+      instanceDefaults: {
+        module: '',
+        description: '',
+        url: ''
+      }
+    }),
     service('uploads', {
       instanceDefaults: {
         file: '',
