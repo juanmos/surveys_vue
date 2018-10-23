@@ -13,9 +13,9 @@ if (!enviroment) {
 } else if (enviroment === 'prod') {
   config.currentEnviroment = 'CORE-PROD'
   fs.writeFileSync('./config/enviroment.json', JSON.stringify(config))
-  console.log('Enviroment cambiado con exito a produccion ****MAPAS MENTALES***!!!')
+  console.log('Enviroment cambiado con exito a  ****PRODUCCION ENCUESTAS***!!!')
 } else if (enviroment === 'dev') {
   config.currentEnviroment = 'CORE-DEV'
   fs.writeFileSync('./config/enviroment.json', JSON.stringify(config))
-  console.log('Enviroment cambiado con exito a desarrollo ****MAPAS MENTALES***!!!')
+  console.log('Enviroment cambiado con exito a desarrollo ****DESARROLLO ENCUENTAS***!!!')
 }
