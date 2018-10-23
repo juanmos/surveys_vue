@@ -74,6 +74,16 @@ const RolesNew = resolve => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
 }
+const PermissionList = resolve => {
+  require.ensure(['./views/permissions/PermissionList.vue'], () => {
+    resolve(require('./views/permissions/PermissionList.vue'))
+  }, 'permission')
+}
+const PermissionNew = resolve => {
+  require.ensure(['./views/permissions/PermissionNew.vue'], () => {
+    resolve(require('./views/permissions/PermissionNew.vue'))
+  }, 'permission')
+}
 
 Vue.use(Router)
 const enviroment = require('./../config/enviroment')
@@ -156,6 +166,16 @@ export default new Router({
           path: 'new-roles',
           name: 'NewRoles',
           component: RolesNew
+        },
+        {
+          path: 'permission',
+          name: 'permission',
+          component: PermissionList
+        },
+        {
+          path: 'new-permission',
+          name: 'NewPermission',
+          component: PermissionNew
         }
       ]
     },
