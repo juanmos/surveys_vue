@@ -31,6 +31,22 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('category-poll', {
+      instanceDefaults: {
+        name: '',
+        type: '',
+        _contains_codegeneral: false
+      },
+      debug: true
+    }),
+    service('codescategorypolls', {
+      instanceDefaults: {
+        code: '',
+        name: '',
+        _categorypoll_id: ''
+      },
+      debug: true
+    }),
     service('studies', {
       instanceDefaults: {
         name: '',

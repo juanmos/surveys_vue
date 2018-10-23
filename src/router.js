@@ -37,6 +37,23 @@ const RegionNew = resolve => {
     resolve(require('./views/regions/RegionNew.vue'))
   }, 'regions')
 }
+const CategoryPollList = resolve => {
+  require.ensure(['./views/category-poll/CategoryPollList.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollList.vue'))
+  }, 'category-poll')
+}
+const CategoryPollNew = resolve => {
+  // cambiar despues
+  require.ensure(['./views/category-poll/CategoryPollNew.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollNew.vue'))
+  }, 'category-poll')
+}
+const CategoryPollAddCode = resolve => {
+  // cambiar despues
+  require.ensure(['./views/category-poll/CategoryPollFormAddCodes.vue'], () => {
+    resolve(require('./views/category-poll/CategoryPollFormAddCodes.vue'))
+  }, 'codes-category-polls')
+}
 const CategoryProjectList = resolve => {
   require.ensure(['./views/category-projects/CategoryProjectList.vue'], () => {
     resolve(require('./views/category-projects/CategoryProjectList.vue'))
@@ -93,6 +110,22 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'CategoryPollNew',
+          name: 'NewCategoryPoll',
+          component: CategoryPollNew
+        },
+        {
+          path: 'CategoryPollList/:isgeneral',
+          name: 'CategoryPollList',
+          component: CategoryPollList
+        },
+        {
+          path: 'CategoryPollFormAddCodes/:category_id/:category_name',
+          name: 'CategoryPollAddCode',
+          component: CategoryPollAddCode,
+          props: true
         },
         {
           path: 'regions',
