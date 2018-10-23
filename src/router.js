@@ -59,7 +59,7 @@ const RolesNew = resolve => {
 }
 
 Vue.use(Router)
-
+const enviroment = require('./../config/enviroment')
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -74,7 +74,8 @@ export default new Router({
           next()
         }).catch((err) => {
           console.log(err)
-          next('/pages/login')
+          window.location = enviroment[enviroment.currentEnviroment].urlAuth
+          // next('/pages/login')
         })
       },
       children: [
