@@ -64,6 +64,21 @@ const CategoryProjectNew = resolve => {
     resolve(require('./views/category-projects/CategoryProjectNew.vue'))
   }, 'category-projects')
 }
+const MenuItemList = resolve => {
+  require.ensure(['./views/menu-items/MenuItemList.vue'], () => {
+    resolve(require('./views/menu-items/MenuItemList.vue'))
+  }, 'menu-items')
+}
+const MenuItemNew = resolve => {
+  require.ensure(['./views/menu-items/MenuItemNew.vue'], () => {
+    resolve(require('./views/menu-items/MenuItemNew.vue'))
+  }, 'menu-items')
+}
+const MenuIconList = resolve => {
+  require.ensure(['./views/menu-items/MenuIconList.vue'], () => {
+    resolve(require('./views/menu-items/MenuIconList.vue'))
+  }, 'menu-items')
+}
 const RolesList = resolve => {
   require.ensure(['./views/roles/RolesList.vue'], () => {
     resolve(require('./views/roles/RolesList.vue'))
@@ -73,6 +88,26 @@ const RolesNew = resolve => {
   require.ensure(['./views/roles/RolesNew.vue'], () => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
+}
+const MenuNew = resolve => {
+  require.ensure(['./views/menus/MenuNew.vue'], () => {
+    resolve(require('./views/menus/MenuNew.vue'))
+  }, 'menus')
+}
+const MenuList = resolve => {
+  require.ensure(['./views/menus/MenuList.vue'], () => {
+    resolve(require('./views/menus/MenuList.vue'))
+  }, 'menus')
+}
+const MenuEdit = resolve => {
+  require.ensure(['./views/menus/MenuEdit.vue'], () => {
+    resolve(require('./views/menus/MenuEdit.vue'))
+  }, 'menus')
+}
+const MenuOrder = resolve => {
+  require.ensure(['./views/menus/MenuOrder.vue'], () => {
+    resolve(require('./views/menus/MenuOrder.vue'))
+  }, 'menus')
 }
 const PermissionList = resolve => {
   require.ensure(['./views/permissions/PermissionList.vue'], () => {
@@ -158,6 +193,21 @@ export default new Router({
           component: CategoryProjectNew
         },
         {
+          path: 'menu-item',
+          name: 'MenuItemList',
+          component: MenuItemList
+        },
+        {
+          path: 'menu-icon-list',
+          name: 'MenuIconList',
+          component: MenuIconList
+        },
+        {
+          path: 'menu-item-new',
+          name: 'MenuItemnew',
+          component: MenuItemNew
+        },
+        {
           path: 'roles',
           name: 'Roles',
           component: RolesList
@@ -166,6 +216,26 @@ export default new Router({
           path: 'new-roles',
           name: 'NewRoles',
           component: RolesNew
+        },
+        {
+          path: 'menu-new',
+          name: 'MenuNew',
+          component: MenuNew
+        },
+        {
+          path: 'menu',
+          name: 'MenuList',
+          component: MenuList
+        },
+        {
+          path: 'menu-edit/:menu_id',
+          name: 'MenuEdit',
+          component: MenuEdit
+        },
+        {
+          path: 'menu-order/:id',
+          name: 'MenuOrder',
+          component: MenuOrder
         },
         {
           path: 'permission',

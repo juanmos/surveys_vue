@@ -1,15 +1,34 @@
 <template>
 <div >
-    <v-container grid-list-md text-xs-center>
+    <v-container grid-list-md text-xs-center @CreateMessage='messageSave'>
         <v-layout row wrap>
         <v-flex xs12>
+          <v-alert
+            :value="alert"
+            :type="tipo_alerta"
+            dismissible
+            transition="scale-transition"
+          >
+            {{mensaje}}
+          </v-alert>
             <v-card :flat="true">
-              <v-subheader>Listado de Categorías</v-subheader>
+              <v-card-title>
+                <v-subheader>Listado de Ítems</v-subheader>
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="search"
+                  label="Buscar ítem..."
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getCategories"
+                  :items="getMenuItems"
                   hide-actions
                   item-key="name"
+                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
@@ -21,7 +40,8 @@
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.name }}
+                        >
+                        {{ props.item.name }}
                           <v-text-field
                             slot="input"
                             v-model="props.item.name"
@@ -32,19 +52,40 @@
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
+                      <td @click="dialogo = true, asignacion(props.item)" class="text-xs-left" >
+                        <v-dialog
+                              v-model="dialogo"
+                              max-width="1000"
+                            >
+                              <v-card>
+                                <v-card-title class="headline">ICONO</v-card-title>
+                                <v-card-text>
+                                  Seleccione un icono
+                                  <menu-icon-list
+                                  slot="input"
+                                  @iconName="seleccion"
+                                  > </menu-icon-list>
+                                </v-card-text>
+                              </v-card>
+                            </v-dialog>
+                            <v-card-text>
+                              <v-icon>{{ props.item.icon }}</v-icon>
+                              {{ props.item.icon }}
+                            </v-card-text>
+                      </td>
                       <td>
                         <v-edit-dialog
-                          :return-value.sync="props.item.description"
+                          :return-value.sync="props.item.url"
                           lazy
-                          @save="edit(props.item.description, props.item, 'description')"
+                          @save="edit(props.item.url, props.item, 'url')"
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.description }}
+                        > {{ props.item.url }}
                           <v-text-field
                             slot="input"
-                            v-model="props.item.description"
-                            label="Editar Descripción"
+                            v-model="props.item.url"
+                            label="Editar url"
                             single-line
                             counter
                             required
@@ -66,7 +107,7 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="dialog = true;itemSelected=props.item">
+                            <v-list-tile @click="dialog = true; itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
                             <v-dialog
@@ -74,10 +115,10 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar categoría</v-card-title>
+                                <v-card-title class="headline">Eliminar Ítem de menú</v-card-title>
 
                                 <v-card-text>
-                                  Esta seguro que desea eliminar la categoría?
+                                  Esta seguro que desea eliminar ítem ?
                                 </v-card-text>
 
                                 <v-card-actions>
@@ -145,6 +186,7 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import MenuIconList from './MenuIconList'
 export default {
   data () {
     return {
@@ -152,11 +194,15 @@ export default {
         {
           text: 'Nombre',
           align: 'left',
-          sortable: true,
+          sortable: false,
           value: 'name'
         },
-        { text: 'Descripción',
-          value: 'description',
+        { text: 'Icono',
+          value: 'icon',
+          sortable: false
+        },
+        { text: 'URL',
+          value: 'url',
           sortable: false
         },
         { text: 'Acciones',
@@ -175,17 +221,26 @@ export default {
       page: 1,
       limit: 20,
       total: 1,
+      icono: '',
       itemSelected: null,
       loaded: false,
-      categories: [],
+      menuItems: [],
       query: {},
-      dialog: false
+      dialog: false,
+      dialogo: false,
+      elemento: [],
+      // alerta
+      alert: false,
+      tipo_alerta: 'success',
+      mensaje: '',
+      search: ''
     }
   },
   methods: {
-    ...mapActions('category-project', { findProjects: 'find' }),
+    ...mapActions('menu-items', { findMenuItems: 'find' }),
+    ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     goToNew () {
-      this.$router.push('/category-project-new')
+      this.$router.push('/menu-item-new')
     },
     save (val) {
       console.log(val)
@@ -208,36 +263,95 @@ export default {
     },
     edit (val, elem, field) {
       if (val !== '') {
-        const {CategoryProject} = this.$FeathersVuex
-        const category = new CategoryProject(elem)
-        category[field] = val
-        category.patch().then((result) => {
-          this.findProjects({ query: {removed: false} }).then(response => {
-            const category = response.data || response
-            console.log('edit ', category)
+        const {MenuItem} = this.$FeathersVuex
+        let menuitem = new MenuItem(elem)
+        menuitem[field] = val
+        menuitem.patch().then((result) => {
+          this.findMenuItems({ query: {removed: false} }).then(response => {
+            const menuitem = response.data || response
+            console.log('edit ', menuitem)
+            // this.alertConfig('Registro Modificado', 'success')
+            this.setSnackMessage('Registro modificado')
+            this.setSnackColor('success')
+            this.setShowSnack(true)
           })
+        }, (err) => {
+          this.setSnackMessage('Error al guardar')
+          this.setShowSnack(true)
+          this.setSnackColor('error')
+          console.log(err)
         })
       }
     },
     del () {
-      const {CategoryProject} = this.$FeathersVuex
-      const category = new CategoryProject(this.itemSelected)
-      category.removed = true
-      category.patch().then((result) => {
-        this.findProjects({ query: {removed: false} }).then(response => {
-          const category = response.data || response
-          console.log(category)
+      const {MenuItem} = this.$FeathersVuex
+      const menuitem = new MenuItem(this.itemSelected)
+      menuitem.removed = true
+      console.log('element ', this.itemSelected)
+      menuitem.patch().then((result) => {
+        this.findMenuItems({ query: {removed: false} }).then(response => {
+          const menuitem = response.data || response
+          console.log(menuitem)
+          this.setSnackColor('success')
+          this.setSnackMessage('Registro eliminado')
+          this.setShowSnack(true)
         })
+      }, (err) => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
+        console.log(err)
       })
+    },
+    seleccion (datos) {
+      // console.log('me trae en selecion', datos)
+      this.icono = datos.nombre
+      this.closeDialogo()
+    },
+    closeDialogo () {
+      console.log('entran')
+      this.editIcon('icon')
+      this.dialogo = false
+    },
+    asignacion (elem) {
+      this.elem = elem
+    },
+    editIcon (field) {
+      // console.log('entraaaa', this.icono)
+      const {MenuItem} = this.$FeathersVuex
+      const menuitem = new MenuItem(this.elem)
+      menuitem[field] = this.icono
+      menuitem.patch().then((result) => {
+        this.findMenuItems({ query: {removed: false} }).then(response => {
+          const menuitem = response.data || response
+          console.log('edit ', menuitem)
+          this.setSnackMessage('Registro modificado')
+          this.setSnackColor('success')
+          this.setShowSnack(true)
+        })
+      }, (err) => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
+        console.log(err)
+      })
+    },
+    alertConfig (message, type) {
+      this.alert = true
+      this.tipo_alerta = type
+      this.mensaje = message
+    },
+    messageSave (data) {
+      this.alertConfig('Datos modificados', data)
     }
   },
   computed: {
-    ...mapState('category-project', {loading: 'isFindPending'}),
-    ...mapState('category-project', { paginationVal: 'pagination' }),
-    ...mapGetters('category-project', {findCategoryInStore: 'find'}),
-    getCategories () {
+    ...mapState('menu-items', {loading: 'isFindPending'}),
+    ...mapState('menu-items', { paginationVal: 'pagination' }),
+    ...mapGetters('menu-items', {findMenuItemInStore: 'find'}),
+    getMenuItems () {
       // console.log('datos= ', this.findCategoryInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findCategoryInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findMenuItemInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -248,24 +362,26 @@ export default {
   },
   watch: {
     page () {
-      this.findProjects({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findMenuItems({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findProjects({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findMenuItems({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.categories = response.data
+      this.menuItems = response.data
     })
   },
-  components: {LoadingComponent, EditableField}
+  components: {LoadingComponent, EditableField, MenuIconList}
 }
 </script>
 
 <style>
-
+  .v-datatable{
+    overflow: hidden;
+  }
 </style>

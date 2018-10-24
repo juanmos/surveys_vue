@@ -183,6 +183,23 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('menu-items', {
+      instanceDefaults: {
+        name: '',
+        icon: '',
+        url: ''
+      }
+    }),
+    service('menus', {
+      instanceDefaults: {
+        level: '',
+        order: '',
+        _roles_id: '',
+        _menu_id: '',
+        _menu_item_id: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
@@ -193,7 +210,8 @@ export default new Vuex.Store({
     currentConstruct: {},
     currentDiagram: null,
     snackMessage: '',
-    showSnack: false
+    showSnack: false,
+    snackColor: 'success'
   },
   getters: {
     getStudyId: (state) => {
@@ -219,6 +237,9 @@ export default new Vuex.Store({
     },
     getShowSnack: (state) => {
       return state.getShowSnack
+    },
+    getSnackColor: (state) => {
+      return state.getSnackColor
     }
   },
   mutations: {
@@ -245,6 +266,9 @@ export default new Vuex.Store({
     },
     setShowSnack (state, show) {
       state.showSnack = show
+    },
+    setSnackColor (state, type) {
+      state.snackColor = type
     }
   },
   actions: {
@@ -271,6 +295,9 @@ export default new Vuex.Store({
     },
     setShowSnack: ({ commit }, show) => {
       commit('setShowSnack', show)
+    },
+    setSnackColor: ({ commit }, show) => {
+      commit('setSnackColor', show)
     }
   }
 })
