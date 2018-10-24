@@ -19,6 +19,11 @@ export default {
       icon: 'menu',
       url: '/menu-item',
       title: 'Menú Items'
+    },
+    {
+      icon: 'view_list',
+      url: '/menu',
+      title: 'Configuración de menús'
     }
   ]
 }

@@ -141,6 +141,13 @@ export default new Vuex.Store({
         _country_id: ''
       }
     }),
+    service('roles', {
+      instanceDefaults: {
+        code: '',
+        name: '',
+        description: ''
+      }
+    }),
     service('uploads', {
       instanceDefaults: {
         file: '',
@@ -158,6 +165,16 @@ export default new Vuex.Store({
         name: '',
         icon: '',
         url: ''
+      }
+    }),
+    service('menus', {
+      instanceDefaults: {
+        level: '',
+        order: '',
+        _roles_id: '',
+        _menu_id: '',
+        _menu_item_id: '',
+        removed: false
       }
     }),
     auth({ userService: 'users' })

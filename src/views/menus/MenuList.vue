@@ -1,19 +1,11 @@
 <template>
 <div >
-    <v-container grid-list-md text-xs-center @CreateMessage='messageSave'>
+    <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
         <v-flex xs12>
-          <v-alert
-            :value="alert"
-            :type="tipo_alerta"
-            dismissible
-            transition="scale-transition"
-          >
-            {{mensaje}}
-          </v-alert>
             <v-card :flat="true">
               <v-card-title>
-                <v-subheader>Listado de Ítems</v-subheader>
+                <v-subheader>ítems del sistema</v-subheader>
                 <v-spacer></v-spacer>
                 <v-text-field
                   v-model="search"
@@ -25,73 +17,36 @@
               </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getMenuItems"
+                  :items="getMenus"
                   hide-actions
-                  item-key="name"
+                  item-key="_id"
                   :search="search"
                 >
+    <template slot="headers" slot-scope="props">
+      <tr>
+        <th
+          v-for="header in props.headers"
+          :key="header.text"
+        >
+          {{ header.text }}
+        </th>
+      </tr>
+    </template>
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        >
-                        {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                            :rules="MyRules"
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td @click="dialogo = true, asignacion(props.item)" class="text-xs-left" >
-                        <v-dialog
-                              v-model="dialogo"
-                              max-width="1000"
-                            >
-                              <v-card>
-                                <v-card-title class="headline">ICONO</v-card-title>
-                                <v-card-text>
-                                  Seleccione un icono
-                                  <menu-icon-list
-                                  slot="input"
-                                  @iconName="seleccion"
-                                  > </menu-icon-list>
-                                </v-card-text>
-                              </v-card>
-                            </v-dialog>
-                            <v-card-text>
-                              <v-icon>{{ props.item.icon }}</v-icon>
-                              {{ props.item.icon }}
-                            </v-card-text>
+                        {{ props.item.menuitem.name }}
                       </td>
                       <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.url"
-                          lazy
-                          @save="edit(props.item.url, props.item, 'url')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.url }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.url"
-                            label="Editar url"
-                            single-line
-                            counter
-                            required
-                            :rules="MyRules"
-                          ></v-text-field>
-                        </v-edit-dialog>
+                        {{ props.item.level }}
+                      </td>
+                      <td>
+                        <v-checkbox input-value="props.item.state" value disabled></v-checkbox>
+                      </td>
+                      <td>
+                        <span class="group pa-2" v-for="item in props.item.rol" :key="item._id">
+                            <v-chip>{{ item.name }}</v-chip>
+                        </span>
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -107,6 +62,12 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToOrder(props.item._id)">
+                              <v-list-tile-title >Cambiar orden</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="goToEdit(props.item._id)">
+                              <v-list-tile-title >Editar</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="dialog = true; itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -116,11 +77,9 @@
                             >
                               <v-card>
                                 <v-card-title class="headline">Eliminar Ítem de menú</v-card-title>
-
                                 <v-card-text>
                                   Esta seguro que desea eliminar ítem ?
                                 </v-card-text>
-
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
 
@@ -186,26 +145,42 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
-import MenuIconList from './MenuIconList'
+import draggable from 'vuedraggable'
 export default {
   data () {
     return {
       headers: [
         {
-          text: 'Nombre',
+          text: 'Menu ítem',
           align: 'left',
           sortable: false,
-          value: 'name'
+          value: 'menuitem.name'
         },
-        { text: 'Icono',
-          value: 'icon',
+        { text: 'Nivel',
+          value: 'level',
           sortable: false
         },
-        { text: 'URL',
-          value: 'url',
+        { text: 'Estado',
+          value: 'state',
+          sortable: false
+        },
+        { text: 'Roles',
+          value: 'roles.name',
           sortable: false
         },
         { text: 'Acciones',
+          value: 'name',
+          sortable: false
+        }
+      ],
+      headersMI: [
+        {
+          text: 'Icono',
+          align: 'left',
+          sortable: false,
+          value: 'icon'
+        },
+        { text: 'Nombre',
           value: 'name',
           sortable: false
         }
@@ -224,7 +199,7 @@ export default {
       icono: '',
       itemSelected: null,
       loaded: false,
-      menuItems: [],
+      menus: [],
       query: {},
       dialog: false,
       dialogo: false,
@@ -233,14 +208,34 @@ export default {
       alert: false,
       tipo_alerta: 'success',
       mensaje: '',
-      search: ''
+      search: '',
+      // para traer los nombres
+      roles: [],
+      menu_item: [],
+      search_menu_item: null,
+      // para checkbox de lista
+      pagination: {
+        sortBy: 'order'
+      },
+      selected: []
     }
   },
   methods: {
-    ...mapActions('menu-items', { findMenuItems: 'find' }),
+    ...mapActions('menus', { findMenu: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
+    ...mapActions('menu-items', { findMenuItems: 'find' }),
+    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('menus', { findMenus: 'find' }),
     goToNew () {
-      this.$router.push('/menu-item-new')
+      this.$router.push('/menu-new')
+    },
+    goToEdit (codigo) {
+      // console.log('mi codigo es ', codigo)
+      this.$router.push('/menu-edit/' + codigo)
+    },
+    goToOrder (codigo) {
+      // console.log('mi codigo es ', codigo)
+      this.$router.push('/menu-order/' + codigo)
     },
     save (val) {
       console.log(val)
@@ -267,7 +262,7 @@ export default {
         let menuitem = new MenuItem(elem)
         menuitem[field] = val
         menuitem.patch().then((result) => {
-          this.findMenuItems({ query: {removed: false} }).then(response => {
+          this.findMenu({ query: {removed: false} }).then(response => {
             const menuitem = response.data || response
             console.log('edit ', menuitem)
             // this.alertConfig('Registro Modificado', 'success')
@@ -284,14 +279,14 @@ export default {
       }
     },
     del () {
-      const {MenuItem} = this.$FeathersVuex
-      const menuitem = new MenuItem(this.itemSelected)
-      menuitem.removed = true
+      const {Menu} = this.$FeathersVuex
+      let menu = new Menu(this.itemSelected)
+      menu['removed'] = true
       console.log('element ', this.itemSelected)
-      menuitem.patch().then((result) => {
-        this.findMenuItems({ query: {removed: false} }).then(response => {
-          const menuitem = response.data || response
-          console.log(menuitem)
+      menu.patch().then((result) => {
+        this.findMenu({ query: {removed: false} }).then(response => {
+          const menu = response.data || response
+          console.log(menu)
           this.setSnackColor('success')
           this.setSnackMessage('Registro eliminado')
           this.setShowSnack(true)
@@ -322,7 +317,7 @@ export default {
       const menuitem = new MenuItem(this.elem)
       menuitem[field] = this.icono
       menuitem.patch().then((result) => {
-        this.findMenuItems({ query: {removed: false} }).then(response => {
+        this.findMenu({ query: {removed: false} }).then(response => {
           const menuitem = response.data || response
           console.log('edit ', menuitem)
           this.setSnackMessage('Registro modificado')
@@ -340,18 +335,16 @@ export default {
       this.alert = true
       this.tipo_alerta = type
       this.mensaje = message
-    },
-    messageSave (data) {
-      this.alertConfig('Datos modificados', data)
     }
+    // para el check de los datos
   },
   computed: {
-    ...mapState('menu-items', {loading: 'isFindPending'}),
-    ...mapState('menu-items', { paginationVal: 'pagination' }),
-    ...mapGetters('menu-items', {findMenuItemInStore: 'find'}),
-    getMenuItems () {
+    ...mapState('menus', {loading: 'isFindPending'}),
+    ...mapState('menus', { paginationVal: 'pagination' }),
+    ...mapGetters('menus', {findMenuInStore: 'find'}),
+    getMenus () {
       // console.log('datos= ', this.findCategoryInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findMenuItemInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findMenuInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -362,21 +355,24 @@ export default {
   },
   watch: {
     page () {
-      this.findMenuItems({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findMenu({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findMenuItems({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findMenu({query: {$skip: this.getSkip, $limit: this.limit, removed: false, $sort: { level: '1' }, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.menuItems = response.data
+      this.menus = response.data
+    })
+    this.findMenuItems({removed: false, ...this.query}).then(response => {
+      this.menu_item = response.data
     })
   },
-  components: {LoadingComponent, EditableField, MenuIconList}
+  components: {LoadingComponent, EditableField, draggable}
 }
 </script>
 

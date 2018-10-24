@@ -62,6 +62,37 @@ const MenuIconList = resolve => {
     resolve(require('./views/menu-items/MenuIconList.vue'))
   }, 'menu-items')
 }
+const RolesList = resolve => {
+  require.ensure(['./views/roles/RolesList.vue'], () => {
+    resolve(require('./views/roles/RolesList.vue'))
+  }, 'roles')
+}
+const RolesNew = resolve => {
+  require.ensure(['./views/roles/RolesNew.vue'], () => {
+    resolve(require('./views/roles/RolesNew.vue'))
+  }, 'roles')
+}
+const MenuNew = resolve => {
+  require.ensure(['./views/menus/MenuNew.vue'], () => {
+    resolve(require('./views/menus/MenuNew.vue'))
+  }, 'menus')
+}
+const MenuList = resolve => {
+  require.ensure(['./views/menus/MenuList.vue'], () => {
+    resolve(require('./views/menus/MenuList.vue'))
+  }, 'menus')
+}
+const MenuEdit = resolve => {
+  require.ensure(['./views/menus/MenuEdit.vue'], () => {
+    resolve(require('./views/menus/MenuEdit.vue'))
+  }, 'menus')
+}
+const MenuOrder = resolve => {
+  require.ensure(['./views/menus/MenuOrder.vue'], () => {
+    resolve(require('./views/menus/MenuOrder.vue'))
+  }, 'menus')
+}
+
 Vue.use(Router)
 
 export default new Router({
@@ -131,6 +162,36 @@ export default new Router({
           path: 'menu-item-new',
           name: 'MenuItemnew',
           component: MenuItemNew
+        },
+        {
+          path: 'roles',
+          name: 'Roles',
+          component: RolesList
+        },
+        {
+          path: 'new-roles',
+          name: 'NewRoles',
+          component: RolesNew
+        },
+        {
+          path: 'menu-new',
+          name: 'MenuNew',
+          component: MenuNew
+        },
+        {
+          path: 'menu',
+          name: 'MenuList',
+          component: MenuList
+        },
+        {
+          path: 'menu-edit/:menu_id',
+          name: 'MenuEdit',
+          component: MenuEdit
+        },
+        {
+          path: 'menu-order/:id',
+          name: 'MenuOrder',
+          component: MenuOrder
         }
       ]
     },
