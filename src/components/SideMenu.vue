@@ -25,7 +25,19 @@
         </router-link>
         <v-divider inset></v-divider>
         <v-subheader>Configuracion</v-subheader>
-
+        <v-list-group>
+          <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title> <v-icon v-html="'category'"></v-icon> Categorías & Códigos</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="'/CategoryPollList/0'">
+                <v-list-tile-action>Categorías</v-list-tile-action>
+              </v-list-tile>
+              <v-list-tile :to="'/CategoryPollList/1'">
+                <v-list-tile-action>Categorías Generales</v-list-tile-action>
+              </v-list-tile>
+        </v-list-group>
         <v-list-tile :to="'/regions'">
           <v-list-tile-action>
             <v-icon v-html="'map'"></v-icon>
@@ -41,12 +53,20 @@
             </v-list-tile>
 
             <v-list-tile  :to="'/roles'">
-
               <v-list-tile-action>
                 <v-icon v-html="'supervised_user_circle'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title v-text="'Roles'"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+            <v-list-tile  :to="'/permission'">
+              <v-list-tile-action>
+                <v-icon v-html="'lock_open'"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="'Permisos'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
 
