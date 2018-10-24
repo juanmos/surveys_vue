@@ -63,10 +63,7 @@
 <!-- esto presenta el json -->
    <!--<div class="list-group col-md-3">
       <pre>{{listString}}</pre>
-    </div>
-     <div class="list-group col-md-3">
-      <pre>{{list2String}}</pre>
-    </div>-->
+    </div> -->
     <v-btn
                 absolute
                 dark
