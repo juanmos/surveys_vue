@@ -4,8 +4,8 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nueva Categoría</v-subheader>
-                <category-project-form @dataSubmited="create"></category-project-form>
+                <v-subheader>Nuevo Ítem</v-subheader>
+                <menu-item-form @dataSubmited="create"></menu-item-form>
                 <v-btn
                 absolute
                 dark
@@ -25,32 +25,39 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import CategoryProjectForm from './CategoryProjectForm'
+import {mapState, mapActions} from 'vuex'
+import MenuItemForm from './MenuItemForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
+    ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     create (values) {
       // method with feathers vuex to create an category project
-      const { CategoryProject } = this.$FeathersVuex
-      const category = new CategoryProject(values)
+      const { MenuItem } = this.$FeathersVuex
+      let category = new MenuItem(values)
       category.save().then((result) => {
+        this.setSnackMessage('Registro creado')
+        this.setShowSnack(true)
         this.goToList()
       }, (err) => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
         console.log(err)
       })
     },
     goToList () {
-      this.$router.push('/category-project')
+      this.$emit('CreateMessage', { mensaje: 'Registro creado', tipo: 'success' })
+      this.$router.push('/menu-item')
     }
   },
   computed: {
-    ...mapState('category-project', {loading: 'isCreatePending'})
+    ...mapState('menu-items', {loading: 'isCreatePending'})
   },
-  components: {CategoryProjectForm, LoadingComponent}
+  components: { MenuItemForm, LoadingComponent }
 }
 </script>
 
 <style>
-
+  /* overflow hidden */
 </style>

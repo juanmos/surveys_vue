@@ -4,30 +4,28 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Roles de Usuarios</v-subheader>
+              <v-subheader>Permisos listado</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getRoles"
+                  :items="getPermission"
                   hide-actions
-                  item-key="name"
+                  item-key="module"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
-                        {{ props.item.code }}
-                      </td>
+
                       <td>
                         <v-edit-dialog
-                          :return-value.sync="props.item.name"
+                          :return-value.sync="props.item.module"
                           lazy
-                          @save="edit(props.item.name, props.item, 'name')"
+                          @save="edit(props.item.module, props.item, 'module')"
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.name }}
+                        > {{ props.item.module }}
                           <v-text-field
                             slot="input"
-                            v-model="props.item.name"
+                            v-model="props.item.module"
                             label="Editar Nombre"
                             single-line
                             counter
@@ -46,6 +44,24 @@
                           <v-text-field
                             slot="input"
                             v-model="props.item.description"
+                            label="Editar Descripción"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                       <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.url"
+                          lazy
+                          @save="edit(props.item.url, props.item, 'url')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.url}}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.url"
                             label="Editar Descripción"
                             single-line
                             counter
@@ -106,7 +122,6 @@
         </v-flex>
         </v-layout>
     </v-container>
-     <confirm-dialog :dialog="dialog" :dialogTitle="dialogTitle"  :dialogText="dialogText" @onConfirm="onConfirm" @onCancel="onCancel" ></confirm-dialog>
 </div>
 </template>
 
@@ -115,32 +130,27 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
-import ConfirmDialog from './../../components/ConfirmDialog.vue'
 export default {
-
   data () {
     return {
-      dialog: false,
-      dialogTitle: 'Eliminar Rol',
-      dialogText: 'Desea eliminar este Rol?',
       headers: [
         {
-          text: 'Codigo',
+          text: 'Modulo',
           align: 'left',
-          sortable: false,
-          value: 'code'
-        },
-        { text: 'Nombre',
-          value: 'name',
-          sortable: true
+          sortable: true,
+          value: 'module'
         },
         {
           text: 'Descripción',
           value: 'description',
           sortable: false
         },
+        { text: 'Url',
+          value: 'url',
+          sortable: false
+        },
         { text: 'Acciones',
-          value: 'name',
+
           sortable: false
         }
       ],
@@ -156,49 +166,39 @@ export default {
       limit: 10,
       total: 1,
       loaded: false,
-      roles: [],
+      Permission: [],
       query: {},
-      rolId: ''
+      dialog: false
     }
   },
   methods: {
-    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('permission', { findPermission: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
     goToNew () {
-      this.$router.push('/new-roles')
+      this.$router.push('/new-permission')
     },
     edit (val, elem, field) {
-      const {Role} = this.$FeathersVuex
-      let roles = new Role(elem)
-      roles[field] = val
-      roles.patch().then((result) => {
+      const {Permission} = this.$FeathersVuex
+      let permisos = new Permission(elem)
+      permisos[field] = val
+      permisos.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Rol Editado')
+        this.setSnackMessage('Permiso Editado')
         this.setShowSnack(true)
       })
     },
     del (element) {
-      this.dialogTitle = 'Eliminar Rol : ' + element.name
-      this.dialog = true
-      this.rolId = element
-    },
-    onConfirm () {
-      const {Role} = this.$FeathersVuex
-      let rolesdelete = new Role(this.rolId)
-      rolesdelete.removed = true
-      rolesdelete.patch().then((result) => {
+      const {Permission} = this.$FeathersVuex
+      let permisos = new Permission(element)
+      permisos.removed = true
+      permisos.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Rol Eliminado')
+        this.setSnackMessage('Permiso Eliminado')
         this.setShowSnack(true)
       })
-      this.dialog = false
-    },
-    onCancel () {
-      this.rolId = ''
-      this.dialog = false
     },
     save (val) {
       this.snack = true
@@ -219,21 +219,21 @@ export default {
       console.log('Dialog closed', val)
     },
     getData () {
-      this.findRoles({query: {removed: false, $skip: 0}}).then(response => {
+      this.findPermission({query: {removed: false, $skip: 0}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.roles = response.data
-        console.log('estas son los roles', this.roles)
+        this.permission = response.data
+        console.log('estas son los roles', this.permission)
       })
     }
   },
   computed: {
-    ...mapState('roles', {loading: 'isFindPending'}),
-    ...mapState('roles', { paginationVal: 'pagination' }),
-    ...mapGetters('roles', {findRolesInStore: 'find'}),
-    getRoles () {
-      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('permission', {loading: 'isFindPending'}),
+    ...mapState('permission', { paginationVal: 'pagination' }),
+    ...mapGetters('permission', {findPermissionsInStore: 'find'}),
+    getPermission () {
+      return this.findPermissionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -244,21 +244,21 @@ export default {
   },
   watch: {
     page () {
-      this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+    this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.roles = response.data
+      this.permission = response.data
     })
   },
-  components: {LoadingComponent, EditableField, ConfirmDialog}
+  components: {LoadingComponent, EditableField}
 }
 </script>
 

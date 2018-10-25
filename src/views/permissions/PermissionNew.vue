@@ -1,11 +1,11 @@
 <template>
-    <v-container grid-list-md text-xs-center>
+<v-container grid-list-md text-xs-center>
         <loading-component v-if="loading"></loading-component>
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nueva Categoría</v-subheader>
-                <category-project-form @dataSubmited="create"></category-project-form>
+                <v-subheader>Nuevo Permiso</v-subheader>
+                <permission-form @dataSubmited="create"></permission-form>
                 <v-btn
                 absolute
                 dark
@@ -23,34 +23,38 @@
         </v-layout>
     </v-container>
 </template>
-
 <script>
-import {mapState} from 'vuex'
-import CategoryProjectForm from './CategoryProjectForm'
+import {mapState, mapActions} from 'vuex'
+
+import PermissionForm from './PermissionForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     create (values) {
-      // method with feathers vuex to create an category project
-      const { CategoryProject } = this.$FeathersVuex
-      const category = new CategoryProject(values)
-      category.save().then((result) => {
+      // method with feathers vuex to create
+      const { Permission } = this.$FeathersVuex
+      let savepermission = new Permission(values)
+      savepermission.save().then((result) => {
+        this.setSnackMessage('Permiso Guardado')
+        this.setShowSnack(true)
         this.goToList()
       }, (err) => {
         console.log(err)
       })
     },
     goToList () {
-      this.$router.push('/category-project')
+      this.$router.push('/permission')
     }
   },
   computed: {
-    ...mapState('category-project', {loading: 'isCreatePending'})
+    ...mapState('permission', {loading: 'isCreatePending'})
   },
-  components: {CategoryProjectForm, LoadingComponent}
+  components: {PermissionForm, LoadingComponent}
 }
 </script>
-
 <style>
-
 </style>

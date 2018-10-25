@@ -19,6 +19,16 @@ export default {
       icon: 'poll',
       url: '/QuesBuildIndex',
       title: 'Constructor de Preguntas'
+    },
+    {
+      icon: 'menu',
+      url: '/menu-item',
+      title: 'Menú Items'
+    },
+    {
+      icon: 'view_list',
+      url: '/menu',
+      title: 'Configuración de menús'
     }
   ]
 }
