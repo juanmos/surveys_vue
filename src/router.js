@@ -74,6 +74,16 @@ const RolesNew = resolve => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
 }
+const QuestionTypeList = resolve => {
+  require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
+    resolve(require('./views/question-types/QuestionTypeList.vue'))
+  }, 'questiontypes')
+}
+const QuestionBuilder = resolve => {
+  require.ensure(['./views/question-builder/QuesBuildIndex.vue'], () => {
+    resolve(require('./views/question-builder/QuesBuildIndex.vue'))
+  }, 'questionbuilder')
+}
 
 Vue.use(Router)
 
@@ -125,6 +135,16 @@ export default new Router({
           name: 'CategoryPollAddCode',
           component: CategoryPollAddCode,
           props: true
+        },
+        {
+          path: 'QuestionTypeList',
+          name: 'QuestionTypeList',
+          component: QuestionTypeList
+        },
+        {
+          path: 'QuesBuildIndex',
+          name: 'QuesBuildIndex',
+          component: QuestionBuilder
         },
         {
           path: 'regions',

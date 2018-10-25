@@ -14,6 +14,11 @@ export default {
       icon: 'category',
       url: '/category-project',
       title: 'Categorías de encuesta'
+    },
+    {
+      icon: 'poll',
+      url: '/QuesBuildIndex',
+      title: 'Constructor de Preguntas'
     }
   ]
 }

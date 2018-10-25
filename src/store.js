@@ -47,6 +47,13 @@ export default new Vuex.Store({
       },
       debug: true
     }),
+    service('question-types', {
+      instanceDefaults: {
+        type_camp: '',
+        config: []
+      },
+      debug: true
+    }),
     service('studies', {
       instanceDefaults: {
         name: '',
