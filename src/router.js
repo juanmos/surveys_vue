@@ -43,13 +43,16 @@ const CategoryPollList = resolve => {
   }, 'category-poll')
 }
 const CategoryPollNew = resolve => {
-  // cambiar despues
   require.ensure(['./views/category-poll/CategoryPollNew.vue'], () => {
     resolve(require('./views/category-poll/CategoryPollNew.vue'))
   }, 'category-poll')
 }
+const CategoryGeneralNew = resolve => {
+  require.ensure(['./views/category-poll/CategoryGeneralNew.vue'], () => {
+    resolve(require('./views/category-poll/CategoryGeneralNew.vue'))
+  }, 'category-poll')
+}
 const CategoryPollAddCode = resolve => {
-  // cambiar despues
   require.ensure(['./views/category-poll/CategoryPollFormAddCodes.vue'], () => {
     resolve(require('./views/category-poll/CategoryPollFormAddCodes.vue'))
   }, 'codes-category-polls')
@@ -170,6 +173,11 @@ export default new Router({
           path: 'CategoryPollNew',
           name: 'NewCategoryPoll',
           component: CategoryPollNew
+        },
+        {
+          path: 'CategoryGeneralNew',
+          name: 'NewCategoryGeneral',
+          component: CategoryGeneralNew
         },
         {
           path: 'CategoryPollList/:isgeneral',

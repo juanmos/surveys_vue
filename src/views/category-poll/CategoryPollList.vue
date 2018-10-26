@@ -171,7 +171,13 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('category-poll', { findCategory: 'find' }),
     goToNew () {
-      this.$router.push('/CategoryPollNew')
+      this.getband()
+      console.log(this.bandgeneral)
+      if (this.bandgeneral === true) {
+        this.$router.push('/CategoryGeneralNew')
+      } else {
+        this.$router.push('/CategoryPollNew')
+      }
     },
     goToAddcodes (val, val2) {
       this.$router.push({path: '/CategoryPollFormAddCodes/' + val + '/' + val2})
@@ -284,7 +290,7 @@ export default {
   watch: {
     '$route' (to, from) { // react to route changes...
       this.getband()
-      this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}).then(response => {
+      this.findCategory({query: {$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
@@ -301,7 +307,7 @@ export default {
   },
   created () {
     this.getband()
-    this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}).then(response => {
+    this.findCategory({query: {$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
