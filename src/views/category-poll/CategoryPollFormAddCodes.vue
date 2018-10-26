@@ -59,7 +59,7 @@
            </v-card>
             <v-data-table
                   :headers="headers"
-                  :items="getCodes, codes_generales"
+                  :items="getCodes, codes_category"
                   hide-actions
                   item-key="name"
                   striped hover
@@ -84,7 +84,7 @@
                             mask="####"
                           ></v-text-field>
                         </v-edit-dialog></td>
-                    <td class="text-xs-center">
+                    <td class="text-xs-left">
                       <v-edit-dialog
                           :return-value.sync="props.item.name"
                           @save="edit(props.item.name, props.item, 'name')"
@@ -148,8 +148,7 @@
             <tbody>
                 <tr v-for="(item) in codes_generales" :key = "item.code">
                     <td class="text-xs-left">{{ item.code }}</td>
-                    <td class="text-xs-center">{{ item.name }}</td>
-                    <td></td>
+                    <td class="text-xs-left">{{ item.name }}</td>
                     <td></td>
                 </tr>
             </tbody>
@@ -192,6 +191,7 @@ export default {
         }
       ],
       categories: [],
+      codes_category: [],
       codes_generales: [],
       category_consult: {},
       test: false,
@@ -207,6 +207,7 @@ export default {
       itemSelectedname: null,
       query: {},
       query2: {},
+      query3: {},
       valid: false,
       rules: validations,
       dialog: false
@@ -216,6 +217,7 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('codescategorypolls', { findCodes: 'find' }),
     ...mapActions('category-poll', { findCategory: 'find' }),
+    ...mapActions('codescategorypolls', { findCodesGeneral: 'find' }),
     createcode () {
       if (parseFloat(this.codescategory.code) > 90 && this.category_consult[0]._iscodegeneral === false) {
         alert('No se pueden ingresar valores mayores a 90 ya que son de códigos generales')
@@ -278,7 +280,7 @@ export default {
       this.codescategory.name = ''
     },
     goToList () {
-      this.$router.push('/categorypoll-list/0')
+      this.$router.push('/CategoryPollList/0')
     },
     save (val) {
       this.snack = true
@@ -300,6 +302,45 @@ export default {
     }
   },
   created () {
+    this.codescategory._categorypoll_id = this.$route.params.category_id
+    this.category_id = this.$route.params.category_id
+    this.findCodes({query: {_categorypoll_id: this.category_id, removed: false, ...this.query}}).then(response => {
+      this.codes_category = response.data
+    })
+    // CONSULTA DE A LA CATEGORÍA PARA SABER SI CONTIENE CODIGOS GENERALES O NO
+    let codetemp = []
+    let codigostemporales = []
+    this.findCategory({query: {_id: this.category_id, ...this.query}}).then(response => {
+      this.category_consult = response.data
+      // console.log('PRIMER RESPONSIVE 1: ', this.category_consult)
+      if (this.category_consult[0]._contains_codegeneral === true) {
+        // CONSULTA DE LOS CODIGOS EN CASO DE QUE SEA TRUE EL CAMPO
+        this.findCategory({query: {_iscodegeneral: true, ...this.query}}).then(response2 => {
+          // console.log('LOS CODIGOS ', response2.data)
+          response2.data.map(function (value, key) {
+            // console.log('VALOR DE MAPEO: ', value._id)
+            codetemp.push(value._id)
+          })
+          // console.log('CODIGOS GENERALES DE BUSQUEDA: ', codetemp)
+          for (let i = 0; i < codetemp.length; i++) {
+            // console.log('VALOR FOR ' + i + codetemp[i])
+            this.findCodes({query: {_categorypoll_id: codetemp[i], removed: false, ...this.query}}).then(response => {
+              this.categories = response.data
+              // console.log('ESTE ES LA RESPUESTA: ', response.data)
+              response.data.map(function (value, key) {
+                codigostemporales.push(value)
+              })
+            })
+          }
+          // console.log('CODIGOS HHH: ', codigostemporales)
+          this.codes_generales = codigostemporales
+        })
+      } else {
+        // NO CONTIEN CODIGOS GENERALES
+      }
+    })
+  },
+  created2 () {
     this.codescategory._categorypoll_id = this.$route.params.category_id
     this.category_id = this.$route.params.category_id
     this.findCodes({removed: false, ...this.query}).then(response => {
