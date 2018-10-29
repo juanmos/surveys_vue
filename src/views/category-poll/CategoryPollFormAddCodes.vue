@@ -210,7 +210,8 @@ export default {
       query3: {},
       valid: false,
       rules: validations,
-      dialog: false
+      dialog: false,
+      action: false
     }
   },
   methods: {
@@ -232,6 +233,7 @@ export default {
             // this.setSnackColor('success')
             this.setShowSnack(true)
             this.limpiarCampos()
+            this.$router.go(0)
           })
         }, (err) => {
           this.setSnackMessage('Error al guardar')
@@ -256,6 +258,9 @@ export default {
             this.setSnackMessage('Registro Modificado')
             // this.setSnackColor('success')
             this.setShowSnack(true)
+            // this.created()
+            // this.action = true
+            this.$router.go(0)
           })
         })
       }
@@ -281,6 +286,10 @@ export default {
     },
     goToList () {
       this.$router.push('/CategoryPollList/0')
+    },
+    changeAction () {
+      console.log('ENTRO A CONSOOOLAAA ')
+      this.action = false
     },
     save (val) {
       this.snack = true
@@ -366,8 +375,7 @@ export default {
     ...mapGetters('codescategorypolls', {findCodesInStore: 'find'}),
     ...mapGetters('category-poll', { findMainCategory: 'find' }),
     getCodes () {
-      // console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
-      return this.findCodesInStore({query: {$sort: { code: '1' }, removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
+      return this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
     }
   }
 }
