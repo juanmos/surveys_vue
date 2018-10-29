@@ -226,7 +226,7 @@ export default {
         const { Codescategorypoll } = this.$FeathersVuex
         let codecategory = new Codescategorypoll(this.codescategory)
         codecategory.save().then((res) => {
-          this.findCodes({ query: { $limit: null } }).then(res => {
+          this.findCodes({ query: { $sort: { code: '1' }, $limit: null } }).then(res => {
             // console.log('dato final', res.data)
             this.setSnackMessage('Registro Ingresado')
             // this.setSnackColor('success')
@@ -250,7 +250,7 @@ export default {
         let codecategory = new Codescategorypoll(elem)
         codecategory[field] = val
         codecategory.patch().then((result) => {
-          this.findCodes({ query: {removed: false} }).then(response => {
+          this.findCodes({ query: {$sort: { code: '1' }, removed: false} }).then(response => {
             const codescategoriesR = response.data || response
             console.log(codescategoriesR)
             this.setSnackMessage('Registro Modificado')
@@ -266,7 +266,7 @@ export default {
       const codecategory = new Codescategorypoll(this.itemSelected)
       codecategory.removed = true
       codecategory.patch().then((result) => {
-        this.findCodes({ query: {removed: false} }).then(response => {
+        this.findCodes({ query: {$sort: { code: '1' }, removed: false} }).then(response => {
           const categoriesR = response.data || response
           console.log(categoriesR)
           this.setSnackMessage('Registro Eliminado')
@@ -304,7 +304,7 @@ export default {
   created () {
     this.codescategory._categorypoll_id = this.$route.params.category_id
     this.category_id = this.$route.params.category_id
-    this.findCodes({query: {_categorypoll_id: this.category_id, removed: false, ...this.query}}).then(response => {
+    this.findCodes({query: {$sort: { code: '1' }, _categorypoll_id: this.category_id, removed: false, ...this.query}}).then(response => {
       this.codes_category = response.data
     })
     // CONSULTA DE A LA CATEGORÍA PARA SABER SI CONTIENE CODIGOS GENERALES O NO
@@ -367,7 +367,7 @@ export default {
     ...mapGetters('category-poll', { findMainCategory: 'find' }),
     getCodes () {
       // console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
-      return this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
+      return this.findCodesInStore({query: {$sort: { code: '1' }, removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
     }
   }
 }
