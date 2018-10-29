@@ -49,7 +49,7 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="goToAddcodes(props.item._id, props.item.name)">
-                              <v-list-tile-title>Añadir códigos</v-list-tile-title>
+                              <v-list-tile-title>Ver códigos</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="itemSelected= props.item; itemSelectedname= props.item.name; editCodeGeneral(props.item._id, props.item.name)">
                               <v-list-tile-title>Usa/No usa códigos generales</v-list-tile-title>
