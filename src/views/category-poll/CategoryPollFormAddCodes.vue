@@ -210,8 +210,7 @@ export default {
       query3: {},
       valid: false,
       rules: validations,
-      dialog: false,
-      action: false
+      dialog: false
     }
   },
   methods: {
@@ -286,10 +285,6 @@ export default {
     },
     goToList () {
       this.$router.push('/CategoryPollList/0')
-    },
-    changeAction () {
-      console.log('ENTRO A CONSOOOLAAA ')
-      this.action = false
     },
     save (val) {
       this.snack = true
