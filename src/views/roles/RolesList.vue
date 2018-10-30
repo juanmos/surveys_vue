@@ -173,16 +173,6 @@ export default {
     goToNew () {
       this.$router.push('/new-roles')
     },
-    // edit (val, elem, field) {
-    //   const {Role} = this.$FeathersVuex
-    //   let roles = new Role(elem)
-    //   roles[field] = val
-    //   roles.patch().then((result) => {
-    //     this.getData()
-    //     this.setSnackMessage('Rol Editado')
-    //     this.setShowSnack(true)
-    //   })
-    // },
     edita (item) {
       this.$router.push({ name: 'NewRoles', params: { id: item._id } })
     },
@@ -222,7 +212,6 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
     },
     getData () {
       this.findRoles({query: {removed: false, $skip: 0}}).then(response => {

@@ -33,7 +33,6 @@
                   label="Descripción"
                   box
                   color="blue-grey lighten-2"
-                  required
                 ></v-text-field>
 
                 <v-btn  small class="blue" @click.native="addpermission()">
@@ -48,7 +47,7 @@
                 <v-list-tile avatar ripple v-for="(item, index) in roles.permissionrol"
                 v-if="item !== null && item !== undefined" v-bind:key="index" class="grey lighten-2 mt-2 mb-2 " >
                     <v-list-tile-content dark >
-                      <v-list-tile-title class="heading blue--text">{{ item._permissions_id }}
+                      <v-list-tile-title class="heading blue--text">{{ item.module}}
                       </v-list-tile-title>
                       <v-list-tile-sub-title class="grey--text text--darken-4">
                           <v-container fluid>
@@ -86,12 +85,11 @@
                               </v-flex>
                             </v-layout>
                           </v-container>
-                         <!-- ${{ item.read }} -->
                         </v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-btn fab small class="navy" @click.native="remove(item)">
-                        <v-icon v-bind:class="[item.active ? 'teal--text': 'grey--text']">delete</v-icon>
+                      <v-btn color="red" fab small class="navy" @click.native="remove(item)">
+                        <v-icon color="white"  >delete</v-icon>
                       </v-btn>
                     </v-list-tile-action>
                 </v-list-tile>
@@ -107,10 +105,13 @@
                       <v-flex xs12 md6>
                         <v-select
                           label="Permisos"
-                           v-model="permissionId"
+                          v-model="permissionId"
                           :items="getPermissions"
                           item-text="module"
                           item-value="_id"
+                          persistent-hint
+                          return-object
+                          single-line
                           box
                         ></v-select>
                       </v-flex>
@@ -157,13 +158,16 @@
 
         </v-layout>
       </v-container>
+     <confirm-dialog :dialog="dialog" :dialogTitle="dialogTitle"  :dialogText="dialogText" @onConfirm="onConfirm" @onCancel="onCancel" ></confirm-dialog>
+
     </v-card>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {validations} from './../../utils/validations'
-const state = {
+import ConfirmDialog from './../../components/ConfirmDialog.vue'
+let state = {
   permisorol: []
 }
 export default {
@@ -172,7 +176,15 @@ export default {
       code: '',
       name: '',
       description: '',
-      permissionrol: '',
+      permissionrol: {
+        '_permissions_id': '',
+        'module': '',
+        'read': '',
+        'create': '',
+        'update': '',
+        'delete': '',
+        'removed': ''
+      },
       removed: false
     },
     valid: false,
@@ -180,15 +192,22 @@ export default {
     modalTitle: 'Agregar Permisos',
     modalText: 'Seleccione un permiso para agregar al rol',
     addPermissionModal: false,
-    dialog: false,
-    permissionId: null,
+    permissionId: { module: '', _id: '' },
     readadd: false,
     crearadd: false,
     editaradd: false,
-    eliminaradd: false
+    eliminaradd: false,
+    dialog: false,
+    dialogTitle: 'Eliminar Permiso',
+    dialogText: 'Desea eliminar este permiso?',
+    permisodel: ''
   }),
   methods: {
     ...mapActions('permission', { findPermissions: 'find' }),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.roles)
@@ -201,21 +220,39 @@ export default {
       this.addPermissionModal = false
     },
     savePermiso () {
-      //  console.log(this.readadd.toString())
       state.permisorol.push({
-        '_permissions_id': this.permissionId,
+        '_permissions_id': this.permissionId._id,
+        'module': this.permissionId.module,
         'read': this.readadd.toString(),
         'create': this.crearadd.toString(),
         'update': this.editaradd.toString(),
-        'delete': this.eliminaradd.toString()
+        'delete': this.eliminaradd.toString(),
+        'removed': false
       })
+
       this.roles.permissionrol = state.permisorol
-      this.permissionId = null
+      this.permissionId = { module: '', _id: '' }
+      this.module = null
       this.readadd = false
       this.crearadd = false
       this.editaradd = false
       this.eliminaradd = false
       this.addPermissionModal = false
+    },
+    remove (element) {
+      this.dialogTitle = 'Eliminar este permiso : ' + element.module
+      this.dialog = true
+      this.permisodel = element._permissions_id
+    },
+    onConfirm () {
+      this.roles.permissionrol.splice(this.roles.permissionrol.findIndex(p => p._permissions_id === this.permisodel), 1)
+      this.setSnackMessage('Permiso Eliminado')
+      this.setShowSnack(true)
+      this.dialog = false
+    },
+    onCancel () {
+      this.permisodel = ''
+      this.dialog = false
     }
   },
   computed: {
@@ -227,8 +264,16 @@ export default {
   created () {
     this.findPermissions({ query: {removed: false} }).then(response => {
     })
-  }
-
+  },
+  mounted () {
+    if (this.$route.params.id) {
+    } else {
+      state = {
+        permisorol: []
+      }
+    }
+  },
+  components: {ConfirmDialog}
 }
 </script>
 
