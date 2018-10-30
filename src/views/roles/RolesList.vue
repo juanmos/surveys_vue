@@ -67,6 +67,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="edita(props.item)">
+                              <v-list-tile-title>Editar</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -170,15 +173,8 @@ export default {
     goToNew () {
       this.$router.push('/new-roles')
     },
-    edit (val, elem, field) {
-      const {Role} = this.$FeathersVuex
-      let roles = new Role(elem)
-      roles[field] = val
-      roles.patch().then((result) => {
-        this.getData()
-        this.setSnackMessage('Rol Editado')
-        this.setShowSnack(true)
-      })
+    edita (item) {
+      this.$router.push({ name: 'NewRoles', params: { id: item._id } })
     },
     del (element) {
       this.dialogTitle = 'Eliminar Rol : ' + element.name
@@ -216,7 +212,6 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
     },
     getData () {
       this.findRoles({query: {removed: false, $skip: 0}}).then(response => {

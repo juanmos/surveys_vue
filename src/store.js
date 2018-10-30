@@ -168,7 +168,8 @@ export default new Vuex.Store({
       instanceDefaults: {
         code: '',
         name: '',
-        description: ''
+        description: '',
+        permissionrol: []
       }
     }),
     service('permission', {
