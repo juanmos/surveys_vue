@@ -17,6 +17,9 @@
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
+        <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
+      </v-btn>
+      <v-btn icon>
         <v-icon>search</v-icon>
       </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
@@ -56,6 +59,7 @@ import {mapState} from 'vuex'
 
 import SideMenu from './../components/SideMenu'
 import SnackMessage from './../components/docaration/SnackMessage'
+import router from './../router'
 export default {
   name: 'App',
   data () {
@@ -71,6 +75,11 @@ export default {
   },
   computed: {
     ...mapState('auth', { user: 'user' })
+  },
+  methods: {
+    goApplications () {
+      router.push('/applications')
+    }
   },
   components: {SideMenu, SnackMessage}
 }
