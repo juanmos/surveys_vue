@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Roles de Usuarios</v-subheader>
+              <v-subheader>Usuarios Roles</v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getRoles"
@@ -220,7 +220,6 @@ export default {
         this.loaded = true
         this.roles = response.data
         console.log('estas son los roles', this.roles)
-        console.log(this.$FeathersVuex)
       })
     }
   },

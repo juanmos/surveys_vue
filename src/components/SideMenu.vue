@@ -69,6 +69,14 @@
                 <v-list-tile-title v-text="'Permisos'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile  :to="'/userrol'">
+              <v-list-tile-action>
+                <v-icon v-html="'ballot'"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="'Usuario Rol'"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
 
         </v-list-group>
 
