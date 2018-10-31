@@ -12,6 +12,11 @@ const Login = resolve => {
     resolve(require('./views/Login.vue'))
   }, 'login')
 }
+const Applications = resolve => {
+  require.ensure(['./views/Applications'], () => {
+    resolve(require('.//views/Applications'))
+  }, 'applications')
+}
 const CustomerNew = resolve => {
   require.ensure(['./views/customers/CustomerNew.vue'], () => {
     resolve(require('./views/customers/CustomerNew.vue'))
@@ -158,6 +163,11 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'applications',
+          name: 'Applications',
+          component: Applications
         },
         {
           path: 'customers',
