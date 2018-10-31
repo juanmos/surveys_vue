@@ -91,7 +91,7 @@
               </div>
             </v-card-title>
             <v-card-actions>
-              <v-btn href="http://mapas-mentales.propraxis.ec/dashboard">Ingresar</v-btn>
+              <v-btn href="http://encuestas.propraxis.ec/dashboard">Ingresar</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
