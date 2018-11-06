@@ -20,7 +20,7 @@
         <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon>search</v-icon>
+        <v-icon @click="goUser" title="Perfil">perm_identity</v-icon>
       </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>more_vert</v-icon>
@@ -79,6 +79,9 @@ export default {
   methods: {
     goApplications () {
       router.push('/applications')
+    },
+    goUser () {
+      router.push('/user-edit')
     }
   },
   components: {SideMenu, SnackMessage}
