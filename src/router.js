@@ -30,7 +30,17 @@ const CustomerList = resolve => {
 const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
     resolve(require('./views/Dashboard.vue'))
-  }, 'login')
+  }, 'dashboard')
+}
+const UserEdit = resolve => {
+  require.ensure(['./views/users/UserEdit.vue'], () => {
+    resolve(require('./views/users/UserEdit.vue'))
+  }, 'userEdit')
+}
+const UserForm = resolve => {
+  require.ensure(['./views/users/UserForm.vue'], () => {
+    resolve(require('./views/users/UserForm.vue'))
+  }, 'userForm')
 }
 const RegionList = resolve => {
   require.ensure(['./views/regions/RegionList.vue'], () => {
@@ -163,6 +173,16 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'user-edit',
+          name: 'userEdit',
+          component: UserEdit
+        },
+        {
+          path: 'userForm',
+          name: 'UserForm',
+          component: UserForm
         },
         {
           path: 'applications',
