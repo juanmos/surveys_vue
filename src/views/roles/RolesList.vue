@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Roles de Usuarios</v-subheader>
+              <v-subheader>Roles de Usuarios </v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getRoles"
@@ -220,7 +220,6 @@ export default {
         this.loaded = true
         this.roles = response.data
         console.log('estas son los roles', this.roles)
-        console.log(this.$FeathersVuex)
       })
     }
   },
@@ -228,6 +227,7 @@ export default {
     ...mapState('roles', {loading: 'isFindPending'}),
     ...mapState('roles', { paginationVal: 'pagination' }),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
+    ...mapState('auth', { user: 'user' }),
     getRoles () {
       return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
@@ -253,6 +253,7 @@ export default {
       this.loaded = true
       this.roles = response.data
     })
+    // console.log(this.auth)
   },
   components: {LoadingComponent, EditableField, ConfirmDialog}
 }

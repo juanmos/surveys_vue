@@ -4,18 +4,28 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Usuarios Roles</v-subheader>
+              <v-card-title>
+                <span class="title">Categoria Segmentación
+                  <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
+                </span>
+                <v-spacer></v-spacer>
+                <v-btn class="teal darken-2" fab small dark @click.native="print()">
+                  <v-icon>print</v-icon>
+                </v-btn>
+                <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
+                  <v-icon>add</v-icon>
+                </v-btn>
+            </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getRoles"
+                  :items="getPermission"
                   hide-actions
                   item-key="name"
+                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
-                        {{ props.item.code }}
-                      </td>
+
                       <td>
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
@@ -52,7 +62,6 @@
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-
                        <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -67,12 +76,44 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="edita(props.item)">
+                            <v-list-tile @click="editar(props.item)">
                               <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="del(props.item)">
+                            <v-list-tile @click="dialog = true; itemSelected=props.item">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
+                            <v-dialog
+                              v-model="dialog"
+                              max-width="290"
+                            >
+                              <v-card>
+                                <v-card-title class="headline">Eliminar: {{ props.item.name }}</v-card-title>
+
+                                <v-card-text>
+                                  Esta seguro que desea eliminar ítem ?
+                                </v-card-text>
+
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+
+                                  <v-btn
+                                    color="red darken-4"
+                                    flat="flat"
+                                    @click="dialog = false"
+                                  >
+                                    Cancelar
+                                  </v-btn>
+
+                                  <v-btn
+                                    color="teal darken-3"
+                                    flat="flat"
+                                    @click="dialog = false, del()"
+                                  >
+                                    Aceptar
+                                  </v-btn>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
                           </v-list>
                         </v-menu>
                       </td>
@@ -91,25 +132,12 @@
                     </v-card>
                   </v-flex>
                 </v-layout>
-                <v-btn
-                absolute
-                dark
-                fab
-                small
-                top
-                right
-                color="pink"
-                @click="goToNew()"
-                >
-                    <v-icon>add</v-icon>
-                </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
             </v-card>
         </v-flex>
         </v-layout>
     </v-container>
-     <confirm-dialog :dialog="dialog" :dialogTitle="dialogTitle"  :dialogText="dialogText" @onConfirm="onConfirm" @onCancel="onCancel" ></confirm-dialog>
 </div>
 </template>
 
@@ -118,24 +146,15 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
-import ConfirmDialog from './../../components/ConfirmDialog.vue'
 export default {
-
   data () {
     return {
-      dialog: false,
-      dialogTitle: 'Eliminar Rol',
-      dialogText: 'Desea eliminar este Rol?',
       headers: [
         {
-          text: 'Codigo',
+          text: 'Nombre',
           align: 'left',
-          sortable: false,
-          value: 'code'
-        },
-        { text: 'Nombre',
-          value: 'name',
-          sortable: true
+          sortable: true,
+          value: 'name'
         },
         {
           text: 'Descripción',
@@ -143,7 +162,7 @@ export default {
           sortable: false
         },
         { text: 'Acciones',
-          value: 'name',
+
           sortable: false
         }
       ],
@@ -151,6 +170,7 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      itemSelected: null,
       rules: validations,
       message: '',
       showMsg: false,
@@ -159,42 +179,43 @@ export default {
       limit: 10,
       total: 1,
       loaded: false,
-      roles: [],
+      Categorysegmentation: [],
       query: {},
-      rolId: ''
+      dialog: false,
+      search: ''
     }
   },
   methods: {
-    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('category-segmentation', { findPermission: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
     goToNew () {
-      this.$router.push('/new-roles')
+      this.$router.push('/new-category-segmentation')
     },
-    edita (item) {
-      this.$router.push({ name: 'NewRoles', params: { id: item._id } })
-    },
-    del (element) {
-      this.dialogTitle = 'Eliminar Rol : ' + element.name
-      this.dialog = true
-      this.rolId = element
-    },
-    onConfirm () {
-      const {Role} = this.$FeathersVuex
-      let rolesdelete = new Role(this.rolId)
-      rolesdelete.removed = true
-      rolesdelete.patch().then((result) => {
+    edit (val, elem, field) {
+      const {CategorySegmentation} = this.$FeathersVuex
+      let catsecg = new CategorySegmentation(elem)
+      catsecg[field] = val
+      catsecg.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Rol Eliminado')
+        this.setSnackMessage('Categoria segmento Editado')
         this.setShowSnack(true)
       })
-      this.dialog = false
     },
-    onCancel () {
-      this.rolId = ''
-      this.dialog = false
+    editar (item) {
+      this.$router.push({ name: 'EditCategorysegmentation', params: { id: item._id } })
+    },
+    del () {
+      const {CategorySegmentation} = this.$FeathersVuex
+      let catsecg = new CategorySegmentation(this.itemSelected)
+      catsecg.removed = true
+      catsecg.patch().then((result) => {
+        this.getData()
+        this.setSnackMessage('Categoria segmento Eliminado')
+        this.setShowSnack(true)
+      })
     },
     save (val) {
       this.snack = true
@@ -212,23 +233,27 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
+      console.log('Dialog closed', val)
+    },
+    print () {
+      window.print()
     },
     getData () {
-      this.findRoles({query: {removed: false, $skip: 0}}).then(response => {
+      this.findPermission({query: {removed: false, $skip: 0}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.roles = response.data
-        console.log('estas son los roles', this.roles)
+        this.permission = response.data
+        console.log('estas son los roles', this.permission)
       })
     }
   },
   computed: {
-    ...mapState('roles', {loading: 'isFindPending'}),
-    ...mapState('roles', { paginationVal: 'pagination' }),
-    ...mapGetters('roles', {findRolesInStore: 'find'}),
-    getRoles () {
-      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('category-segmentation', {loading: 'isFindPending'}),
+    ...mapState('category-segmentation', { paginationVal: 'pagination' }),
+    ...mapGetters('category-segmentation', {findPermissionsInStore: 'find'}),
+    getPermission () {
+      return this.findPermissionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -239,21 +264,21 @@ export default {
   },
   watch: {
     page () {
-      this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+    this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.roles = response.data
+      this.permission = response.data
     })
   },
-  components: {LoadingComponent, EditableField, ConfirmDialog}
+  components: {LoadingComponent, EditableField}
 }
 </script>
 

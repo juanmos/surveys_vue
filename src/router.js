@@ -137,10 +137,20 @@ const PermissionNew = resolve => {
     resolve(require('./views/permissions/PermissionNew.vue'))
   }, 'permission')
 }
-const RolesuserList = resolve => {
-  require.ensure(['./views/userrol/RolesuserList.vue'], () => {
-    resolve(require('./views/userrol/RolesuserList.vue'))
-  }, 'rolesuser')
+const CategorysegmentList = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentList.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentList.vue'))
+  }, 'category-segmentation')
+}
+const CategorysegmentNew = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentNew.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentNew.vue'))
+  }, 'category-segmentation')
+}
+const CategorysegmentEdit = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentForm.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentForm.vue'))
+  }, 'category-segmentation')
 }
 
 Vue.use(Router)
@@ -291,9 +301,19 @@ export default new Router({
           component: PermissionNew
         },
         {
-          path: 'userrol',
-          name: 'Rolesuser',
-          component: RolesuserList
+          path: 'category-segmentation',
+          name: 'Categorysegmentation',
+          component: CategorysegmentList
+        },
+        {
+          path: 'new-category-segmentation',
+          name: 'NewCategorysegmentation',
+          component: CategorysegmentNew
+        },
+        {
+          path: 'Edit-category-segmentation',
+          name: 'EditCategorysegmentation',
+          component: CategorysegmentEdit
         }
       ]
     },
