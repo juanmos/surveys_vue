@@ -51,6 +51,14 @@
             <v-list-tile slot="activator">
               <v-list-tile-title>Accesos</v-list-tile-title>
             </v-list-tile>
+            <v-list-tile  :to="'/list-access'">
+              <v-list-tile-action>
+                <v-icon v-html="'supervised_user_circle'"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="'Lista de usuarios'"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
 
             <v-list-tile  :to="'/roles'">
               <v-list-tile-action>
