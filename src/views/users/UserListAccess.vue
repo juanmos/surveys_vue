@@ -147,7 +147,7 @@ export default {
     changeAccess (element) {
       const {User} = this.$FeathersVuex
       const user = new User(element)
-      window.open('http://gestion.propraxis.ec/#/users-edit?_id=' + user._id, '_blank')
+      window.open('http://localhost:8081/#/users-edit?_id=' + user._id, '_blank')
     }
   },
   computed: {
