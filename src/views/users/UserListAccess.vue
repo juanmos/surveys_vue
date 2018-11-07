@@ -5,11 +5,24 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-subheader>Usuarios con acceso</v-subheader>
+              <v-card-title>
+                <v-subheader>Listado de Ítems</v-subheader>
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="search"
+                  label="Buscar usuario"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
             <v-data-table
                 :headers="headers"
                 :items="getUsers"
                 hide-actions
                 class="elevation-1"
+                item-key="name"
+                :search="search"
             >
                 <template slot="items" slot-scope="props">
                 <td>
@@ -64,7 +77,6 @@
             </v-layout>
                 <loading-component v-if="loading
                 "></loading-component>
-
             </v-card>
         </v-flex>
         </v-layout>
@@ -108,6 +120,7 @@ export default {
       accessFilter: { application_permissions: {polls: true} },
       showMsg: false,
       msgType: 'error',
+      search: '',
       rules: validations
     }
   },
@@ -141,7 +154,7 @@ export default {
     ...mapState('users', {loading: 'isFindPending'}),
     ...mapGetters('users', {findUsersInStore: 'find'}),
     getUsers () {
-      return this.findUsersInStore({query: {removed: false, ...this.accessFilter}}).data
+      return this.findUsersInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.accessFilter}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -152,7 +165,7 @@ export default {
   },
   watch: {
     page () {
-      this.findUsers({ query: {removed: false} }).then(response => {
+      this.findUsers({ query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.accessFilter} }).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
