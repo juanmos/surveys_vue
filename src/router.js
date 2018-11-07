@@ -42,6 +42,11 @@ const UserForm = resolve => {
     resolve(require('./views/users/UserForm.vue'))
   }, 'userForm')
 }
+const UserListAccess = resolve => {
+  require.ensure(['./views/users/UserListAccess.vue'], () => {
+    resolve(require('./views/users/UserListAccess.vue'))
+  }, 'userListAccess')
+}
 const RegionList = resolve => {
   require.ensure(['./views/regions/RegionList.vue'], () => {
     resolve(require('./views/regions/RegionList.vue'))
@@ -183,6 +188,11 @@ export default new Router({
           path: 'userForm',
           name: 'UserForm',
           component: UserForm
+        },
+        {
+          path: 'list-access',
+          name: 'UserListAccess',
+          component: UserListAccess
         },
         {
           path: 'applications',
