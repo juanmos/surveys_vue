@@ -35,7 +35,7 @@
                   color="blue-grey lighten-2"
                 ></v-text-field>
 
-                <v-btn  small class="blue" @click.native="addpermission()">
+                <v-btn  small class="blue" @click.native="addService()">
                   <v-icon>add</v-icon>Agregar Permiso
                 </v-btn>
                   &nbsp;
@@ -96,7 +96,7 @@
               </v-list>
             </v-flex>
 
-            <v-dialog v-model="addPermissionModal" width="700" persistent>
+            <v-dialog v-model="addRestfulModal" width="700" persistent>
               <v-card>
                 <v-card-title>{{modalTitle}}</v-card-title>
                 <v-card-text>
@@ -104,10 +104,10 @@
                     <v-layout row wrap>
                       <v-flex xs12 md6>
                         <v-select
-                          label="Permisos"
-                          v-model="permissionId"
-                          :items="getPermissions"
-                          item-text="module"
+                          label="Servicios"
+                          v-model="service"
+                          :items="getServices"
+                          item-text="name"
                           item-value="_id"
                           persistent-hint
                           return-object
@@ -191,8 +191,8 @@ export default {
     rules: validations,
     modalTitle: 'Agregar Permisos',
     modalText: 'Seleccione un permiso para agregar al rol',
-    addPermissionModal: false,
-    permissionId: { module: '', _id: '' },
+    addRestfulModal: false,
+    service: { module: '', _id: '' },
     readadd: false,
     crearadd: false,
     editaradd: false,
@@ -203,7 +203,7 @@ export default {
     permisodel: ''
   }),
   methods: {
-    ...mapActions('permission', { findPermissions: 'find' }),
+    ...mapActions('restfuls', { findRestful: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -213,16 +213,16 @@ export default {
         this.$emit('dataSubmited', this.roles)
       }
     },
-    addpermission () {
-      this.addPermissionModal = true
+    addService () {
+      this.addRestfulModal = true
     },
     cancelAddPermiso () {
-      this.addPermissionModal = false
+      this.addRestfulModal = false
     },
     savePermiso () {
       state.permisorol.push({
-        '_permissions_id': this.permissionId._id,
-        'module': this.permissionId.module,
+        '_permissions_id': this.service._id,
+        'module': this.service.module,
         'read': this.readadd.toString(),
         'create': this.crearadd.toString(),
         'update': this.editaradd.toString(),
@@ -230,14 +230,17 @@ export default {
         'removed': false
       })
 
+      this.clear()
+    },
+    clear () {
       this.roles.permissionrol = state.permisorol
-      this.permissionId = { module: '', _id: '' }
+      this.service = { module: '', _id: '' }
       this.module = null
       this.readadd = false
       this.crearadd = false
       this.editaradd = false
       this.eliminaradd = false
-      this.addPermissionModal = false
+      this.addRestfulModal = false
     },
     remove (element) {
       this.dialogTitle = 'Eliminar este permiso : ' + element.module
@@ -256,13 +259,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('permission', {findPermissionsInStore: 'find'}),
-    getPermissions () {
-      return this.findPermissionsInStore({query: {removed: false}}).data
+    ...mapGetters('restfuls', {findRestfulInStore: 'find'}),
+    getServices () {
+      return this.findRestfulInStore({query: {removed: false}}).data
     }
   },
   created () {
-    this.findPermissions({ query: {removed: false} }).then(response => {
+    this.findRestful({ query: {removed: false} }).then(response => {
     })
   },
   mounted () {

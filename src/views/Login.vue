@@ -40,7 +40,7 @@ export default {
     auth (credentials) {
       this.authenticate(credentials).then((result) => {
         this.setShowSnack(true)
-        this.setSnackMessage('Bienvenido a mapas mentales')
+        this.setSnackMessage('Bienvenido al sistema de encuestas')
         this.$router.push('/')
       }, (err) => {
         this.setShowSnack(true)
