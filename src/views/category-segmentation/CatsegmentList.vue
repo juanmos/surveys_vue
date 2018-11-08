@@ -87,7 +87,7 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar: {{ props.item.name }}</v-card-title>
+                                <v-card-title class="headline">Eliminar categoria segmentación</v-card-title>
 
                                 <v-card-text>
                                   Esta seguro que desea eliminar ítem ?

@@ -150,11 +150,7 @@ export default {
     categoryseg: {
       name: '',
       description: '',
-      datos: {
-        'opciones': '',
-        'valor1': '',
-        'valor2': ''
-      },
+      datos: [],
       removed: false
     },
     valid: false,
@@ -172,7 +168,7 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    ...mapActions('category-segmentation', { findMenuItems: 'find' }),
+    ...mapActions('category-segmentation', { findcatItems: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.categoryseg)
@@ -182,11 +178,16 @@ export default {
       const {CategorySegmentation} = this.$FeathersVuex
       let catsecg = new CategorySegmentation(this.categoryseg)
       catsecg.patch().then((result) => {
-        this.setSnackMessage('Categoria segmento Editado')
+        this.setSnackMessage('Categoria Guardado')
         this.setShowSnack(true)
+        this.goToList()
+      }, (err) => {
+        console.log(err)
       })
+      this.categoryseg.datos = []
     },
     goToList () {
+      this.categoryseg = ''
       this.$router.push('/category-segmentation')
     },
     savecategory () {
@@ -208,8 +209,12 @@ export default {
       this.dialog = false
     },
     cargaredicion (elementid) {
-      this.findMenuItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
+      let state = {
+        datos: []
+      }
+      this.findcatItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
         this.Listcat = response.data
+        this.categoryseg._id = this.$route.params.id
         this.categoryseg.name = this.Listcat[0].name
         this.categoryseg.description = this.Listcat[0].description
         for (let i = 0; i <= this.Listcat[0].datos.length - 1; i++) {
@@ -223,13 +228,11 @@ export default {
       })
     }
   },
-
   mounted () {
     if (this.$route.params.id) {
       this.titulo = 'Editar Categoria Segmentación'
       this.cargaredicion(this.$route.params.id)
-      console.log(this.idedicion)
-    } else this.titulo = 'Nuevo Categoria Segmentación'; this.idedicion = 'M'
+    } else this.titulo = 'Nuevo Categoria Segmentación'
   }
 }
 </script>
