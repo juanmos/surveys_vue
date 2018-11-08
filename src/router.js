@@ -152,9 +152,19 @@ const PermissionNew = resolve => {
     resolve(require('./views/permissions/PermissionNew.vue'))
   }, 'permission')
 }
+const RestfulList = resolve => {
+  require.ensure(['./views/restfuls/RestfulList.vue'], () => {
+    resolve(require('./views/restfuls/RestfulList.vue'))
+  }, 'restfuls')
+}
+const RestfulNew = resolve => {
+  require.ensure(['./views/restfuls/RestfulNew.vue'], () => {
+    resolve(require('./views/restfuls/RestfulNew.vue'))
+  }, 'restfuls')
+}
 
 Vue.use(Router)
-const enviroment = require('./../config/enviroment')
+// const enviroment = require('./../config/enviroment')
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -169,8 +179,8 @@ export default new Router({
           next()
         }).catch((err) => {
           console.log(err)
-          window.location = enviroment[enviroment.currentEnviroment].urlAuth
-          // next('/pages/login')
+          // window.location = enviroment[enviroment.currentEnviroment].urlAuth
+          next('/pages/login')
         })
       },
       children: [
@@ -314,6 +324,16 @@ export default new Router({
           path: 'new-permission',
           name: 'NewPermission',
           component: PermissionNew
+        },
+        {
+          path: 'restfuls',
+          name: 'RestfulList',
+          component: RestfulList
+        },
+        {
+          path: 'restful-new',
+          name: 'RestfulNew',
+          component: RestfulNew
         }
       ]
     },

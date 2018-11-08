@@ -19,18 +19,6 @@ export default new Vuex.Store({
       },
       debug: true
     }),
-    service('boards', {
-      instanceDefaults: {
-        name: '',
-        category: '',
-        _user_id: '',
-        memberIds: [],
-        graphic_content: {},
-        nodeDataArray: [],
-        linkDataArray: []
-      },
-      debug: true
-    }),
     service('category-poll', {
       instanceDefaults: {
         name: '',
@@ -54,18 +42,6 @@ export default new Vuex.Store({
       },
       debug: true
     }),
-    service('studies', {
-      instanceDefaults: {
-        name: '',
-        description: '',
-        _user_id: '',
-        memberIds: [],
-        sub_studies: [],
-        geographical_scope: '',
-        _customer_id: ''
-      },
-      debug: true
-    }),
     service('customers', {
       instanceDefaults: {
         code: '',
@@ -82,68 +58,6 @@ export default new Vuex.Store({
         _type_company_id: '',
         _segment_id: '',
         _representative_user_id: '',
-        removed: false
-      }
-    }),
-    service('countries', {
-      instanceDefaults: {
-        name: '',
-        removed: false
-      }
-    }),
-    service('cities', {
-      instanceDefaults: {
-        name: '',
-        _country_id: '',
-        removed: false
-      }
-    }),
-    service('customer-contacts', {
-      instanceDefaults: {
-        name: '',
-        phones: '',
-        cellphones: '',
-        email: '',
-        position: '',
-        _customer_id: '',
-        removed: false
-      }
-    }),
-    service('main-constructs', {
-      instanceDefaults: {
-        name: '',
-        _board_id: '',
-        color: '',
-        description: ''
-      }
-    }),
-    service('graph-defaults', {
-      instanceDefaults: {
-        component: '',
-        nodeDataArray: []
-      }
-    }),
-    service('working-tables', {
-      instanceDefaults: {
-        name: '',
-        description: '',
-        component: '',
-        type: '',
-        removed: false
-      }
-    }),
-    service('table-instances', {
-      instanceDefaults: {
-        name: '',
-        _working_table_id: '',
-        _board_id: '',
-        incorporates: [],
-        nodeDataArray: [],
-        linkDataArray: [],
-        deletes: [],
-        weakens: [],
-        threats: [],
-        opportunities: [],
         removed: false
       }
     }),
@@ -208,6 +122,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('restfuls', {
+      instanceDefaults: {
+        name: '',
+        url: '',
+        description: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
@@ -222,24 +143,6 @@ export default new Vuex.Store({
     snackColor: 'success'
   },
   getters: {
-    getStudyId: (state) => {
-      return state.studyId
-    },
-    getCurrentMapId: (state) => {
-      return state.currentMapId
-    },
-    getCurrentTableInstanceId: (state) => {
-      return state.currentTableInstanceId
-    },
-    getCurrentConstructId: (state) => {
-      return state.currentConstructId
-    },
-    getCurrentConstruct: (state) => {
-      return state.currentConstruct
-    },
-    getCurrentDiagram: (state) => {
-      return state.currentDiagram
-    },
     getSnackMessage: (state) => {
       return state.snackMessage
     },
@@ -251,24 +154,6 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setStudyId (state, id) {
-      state.studyId = id
-    },
-    setCurrentMapId (state, id) {
-      state.currentMapId = id
-    },
-    setCurrentTableInstanceId (state, id) {
-      state.currentTableInstanceId = id
-    },
-    setCurrentConstructId (state, id) {
-      state.currentConstructId = id
-    },
-    setCurrentConstruct (state, construct) {
-      state.currentConstruct = construct
-    },
-    setCurrentDiagram (state, type) {
-      state.currentDiagram = type
-    },
     setSnackMessage (state, message) {
       state.snackMessage = message
     },
@@ -280,24 +165,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setStudyId: ({ commit }, id) => {
-      commit('setStudyId', id)
-    },
-    setCurrentMapId: ({ commit }, id) => {
-      commit('setCurrentMapId', id)
-    },
-    setCurrentTableInstanceId: ({ commit }, id) => {
-      commit('setCurrentTableInstanceId', id)
-    },
-    setCurrentConstructId: ({ commit }, id) => {
-      commit('setCurrentConstructId', id)
-    },
-    setCurrentConstruct: ({ commit }, construct) => {
-      commit('setCurrentConstruct', construct)
-    },
-    setCurrentDiagram: ({ commit }, type) => {
-      commit('setCurrentDiagram', type)
-    },
     setSnackMessage: ({ commit }, message) => {
       commit('setSnackMessage', message)
     },
