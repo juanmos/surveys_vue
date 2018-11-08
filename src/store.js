@@ -129,6 +129,13 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('category-segmentation', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        datos: []
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
