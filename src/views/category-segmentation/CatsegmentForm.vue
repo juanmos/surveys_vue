@@ -61,12 +61,6 @@
                                           box
                                           color="blue-grey lighten-2"
                                         ></v-text-field>
-                                        <v-text-field
-                                          v-model="valor2"
-                                          label="Valor 2"
-                                          box
-                                          color="blue-grey lighten-2"
-                                        ></v-text-field>
                                       </v-flex>
                                     </v-layout>
                                   </v-container>
@@ -91,7 +85,6 @@
                           <template slot="items" slot-scope="props">
                             <td class="text-xs-left">{{ props.item.opciones }}</td>
                             <td class="text-xs-left">{{ props.item.valor1 }}</td>
-                            <td class="text-xs-left">{{ props.item.valor2 }}</td>
                             <td>
                               <v-icon
                                 small
@@ -171,7 +164,6 @@ export default {
         value: 'opciones'
       },
       {text: 'Valor1', value: 'valor1'},
-      {text: 'Valor2', value: 'valor2'},
       {text: 'Accion', value: ' '}
     ]
   }),
@@ -218,6 +210,8 @@ export default {
       this.setSnackMessage('Opción Eliminado')
       this.setShowSnack(true)
       this.dialog = false
+      state.datostemp = []
+      console.log(this.categoryseg.datos)
     },
     cargaredicion (elementid) {
       this.findcatItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
