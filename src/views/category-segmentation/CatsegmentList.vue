@@ -9,9 +9,6 @@
                   <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
                 </span>
                 <v-spacer></v-spacer>
-                <v-btn class="teal darken-2" fab small dark @click.native="print()">
-                  <v-icon>print</v-icon>
-                </v-btn>
                 <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
                   <v-icon>add</v-icon>
                 </v-btn>
@@ -87,7 +84,7 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar: {{ props.item.name }}</v-card-title>
+                                <v-card-title class="headline">Eliminar categoria</v-card-title>
 
                                 <v-card-text>
                                   Esta seguro que desea eliminar ítem ?
