@@ -198,7 +198,7 @@ export default {
       state.datostemp.push({
         'opciones': this.opcion.toString(),
         'valor1': this.valor1.toString(),
-        'valor2': this.valor2.toString()
+        'valor2': ''
       })
       this.categoryseg.datos = state.datostemp
       this.opcion = ''
@@ -211,7 +211,6 @@ export default {
       this.setShowSnack(true)
       this.dialog = false
       state.datostemp = []
-      console.log(this.categoryseg.datos)
     },
     cargaredicion (elementid) {
       this.findcatItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
