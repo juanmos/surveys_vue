@@ -177,6 +177,21 @@ const RestfulNew = resolve => {
     resolve(require('./views/restfuls/RestfulNew.vue'))
   }, 'restfuls')
 }
+const UsersPollsList = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsList.vue'))
+  }, 'users-polls')
+}
+const UsersPollsNew = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsNew.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsNew.vue'))
+  }, 'users-polls')
+}
+const UsersPollsEdit = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsEdit.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsEdit.vue'))
+  }, 'users-polls')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -364,6 +379,21 @@ export default new Router({
           path: 'restful-new',
           name: 'RestfulNew',
           component: RestfulNew
+        },
+        {
+          path: 'users-polls',
+          name: 'UsersPollsList',
+          component: UsersPollsList
+        },
+        {
+          path: 'users-polls-new',
+          name: 'UsersPollsNew',
+          component: UsersPollsNew
+        },
+        {
+          path: 'users-polls-edit/:_id',
+          name: 'UsersPollsEdit',
+          component: UsersPollsEdit
         }
       ]
     },
