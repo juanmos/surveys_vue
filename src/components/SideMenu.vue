@@ -60,6 +60,15 @@
               </v-list-tile-content>
             </v-list-tile>
 
+            <v-list-tile  :to="'/users-polls'">
+              <v-list-tile-action>
+                <v-icon v-html="'supervised_user_circle'"></v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title v-text="'Usuarios sistema encuestas'"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
             <v-list-tile  :to="'/roles'">
               <v-list-tile-action>
                 <v-icon v-html="'supervised_user_circle'"></v-icon>
