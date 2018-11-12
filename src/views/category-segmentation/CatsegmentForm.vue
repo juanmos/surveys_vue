@@ -41,7 +41,7 @@
                           <v-toolbar-title>Lista de Parametros</v-toolbar-title>
                           <v-spacer></v-spacer>
                             <div  max-width="500px">
-                              <v-btn color="success" small @click="dialog = true;">Nuevo Parametro</v-btn>
+                              <v-btn color="success" small @click="dialog = true; opcion =''; valor1=''">Nuevo Parametro</v-btn>
                             </div>
                               <v-dialog  v-model="dialog"  max-width="400" >
                                 <v-card>
@@ -86,6 +86,13 @@
                             <td class="text-xs-left">{{ props.item.opciones }}</td>
                             <td class="text-xs-left">{{ props.item.valor1 }}</td>
                             <td>
+                              <v-icon
+                                small
+                                class="mr-2"
+                                @click="dialog = true; opcion =props.item.opciones; valor1 =props.item.valor1; itemSelected3=props.item"
+                              >
+                                edit
+                              </v-icon>
                               <v-icon
                                 small
                                 @click="dialog2 = true; itemSelected2=props.item"
@@ -155,6 +162,7 @@ export default {
     valor1: '',
     valor2: '',
     itemSelected2: null,
+    itemSelected3: null,
     titulo: '',
     headers: [
       {
@@ -195,36 +203,50 @@ export default {
       this.$router.push('/category-segmentation')
     },
     savecategory () {
-      state.datostemp.push({
-        'opciones': this.opcion.toString(),
-        'valor1': this.valor1.toString(),
-        'valor2': ''
-      })
-      this.categoryseg.datos = state.datostemp
-      this.opcion = ''
-      this.valor1 = ''
-      this.valor2 = ''
+      if (this.itemSelected3) {
+        let itemactual = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected3.opciones)
+        this.categoryseg.datos[itemactual].opciones = this.opcion.toString()
+        this.categoryseg.datos[itemactual].valor1 = this.valor1.toString()
+        this.itemSelected3 = ''
+      } else {
+        state.datostemp.push({
+          'opciones': this.opcion.toString(),
+          'valor1': this.valor1.toString(),
+          'valor2': '',
+          'removed': false
+        })
+        this.categoryseg.datos = state.datostemp
+        this.opcion = ''
+        this.valor1 = ''
+        this.valor2 = ''
+      }
     },
     delcateg () {
-      this.categoryseg.datos.splice(this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected2.opciones), 1)
+      let itemdelete = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected2.opciones)
+      this.categoryseg.datos[itemdelete].removed = true
+      this.itemSelected2 = ''
       this.setSnackMessage('Opción Eliminado')
       this.setShowSnack(true)
       this.dialog = false
-      state.datostemp = []
+      this.categoryseg.datos = this.categoryseg.datos.filter(p => p.removed === false)
     },
     cargaredicion (elementid) {
-      this.findcatItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
+      this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
         this.Listcat = response.data
         this.categoryseg._id = this.$route.params.id
         this.categoryseg.name = this.Listcat[0].name
         this.categoryseg.description = this.Listcat[0].description
         for (let i = 0; i <= this.Listcat[0].datos.length - 1; i++) {
-          state.datostemp.push({
-            'opciones': this.Listcat[0].datos[i].opciones,
-            'valor1': this.Listcat[0].datos[i].valor1,
-            'valor2': this.Listcat[0].datos[i].valor2
-          })
-          this.categoryseg.datos = state.datostemp
+          if (this.Listcat[0].datos[i].removed === false) {
+            state.datostemp.push({
+              '_id': this.Listcat[0].datos[i]._id,
+              'opciones': this.Listcat[0].datos[i].opciones,
+              'valor1': this.Listcat[0].datos[i].valor1,
+              'valor2': this.Listcat[0].datos[i].valor2,
+              'removed': this.Listcat[0].datos[i].removed
+            })
+            this.categoryseg.datos = state.datostemp
+          }
         }
       })
     }

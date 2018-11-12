@@ -84,7 +84,7 @@
             <v-icon v-html="'assignment'"></v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="'Cat. Segmentación'"></v-list-tile-title>
+            <v-list-tile-title v-text="'Categoría Segmentación'"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
