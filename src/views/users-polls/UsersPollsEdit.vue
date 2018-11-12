@@ -49,7 +49,7 @@ export default {
       })
     },
     goToList () {
-      // this.$router.push('/')
+      this.$router.push('/users-polls')
     }
   },
   computed: {
