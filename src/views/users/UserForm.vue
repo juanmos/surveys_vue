@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 import {validations} from './../../utils/validations'
 export default {
@@ -76,8 +76,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('studies', {loading: 'isCreatePending'}),
-    ...mapState('auth', {user: 'user'})
+    user () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    }
   },
   components: {LoadingComponent}
 }

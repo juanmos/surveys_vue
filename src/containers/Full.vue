@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-
 import SideMenu from './../components/SideMenu'
 import SnackMessage from './../components/docaration/SnackMessage'
 import router from './../router'
@@ -74,7 +72,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', { user: 'user' })
+    user () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    }
   },
   methods: {
     goApplications () {
