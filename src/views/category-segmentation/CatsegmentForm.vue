@@ -57,7 +57,7 @@
                                         ></v-text-field>
                                           <v-text-field
                                           v-model="valor1"
-                                          label="Valor 1"
+                                          label="Valor"
                                           box
                                           color="blue-grey lighten-2"
                                         ></v-text-field>
@@ -78,9 +78,10 @@
                         </v-toolbar>
                         <v-data-table
                           :headers="headers"
-                          :items="categoryseg.datos"
+                          :items="categorysegver"
                           hide-actions
                           class="elevation-1"
+                          ref="table"
                         >
                           <template slot="items" slot-scope="props">
                             <td class="text-xs-left">{{ props.item.opciones }}</td>
@@ -154,6 +155,7 @@ export default {
       datos: [],
       removed: false
     },
+    categorysegver: [],
     valid: false,
     rules: validations,
     dialog: false,
@@ -198,8 +200,6 @@ export default {
       })
     },
     goToList () {
-      this.categoryseg = []
-      state.datostemp = []
       this.$router.push('/category-segmentation')
     },
     savecategory () {
@@ -208,6 +208,8 @@ export default {
         this.categoryseg.datos[itemactual].opciones = this.opcion.toString()
         this.categoryseg.datos[itemactual].valor1 = this.valor1.toString()
         this.itemSelected3 = ''
+        this.categorysegver = this.categoryseg.datos
+        this.ver()
       } else {
         state.datostemp.push({
           'opciones': this.opcion.toString(),
@@ -216,6 +218,7 @@ export default {
           'removed': false
         })
         this.categoryseg.datos = state.datostemp
+        this.ver()
         this.opcion = ''
         this.valor1 = ''
         this.valor2 = ''
@@ -225,10 +228,25 @@ export default {
       let itemdelete = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected2.opciones)
       this.categoryseg.datos[itemdelete].removed = true
       this.itemSelected2 = ''
+      this.ver()
       this.setSnackMessage('Opción Eliminado')
       this.setShowSnack(true)
       this.dialog = false
-      this.categoryseg.datos = this.categoryseg.datos.filter(p => p.removed === false)
+    },
+    ver () {
+      state.datostemp = []
+      this.categoryseg.datos.forEach(function (word) {
+        if (word.removed === false) {
+          state.datostemp.push({
+            '_id': word._id,
+            'opciones': word.opciones,
+            'valor1': word.valor1,
+            'valor2': word.valor2,
+            'removed': word.removed
+          })
+        }
+      })
+      this.categorysegver = state.datostemp
     },
     cargaredicion (elementid) {
       this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
@@ -236,6 +254,7 @@ export default {
         this.categoryseg._id = this.$route.params.id
         this.categoryseg.name = this.Listcat[0].name
         this.categoryseg.description = this.Listcat[0].description
+        this.categoryseg.datos = this.Listcat[0].datos
         for (let i = 0; i <= this.Listcat[0].datos.length - 1; i++) {
           if (this.Listcat[0].datos[i].removed === false) {
             state.datostemp.push({
@@ -245,7 +264,7 @@ export default {
               'valor2': this.Listcat[0].datos[i].valor2,
               'removed': this.Listcat[0].datos[i].removed
             })
-            this.categoryseg.datos = state.datostemp
+            this.categorysegver = state.datostemp
           }
         }
       })

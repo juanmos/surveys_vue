@@ -177,6 +177,11 @@ const RestfulNew = resolve => {
     resolve(require('./views/restfuls/RestfulNew.vue'))
   }, 'restfuls')
 }
+const PollsList = resolve => {
+  require.ensure(['./views/polls-project/PollsList.vue'], () => {
+    resolve(require('./views/polls-project/PollsList.vue'))
+  }, 'polls-project')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -364,6 +369,11 @@ export default new Router({
           path: 'restful-new',
           name: 'RestfulNew',
           component: RestfulNew
+        },
+        {
+          path: 'polls-project',
+          name: 'Pollslist',
+          component: PollsList
         }
       ]
     },
