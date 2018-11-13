@@ -64,7 +64,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('studies', {loading: 'isCreatePending'}),
+    ...mapState('users', {loading: 'isCreatePending'}),
     ...mapState('auth', { user: 'user' })
   },
   components: {UserForm, UserEditPassword, LoadingComponent}

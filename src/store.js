@@ -129,6 +129,16 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('users-polls', {
+      instanceDefaults: {
+        name: '',
+        email: '',
+        password: '',
+        phones: '',
+        avatar: '',
+        removed: false
+      }
+    }),
     service('category-segmentation', {
       instanceDefaults: {
         name: '',
@@ -153,12 +163,6 @@ export default new Vuex.Store({
     auth({ userService: 'users' })
   ],
   state: {
-    studyId: null,
-    currentMapId: null,
-    currentTableInstanceId: null,
-    currentConstructId: null,
-    currentConstruct: {},
-    currentDiagram: null,
     snackMessage: '',
     showSnack: false,
     snackColor: 'success'

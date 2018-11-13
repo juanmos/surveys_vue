@@ -182,6 +182,21 @@ const PollsList = resolve => {
     resolve(require('./views/polls-project/PollsList.vue'))
   }, 'polls-project')
 }
+const UsersPollsList = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsList.vue'))
+  }, 'users-polls')
+}
+const UsersPollsNew = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsNew.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsNew.vue'))
+  }, 'users-polls')
+}
+const UsersPollsEdit = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsEdit.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsEdit.vue'))
+  }, 'users-polls')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -374,6 +389,21 @@ export default new Router({
           path: 'polls-project',
           name: 'Pollslist',
           component: PollsList
+        },
+        {
+          path: 'users-polls',
+          name: 'UsersPollsList',
+          component: UsersPollsList
+        },
+        {
+          path: 'users-polls-new',
+          name: 'UsersPollsNew',
+          component: UsersPollsNew
+        },
+        {
+          path: 'users-polls-edit/:_id',
+          name: 'UsersPollsEdit',
+          component: UsersPollsEdit
         }
       ]
     },
