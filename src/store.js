@@ -143,7 +143,21 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         description: '',
-        datos: []
+        datos: [],
+        removed: false
+      }
+    }),
+    service('polls-project', {
+      instanceDefaults: {
+        name: '',
+        date_start: '',
+        date_end: '',
+        date_deliver: '',
+        _customer_id: '',
+        _customer_contact_id: '',
+        number_polls: '',
+        state_polls: [],
+        removed: false
       }
     }),
     auth({ userService: 'users' })
