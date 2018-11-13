@@ -21,6 +21,7 @@
                 <v-text-field
                   :append-icon="'email'"
                   v-model="userPolls.email"
+                  :rules="rules.emailRules"
                   label="Correo electrónico"
                   color="blue-grey lighten-2"
                   required

@@ -66,7 +66,9 @@ export default {
   },
   computed: {
     ...mapState('studies', {loading: 'isCreatePending'}),
-    ...mapState('auth', {user: 'user'})
+    user () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    }
   },
   components: {LoadingComponent}
 }
