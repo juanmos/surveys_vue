@@ -229,6 +229,8 @@ export default {
       this.setShowSnack(true)
       this.dialog = false
       this.categoryseg.datos = this.categoryseg.datos.filter(p => p.removed === false)
+      state.datostemp = []
+      console.log(this.categoryseg.datos)
     },
     cargaredicion (elementid) {
       this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
