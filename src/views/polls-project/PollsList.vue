@@ -15,7 +15,7 @@
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getPermission"
+                  :items="getpools"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -57,7 +57,7 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar categoria</v-card-title>
+                                <v-card-title class="headline">Eliminar Encuesta</v-card-title>
 
                                 <v-card-text>
                                   Esta seguro que desea eliminar ítem ?
@@ -156,7 +156,7 @@ export default {
       limit: 10,
       total: 1,
       loaded: false,
-      Categorysegmentation: [],
+      Pollsprojects: [],
       query: {},
       dialog: false,
       search: ''
@@ -169,28 +169,18 @@ export default {
       'setShowSnack'
     ]),
     goToNew () {
-      // this.$router.push('/new-category-segmentation')
-    },
-    edit (val, elem, field) {
-      const {CategorySegmentation} = this.$FeathersVuex
-      let catsecg = new CategorySegmentation(elem)
-      catsecg[field] = val
-      catsecg.patch().then((result) => {
-        this.getData()
-        this.setSnackMessage('Categoria segmento Editado')
-        this.setShowSnack(true)
-      })
+      this.$router.push('/new-polls-project')
     },
     editar (item) {
-      this.$router.push({ name: 'EditCategorysegmentation', params: { id: item._id } })
+      this.$router.push({ name: 'EditPollsprojects', params: { id: item._id } })
     },
     del () {
-      const {CategorySegmentation} = this.$FeathersVuex
-      let catsecg = new CategorySegmentation(this.itemSelected)
-      catsecg.removed = true
-      catsecg.patch().then((result) => {
+      const {PollsProject} = this.$FeathersVuex
+      let pollsp = new PollsProject(this.itemSelected)
+      pollsp.removed = true
+      pollsp.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Categoria segmento Eliminado')
+        this.setSnackMessage('Encuesta Eliminada')
         this.setShowSnack(true)
       })
     },
@@ -209,19 +199,12 @@ export default {
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
     },
-    close (val) {
-      console.log('Dialog closed', val)
-    },
-    print () {
-      window.print()
-    },
     getData () {
       this.findPolls({query: {removed: false, $skip: 0}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.permission = response.data
-        console.log('estas son los items', this.permission)
+        this.pools = response.data
       })
     }
   },
@@ -229,7 +212,7 @@ export default {
     ...mapState('polls-project', {loading: 'isFindPending'}),
     ...mapState('polls-project', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
-    getPermission () {
+    getpools () {
       return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
@@ -252,7 +235,7 @@ export default {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.permission = response.data
+      this.pools = response.data
     })
   },
   components: {LoadingComponent, EditableField}
