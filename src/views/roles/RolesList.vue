@@ -13,9 +13,6 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
-                        {{ props.item.code }}
-                      </td>
                       <td>
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
@@ -67,7 +64,7 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="edita(props.item)">
+                            <v-list-tile @click="edita(props.item._id)">
                               <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="del(props.item)">
@@ -127,12 +124,6 @@ export default {
       dialogTitle: 'Eliminar Rol',
       dialogText: 'Desea eliminar este Rol?',
       headers: [
-        {
-          text: 'Codigo',
-          align: 'left',
-          sortable: false,
-          value: 'code'
-        },
         { text: 'Nombre',
           value: 'name',
           sortable: true
@@ -173,8 +164,8 @@ export default {
     goToNew () {
       this.$router.push('/new-roles')
     },
-    edita (item) {
-      this.$router.push({ name: 'NewRoles', params: { id: item._id } })
+    edita (id) {
+      this.$router.push('/edit-roles/' + id)
     },
     del (element) {
       this.dialogTitle = 'Eliminar Rol : ' + element.name

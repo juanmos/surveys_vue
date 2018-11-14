@@ -112,6 +112,11 @@ const RolesNew = resolve => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
 }
+const RolesEdit = resolve => {
+  require.ensure(['./views/roles/RolesEdit.vue'], () => {
+    resolve(require('./views/roles/RolesEdit.vue'))
+  }, 'roles')
+}
 const QuestionTypeList = resolve => {
   require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
     resolve(require('./views/question-types/QuestionTypeList.vue'))
@@ -324,6 +329,11 @@ export default new Router({
           path: 'new-roles',
           name: 'NewRoles',
           component: RolesNew
+        },
+        {
+          path: 'edit-roles/:_id',
+          name: 'RolesEdit',
+          component: RolesEdit
         },
         {
           path: 'menu-new',
