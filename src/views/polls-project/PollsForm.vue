@@ -43,6 +43,14 @@
                   ></v-select>
                 </v-flex>
                 <v-flex md4 xs12>
+                  <v-menu lazy :close-on-content-click="false" v-model="fechaentrega" transition="v-scale-transition" offset-y full-width
+                    :nudge-left="40" max-width="290px">
+                    <v-text-field slot="activator" label="Fecha Entrega" v-model="poolsseg.date_deliver" prepend-icon="event" readonly></v-text-field>
+                    <v-date-picker v-model="poolsseg.date_deliver" no-title scrollable>
+                    </v-date-picker>
+                  </v-menu>
+                </v-flex>
+                <v-flex md4 xs12>
                 <v-text-field name="quantity" v-model="poolsseg.number_polls" label="Cantidad de encuestas" hint="Cantidad de Encuestadores" class="input-group--focused"
                   ></v-text-field>
                 </v-flex>
@@ -56,6 +64,10 @@
                       item-value="id"
                   ></v-autocomplete>
                 </v-flex>
+                <v-flex md4 xs12>
+                </v-flex>
+                <v-flex md4 xs12>
+                </v-flex>
                 <div class="text-xs-center pt-2">
                   <v-btn v-if="!this.$route.params.id" @click.native="sendData(poolsseg)" color="primary">Guardar</v-btn>
                   <v-btn v-else color="primary" @click.native="actualizar(poolsseg)">Actualizar</v-btn>
@@ -66,8 +78,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import {mapActions, mapGetters} from 'vuex'
 import {validations} from './../../utils/validations'
+Vue.use(require('vue-moment'))
 let state = {
   datostemp: []
 }
@@ -85,6 +99,7 @@ export default {
     },
     fechainicio: false,
     fechafin: false,
+    fechaentrega: false,
     pollssegver: [],
     valid: false,
     rules: validations,
@@ -144,7 +159,7 @@ export default {
         this.poolsseg.name = this.Listcat[0].name
         this.poolsseg.date_start = this.Listcat[0].date_start
         this.poolsseg.date_end = this.Listcat[0].date_end
-        this.poolsseg.date_delivery = this.Listcat[0].date_delivery
+        this.poolsseg.date_deliver = this.Listcat[0].date_deliver
         this.poolsseg._customer_id = this.Listcat[0]._customer_id
         this.poolsseg.number_polls = this.Listcat[0].number_polls
         this.poolsseg.state_polls = this.Listcat[0].state_polls[0]

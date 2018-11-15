@@ -27,10 +27,16 @@
                           {{props.item.name}}
                       </td>
                       <td class="text-sm-left">
-                          {{ props.item.date_start}}
+                          {{props.item.clientes.name}}
                       </td>
                       <td class="text-sm-left">
-                          {{props.item.date_end}}
+                        {{props.item.date_start | moment("YYYY-MM-DD")}}
+                      </td>
+                      <td class="text-sm-left">
+                          {{props.item.date_end | moment("YYYY-MM-DD")}}
+                      </td>
+                      <td class="text-sm-left">
+                        {{props.item.date_deliver | moment("YYYY-MM-DD")}}
                       </td>
                        <td class="justify-center layout px-0">
                         <v-menu
@@ -112,10 +118,12 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+Vue.use(require('vue-moment'))
 export default {
   data () {
     return {
@@ -127,6 +135,12 @@ export default {
           value: 'name'
         },
         {
+          text: 'Cliente',
+          align: 'left',
+          sortable: false,
+          value: '_customer_id'
+        },
+        {
           text: 'Fecha Inicio',
           value: 'date_start',
           type: 'date',
@@ -135,6 +149,12 @@ export default {
         {
           text: 'Fecha Fin',
           value: 'date_end',
+          type: 'date',
+          sortable: false
+        },
+        {
+          text: 'Fecha de Entrega',
+          value: 'date_deliver',
           type: 'date',
           sortable: false
         },

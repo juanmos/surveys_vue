@@ -22,6 +22,7 @@
     "surveyjs-editor": "^1.0.52",
     "surveyjs-widgets": "^1.0.52",
     "vue": "^2.5.17",
+    "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",
     "vuetify": "^1.2.1",
