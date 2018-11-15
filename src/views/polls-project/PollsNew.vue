@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <PollsForm @dataSubmited="create"></PollsForm>
+                <PollsForm ></PollsForm>
             </v-card>
         </v-flex>
         </v-layout>

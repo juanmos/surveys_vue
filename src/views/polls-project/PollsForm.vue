@@ -78,10 +78,15 @@
 </template>
 
 <script>
-import Vue from 'vue'
+
 import {mapActions, mapGetters} from 'vuex'
 import {validations} from './../../utils/validations'
-Vue.use(require('vue-moment'))
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+Vue.use(VueMoment, {
+  moment
+})
 let state = {
   datostemp: []
 }
@@ -157,9 +162,9 @@ export default {
         this.Listcat = response.data
         this.poolsseg._id = this.$route.params.id
         this.poolsseg.name = this.Listcat[0].name
-        this.poolsseg.date_start = this.Listcat[0].date_start
-        this.poolsseg.date_end = this.Listcat[0].date_end
-        this.poolsseg.date_deliver = this.Listcat[0].date_deliver
+        this.poolsseg.date_start = moment.tz(this.Listcat[0].date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
+        this.poolsseg.date_end = moment.tz(this.Listcat[0].date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
+        this.poolsseg.date_deliver = moment.tz(this.Listcat[0].date_deliver, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
         this.poolsseg._customer_id = this.Listcat[0]._customer_id
         this.poolsseg.number_polls = this.Listcat[0].number_polls
         this.poolsseg.state_polls = this.Listcat[0].state_polls[0]

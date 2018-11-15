@@ -30,13 +30,13 @@
                           {{props.item.clientes.name}}
                       </td>
                       <td class="text-sm-left">
-                        {{props.item.date_start | moment("YYYY-MM-DD")}}
+                         {{props.item.date_start | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
                       <td class="text-sm-left">
-                          {{props.item.date_end | moment("YYYY-MM-DD")}}
+                         {{ props.item.date_end | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
                       <td class="text-sm-left">
-                        {{props.item.date_deliver | moment("YYYY-MM-DD")}}
+                         {{props.item.date_deliver | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
                        <td class="justify-center layout px-0">
                         <v-menu
@@ -118,12 +118,16 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
-Vue.use(require('vue-moment'))
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+Vue.use(VueMoment, {
+  moment
+})
 export default {
   data () {
     return {
