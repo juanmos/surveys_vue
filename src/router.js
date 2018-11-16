@@ -172,16 +172,6 @@ const CategorysegmentEdit = resolve => {
     resolve(require('./views/category-segmentation/CatsegmentForm.vue'))
   }, 'category-segmentation')
 }
-const RestfulList = resolve => {
-  require.ensure(['./views/restfuls/RestfulList.vue'], () => {
-    resolve(require('./views/restfuls/RestfulList.vue'))
-  }, 'restfuls')
-}
-const RestfulNew = resolve => {
-  require.ensure(['./views/restfuls/RestfulNew.vue'], () => {
-    resolve(require('./views/restfuls/RestfulNew.vue'))
-  }, 'restfuls')
-}
 const UsersPollsList = resolve => {
   require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
     resolve(require('./views/users-polls/UsersPollsList.vue'))
@@ -379,16 +369,6 @@ export default new Router({
           path: 'Edit-category-segmentation',
           name: 'EditCategorysegmentation',
           component: CategorysegmentEdit
-        },
-        {
-          path: 'restfuls',
-          name: 'RestfulList',
-          component: RestfulList
-        },
-        {
-          path: 'restful-new',
-          name: 'RestfulNew',
-          component: RestfulNew
         },
         {
           path: 'users-polls',
