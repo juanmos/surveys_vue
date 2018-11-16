@@ -5,7 +5,7 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-card-title>
-                <span class="title">Categoria Segmentación
+                <span class="title text-sm-left">Proyecto Encuestas
                   <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
                 </span>
                 <v-spacer></v-spacer>
@@ -15,7 +15,7 @@
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getPermission"
+                  :items="getpools"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -23,41 +23,20 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
 
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
+                      <td class="text-sm-left">
+                          {{props.item.name}}
                       </td>
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.description"
-                          lazy
-                          @save="edit(props.item.description, props.item, 'description')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.description }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.description"
-                            label="Editar Descripción"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
+                      <td class="text-sm-left">
+                          {{props.item.clientes.name}}
+                      </td>
+                      <td class="text-sm-left">
+                         {{props.item.date_start | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
+                      </td>
+                      <td class="text-sm-left">
+                         {{ props.item.date_end | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
+                      </td>
+                      <td class="text-sm-left">
+                         {{props.item.date_deliver | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
                        <td class="justify-center layout px-0">
                         <v-menu
@@ -84,7 +63,7 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar categoria</v-card-title>
+                                <v-card-title class="headline">Eliminar Encuesta</v-card-title>
 
                                 <v-card-text>
                                   Esta seguro que desea eliminar ítem ?
@@ -143,6 +122,12 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+Vue.use(VueMoment, {
+  moment
+})
 export default {
   data () {
     return {
@@ -154,12 +139,31 @@ export default {
           value: 'name'
         },
         {
-          text: 'Descripción',
-          value: 'description',
+          text: 'Cliente',
+          align: 'left',
+          sortable: false,
+          value: '_customer_id'
+        },
+        {
+          text: 'Fecha Inicio',
+          value: 'date_start',
+          type: 'date',
           sortable: false
         },
-        { text: 'Acciones',
-
+        {
+          text: 'Fecha Fin',
+          value: 'date_end',
+          type: 'date',
+          sortable: false
+        },
+        {
+          text: 'Fecha de Entrega',
+          value: 'date_deliver',
+          type: 'date',
+          sortable: false
+        },
+        {
+          text: 'Acciones',
           sortable: false
         }
       ],
@@ -176,41 +180,31 @@ export default {
       limit: 10,
       total: 1,
       loaded: false,
-      Categorysegmentation: [],
+      Pollsprojects: [],
       query: {},
       dialog: false,
       search: ''
     }
   },
   methods: {
-    ...mapActions('category-segmentation', { findPermission: 'find' }),
+    ...mapActions('polls-project', { findPolls: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
     goToNew () {
-      this.$router.push('/new-category-segmentation')
-    },
-    edit (val, elem, field) {
-      const {CategorySegmentation} = this.$FeathersVuex
-      let catsecg = new CategorySegmentation(elem)
-      catsecg[field] = val
-      catsecg.patch().then((result) => {
-        this.getData()
-        this.setSnackMessage('Categoria segmento Editado')
-        this.setShowSnack(true)
-      })
+      this.$router.push('/new-polls-project')
     },
     editar (item) {
-      this.$router.push({ name: 'EditCategorysegmentation', params: { id: item._id } })
+      this.$router.push({ name: 'EditPollsprojects', params: { id: item._id } })
     },
     del () {
-      const {CategorySegmentation} = this.$FeathersVuex
-      let catsecg = new CategorySegmentation(this.itemSelected)
-      catsecg.removed = true
-      catsecg.patch().then((result) => {
+      const {PollsProject} = this.$FeathersVuex
+      let pollsp = new PollsProject(this.itemSelected)
+      pollsp.removed = true
+      pollsp.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Categoria segmento Eliminado')
+        this.setSnackMessage('Encuesta Eliminada')
         this.setShowSnack(true)
       })
     },
@@ -229,28 +223,21 @@ export default {
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
     },
-    close (val) {
-      console.log('Dialog closed', val)
-    },
-    print () {
-      window.print()
-    },
     getData () {
-      this.findPermission({query: {removed: false, $skip: 0}}).then(response => {
+      this.findPolls({query: {removed: false, $skip: 0}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.permission = response.data
-        console.log('estas son los roles', this.permission)
+        this.pools = response.data
       })
     }
   },
   computed: {
-    ...mapState('category-segmentation', {loading: 'isFindPending'}),
-    ...mapState('category-segmentation', { paginationVal: 'pagination' }),
-    ...mapGetters('category-segmentation', {findPermissionsInStore: 'find'}),
-    getPermission () {
-      return this.findPermissionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('polls-project', {loading: 'isFindPending'}),
+    ...mapState('polls-project', { paginationVal: 'pagination' }),
+    ...mapGetters('polls-project', {findPollsInStore: 'find'}),
+    getpools () {
+      return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -261,18 +248,18 @@ export default {
   },
   watch: {
     page () {
-      this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findPermission({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+    this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.permission = response.data
+      this.pools = response.data
     })
   },
   components: {LoadingComponent, EditableField}

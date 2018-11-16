@@ -4,51 +4,6 @@
          <span class="title">{{titulo}}</span>
           <v-spacer></v-spacer>
           &nbsp;
-          <v-btn fab small class="info" @click="dialog = true; ">
-            <v-icon>add</v-icon>
-          </v-btn>
-             <v-dialog  v-model="dialog"  max-width="400" >
-                <v-card>
-                  <v-card-title class="headline">Agregar parametros</v-card-title>
-
-                  <v-container fluid grid-list-md>
-                    <v-layout row wrap>
-                      <v-flex xs12 md12>
-                          <v-text-field
-                          v-model="opcion"
-                          :rules="rules.nameRules"
-                          label="Nombre del segmento"
-                          box
-                          color="blue-grey lighten-2"
-                          required
-                        ></v-text-field>
-                          <v-text-field
-                          v-model="valor1"
-                          label="Valor 1"
-                          box
-                          color="blue-grey lighten-2"
-                        ></v-text-field>
-                        <v-text-field
-                         v-model="valor2"
-                          label="Valor 2"
-                          box
-                          color="blue-grey lighten-2"
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn  color="red darken-4" flat="flat" @click="dialog = false">
-                      Cancelar
-                    </v-btn>
-                    <v-btn color="teal darken-3" flat="flat" @click="dialog = false, savecategory()">
-                      Aceptar
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
           <v-btn fab small class="error" @click.native="goToList()">
             <v-icon>cancel</v-icon>
           </v-btn>
@@ -81,57 +36,104 @@
                   color="blue-grey lighten-2"
                   required
                 ></v-text-field>
-
-                  <v-flex xs8 v-if="categoryseg.datos && categoryseg.datos.length>0">
-                    <span class="title">Opciones de segmentación</span>
-                    <v-list class="transparent elevation-0" two-line >
-                      <v-list-tile avatar ripple v-for="(item, index) in categoryseg.datos" v-if="item !== null && item !== undefined" v-bind:key="index" class="grey lighten-2 mt-2 mb-2 " >
-                          <v-flex xs12 sm4>
-                              <v-list-tile-content dark >
-                                Opcion:  <v-list-tile-title class="heading blue--text">{{ item.opciones}} </v-list-tile-title>
-                              </v-list-tile-content>
-                          </v-flex>
-                          <v-flex xs12 sm4>
-                              <v-list-tile-content dark >
-                              Valor 1: <v-list-tile-title class="heading blue--text">{{ item.valor1}} </v-list-tile-title>
-                              </v-list-tile-content>
-                          </v-flex>
-                          <v-flex xs12 sm4>
-                              <v-list-tile-content dark >
-                                Valor 2:<v-list-tile-title class="heading blue--text">{{ item.valor2}} </v-list-tile-title>
-                              </v-list-tile-content>
-                          </v-flex>
-                          <v-list-tile-action>
-                            <v-btn color="red" fab small class="navy" @click="dialog2 = true; itemSelected2=item">
-                              <v-icon color="white"  >delete</v-icon>
-                            </v-btn>
-                          </v-list-tile-action>
-                           <v-dialog  v-model="dialog2"  max-width="290">
-                              <v-card>
-                                <v-card-title class="headline">Eliminar:</v-card-title>
-                                <v-card-text>
-                                  Esta seguro que desea eliminar ítem ?
-                                </v-card-text>
-                                <v-card-actions>
-                                  <v-spacer></v-spacer>
-                                  <v-btn color="red darken-4" flat="flat" @click="dialog2 = false">
-                                    Cancelar
-                                  </v-btn>
-                                  <v-btn
-                                    color="teal darken-3"
-                                    flat="flat"
-                                    @click="dialog2 = false, delcateg()"
-                                  >
-                                    Aceptar
-                                  </v-btn>
-                                </v-card-actions>
-                              </v-card>
-                            </v-dialog>
-                      </v-list-tile>
-                    </v-list>
-                  </v-flex>
-                <v-btn v-if="!this.$route.params.id" type="submit" :disabled="!valid"  small color="info">Guardar</v-btn>
-                <v-btn v-else  small color="info" @click.native="actualizar()">Actualizar</v-btn>
+                    <div>
+                        <v-toolbar flat color="white">
+                          <v-toolbar-title>Lista de Parametros</v-toolbar-title>
+                          <v-spacer></v-spacer>
+                            <div  max-width="500px">
+                              <v-btn color="success" small @click="dialog = true; opcion =''; valor1=''">Nuevo Parametro</v-btn>
+                            </div>
+                              <v-dialog  v-model="dialog"  max-width="400" >
+                                <v-card>
+                                  <v-card-title class="headline">Agregar parametros</v-card-title>
+                                  <v-container fluid grid-list-md>
+                                    <v-layout row wrap>
+                                      <v-flex xs12 md12>
+                                          <v-text-field
+                                          v-model="opcion"
+                                          label="Titulo"
+                                          box
+                                          color="blue-grey lighten-2"
+                                        ></v-text-field>
+                                          <v-text-field
+                                          v-model="valor1"
+                                          label="Valor"
+                                          box
+                                          color="blue-grey lighten-2"
+                                        ></v-text-field>
+                                      </v-flex>
+                                    </v-layout>
+                                  </v-container>
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn  color="red darken-4" flat="flat" @click="dialog = false">
+                                      Cancelar
+                                    </v-btn>
+                                    <v-btn color="teal darken-3" flat="flat" @click="dialog = false, savecategory()">
+                                      Aceptar
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                        </v-toolbar>
+                        <v-data-table
+                          :headers="headers"
+                          :items="categorysegver"
+                          hide-actions
+                          class="elevation-1"
+                          ref="table"
+                        >
+                          <template slot="items" slot-scope="props">
+                            <td class="text-xs-left">{{ props.item.opciones }}</td>
+                            <td class="text-xs-left">{{ props.item.valor1 }}</td>
+                            <td>
+                              <v-icon
+                                small
+                                class="mr-2"
+                                @click="dialog = true; opcion =props.item.opciones; valor1 =props.item.valor1; itemSelected3=props.item"
+                              >
+                                edit
+                              </v-icon>
+                              <v-icon
+                                small
+                                @click="dialog2 = true; itemSelected2=props.item"
+                              >
+                                delete
+                              </v-icon>
+                              <v-dialog  v-model="dialog2"  max-width="290">
+                                  <v-card>
+                                    <v-card-title class="headline">Eliminar:</v-card-title>
+                                    <v-card-text>
+                                      Esta seguro que desea eliminar ítem ?
+                                    </v-card-text>
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn color="red darken-4" flat="flat" @click="dialog2 = false">
+                                        Cancelar
+                                      </v-btn>
+                                      <v-btn
+                                        color="teal darken-3"
+                                        flat="flat"
+                                        @click="dialog2 = false, delcateg()"
+                                      >
+                                        Aceptar
+                                      </v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                                </v-dialog>
+                            </td>
+                          </template>
+                          <template slot="no-data">
+                            <v-alert :value="true" color="error" icon="warning">
+                              No tiene datos :(
+                            </v-alert>
+                          </template>
+                        </v-data-table>
+                    </div>
+                <div class="text-xs-center pt-2">
+                  <v-btn v-if="!this.$route.params.id" type="submit" :disabled="!valid"  color="primary">Guardar</v-btn>
+                  <v-btn v-else color="primary" @click.native="actualizar()">Actualizar</v-btn>
+                </div>
             </v-form>
           </v-flex>
         </v-layout>
@@ -143,36 +145,44 @@
 import {mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 let state = {
-  datos: []
+  datostemp: []
 }
 export default {
   data: (vm) => ({
     categoryseg: {
       name: '',
       description: '',
-      datos: {
-        'opciones': '',
-        'valor1': '',
-        'valor2': ''
-      },
+      datos: [],
       removed: false
     },
+    categorysegver: [],
     valid: false,
     rules: validations,
     dialog: false,
     dialog2: false,
-    opcion: null,
-    valor1: null,
-    valor2: null,
+    opcion: '',
+    valor1: '',
+    valor2: '',
     itemSelected2: null,
-    titulo: ''
+    itemSelected3: null,
+    titulo: '',
+    headers: [
+      {
+        text: 'Titulo',
+        align: 'left',
+        sortable: true,
+        value: 'opciones'
+      },
+      {text: 'Valor1', value: 'valor1'},
+      {text: 'Accion', value: ' '}
+    ]
   }),
   methods: {
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
-    ...mapActions('category-segmentation', { findMenuItems: 'find' }),
+    ...mapActions('category-segmentation', { findcatItems: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.categoryseg)
@@ -182,54 +192,93 @@ export default {
       const {CategorySegmentation} = this.$FeathersVuex
       let catsecg = new CategorySegmentation(this.categoryseg)
       catsecg.patch().then((result) => {
-        this.setSnackMessage('Categoria segmento Editado')
+        this.setSnackMessage('Categoria Guardado')
         this.setShowSnack(true)
+        this.goToList()
+      }, (err) => {
+        console.log(err)
       })
     },
     goToList () {
       this.$router.push('/category-segmentation')
     },
     savecategory () {
-      state.datos.push({
-        'opciones': this.opcion.toString(),
-        'valor1': this.valor1.toString(),
-        'valor2': this.valor2.toString()
-      })
-
-      this.categoryseg.datos = state.datos
-      this.opcion = null
-      this.valor1 = null
-      this.valor2 = null
+      if (this.itemSelected3) {
+        let itemactual = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected3.opciones)
+        this.categoryseg.datos[itemactual].opciones = this.opcion.toString()
+        this.categoryseg.datos[itemactual].valor1 = this.valor1.toString()
+        this.itemSelected3 = ''
+        this.categorysegver = this.categoryseg.datos
+        this.ver()
+      } else {
+        state.datostemp.push({
+          'opciones': this.opcion.toString(),
+          'valor1': this.valor1.toString(),
+          'valor2': '',
+          'removed': false
+        })
+        this.categoryseg.datos = state.datostemp
+        this.ver()
+        this.opcion = ''
+        this.valor1 = ''
+        this.valor2 = ''
+      }
     },
     delcateg () {
-      this.categoryseg.datos.splice(this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected2.opciones), 1)
+      let itemdelete = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected2.opciones)
+      this.categoryseg.datos[itemdelete].removed = true
+      this.itemSelected2 = ''
+      this.ver()
       this.setSnackMessage('Opción Eliminado')
       this.setShowSnack(true)
       this.dialog = false
     },
-    cargaredicion (elementid) {
-      this.findMenuItems({query: {_id: this.$route.params.id, ...this.query}}).then(response => {
-        this.Listcat = response.data
-        this.categoryseg.name = this.Listcat[0].name
-        this.categoryseg.description = this.Listcat[0].description
-        for (let i = 0; i <= this.Listcat[0].datos.length - 1; i++) {
-          state.datos.push({
-            'opciones': this.Listcat[0].datos[i].opciones,
-            'valor1': this.Listcat[0].datos[i].valor1,
-            'valor2': this.Listcat[0].datos[i].valor2
+    ver () {
+      state.datostemp = []
+      this.categoryseg.datos.forEach(function (word) {
+        if (word.removed === false) {
+          state.datostemp.push({
+            '_id': word._id,
+            'opciones': word.opciones,
+            'valor1': word.valor1,
+            'valor2': word.valor2,
+            'removed': word.removed
           })
         }
-        this.categoryseg.datos = state.datos
+      })
+      this.categorysegver = state.datostemp
+    },
+    cargaredicion (elementid) {
+      this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
+        this.Listcat = response.data
+        this.categoryseg._id = this.$route.params.id
+        this.categoryseg.name = this.Listcat[0].name
+        this.categoryseg.description = this.Listcat[0].description
+        this.categoryseg.datos = this.Listcat[0].datos
+        for (let i = 0; i <= this.Listcat[0].datos.length - 1; i++) {
+          if (this.Listcat[0].datos[i].removed === false) {
+            state.datostemp.push({
+              '_id': this.Listcat[0].datos[i]._id,
+              'opciones': this.Listcat[0].datos[i].opciones,
+              'valor1': this.Listcat[0].datos[i].valor1,
+              'valor2': this.Listcat[0].datos[i].valor2,
+              'removed': this.Listcat[0].datos[i].removed
+            })
+            this.categorysegver = state.datostemp
+          }
+        }
       })
     }
   },
-
   mounted () {
     if (this.$route.params.id) {
       this.titulo = 'Editar Categoria Segmentación'
+      state.datostemp = []
       this.cargaredicion(this.$route.params.id)
-      console.log(this.idedicion)
-    } else this.titulo = 'Nuevo Categoria Segmentación'; this.idedicion = 'M'
+    } else {
+      this.titulo = 'Nuevo Categoria Segmentación'
+      state.datostemp = []
+    }
   }
 }
 </script>

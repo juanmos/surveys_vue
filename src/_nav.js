@@ -29,6 +29,11 @@ export default {
       icon: 'view_list',
       url: '/menu',
       title: 'Configuración de menús'
+    },
+    {
+      icon: 'comment',
+      url: '/polls-project',
+      title: 'Encuestas Proyectos'
     }
   ]
 }
