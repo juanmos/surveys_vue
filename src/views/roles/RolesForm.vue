@@ -194,7 +194,8 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
+import axios from 'axios'
 import {validations} from './../../utils/validations'
 import ConfirmDialog from './../../components/ConfirmDialog.vue'
 export default {
@@ -217,6 +218,7 @@ export default {
     modalText: 'Seleccione un permiso para agregar al rol',
     addRestfulModal: false,
     service: {},
+    services: [],
     read: false,
     created: false,
     edit: false,
@@ -324,8 +326,10 @@ export default {
   },
   computed: {
     ...mapGetters('restfuls', {findRestfulInStore: 'find'}),
+    ...mapState('auth', { accessToken: 'accessToken' }),
+    ...mapState(['currentEnv']),
     getServices () {
-      return this.findRestfulInStore({query: {removed: false}}).data
+      return this.services
     },
     getViewPermissions () {
       let that = this
@@ -340,7 +344,11 @@ export default {
     }
   },
   created () {
-    this.findRestful({ query: {removed: false} }).then(response => {
+    let axiosIntance = axios.create({baseURL: this.currentEnv})
+    let that = this
+    axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
+    axiosIntance.get('/restfuls').then(res => {
+      that.services = res.data.services
     })
   },
   mounted () {},

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import feathersVuex from 'feathers-vuex'
 import feathersClient from './feathers-client'
+import enviroment from './../config/enviroment'
 const { auth, FeathersVuex, service } = feathersVuex(feathersClient, { idField: '_id' })
 
 Vue.use(Vuex)
@@ -124,9 +125,7 @@ export default new Vuex.Store({
     }),
     service('restfuls', {
       instanceDefaults: {
-        name: '',
-        url: '',
-        description: ''
+        services: []
       }
     }),
     service('users-polls', {
@@ -151,7 +150,8 @@ export default new Vuex.Store({
   state: {
     snackMessage: '',
     showSnack: false,
-    snackColor: 'success'
+    snackColor: 'success',
+    currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase
   },
   getters: {
     getSnackMessage: (state) => {

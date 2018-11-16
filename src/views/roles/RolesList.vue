@@ -244,7 +244,6 @@ export default {
       this.loaded = true
       this.roles = response.data
     })
-    // console.log(this.auth)
   },
   components: {LoadingComponent, EditableField, ConfirmDialog}
 }
