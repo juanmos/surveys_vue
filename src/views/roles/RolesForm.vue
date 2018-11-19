@@ -79,17 +79,11 @@
                   <v-container fluid grid-list-md>
                     <v-layout row wrap>
                       <v-flex xs12 md6>
-                        <v-select
-                          label="Servicios"
-                          v-model="service"
-                          :items="getServices"
+                          <v-autocomplete v-bind:items="getServices"
                           item-text="name"
                           item-value="_id"
-                          persistent-hint
-                          return-object
-                          single-line
-                          box
-                        ></v-select>
+                          v-model="service" label="Servicio:"
+                          ></v-autocomplete>
                       </v-flex>
                       <v-flex xs12 md12>
                         <v-container fluid>
@@ -227,19 +221,19 @@ export default {
     savePermiso () {
       let permissions = []
       if (this.read === true) {
-        permissions = permissions.concat(this.buildReadPermissions(this.service.name))
+        permissions = permissions.concat(this.buildReadPermissions(this.service))
       }
 
       if (this.created === true) {
-        permissions = permissions.concat(this.buildCreatePermissions(this.service.name))
+        permissions = permissions.concat(this.buildCreatePermissions(this.service))
       }
 
       if (this.edit === true) {
-        permissions = permissions.concat(this.buildUpdatePermissions(this.service.name))
+        permissions = permissions.concat(this.buildUpdatePermissions(this.service))
       }
 
       if (this.drop === true) {
-        permissions = permissions.concat(this.buildRemovePermissions(this.service.name))
+        permissions = permissions.concat(this.buildRemovePermissions(this.service))
       }
       this.rol.permissions = this.rol.permissions.concat(permissions)
       this.clear()
@@ -261,7 +255,7 @@ export default {
       return permissionUpdate
     },
     clear () {
-      this.service = { module: '', _id: '' }
+      this.service = ''
       this.module = null
       this.addRestfulModal = false
       this.clearSelectPermissions()
@@ -309,7 +303,6 @@ export default {
           that.viewPermission.push(name)
         }
       })
-      console.log('permissions---', this.viewPermission)
       return this.viewPermission
     }
   },
