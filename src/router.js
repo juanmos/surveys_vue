@@ -47,6 +47,11 @@ const UserListAccess = resolve => {
     resolve(require('./views/users/UserListAccess.vue'))
   }, 'userListAccess')
 }
+const UserRol = resolve => {
+  require.ensure(['./views/users/UserRol.vue'], () => {
+    resolve(require('./views/users/UserRol.vue'))
+  }, 'userListAccess')
+}
 const RegionList = resolve => {
   require.ensure(['./views/regions/RegionList.vue'], () => {
     resolve(require('./views/regions/RegionList.vue'))
@@ -248,6 +253,11 @@ export default new Router({
           path: 'list-access',
           name: 'UserListAccess',
           component: UserListAccess
+        },
+        {
+          path: 'user-rol/:_id',
+          name: 'UserRol',
+          component: UserRol
         },
         {
           path: 'applications',
