@@ -119,7 +119,6 @@
                                 <v-checkbox
                                 v-model="drop"
                                   label="Eliminar"
-
                                 ></v-checkbox>
                               </v-flex>
                             </v-layout>
@@ -336,6 +335,7 @@ export default {
     axiosIntance.get('/restfuls').then(res => {
       that.services = res.data.services
     })
+    this.clear()
   },
   mounted () {},
   components: {ConfirmDialog}
