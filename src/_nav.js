@@ -33,7 +33,7 @@ export default {
     {
       icon: 'comment',
       url: '/polls-project',
-      title: 'Encuestas Proyectos'
+      title: 'Proyectos de Encuestas'
     }
   ]
 }

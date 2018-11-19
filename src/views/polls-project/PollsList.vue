@@ -8,6 +8,19 @@
                 <span class="title text-sm-left">Proyecto Encuestas
                   <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
                 </span>
+                  <v-spacer></v-spacer>
+                <span class="title text-sm-left">
+                  <v-autocomplete
+                      :filter="customFilter"
+                      label="Filtro por estado"
+                      v-model="state_polls_filter"
+                      :items="itemsestado"
+                      @change="filteredItems"
+                      item-text="name"
+                      item-value="id"
+                  ></v-autocomplete>
+                </span>
+
                 <v-spacer></v-spacer>
                 <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
                   <v-icon>add</v-icon>
@@ -53,10 +66,13 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="editar(props.item)">
-                              <v-list-tile-title>Editar</v-list-tile-title>
+                             <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="dialog = true; itemSelected=props.item">
-                              <v-list-tile-title>Eliminar</v-list-tile-title>
+                              <v-icon>delete</v-icon> <v-list-tile-title>Eliminar</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="ver(props.item)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
                             <v-dialog
                               v-model="dialog"
@@ -171,6 +187,7 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      state_polls_filter: '',
       itemSelected: null,
       rules: validations,
       message: '',
@@ -183,7 +200,16 @@ export default {
       Pollsprojects: [],
       query: {},
       dialog: false,
-      search: ''
+      search: '',
+      itemsestado: [
+        { name: 'Creada', id: 1 },
+        { name: 'Edición', id: 2 },
+        { name: 'Recolección de datos', id: 3 },
+        { name: 'Validación', id: 4 },
+        { name: 'En informe', id: 5 },
+        { name: 'Completa', id: 6 },
+        { name: 'Cancelada', id: 7 }
+      ]
     }
   },
   methods: {
@@ -192,11 +218,20 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
+    filteredItems () {
+      return this.pools.filter((i) => {
+        console.log(i.number_polls)
+        return i.number_polls === 444
+      })
+    },
     goToNew () {
       this.$router.push('/new-polls-project')
     },
     editar (item) {
       this.$router.push({ name: 'EditPollsprojects', params: { id: item._id } })
+    },
+    ver (item) {
+      this.$router.push({ name: 'ViewPollsprojects', params: { id: item._id } })
     },
     del () {
       const {PollsProject} = this.$FeathersVuex
@@ -230,6 +265,11 @@ export default {
         this.loaded = true
         this.pools = response.data
       })
+    },
+    customFilter (item, queryText, itemText) {
+      const textOne = item.name.toLowerCase()
+      const searchText = queryText.toLowerCase()
+      return textOne.indexOf(searchText) > -1
     }
   },
   computed: {
