@@ -34,60 +34,6 @@
                 <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Rol</v-btn>
             </v-form>
           </v-flex>
-          <!-- <v-flex xs12 v-if="rol.permissions && rol.permissions.length>0">
-              <v-list class="transparent elevation-0" two-line >
-                <v-list-tile avatar ripple v-for="(item, index) in rol.permissions"
-                v-if="item !== null && item !== undefined" v-bind:key="index" class="grey lighten-2 mt-2 mb-2 " >
-                    <v-list-tile-content dark >
-                      <v-list-tile-title class="heading blue--text">{{ item}}
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title class="grey--text text--darken-4">
-                          <v-container fluid>
-                            <v-layout row wrap>
-                              <v-list-tile-content dark>
-
-                              </v-list-tile-content>
-                              <v-flex xs12 sm3>
-                                <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.read == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Leer
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                 <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.create == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Crear
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.update == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Editar
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                 <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.drop == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Eliminar
-                                </v-list-tile-title>
-                              </v-flex>
-                            </v-layout>
-                          </v-container>
-                        </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-btn color="red" fab small class="navy" @click.native="remove(item)">
-                        <v-icon color="white"  >drop</v-icon>
-                      </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
-              </v-list>
-          </v-flex> aqui -->
-
           <v-flex xs12>
               <v-data-table
                     :headers="headers"
@@ -112,7 +58,7 @@
                             <v-icon>more_vert</v-icon>
                             </v-btn>
                             <v-list>
-                              <v-list-tile @click="edita(props.item._id)">
+                              <v-list-tile @click="editService(props.item)">
                                 <v-list-tile-title>Editar</v-list-tile-title>
                               </v-list-tile>
                               <v-list-tile @click="del(props.item)">
@@ -217,7 +163,7 @@ export default {
     modalTitle: 'Agregar Permisos',
     modalText: 'Seleccione un permiso para agregar al rol',
     addRestfulModal: false,
-    service: {},
+    service: null,
     services: [],
     read: false,
     created: false,
@@ -246,20 +192,40 @@ export default {
     addService () {
       this.addRestfulModal = true
     },
+    editService (data) {
+      this.addRestfulModal = true
+      this.service = data
+      let matches = this.rol.permissions.filter(s => s.includes(this.service))
+      this.loadPermissionsSave(matches)
+    },
+    loadPermissionsSave (matches) {
+      this.clearSelectPermissions()
+      const read = 'get'
+      const create = 'create'
+      const update = 'update'
+      const drop = 'remove'
+      let readPermissions = matches.filter(s => s.includes(read))
+      if (readPermissions.length > 0) {
+        this.read = true
+      }
+      let createPermissions = matches.filter(s => s.includes(create))
+      if (createPermissions.length > 0) {
+        this.created = true
+      }
+      let updatePermissions = matches.filter(s => s.includes(update))
+      if (updatePermissions.length > 0) {
+        this.edit = true
+      }
+      let deletePermissions = matches.filter(s => s.includes(drop))
+      if (deletePermissions.length > 0) {
+        this.drop = true
+      }
+    },
     cancelAddPermiso () {
       this.addRestfulModal = false
     },
     savePermiso () {
       let permissions = []
-      /* state.permisorol.push({
-        '_permissions_id': this.service._id,
-        'service': this.service.name,
-        'read': this.read,
-        'create': this.created,
-        'update': this.edit,
-        'drop': this.drop,
-        'removed': false
-    }) */
       if (this.read === true) {
         permissions = permissions.concat(this.buildReadPermissions(this.service.name))
       }
@@ -297,11 +263,14 @@ export default {
     clear () {
       this.service = { module: '', _id: '' }
       this.module = null
+      this.addRestfulModal = false
+      this.clearSelectPermissions()
+    },
+    clearSelectPermissions () {
       this.read = false
       this.created = false
       this.edit = false
       this.drop = false
-      this.addRestfulModal = false
     },
     remove (element) {
       this.dialogTitle = 'Eliminar este permiso : ' + element.module
@@ -340,6 +309,7 @@ export default {
           that.viewPermission.push(name)
         }
       })
+      console.log('permissions---', this.viewPermission)
       return this.viewPermission
     }
   },

@@ -53,7 +53,7 @@
             </v-list-tile>
             <v-list-tile  :to="'/list-access'">
               <v-list-tile-action>
-                <v-icon v-html="'supervised_user_circle'"></v-icon>
+                <v-icon v-html="'contacts'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title v-text="'Usuarios del grupo'"></v-list-tile-title>
@@ -71,7 +71,7 @@
 
             <v-list-tile  :to="'/roles'">
               <v-list-tile-action>
-                <v-icon v-html="'supervised_user_circle'"></v-icon>
+                <v-icon v-html="'group_add'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title v-text="'Roles'"></v-list-tile-title>
