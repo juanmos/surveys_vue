@@ -58,6 +58,9 @@
                     <v-list-tile @click="changeAccess(props.item)">
                       <v-list-tile-title>Cambiar acceso</v-list-tile-title>
                     </v-list-tile>
+                    <v-list-tile @click="assignRol(props.item._id)">
+                      <v-list-tile-title>Asignar rol</v-list-tile-title>
+                    </v-list-tile>
                   </v-list>
                 </v-menu>
                 </td>
@@ -148,6 +151,9 @@ export default {
       const {User} = this.$FeathersVuex
       const user = new User(element)
       window.open('http://gestion.propraxis.ec/#/users-edit?_id=' + user._id, '_blank')
+    },
+    assignRol (code) {
+      this.$router.push('/user-rol/' + code)
     }
   },
   computed: {
