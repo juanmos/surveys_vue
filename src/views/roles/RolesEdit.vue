@@ -49,9 +49,7 @@ export default {
       })
     },
     goToList () {
-      if (this.$route.params.id) {
-        this.$router.push({ name: '/roles', params: { id: this.$route.params.id } })
-      } else { this.$router.push('/roles') }
+      this.$router.push('/roles')
     }
   },
   mounted () {},

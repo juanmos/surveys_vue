@@ -17,7 +17,7 @@
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
                           lazy
-                          @save="edit(props.item.name, props.item, 'name')"
+                          @save="edit(props.item)"
                           @cancel="cancel"
                           @open="open"
                           @close="close"

@@ -5,12 +5,12 @@
         grid-list-lg
       >
         <v-layout row wrap>
-          <v-flex xs6>
-            <v-form
-            v-model="valid"
+            <v-form v-model="valid"
             @submit.prevent="sendData"
             @keydown.prevent.enter
             >
+          <v-flex xs12>
+
                 <v-text-field
                   v-model="rol.name"
                   :rules="rules.nameRules"
@@ -26,10 +26,8 @@
                   box
                   color="blue-grey lighten-2"
                 ></v-text-field>
-
-            </v-form>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs12>
               <v-btn
                 small
                 color="secondary"
@@ -44,6 +42,7 @@
                   GUARDAR ROL
                 </v-btn>
           </v-flex>
+          </v-form>
           <v-flex xs12>
               <v-data-table
                     :headers="headers"
@@ -120,7 +119,6 @@
                                 <v-checkbox
                                 v-model="drop"
                                   label="Eliminar"
-
                                 ></v-checkbox>
                               </v-flex>
                             </v-layout>
@@ -239,9 +237,10 @@ export default {
           })
         })
       }
+      return this.rol.permissions
     },
     savePermissions () {
-      this.modifyPermissions()
+      this.rol.permissions = this.modifyPermissions()
       let permissions = []
       if (this.read === true) {
         permissions = permissions.concat(this.buildReadPermissions(this.service))
@@ -336,6 +335,7 @@ export default {
     axiosIntance.get('/restfuls').then(res => {
       that.services = res.data.services
     })
+    this.clear()
   },
   mounted () {},
   components: {ConfirmDialog}
