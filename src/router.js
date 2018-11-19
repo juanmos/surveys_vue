@@ -117,6 +117,11 @@ const RolesEdit = resolve => {
     resolve(require('./views/roles/RolesEdit.vue'))
   }, 'roles')
 }
+const AssignRol = resolve => {
+  require.ensure(['./views/roles/AssignRol.vue'], () => {
+    resolve(require('./views/roles/AssignRol.vue'))
+  }, 'roles')
+}
 const QuestionTypeList = resolve => {
   require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
     resolve(require('./views/question-types/QuestionTypeList.vue'))
@@ -339,6 +344,11 @@ export default new Router({
           path: 'edit-roles/:_id',
           name: 'RolesEdit',
           component: RolesEdit
+        },
+        {
+          path: 'assign-rol',
+          name: 'AssignRol',
+          component: AssignRol
         },
         {
           path: 'menu-new',

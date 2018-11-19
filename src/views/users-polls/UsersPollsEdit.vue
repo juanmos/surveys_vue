@@ -5,7 +5,28 @@
         <v-flex xs12>
             <v-card :flat="true">
                 <v-subheader>Información del usuario de encuestas:</v-subheader>
-                <users-polls-form :values="dataUser" @dataSubmited="create"></users-polls-form>
+                <v-tabs right>
+                  <v-tab>
+                    Usuario
+                  </v-tab>
+                  <v-tab>
+                    Asignar rol
+                  </v-tab>
+                  <v-tab-item>
+                    <v-card flat>
+                      <v-card-text>
+                        <users-polls-form :values="dataUser" @dataSubmited="create"></users-polls-form>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                  <v-tab-item>
+                    <v-card flat>
+                      <v-card-text>
+                        <users-polls-rol :values="dataUser" @dataSubmited="createUsersRol"></users-polls-rol>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                </v-tabs>
             </v-card>
         </v-flex>
         </v-layout>
@@ -14,6 +35,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import UsersPollsForm from './UsersPollsForm'
+import UsersPollsRol from './UsersPollsRol'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   data () {
@@ -43,6 +65,15 @@ export default {
         this.setSnackMessage('Error al modificar el usuario', err)
       })
     },
+    createUsersRol (values) {
+      const {UsersRole} = this.$FeathersVuex
+      const usersRole = new UsersRole(values)
+      usersRole.save().then((result) => {
+        this.goToList()
+      }, (err) => {
+        console.log(err)
+      })
+    },
     getDataUser () {
       this.findUserPolls({query: {_id: this.user_id, removed: false, ...this.query}}).then(response => {
         this.dataUser = response.data[0]
@@ -57,11 +88,10 @@ export default {
     ...mapState('auth', { user: 'user' })
   },
   created () {
-    console.log('id--', this.$route.params._id)
     this.user_id = this.$route.params._id
     this.getDataUser()
   },
-  components: {UsersPollsForm, LoadingComponent}
+  components: {UsersPollsForm, LoadingComponent, UsersPollsRol}
 }
 </script>
 <style>
