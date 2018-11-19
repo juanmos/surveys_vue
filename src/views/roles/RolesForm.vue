@@ -27,12 +27,22 @@
                   color="blue-grey lighten-2"
                 ></v-text-field>
 
-                <v-btn  small class="blue" @click.native="addService()">
-                  <v-icon>add</v-icon>Agregar Permiso
-                </v-btn>
-                  &nbsp;
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Rol</v-btn>
             </v-form>
+          </v-flex>
+          <v-flex xs6>
+              <v-btn
+                small
+                color="secondary"
+                 @click.native="addService()">
+                AGREGAR PERMISOS
+              </v-btn>
+                &nbsp;
+              <v-btn small
+                  type="submit" :disabled="!valid"
+                  color="success"
+                >
+                  GUARDAR ROL
+                </v-btn>
           </v-flex>
           <v-flex xs12>
               <v-data-table
@@ -120,7 +130,7 @@
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn class="green--text darken-1" flat="flat" @click.native="savePermiso">Agregar</v-btn>
+                  <v-btn class="green--text darken-1" flat="flat" @click.native="savePermissions">Agregar</v-btn>
                   <v-btn class="green--text darken-1" flat="flat" @click.native="cancelAddPermiso">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
@@ -191,6 +201,7 @@ export default {
       this.service = data
       let matches = this.rol.permissions.filter(s => s.includes(this.service))
       this.loadPermissionsSave(matches)
+      this.modifyPermissions()
     },
     loadPermissionsSave (matches) {
       this.clearSelectPermissions()
@@ -218,7 +229,19 @@ export default {
     cancelAddPermiso () {
       this.addRestfulModal = false
     },
-    savePermiso () {
+    modifyPermissions () {
+      let matches = this.rol.permissions.filter(s => s.includes(this.service))
+      if (matches.length > 0) {
+        let that = this
+        matches.forEach(function (element) {
+          that.rol.permissions = that.rol.permissions.filter(function (item) {
+            return item !== element
+          })
+        })
+      }
+    },
+    savePermissions () {
+      this.modifyPermissions()
       let permissions = []
       if (this.read === true) {
         permissions = permissions.concat(this.buildReadPermissions(this.service))
