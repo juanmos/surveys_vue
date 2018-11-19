@@ -56,7 +56,7 @@
                 <v-icon v-html="'supervised_user_circle'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title v-text="'Lista de usuarios'"></v-list-tile-title>
+                <v-list-tile-title v-text="'Usuarios del grupo'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
 
@@ -65,7 +65,7 @@
                 <v-icon v-html="'supervised_user_circle'"></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title v-text="'Usuarios sistema encuestas'"></v-list-tile-title>
+                <v-list-tile-title v-text="'Usuarios encuestadores'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
 
