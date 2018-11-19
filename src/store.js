@@ -159,6 +159,14 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('users-roles', {
+      instanceDefaults: {
+        _user_id: null,
+        _rol_id: null,
+        rol: null,
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

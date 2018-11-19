@@ -117,6 +117,11 @@ const RolesEdit = resolve => {
     resolve(require('./views/roles/RolesEdit.vue'))
   }, 'roles')
 }
+const AssignRol = resolve => {
+  require.ensure(['./views/roles/AssignRol.vue'], () => {
+    resolve(require('./views/roles/AssignRol.vue'))
+  }, 'roles')
+}
 const QuestionTypeList = resolve => {
   require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
     resolve(require('./views/question-types/QuestionTypeList.vue'))
@@ -171,16 +176,6 @@ const CategorysegmentEdit = resolve => {
   require.ensure(['./views/category-segmentation/CatsegmentForm.vue'], () => {
     resolve(require('./views/category-segmentation/CatsegmentForm.vue'))
   }, 'category-segmentation')
-}
-const RestfulList = resolve => {
-  require.ensure(['./views/restfuls/RestfulList.vue'], () => {
-    resolve(require('./views/restfuls/RestfulList.vue'))
-  }, 'restfuls')
-}
-const RestfulNew = resolve => {
-  require.ensure(['./views/restfuls/RestfulNew.vue'], () => {
-    resolve(require('./views/restfuls/RestfulNew.vue'))
-  }, 'restfuls')
 }
 const PollsList = resolve => {
   require.ensure(['./views/polls-project/PollsList.vue'], () => {
@@ -351,6 +346,11 @@ export default new Router({
           component: RolesEdit
         },
         {
+          path: 'assign-rol',
+          name: 'AssignRol',
+          component: AssignRol
+        },
+        {
           path: 'menu-new',
           name: 'MenuNew',
           component: MenuNew
@@ -394,16 +394,6 @@ export default new Router({
           path: 'Edit-category-segmentation',
           name: 'EditCategorysegmentation',
           component: CategorysegmentEdit
-        },
-        {
-          path: 'restfuls',
-          name: 'RestfulList',
-          component: RestfulList
-        },
-        {
-          path: 'restful-new',
-          name: 'RestfulNew',
-          component: RestfulNew
         },
         {
           path: 'polls-project',

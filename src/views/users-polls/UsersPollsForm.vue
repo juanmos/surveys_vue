@@ -40,6 +40,11 @@
                   color="blue-grey lighten-2"
                   required
                 ></v-text-field>
+                <v-autocomplete v-if="newData" v-bind:items="getRoles"
+                item-text="name"
+                item-value="_id"
+                v-model="userPolls.rol" label="Seleccione rol:"
+                ></v-autocomplete>
               <v-text-field
                   :append-icon="showPass ? 'visibility_off' : 'visibility'"
                   v-model="userPolls.password"
@@ -67,6 +72,7 @@
 </template>
 
 <script>
+import {mapState, mapActions, mapGetters} from 'vuex'
 import {validations} from './../../utils/validations'
 export default {
   props: ['values'],
@@ -78,8 +84,10 @@ export default {
       password: null,
       confirmPassword: null,
       phones: '',
+      rol: null,
       removed: false
     },
+    newData: true,
     showPass: false,
     valid: false,
     rules: validations,
@@ -88,6 +96,7 @@ export default {
     ]
   }),
   methods: {
+    ...mapActions('roles', { findRoles: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.userPolls)
@@ -100,10 +109,28 @@ export default {
       this.userPolls.confirmPassword = null
     }
   },
+  computed: {
+    ...mapState('roles', {loading: 'isFindPending'}),
+    ...mapGetters('roles', {findRolesInStore: 'find'}),
+    getRoles () {
+      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
+  },
   watch: {
     values: function (dat) {
       this.setData(dat)
+      if (dat) {
+        this.newData = false
+      }
     }
+  },
+  created () {
+    this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.roles = response.data
+    })
   }
 }
 </script>
