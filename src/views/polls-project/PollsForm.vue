@@ -11,7 +11,7 @@
       <v-container fluid grid-list-md >
             <v-layout row wrap >
                 <v-flex md4 xs12>
-                  <v-text-field name="nombre" label="Nombre" hint="Nombre de la Encuesta"  v-model="poolsseg.name"
+                  <v-text-field name="nombre"  label="Nombre" hint="Nombre de la Encuesta"  v-model="poolsseg.name"
                     class="input-group--focused" required></v-text-field>
                 </v-flex>
 
@@ -69,8 +69,7 @@
                 <v-flex md4 xs12>
                 </v-flex>
                 <div class="text-xs-center pt-2">
-                  <v-btn v-if="!this.$route.params.id" @click.native="sendData(poolsseg)" color="primary">Guardar</v-btn>
-                  <v-btn v-else color="primary" @click.native="actualizar(poolsseg)">Actualizar</v-btn>
+                  <v-btn  @click.native="sendData(poolsseg)" color="primary">{{titulosave}}</v-btn>
                 </div>
             </v-layout>
           </v-container>
@@ -110,11 +109,9 @@ export default {
     rules: validations,
     dialog: false,
     dialog2: false,
-    opcion: '',
-    valor1: '',
-    valor2: '',
     itemSelected2: null,
     titulo: '',
+    titulosave: '',
     itemsestado: [
       { name: 'Creada', id: 1 },
       { name: 'Edición', id: 2 },
@@ -134,19 +131,8 @@ export default {
     ...mapActions('customers', {findcustomers: 'find'}),
     sendData (values) {
       const {PollsProject} = this.$FeathersVuex
-      let saveCategorySegmentation = new PollsProject(values)
-      saveCategorySegmentation.save().then((result) => {
-        this.setSnackMessage('Encuesta Guardado')
-        this.setShowSnack(true)
-        this.goToList()
-      }, (err) => {
-        console.log(err)
-      })
-    },
-    actualizar (values) {
-      const {PollsProject} = this.$FeathersVuex
-      let saveCategorySegmentation = new PollsProject(values)
-      saveCategorySegmentation.save().then((result) => {
+      let savePolls = new PollsProject(values)
+      savePolls.save().then((result) => {
         this.setSnackMessage('Encuesta Guardado')
         this.setShowSnack(true)
         this.goToList()
@@ -185,10 +171,12 @@ export default {
   mounted () {
     if (this.$route.params.id) {
       this.titulo = 'Editar encuesta'
+      this.titulosave = 'Actualizar'
       state.datostemp = []
       this.cargaredicion(this.$route.params.id)
     } else {
       this.titulo = 'Nueva encuesta'
+      this.titulosave = 'Guardar'
       state.datostemp = []
     }
   },
