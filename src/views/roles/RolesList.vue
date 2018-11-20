@@ -13,43 +13,8 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item)"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.description"
-                          lazy
-                          @save="edit(props.item.description, props.item, 'description')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.description }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.description"
-                            label="Editar Descripción"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-
+                        <td class="text-xs-left">{{props.item.name}}</td>
+                        <td class="text-xs-left">{{props.item.description}}</td>
                        <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -210,7 +175,6 @@ export default {
         this.total = response.total
         this.loaded = true
         this.roles = response.data
-        console.log('estas son los roles', this.roles)
       })
     }
   },
