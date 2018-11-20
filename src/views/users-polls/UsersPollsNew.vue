@@ -45,7 +45,7 @@ export default {
       let userPoll = new UsersPoll(values)
       userPoll.save().then((result) => {
         let userRol = {
-          _user_id: result._rol_id,
+          _user_id: result._id,
           _rol_id: values.rol
         }
         this.createUsersRol(userRol)
