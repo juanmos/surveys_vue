@@ -119,9 +119,14 @@ export default {
       { name: 'Cancelada', id: 7 }
     ],
     colors: {
-      1: 'blue',
-      2: 'red',
-      3: 'green'
+      0: 'green',
+      1: 'green',
+      2: 'green',
+      3: 'green',
+      4: 'green',
+      5: 'blue',
+      6: 'blue',
+      7: 'red'
     }
   }),
   methods: {

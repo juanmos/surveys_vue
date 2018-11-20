@@ -15,7 +15,6 @@
                       label="Filtro por estado"
                       v-model="state_polls_filter"
                       :items="itemsestado"
-                      @change="filteredItems"
                       item-text="name"
                       item-value="id"
                   ></v-autocomplete>
@@ -50,6 +49,9 @@
                       </td>
                       <td class="text-sm-left">
                          {{props.item.date_deliver | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
+                      </td>
+                         <td class="text-sm-left">
+                         <v-chip label small :color="getColorByStatus(props.item.state_polls[0])" text-color="white" >{{itemsestado[props.item.state_polls[0]].name}}</v-chip>
                       </td>
                        <td class="justify-center layout px-0">
                         <v-menu
@@ -179,6 +181,12 @@ export default {
           sortable: false
         },
         {
+          text: 'Estado',
+          value: 'state_polls',
+          type: 'string',
+          sortable: false
+        },
+        {
           text: 'Acciones',
           sortable: false
         }
@@ -202,6 +210,7 @@ export default {
       dialog: false,
       search: '',
       itemsestado: [
+        { name: 'Todos', id: 0 },
         { name: 'Creada', id: 1 },
         { name: 'Edición', id: 2 },
         { name: 'Recolección de datos', id: 3 },
@@ -209,7 +218,17 @@ export default {
         { name: 'En informe', id: 5 },
         { name: 'Completa', id: 6 },
         { name: 'Cancelada', id: 7 }
-      ]
+      ],
+      colors: {
+        0: 'green',
+        1: 'green',
+        2: 'green',
+        3: 'green',
+        4: 'green',
+        5: 'blue',
+        6: 'blue',
+        7: 'red'
+      }
     }
   },
   methods: {
@@ -218,12 +237,6 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    filteredItems () {
-      return this.pools.filter((i) => {
-        console.log(i.number_polls)
-        return i.number_polls === 444
-      })
-    },
     goToNew () {
       this.$router.push('/new-polls-project')
     },
@@ -270,6 +283,9 @@ export default {
       const textOne = item.name.toLowerCase()
       const searchText = queryText.toLowerCase()
       return textOne.indexOf(searchText) > -1
+    },
+    getColorByStatus (status) {
+      return this.colors[status]
     }
   },
   computed: {
@@ -277,7 +293,11 @@ export default {
     ...mapState('polls-project', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     getpools () {
-      return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      if (!this.state_polls_filter || this.state_polls_filter === 0) {
+        return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      } else {
+        return this.findPollsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      }
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
