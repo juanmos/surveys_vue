@@ -19,7 +19,7 @@
                       v-bind:items="getRoles"
                       item-text="name"
                       item-value="_id"
-                      label="Filtrar por rol"
+                      label="Rol"
                     ></v-select>
                 </v-flex>
                 <v-flex xs6>
@@ -280,6 +280,11 @@ export default {
     },
     getRoles () {
       let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
+      let option = {
+        'name': 'TODOS',
+        '_id': null
+      }
+      listRoles.push(option)
       return listRoles
     }
   },
