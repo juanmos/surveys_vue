@@ -22,9 +22,6 @@
                       label="Rol"
                     ></v-select>
                 </v-flex>
-                <v-flex xs6>
-
-                </v-flex>
               </v-card-title>
             <v-data-table
                   :headers="headers"
