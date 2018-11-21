@@ -227,7 +227,12 @@ export default {
       this.snackText = 'Data saved'
     },
     getNameRol (id) {
-      return this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data[0].name
+      let data = this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      let name = ''
+      if (data.length > 0 && data[0].name) {
+        name = data[0].name
+      }
+      return name
     },
     cancel () {
       this.snack = true
