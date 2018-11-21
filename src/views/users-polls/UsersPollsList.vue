@@ -70,6 +70,7 @@
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
+                      <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -180,6 +181,10 @@ export default {
           value: 'url',
           sortable: false
         },
+        { text: 'Rol',
+          value: 'rol',
+          sortable: false
+        },
         { text: 'Acciones',
           value: 'name',
           sortable: false
@@ -220,6 +225,9 @@ export default {
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
+    },
+    getNameRol (id) {
+      return this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data[0].name
     },
     cancel () {
       this.snack = true
