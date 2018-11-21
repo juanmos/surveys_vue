@@ -5,11 +5,33 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-subheader>Usuarios de encuestas</v-subheader>
+              <v-card-title>
+                <v-flex xs6>
+                    <v-text-field
+                      v-model="search"
+                      append-icon="search"
+                      label="Buscar por nombre"
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                    <v-select
+                      v-model="filterRol"
+                      v-bind:items="getRoles"
+                      item-text="name"
+                      item-value="_id"
+                      label="Filtrar por rol"
+                    ></v-select>
+                </v-flex>
+                <v-flex xs6>
+
+                </v-flex>
+              </v-card-title>
             <v-data-table
                   :headers="headers"
                   :items="getUsersPolls"
                   hide-actions
                   item-key="name"
+                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
@@ -170,9 +192,12 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      filterRol: null,
+      roles: null,
       rules: validations,
       message: '',
       showMsg: false,
+      search: '',
       msgType: 'error',
       page: 1,
       limit: 20,
@@ -186,6 +211,7 @@ export default {
   },
   methods: {
     ...mapActions('users-polls', { findUsersPolls: 'find' }),
+    ...mapActions('roles', { findRoles: 'find' }),
     goToNew () {
       this.$router.push('/users-polls-new')
     },
@@ -238,14 +264,23 @@ export default {
     ...mapState('users-polls', {loading: 'isFindPending'}),
     ...mapState('users-polls', { paginationVal: 'pagination' }),
     ...mapGetters('users-polls', {findUsersPollsInStore: 'find'}),
+    ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersPolls () {
-      return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      if (this.filterRol != null) {
+        return this.findUsersPollsInStore({query: {removed: false, _rol_id: this.filterRol, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      } else {
+        return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      }
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
     getSkip () {
       return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+    },
+    getRoles () {
+      let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
+      return listRoles
     }
   },
   watch: {
@@ -262,6 +297,12 @@ export default {
       this.total = response.total
       this.loaded = true
       this.categories = response.data
+    })
+    this.findRoles({query: {removed: false, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.roles = response.data
     })
   },
   components: {LoadingComponent, EditableField}

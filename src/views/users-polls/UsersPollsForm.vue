@@ -43,7 +43,7 @@
                 <v-autocomplete v-if="newData" v-bind:items="getRoles"
                 item-text="name"
                 item-value="_id"
-                v-model="userPolls.rol" label="Seleccione rol:"
+                v-model="userPolls._rol_id" label="Seleccione rol:"
                 ></v-autocomplete>
               <v-text-field
                   :append-icon="showPass ? 'visibility_off' : 'visibility'"
@@ -84,7 +84,7 @@ export default {
       password: null,
       confirmPassword: null,
       phones: '',
-      rol: null,
+      _rol_id: null,
       removed: false
     },
     newData: true,
