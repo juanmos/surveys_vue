@@ -193,8 +193,7 @@ export default {
     goToEdit (element) {
       const {Customer} = this.$FeathersVuex
       const customer = new Customer(element)
-      // window.open('http://gestion.propraxis.ec/#/edit-client?_id=' + customer._id, '_blank')
-      window.open('http://localhost:8081/#/edit-client?_id=' + customer._id, '_blank')
+      window.open('http://gestion.propraxis.ec/#/edit-client?_id=' + customer._id, '_blank')
     },
     edit (val, elem, field) {
       const {Customer} = this.$FeathersVuex
