@@ -160,6 +160,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('poll-category', {
+      instanceDefaults: {
+        _polls_project_id: '',
+        _categorySegmentation_id: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
