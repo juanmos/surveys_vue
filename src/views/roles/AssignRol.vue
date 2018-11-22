@@ -4,17 +4,60 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Roles de Usuarios </v-subheader>
+              <v-subheader>Asignar rol a usuarios </v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getRoles"
+                  :items="getUsers"
                   hide-actions
                   item-key="name"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                        <td class="text-xs-left">{{props.item.name}}</td>
-                        <td class="text-xs-left">{{props.item.description}}</td>
+                      <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.email"
+                          lazy
+                          @save="edit(props.item.email, props.item, 'email')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.email }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.email"
+                            label="Editar email"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.name"
+                          lazy
+                          @save="edit(props.item.name, props.item, 'name')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.name }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.name"
+                            label="Editar Nombres"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+
+                      <td>
+                          <v-autocomplete v-bind:items="getRoles"
+                          item-text="name"
+                          item-value="_id"
+                          v-model="props.item._rol_id" label=""
+                          ></v-autocomplete>
+                      </td>
+
                        <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -89,13 +132,18 @@ export default {
       dialogTitle: 'Eliminar Rol',
       dialogText: 'Desea eliminar este Rol?',
       headers: [
-        { text: 'Nombre',
+        { text: 'Usuario',
           value: 'name',
           sortable: true
         },
         {
-          text: 'Descripción',
+          text: 'Nombres',
           value: 'description',
+          sortable: false
+        },
+        {
+          text: 'Rol',
+          value: 'rol',
           sortable: false
         },
         { text: 'Acciones',
@@ -109,18 +157,20 @@ export default {
       ],
       rules: validations,
       message: '',
+      selectedRol: null,
       showMsg: false,
       msgType: 'error',
       page: 1,
       limit: 10,
       total: 1,
       loaded: false,
-      roles: [],
+      usersPolls: [],
       query: {},
       rolId: ''
     }
   },
   methods: {
+    ...mapActions('users-polls', { findUsersPolls: 'find' }),
     ...mapActions('roles', { findRoles: 'find' }),
     ...mapActions([
       'setSnackMessage',
@@ -170,19 +220,24 @@ export default {
     close (val) {
     },
     getData () {
-      this.findRoles({query: {removed: false, $skip: 0}}).then(response => {
+      this.findUsersPolls({query: {removed: false, $skip: 0}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
         this.roles = response.data
+        console.log('estas son los roles', this.roles)
       })
     }
   },
   computed: {
-    ...mapState('roles', {loading: 'isFindPending'}),
-    ...mapState('roles', { paginationVal: 'pagination' }),
+    ...mapState('users-polls', {loading: 'isFindPending'}),
+    ...mapState('users-polls', { paginationVal: 'pagination' }),
+    ...mapGetters('users-polls', {findUsersPollsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     ...mapState('auth', { user: 'user' }),
+    getUsers () {
+      return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
     getRoles () {
       return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
@@ -195,18 +250,24 @@ export default {
   },
   watch: {
     page () {
-      this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
+    this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.usersPolls = response.data
+    })
     this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.roles = response.data
+      this.usersPolls = response.data
     })
   },
   components: {LoadingComponent, EditableField, ConfirmDialog}

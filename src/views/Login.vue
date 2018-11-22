@@ -40,6 +40,7 @@ export default {
     auth (credentials) {
       this.authenticate(credentials).then((result) => {
         this.setShowSnack(true)
+        localStorage.setItem('user', JSON.stringify(result.user))
         this.setSnackMessage('Bienvenido al sistema de encuestas')
         this.$router.push('/')
       }, (err) => {

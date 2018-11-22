@@ -6,69 +6,47 @@
       >
         <v-layout row wrap>
           <v-flex xs12>
-            <v-form
-            v-model="valid"
-            @submit.prevent="sendData"
-            @keydown.prevent.enter
-            >
-                <v-text-field
-                  v-model="customer.name"
-                  :rules="rules.nameRules"
-                  label="Nombre"
-                  box
-                  color="blue-grey lighten-2"
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="customer.ruc"
-                  label="Ruc"
-                  box
-                  color="blue-grey lighten-2"
-                  required
-                  type="number"
-                ></v-text-field>
-                <v-text-field
-                  :append-icon="'email'"
-                  v-model="customer.email"
-                  :rules="rules.emailRules"
-                  box
-                  color="blue-grey lighten-2"
-                  label="Email"
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="customer.phones"
-                  label="Telefonos"
-                  box
-                  color="blue-grey lighten-2"
-                ></v-text-field>
-                <v-text-field
-                  v-model="customer.address"
-                  label="Direccion"
-                  box
-                  color="blue-grey lighten-2"
-                ></v-text-field>
-                <v-text-field
-                  v-model="customer.economic_group"
-                  label="Grupo Empresarial"
-                  box
-                  color="blue-grey lighten-2"
-                ></v-text-field>
-                <v-select
-                  label="Tipo de Cliente"
-                  v-model="customer.type"
-                  :items="['premium', 'vip', 'normal']"
-                  box
-                ></v-select>
-                <v-switch
-                  v-model="customer.special_ruc"
-                  class="mt-0"
-                  color="blue lighten-2"
-                  hide-details
-                  label="Consumidor final o extranjero?"
-                ></v-switch>
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Usuario</v-btn>
-            </v-form>
+            <v-card flat>
+            <v-card-text>
+              <v-layout align-center mb-3>
+                <v-avatar color="blue">
+                  <v-icon dark>account_circle</v-icon>
+                </v-avatar>
+                <strong style="margin-left: 10px;" class="title">Cliente: {{customer.name}}</strong>
+                <v-spacer></v-spacer>
+                <v-btn icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-btn>
+              </v-layout>
+
+              <p style="text-align: justify;">
+                <strong>RUC:</strong> {{customer.ruc}}
+              </p>
+              <p style="text-align: justify;">
+                <strong>Correo electrónico:</strong> {{customer.email}}
+              </p>
+              <p style="text-align: justify;">
+                <strong>Teléfono:</strong> {{customer.phones}}
+              </p>
+              <p style="text-align: justify;">
+                <strong>Dirección:</strong> {{customer.address}}
+              </p>
+              <p style="text-align: justify;">
+                <strong>Grupo empresarial:</strong> {{customer.economic_group}}
+              </p>
+              <p style="text-align: justify;">
+                <strong>Tipo Cliente:</strong> {{customer.type}}
+              </p>
+              <v-switch
+                v-model="customer.special_ruc"
+                readonly="true"
+                class="mt-0"
+                color="blue lighten-2"
+                hide-details
+                label="Consumidor final o extranjero?"
+              ></v-switch>
+            </v-card-text>
+          </v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -78,6 +56,7 @@
 <script>
 import {validations} from './../../utils/validations'
 export default {
+  props: ['values'],
   data: (vm) => ({
     customer: {
       code: '',
@@ -103,6 +82,15 @@ export default {
       if (this.valid) {
         this.$emit('dataSubmited', this.customer)
       }
+    },
+    setData (data) {
+      let obj = Object.assign({}, data)
+      this.customer = obj
+    }
+  },
+  watch: {
+    values: function (dat) {
+      this.setData(dat)
     }
   }
 }

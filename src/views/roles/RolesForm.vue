@@ -5,22 +5,14 @@
         grid-list-lg
       >
         <v-layout row wrap>
-          <v-flex xs6>
-            <v-form
-            v-model="valid"
+            <v-form v-model="valid"
             @submit.prevent="sendData"
             @keydown.prevent.enter
             >
-              <v-text-field
-                  v-model="roles.code"
-                  :rules="rules.nameRules"
-                  label="Codigo"
-                  box
-                  color="blue-grey lighten-2"
-                  required
-                ></v-text-field>
+          <v-flex xs12>
+
                 <v-text-field
-                  v-model="roles.name"
+                  v-model="rol.name"
                   :rules="rules.nameRules"
                   label="Nombre"
                   box
@@ -28,73 +20,66 @@
                   required
                 ></v-text-field>
                  <v-text-field
-                  v-model="roles.description"
+                  v-model="rol.description"
                   :rules="rules.nameRules"
                   label="Descripción"
                   box
                   color="blue-grey lighten-2"
                 ></v-text-field>
-
-                <v-btn  small class="blue" @click.native="addService()">
-                  <v-icon>add</v-icon>Agregar Permiso
-                </v-btn>
-                  &nbsp;
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Rol</v-btn>
-            </v-form>
           </v-flex>
-           <v-flex xs6 v-if="roles.permissionrol && roles.permissionrol.length>0">
-              <v-list class="transparent elevation-0" two-line >
-                <v-list-tile avatar ripple v-for="(item, index) in roles.permissionrol"
-                v-if="item !== null && item !== undefined" v-bind:key="index" class="grey lighten-2 mt-2 mb-2 " >
-                    <v-list-tile-content dark >
-                      <v-list-tile-title class="heading blue--text">{{ item.module}}
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title class="grey--text text--darken-4">
-                          <v-container fluid>
-                            <v-layout row wrap>
-                              <v-list-tile-content dark>
-
-                              </v-list-tile-content>
-                              <v-flex xs12 sm3>
-                                <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.read == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Leer
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                 <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.create == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Crear
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.update == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Editar
-                                </v-list-tile-title>
-                              </v-flex>
-                              <v-flex xs6 sm3>
-                                 <v-list-tile-title class="heading blue--text">
-                                  <v-icon v-if = "item.delete == 'true'"  color="success">done_outline</v-icon>
-                                  <v-icon v-else  color="error">cancel</v-icon>
-                                  Eliminar
-                                </v-list-tile-title>
-                              </v-flex>
-                            </v-layout>
-                          </v-container>
-                        </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-btn color="red" fab small class="navy" @click.native="remove(item)">
-                        <v-icon color="white"  >delete</v-icon>
-                      </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
-              </v-list>
-            </v-flex>
+          <v-flex xs12>
+              <v-btn
+                small
+                color="secondary"
+                 @click.native="addService()">
+                AGREGAR PERMISOS
+              </v-btn>
+                &nbsp;
+              <v-btn small
+                  type="submit" :disabled="!valid"
+                  color="success"
+                >
+                  GUARDAR ROL
+                </v-btn>
+          </v-flex>
+          </v-form>
+          <v-flex xs12>
+              <v-data-table
+                    :headers="headers"
+                    :items="getViewPermissions"
+                    hide-actions
+                    item-key="name"
+                  >
+                    <template slot="items" slot-scope="props">
+                      <tr @click="props.expanded = !props.expanded">
+                        <td class="text-xs-left">{{props.item}}</td>
+                         <td class="justify-center layout px-0">
+                          <v-menu
+                            bottom
+                            transition="slide-y-transition"
+                          >
+                            <v-btn
+                              slot="activator"
+                              color="primary"
+                              flat
+                              icon
+                            >
+                            <v-icon>more_vert</v-icon>
+                            </v-btn>
+                            <v-list>
+                              <v-list-tile @click="editService(props.item)">
+                                <v-list-tile-title>Editar</v-list-tile-title>
+                              </v-list-tile>
+                              <v-list-tile @click="del(props.item)">
+                                <v-list-tile-title>Eliminar</v-list-tile-title>
+                              </v-list-tile>
+                            </v-list>
+                          </v-menu>
+                        </td>
+                      </tr>
+                    </template>
+                  </v-data-table>
+          </v-flex>
 
             <v-dialog v-model="addRestfulModal" width="700" persistent>
               <v-card>
@@ -103,44 +88,37 @@
                   <v-container fluid grid-list-md>
                     <v-layout row wrap>
                       <v-flex xs12 md6>
-                        <v-select
-                          label="Servicios"
-                          v-model="service"
-                          :items="getServices"
+                          <v-autocomplete v-bind:items="getServices"
                           item-text="name"
                           item-value="_id"
-                          persistent-hint
-                          return-object
-                          single-line
-                          box
-                        ></v-select>
+                          v-model="service" label="Servicio:"
+                          ></v-autocomplete>
                       </v-flex>
                       <v-flex xs12 md12>
                         <v-container fluid>
                             <v-layout row wrap>
                               <v-flex xs12 sm3>
                                 <v-checkbox
-                                v-model="readadd"
+                                v-model="read"
                                   label="Leer"
                                 ></v-checkbox>
                               </v-flex>
                               <v-flex xs6 sm3>
                                 <v-checkbox
-                                v-model="crearadd"
+                                v-model="created"
                                   label="Crear"
                                 ></v-checkbox>
                               </v-flex>
                               <v-flex xs6 sm3>
                                 <v-checkbox
-                                v-model="editaradd"
+                                v-model="edit"
                                   label="Editar"
                                 ></v-checkbox>
                               </v-flex>
                               <v-flex xs6 sm3>
                                 <v-checkbox
-                                v-model="eliminaradd"
+                                v-model="drop"
                                   label="Eliminar"
-
                                 ></v-checkbox>
                               </v-flex>
                             </v-layout>
@@ -150,7 +128,7 @@
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn class="green--text darken-1" flat="flat" @click.native="savePermiso">Agregar</v-btn>
+                  <v-btn class="green--text darken-1" flat="flat" @click.native="savePermissions">Agregar</v-btn>
                   <v-btn class="green--text darken-1" flat="flat" @click.native="cancelAddPermiso">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
@@ -164,39 +142,35 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
+import axios from 'axios'
 import {validations} from './../../utils/validations'
 import ConfirmDialog from './../../components/ConfirmDialog.vue'
-let state = {
-  permisorol: []
-}
 export default {
+  props: ['values'],
   data: (vm) => ({
-    roles: {
-      code: '',
+    rol: {
       name: '',
       description: '',
-      permissionrol: {
-        '_permissions_id': '',
-        'module': '',
-        'read': '',
-        'create': '',
-        'update': '',
-        'delete': '',
-        'removed': ''
-      },
+      permissions: [],
       removed: false
     },
+    viewPermission: [],
+    headers: [
+      {text: 'Nombre', align: 'left', sortable: true, value: 'name'},
+      {text: 'Acciones', value: 'name', sortable: false}
+    ],
     valid: false,
     rules: validations,
     modalTitle: 'Agregar Permisos',
     modalText: 'Seleccione un permiso para agregar al rol',
     addRestfulModal: false,
-    service: { module: '', _id: '' },
-    readadd: false,
-    crearadd: false,
-    editaradd: false,
-    eliminaradd: false,
+    service: null,
+    services: [],
+    read: false,
+    created: false,
+    edit: false,
+    drop: false,
     dialog: false,
     dialogTitle: 'Eliminar Permiso',
     dialogText: 'Desea eliminar este permiso?',
@@ -210,37 +184,109 @@ export default {
     ]),
     sendData () {
       if (this.valid) {
-        this.$emit('dataSubmited', this.roles)
+        this.$emit('dataSubmited', this.rol)
       }
+    },
+    setData (data) {
+      let obj = Object.assign({}, data)
+      this.rol = obj
     },
     addService () {
       this.addRestfulModal = true
     },
+    editService (data) {
+      this.addRestfulModal = true
+      this.service = data
+      let matches = this.rol.permissions.filter(s => s.includes(this.service))
+      this.loadPermissionsSave(matches)
+      this.modifyPermissions()
+    },
+    loadPermissionsSave (matches) {
+      this.clearSelectPermissions()
+      const read = 'get'
+      const create = 'create'
+      const update = 'update'
+      const drop = 'remove'
+      let readPermissions = matches.filter(s => s.includes(read))
+      if (readPermissions.length > 0) {
+        this.read = true
+      }
+      let createPermissions = matches.filter(s => s.includes(create))
+      if (createPermissions.length > 0) {
+        this.created = true
+      }
+      let updatePermissions = matches.filter(s => s.includes(update))
+      if (updatePermissions.length > 0) {
+        this.edit = true
+      }
+      let deletePermissions = matches.filter(s => s.includes(drop))
+      if (deletePermissions.length > 0) {
+        this.drop = true
+      }
+    },
     cancelAddPermiso () {
       this.addRestfulModal = false
     },
-    savePermiso () {
-      state.permisorol.push({
-        '_permissions_id': this.service._id,
-        'module': this.service.module,
-        'read': this.readadd.toString(),
-        'create': this.crearadd.toString(),
-        'update': this.editaradd.toString(),
-        'delete': this.eliminaradd.toString(),
-        'removed': false
-      })
+    modifyPermissions () {
+      let matches = this.rol.permissions.filter(s => s.includes(this.service))
+      if (matches.length > 0) {
+        let that = this
+        matches.forEach(function (element) {
+          that.rol.permissions = that.rol.permissions.filter(function (item) {
+            return item !== element
+          })
+        })
+      }
+      return this.rol.permissions
+    },
+    savePermissions () {
+      this.rol.permissions = this.modifyPermissions()
+      let permissions = []
+      if (this.read === true) {
+        permissions = permissions.concat(this.buildReadPermissions(this.service))
+      }
 
+      if (this.created === true) {
+        permissions = permissions.concat(this.buildCreatePermissions(this.service))
+      }
+
+      if (this.edit === true) {
+        permissions = permissions.concat(this.buildUpdatePermissions(this.service))
+      }
+
+      if (this.drop === true) {
+        permissions = permissions.concat(this.buildRemovePermissions(this.service))
+      }
+      this.rol.permissions = this.rol.permissions.concat(permissions)
       this.clear()
     },
+    buildReadPermissions (serviceName) {
+      let permissionRead = [serviceName + ':find', serviceName + ':get']
+      return permissionRead
+    },
+    buildCreatePermissions (serviceName) {
+      let permissionCreate = [serviceName + ':create']
+      return permissionCreate
+    },
+    buildUpdatePermissions (serviceName) {
+      let permissionUpdate = [serviceName + ':update', serviceName + ':patch']
+      return permissionUpdate
+    },
+    buildRemovePermissions (serviceName) {
+      let permissionUpdate = [serviceName + ':remove']
+      return permissionUpdate
+    },
     clear () {
-      this.roles.permissionrol = state.permisorol
-      this.service = { module: '', _id: '' }
+      this.service = ''
       this.module = null
-      this.readadd = false
-      this.crearadd = false
-      this.editaradd = false
-      this.eliminaradd = false
       this.addRestfulModal = false
+      this.clearSelectPermissions()
+    },
+    clearSelectPermissions () {
+      this.read = false
+      this.created = false
+      this.edit = false
+      this.drop = false
     },
     remove (element) {
       this.dialogTitle = 'Eliminar este permiso : ' + element.module
@@ -248,7 +294,7 @@ export default {
       this.permisodel = element._permissions_id
     },
     onConfirm () {
-      this.roles.permissionrol.splice(this.roles.permissionrol.findIndex(p => p._permissions_id === this.permisodel), 1)
+      this.rol.permissions.splice(this.rol.permissions.findIndex(p => p._permissions_id === this.permisodel), 1)
       this.setSnackMessage('Permiso Eliminado')
       this.setShowSnack(true)
       this.dialog = false
@@ -258,24 +304,40 @@ export default {
       this.dialog = false
     }
   },
+  watch: {
+    values: function (dat) {
+      this.setData(dat)
+    }
+  },
   computed: {
     ...mapGetters('restfuls', {findRestfulInStore: 'find'}),
+    ...mapState('auth', { accessToken: 'accessToken' }),
+    ...mapState(['currentEnv']),
     getServices () {
-      return this.findRestfulInStore({query: {removed: false}}).data
+      return this.services
+    },
+    getViewPermissions () {
+      let that = this
+      this.rol.permissions.forEach(function (element) {
+        let array = element.split(':')
+        let name = array[0]
+        if (!that.viewPermission.includes(name)) {
+          that.viewPermission.push(name)
+        }
+      })
+      return this.viewPermission
     }
   },
   created () {
-    this.findRestful({ query: {removed: false} }).then(response => {
+    let axiosIntance = axios.create({baseURL: this.currentEnv})
+    let that = this
+    axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
+    axiosIntance.get('/restfuls').then(res => {
+      that.services = res.data.services
     })
+    this.clear()
   },
-  mounted () {
-    if (this.$route.params.id) {
-    } else {
-      state = {
-        permisorol: []
-      }
-    }
-  },
+  mounted () {},
   components: {ConfirmDialog}
 }
 </script>

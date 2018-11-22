@@ -1,11 +1,21 @@
 <template>
     <v-container grid-list-md text-xs-center>
-        <loading-component v-if="loading"></loading-component>
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
                 <v-subheader>Usuarios del sistema encuentas</v-subheader>
-                <users-polls-form @dataSubmited="create"></users-polls-form>
+                <v-tabs right>
+                  <v-tab>
+                    Usuario
+                  </v-tab>
+                  <v-tab-item>
+                    <v-card flat>
+                      <v-card-text>
+                        <users-polls-form @dataSubmited="create"></users-polls-form>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                </v-tabs>
                 <v-btn
                 absolute
                 dark
@@ -25,9 +35,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 import UsersPollsForm from './UsersPollsForm'
-import LoadingComponent from '../../components/docaration/LoadingComponent'
+import UsersPollsRol from './UsersPollsRol'
 export default {
   methods: {
     create (values) {
@@ -35,6 +44,19 @@ export default {
       const { UsersPoll } = this.$FeathersVuex
       let userPoll = new UsersPoll(values)
       userPoll.save().then((result) => {
+        let userRol = {
+          _user_id: result._id,
+          _rol_id: values._rol_id
+        }
+        this.createUsersRol(userRol)
+      }, (err) => {
+        console.log(err)
+      })
+    },
+    createUsersRol (values) {
+      const {UsersRole} = this.$FeathersVuex
+      const usersRole = new UsersRole(values)
+      usersRole.save().then((result) => {
         this.goToList()
       }, (err) => {
         console.log(err)
@@ -45,12 +67,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('users-polls', {loading: 'isCreatePending'})
+    getRoles () {
+      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
   },
   mounted () {
     // console.log(this.$FeathersVuex);
   },
-  components: {UsersPollsForm, LoadingComponent}
+  components: {UsersPollsForm, UsersPollsRol}
 }
 </script>
 

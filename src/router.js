@@ -22,6 +22,11 @@ const CustomerNew = resolve => {
     resolve(require('./views/customers/CustomerNew.vue'))
   }, 'customers')
 }
+const CustomerEdit = resolve => {
+  require.ensure(['./views/customers/CustomerEdit.vue'], () => {
+    resolve(require('./views/customers/CustomerEdit.vue'))
+  }, 'customers')
+}
 const CustomerList = resolve => {
   require.ensure(['./views/customers/CustomerList.vue'], () => {
     resolve(require('./views/customers/CustomerList.vue'))
@@ -45,6 +50,11 @@ const UserForm = resolve => {
 const UserListAccess = resolve => {
   require.ensure(['./views/users/UserListAccess.vue'], () => {
     resolve(require('./views/users/UserListAccess.vue'))
+  }, 'userListAccess')
+}
+const UserRol = resolve => {
+  require.ensure(['./views/users/UserRol.vue'], () => {
+    resolve(require('./views/users/UserRol.vue'))
   }, 'userListAccess')
 }
 const RegionList = resolve => {
@@ -112,6 +122,16 @@ const RolesNew = resolve => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
 }
+const RolesEdit = resolve => {
+  require.ensure(['./views/roles/RolesEdit.vue'], () => {
+    resolve(require('./views/roles/RolesEdit.vue'))
+  }, 'roles')
+}
+const AssignRol = resolve => {
+  require.ensure(['./views/roles/AssignRol.vue'], () => {
+    resolve(require('./views/roles/AssignRol.vue'))
+  }, 'roles')
+}
 const QuestionTypeList = resolve => {
   require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
     resolve(require('./views/question-types/QuestionTypeList.vue'))
@@ -166,16 +186,6 @@ const CategorysegmentEdit = resolve => {
   require.ensure(['./views/category-segmentation/CatsegmentForm.vue'], () => {
     resolve(require('./views/category-segmentation/CatsegmentForm.vue'))
   }, 'category-segmentation')
-}
-const RestfulList = resolve => {
-  require.ensure(['./views/restfuls/RestfulList.vue'], () => {
-    resolve(require('./views/restfuls/RestfulList.vue'))
-  }, 'restfuls')
-}
-const RestfulNew = resolve => {
-  require.ensure(['./views/restfuls/RestfulNew.vue'], () => {
-    resolve(require('./views/restfuls/RestfulNew.vue'))
-  }, 'restfuls')
 }
 const PollsList = resolve => {
   require.ensure(['./views/polls-project/PollsList.vue'], () => {
@@ -255,6 +265,11 @@ export default new Router({
           component: UserListAccess
         },
         {
+          path: 'user-rol/:_id',
+          name: 'UserRol',
+          component: UserRol
+        },
+        {
           path: 'applications',
           name: 'Applications',
           component: Applications
@@ -268,6 +283,11 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'customer-view/:_id',
+          name: 'CustomerEdit',
+          component: CustomerEdit
         },
         {
           path: 'CategoryPollNew',
@@ -346,6 +366,16 @@ export default new Router({
           component: RolesNew
         },
         {
+          path: 'edit-roles/:_id',
+          name: 'RolesEdit',
+          component: RolesEdit
+        },
+        {
+          path: 'assign-rol',
+          name: 'AssignRol',
+          component: AssignRol
+        },
+        {
           path: 'menu-new',
           name: 'MenuNew',
           component: MenuNew
@@ -389,16 +419,6 @@ export default new Router({
           path: 'Edit-category-segmentation',
           name: 'EditCategorysegmentation',
           component: CategorysegmentEdit
-        },
-        {
-          path: 'restfuls',
-          name: 'RestfulList',
-          component: RestfulList
-        },
-        {
-          path: 'restful-new',
-          name: 'RestfulNew',
-          component: RestfulNew
         },
         {
           path: 'polls-project',
