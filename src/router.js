@@ -22,6 +22,11 @@ const CustomerNew = resolve => {
     resolve(require('./views/customers/CustomerNew.vue'))
   }, 'customers')
 }
+const CustomerEdit = resolve => {
+  require.ensure(['./views/customers/CustomerEdit.vue'], () => {
+    resolve(require('./views/customers/CustomerEdit.vue'))
+  }, 'customers')
+}
 const CustomerList = resolve => {
   require.ensure(['./views/customers/CustomerList.vue'], () => {
     resolve(require('./views/customers/CustomerList.vue'))
@@ -278,6 +283,11 @@ export default new Router({
           path: 'new-customer',
           name: 'NewCustomers',
           component: CustomerNew
+        },
+        {
+          path: 'customer-view/:_id',
+          name: 'CustomerEdit',
+          component: CustomerEdit
         },
         {
           path: 'CategoryPollNew',
