@@ -5,15 +5,27 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-subheader>Listado de Clientes</v-subheader>
+              <v-card-title>
+                <v-flex xs6>
+                    <v-text-field
+                      v-model="search"
+                      append-icon="search"
+                      label="Buscar..."
+                      single-line
+                      hide-details
+                    ></v-text-field>
+                </v-flex>
+              </v-card-title>
             <v-data-table
                   :headers="headers"
                   :items="getCustomers"
                   hide-actions
                   item-key="name"
+                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td>
+                      <td class="text-xs-left">
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
                           lazy
@@ -51,42 +63,6 @@
                       </td>
                       <td class="text-xs-left">
                         <v-edit-dialog
-                          :return-value.sync="props.item.email"
-                          lazy
-                          @save="edit(props.item.email, props.item, 'email')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.email }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.email"
-                            label="Editar Email"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td class="text-xs-left">
-                        <v-edit-dialog
-                          :return-value.sync="props.item.phones"
-                          lazy
-                          @save="edit(props.item.phones, props.item, 'phones')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.phones }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.phones"
-                            label="Editar Telefono"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td class="text-xs-left">
-                        <v-edit-dialog
                           :return-value.sync="props.item.address"
                           lazy
                           @save="edit(props.item.address, props.item, 'address')"
@@ -117,6 +93,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToView(props.item._id)">
+                                <v-list-tile-title>Ver Info</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -179,16 +158,6 @@ export default {
           sortable: false
         },
         {
-          text: 'Email',
-          value: 'email',
-          sortable: false
-        },
-        {
-          text: 'Telefono',
-          value: 'phones',
-          sortable: false
-        },
-        {
           text: 'Direccion',
           value: 'address',
           sortable: false
@@ -201,6 +170,7 @@ export default {
       ],
       customers: [],
       message: '',
+      search: '',
       showMsg: false,
       msgType: 'error',
       page: 1,
@@ -215,6 +185,10 @@ export default {
     ...mapActions('customers', { findCustomers: 'find' }),
     goToNew () {
       this.$router.push('/new-customer')
+    },
+    goToView (codigo) {
+      // console.log('mi codigo es ', codigo)
+      this.$router.push('/customer-view/' + codigo)
     },
     edit (val, elem, field) {
       const {Customer} = this.$FeathersVuex
