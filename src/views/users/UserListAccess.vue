@@ -4,12 +4,25 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Usuarios </v-subheader>
+              <v-subheader>Usuarios con acceso</v-subheader>
+              <v-card-title>
+                <v-subheader>Listado de Ítems</v-subheader>
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="search"
+                  label="Buscar usuario"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
             <v-data-table
                 :headers="headers"
                 :items="getUsers"
                 hide-actions
                 class="elevation-1"
+                item-key="name"
+                :search="search"
             >
                 <template slot="items" slot-scope="props">
                 <td>
@@ -18,13 +31,6 @@
                     lazy
                     @save="edit(props.item.name, props.item, 'name')"
                   > {{ props.item.name }}
-                    <v-text-field
-                      slot="input"
-                      v-model="props.item.name"
-                      label="Editar Nombre"
-                      single-line
-                      counter
-                    ></v-text-field>
                   </v-edit-dialog>
                 </td>
                 <td>
@@ -33,14 +39,6 @@
                     lazy
                     @save="edit(props.item.email, props.item, 'email')"
                   > {{ props.item.email }}
-                    <v-text-field
-                      slot="input"
-                      v-model="props.item.email"
-                      label="Editar Email"
-                      :rules="rules.emailRules"
-                      single-line
-                      counter
-                    ></v-text-field>
                   </v-edit-dialog>
                 </td>
                 <td>
@@ -57,8 +55,11 @@
                    <v-icon>more_vert</v-icon>
                   </v-btn>
                   <v-list>
-                    <v-list-tile @click="del(props.item)">
-                      <v-list-tile-title>Eliminar</v-list-tile-title>
+                    <v-list-tile @click="changeAccess(props.item)">
+                      <v-list-tile-title>Cambiar acceso</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="assignRol(props.item._id)">
+                      <v-list-tile-title>Asignar rol</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
                 </v-menu>
@@ -77,21 +78,8 @@
                 </v-card>
               </v-flex>
             </v-layout>
-                <v-btn
-                absolute
-                dark
-                fab
-                small
-                top
-                right
-                color="pink"
-                @click="goToNew()"
-                >
-                    <v-icon>add</v-icon>
-                </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
-
             </v-card>
         </v-flex>
         </v-layout>
@@ -101,7 +89,6 @@
 
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
-
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 import {validations} from './../../utils/validations'
@@ -133,8 +120,10 @@ export default {
       ],
       users: [],
       message: '',
+      accessFilter: { application_permissions: {polls: true} },
       showMsg: false,
       msgType: 'error',
+      search: '',
       rules: validations
     }
   },
@@ -144,7 +133,7 @@ export default {
       this.$router.push('/new-user')
     },
     getData () {
-      let params = {query: {removed: false}}
+      let params = {query: {removed: false, application_permissions: true}}
       return this.$store.dispatch('users/find', params)
     },
     edit (val, elem, field) {
@@ -158,23 +147,20 @@ export default {
         })
       })
     },
-    del (element) {
+    changeAccess (element) {
       const {User} = this.$FeathersVuex
       const user = new User(element)
-      user.removed = true
-      user.patch().then((result) => {
-        this.findUsers({ query: {removed: false} }).then(response => {
-          const users = response.data || response
-          console.log(users)
-        })
-      })
+      window.open('http://gestion.propraxis.ec/#/users-edit?_id=' + user._id, '_blank')
+    },
+    assignRol (code) {
+      this.$router.push('/user-rol/' + code)
     }
   },
   computed: {
     ...mapState('users', {loading: 'isFindPending'}),
     ...mapGetters('users', {findUsersInStore: 'find'}),
     getUsers () {
-      return this.findUsersInStore({query: {removed: false}}).data
+      return this.findUsersInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.accessFilter}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -185,7 +171,7 @@ export default {
   },
   watch: {
     page () {
-      this.findUsers({ query: {removed: false} }).then(response => {
+      this.findUsers({ query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.accessFilter} }).then(response => {
         this.limit = response.limit
         this.total = response.total
       })

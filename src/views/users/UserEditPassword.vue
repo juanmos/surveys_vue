@@ -12,34 +12,24 @@
             @keydown.prevent.enter
             >
                 <v-text-field
-                  :append-icon="'name'"
-                  v-model="user.name"
-                  :rules="rules.nameRules"
-                  label="Nombre"
+                  :append-icon="showPass ? 'visibility_off' : 'visibility'"
+                  v-model="user.password"
+                  :rules="rules.passwordRules"
+                  :type="showPass ? 'text' : 'password'"
+                  label="Contraseña"
+                  @click:append="showPass = !showPass"
                   required
                 ></v-text-field>
                 <v-text-field
-                  :append-icon="'email'"
-                  v-model="user.email"
-                  :rules="rules.emailRules"
-                  label="Email"
+                  :append-icon="showPass ? 'visibility_off' : 'visibility'"
+                  v-model="user.confirmPassword"
+                  :rules="confirmPasswordRules"
+                  :type="showPass ? 'text' : 'password'"
+                  label="Repita contraseña"
+                  @click:append="showPass = !showPass"
                   required
                 ></v-text-field>
-                <v-text-field
-                  :append-icon="'cedula'"
-                  v-model="user.cedula"
-                  :rules="rules.nameRules"
-                  label="Cédula de identidad"
-                  required
-                ></v-text-field>
-                <v-text-field
-                  :append-icon="'phones'"
-                  v-model="user.phones"
-                  :rules="rules.nameRules"
-                  label="Teléfono"
-                  required
-                ></v-text-field>
-                <v-btn type="submit" :disabled="!valid" small color="info">Modificar</v-btn>
+                <v-btn type="submit"  :disabled="!valid" small color="info">Modificar</v-btn>
             </v-form>
           </v-flex>
         </v-layout>
@@ -48,15 +38,14 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 import {validations} from './../../utils/validations'
 export default {
   data: (vm) => ({
     valid: false,
     name: '',
-    email: '',
-    phones: '',
+    password: '',
     showPass: false,
     rules: validations,
     confirmPasswordRules: [
@@ -76,6 +65,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('studies', {loading: 'isCreatePending'}),
     user () {
       return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
     }

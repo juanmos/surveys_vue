@@ -17,7 +17,10 @@
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
-        <v-icon>search</v-icon>
+        <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon @click="goUser" title="Perfil">perm_identity</v-icon>
       </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>more_vert</v-icon>
@@ -52,10 +55,9 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-
 import SideMenu from './../components/SideMenu'
 import SnackMessage from './../components/docaration/SnackMessage'
+import router from './../router'
 export default {
   name: 'App',
   data () {
@@ -70,7 +72,17 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', { user: 'user' })
+    user () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    }
+  },
+  methods: {
+    goApplications () {
+      router.push('/applications')
+    },
+    goUser () {
+      router.push('/user-edit')
+    }
   },
   components: {SideMenu, SnackMessage}
 }

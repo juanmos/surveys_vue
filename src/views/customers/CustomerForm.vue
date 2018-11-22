@@ -30,7 +30,6 @@
                 <v-text-field
                   :append-icon="'email'"
                   v-model="customer.email"
-                  :rules="rules.emailRules"
                   box
                   color="blue-grey lighten-2"
                   label="Email"
@@ -67,7 +66,6 @@
                   hide-details
                   label="Consumidor final o extranjero?"
                 ></v-switch>
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar Usuario</v-btn>
             </v-form>
           </v-flex>
         </v-layout>
@@ -78,6 +76,7 @@
 <script>
 import {validations} from './../../utils/validations'
 export default {
+  props: ['values'],
   data: (vm) => ({
     customer: {
       code: '',
@@ -103,6 +102,15 @@ export default {
       if (this.valid) {
         this.$emit('dataSubmited', this.customer)
       }
+    },
+    setData (data) {
+      let obj = Object.assign({}, data)
+      this.customer = obj
+    }
+  },
+  watch: {
+    values: function (dat) {
+      this.setData(dat)
     }
   }
 }

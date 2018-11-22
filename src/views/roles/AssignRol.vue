@@ -4,28 +4,34 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Clientes</v-subheader>
-              <v-card-title>
-                <v-flex xs6>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="search"
-                      label="Buscar..."
-                      single-line
-                      hide-details
-                    ></v-text-field>
-                </v-flex>
-              </v-card-title>
+              <v-subheader>Asignar rol a usuarios </v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getCustomers"
+                  :items="getUsers"
                   hide-actions
                   item-key="name"
-                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
+                      <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.email"
+                          lazy
+                          @save="edit(props.item.email, props.item, 'email')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.email }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.email"
+                            label="Editar email"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td>
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
                           lazy
@@ -37,49 +43,22 @@
                           <v-text-field
                             slot="input"
                             v-model="props.item.name"
-                            label="Editar Nombre"
+                            label="Editar Nombres"
                             single-line
                             counter
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-                      <td class="text-xs-left">
-                        <v-edit-dialog
-                          :return-value.sync="props.item.ruc"
-                          lazy
-                          @save="edit(props.item.ruc, props.item, 'ruc')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.ruc }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.ruc"
-                            label="Editar Ruc"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
+
+                      <td>
+                          <v-autocomplete v-bind:items="getRoles"
+                          item-text="name"
+                          item-value="_id"
+                          v-model="props.item._rol_id" label=""
+                          ></v-autocomplete>
                       </td>
-                      <td class="text-xs-left">
-                        <v-edit-dialog
-                          :return-value.sync="props.item.address"
-                          lazy
-                          @save="edit(props.item.address, props.item, 'address')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.address }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.address"
-                            label="Editar Direccion"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td class="justify-center layout px-0">
+
+                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
                           transition="slide-y-transition"
@@ -93,11 +72,11 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToView(props.item._id)">
-                                <v-list-tile-title>Ver Info</v-list-tile-title>
+                            <v-list-tile @click="edita(props.item._id)">
+                              <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToEdit(props.item)">
-                              <v-list-tile-title>Modificar</v-list-tile-title>
+                            <v-list-tile @click="del(props.item)">
+                              <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
                           </v-list>
                         </v-menu>
@@ -135,90 +114,95 @@
         </v-flex>
         </v-layout>
     </v-container>
+     <confirm-dialog :dialog="dialog" :dialogTitle="dialogTitle"  :dialogText="dialogText" @onConfirm="onConfirm" @onCancel="onCancel" ></confirm-dialog>
 </div>
 </template>
 
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
-
+import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import ConfirmDialog from './../../components/ConfirmDialog.vue'
 export default {
+
   data () {
     return {
+      dialog: false,
+      dialogTitle: 'Eliminar Rol',
+      dialogText: 'Desea eliminar este Rol?',
       headers: [
-        {
-          text: 'Nombre',
-          align: 'left',
-          sortable: false,
-          value: 'name'
+        { text: 'Usuario',
+          value: 'name',
+          sortable: true
         },
-        { text: 'Ruc',
-          value: 'ruc',
+        {
+          text: 'Nombres',
+          value: 'description',
           sortable: false
         },
         {
-          text: 'Direccion',
-          value: 'address',
+          text: 'Rol',
+          value: 'rol',
           sortable: false
         },
-        {
-          text: 'Acciones',
+        { text: 'Acciones',
           value: 'name',
           sortable: false
         }
       ],
-      customers: [],
+      MyRules: [
+        v => !!v || 'El campo es requerido'
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+      ],
+      rules: validations,
       message: '',
-      search: '',
+      selectedRol: null,
       showMsg: false,
       msgType: 'error',
       page: 1,
-      limit: 20,
+      limit: 10,
       total: 1,
       loaded: false,
-      clients: [],
-      query: {}
+      usersPolls: [],
+      query: {},
+      rolId: ''
     }
   },
   methods: {
-    ...mapActions('customers', { findCustomers: 'find' }),
+    ...mapActions('users-polls', { findUsersPolls: 'find' }),
+    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     goToNew () {
-      this.$router.push('/new-customer')
+      this.$router.push('/new-roles')
     },
-    goToView (codigo) {
-      // console.log('mi codigo es ', codigo)
-      this.$router.push('/customer-view/' + codigo)
-    },
-    goToEdit (element) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(element)
-      window.open('http://gestion.propraxis.ec/#/edit-client?_id=' + customer._id, '_blank')
-    },
-    edit (val, elem, field) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(elem)
-      customer[field] = val
-      customer.patch().then((result) => {
-        this.findCustomers({ query: {removed: false} }).then(response => {
-          const customers = response.data || response
-          console.log(customers)
-        })
-      })
+    edita (id) {
+      this.$router.push('/edit-roles/' + id)
     },
     del (element) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(element)
-      customer.removed = true
-      customer.patch().then((result) => {
-        this.findCustomers({ query: {removed: false} }).then(response => {
-          const customers = response.data || response
-          console.log(customers)
-        })
+      this.dialogTitle = 'Eliminar Rol : ' + element.name
+      this.dialog = true
+      this.rolId = element
+    },
+    onConfirm () {
+      const {Role} = this.$FeathersVuex
+      let rolesdelete = new Role(this.rolId)
+      rolesdelete.removed = true
+      rolesdelete.patch().then((result) => {
+        this.getData()
+        this.setSnackMessage('Rol Eliminado')
+        this.setShowSnack(true)
       })
+      this.dialog = false
+    },
+    onCancel () {
+      this.rolId = ''
+      this.dialog = false
     },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
@@ -234,15 +218,28 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
+    },
+    getData () {
+      this.findUsersPolls({query: {removed: false, $skip: 0}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.roles = response.data
+        console.log('estas son los roles', this.roles)
+      })
     }
   },
   computed: {
-    ...mapState('customers', {loading: 'isFindPending'}),
-    ...mapState('customers', { paginationVal: 'pagination' }),
-    ...mapGetters('customers', {findCustomersInStore: 'find'}),
-    getCustomers () {
-      return this.findCustomersInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('users-polls', {loading: 'isFindPending'}),
+    ...mapState('users-polls', { paginationVal: 'pagination' }),
+    ...mapGetters('users-polls', {findUsersPollsInStore: 'find'}),
+    ...mapGetters('roles', {findRolesInStore: 'find'}),
+    ...mapState('auth', { user: 'user' }),
+    getUsers () {
+      return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
+    getRoles () {
+      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -253,21 +250,27 @@ export default {
   },
   watch: {
     page () {
-      this.findCustomers({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findCustomers({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.clients = response.data
+      this.usersPolls = response.data
+    })
+    this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.usersPolls = response.data
     })
   },
-  components: {LoadingComponent, EditableField}
+  components: {LoadingComponent, EditableField, ConfirmDialog}
 }
 </script>
 

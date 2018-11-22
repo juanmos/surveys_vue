@@ -1,41 +1,60 @@
 <template>
 <div>
     <v-container grid-list-md text-xs-center>
-        <v-layout row wrap>
-        <v-flex xs12>
+        <v-layout justify-center>
+        <v-flex xs9>
             <v-card :flat="true">
-              <v-subheader>Listado de Categorías</v-subheader>
+              <v-subheader>TIPOS DE PREGUNTAS</v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getCategories"
                   hide-actions
-                  item-key="name"
+                  item-key="type_camp"
                   striped hover
                   outlined
                   bordered
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-center">
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
+                      <td class="text-xs-left">
+                        {{ props.item.type_camp  }}
+                      </td>
+                      <td class="text-xs-left">
+                        {{ props.item.config }}
                       </td>
                       <td class="justify-center layout px-0">
-                        <v-menu
+                        <v-icon title="Eliminar Código"
+                      color="blue"
+            small
+            @click="itemSelected= props.item; itemSelectedname= props.item.type_camp; itemSelectedconfig= props.item.config; dialog = true; "
+          >
+            search
+          </v-icon>
+          <v-dialog
+                          v-model="dialog"
+                          max-width="680"
+                          heigth="800"
+                        >
+                          <v-card>
+                            <v-card-title class="headline">Previsualización de Configuración de tipo: {{ itemSelectedname }}</v-card-title>
+                            <!-- VISUALIZACION DEL TIPO DE CONFIGURACION -->
+                            <v-card-text>
+                              {{ itemSelectedconfig[0].type}}
+                            </v-card-text>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialog = false"
+                              >
+                                ACEPTAR
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                        <!-- <v-menu
                           bottom
                           transition="slide-y-transition"
                         >
@@ -49,7 +68,7 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="goToAddcodes(props.item._id, props.item.name)">
-                              <v-list-tile-title>Ver códigos</v-list-tile-title>
+                              <v-list-tile-title>Añadir códigos</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="itemSelected= props.item; itemSelectedname= props.item.name; editCodeGeneral(props.item._id, props.item.name)">
                               <v-list-tile-title>Usa/No usa códigos generales</v-list-tile-title>
@@ -91,7 +110,7 @@
                             </v-card-actions>
                           </v-card>
                         </v-dialog>
-                        </v-menu>
+                        </v-menu> -->
                       </td>
                     </tr>
                   </template>
@@ -102,7 +121,6 @@
                       <v-card-text>
                         <v-pagination
                           v-model="page"
-                          :length="getLength"
                         ></v-pagination>
                       </v-card-text>
                     </v-card>
@@ -115,13 +133,11 @@
                 small
                 top
                 right
-                color="pink"
+                color="red"
                 @click="goToNew()"
                 >
                     <v-icon>add</v-icon>
                 </v-btn>
-                <loading-component v-if="loading
-                "></loading-component>
             </v-card>
         </v-flex>
         </v-layout>
@@ -130,24 +146,26 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from 'vuex'
-
-import EditableField from './../../components/forms/EditableField'
-import LoadingComponent from './../../components/docaration/LoadingComponent'
+import {mapGetters, mapActions} from 'vuex'
 export default {
   data () {
     return {
       headers: [
         {
-          text: 'Nombre',
+          text: 'Tipo de campo',
           align: 'left',
           sortable: false,
-          value: 'name'
+          value: 'type_camp'
+        },
+        {
+          text: 'Configuración',
+          align: 'center',
+          value: 'config',
+          sortable: false
         },
         {
           text: 'Acciones',
           align: 'center',
-          value: 'name',
           sortable: false
         }
       ],
@@ -157,6 +175,7 @@ export default {
       msgType: 'error',
       itemSelected: null,
       itemSelectedname: null,
+      itemSelectedconfig: {type: ''},
       page: 1,
       limit: 20,
       total: 1,
@@ -170,14 +189,9 @@ export default {
   methods: {
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('category-poll', { findCategory: 'find' }),
+    ...mapActions('question-types', {findQuestiontypes: 'find'}),
     goToNew () {
-      this.getband()
-      console.log(this.bandgeneral)
-      if (this.bandgeneral === true) {
-        this.$router.push('/CategoryGeneralNew')
-      } else {
-        this.$router.push('/CategoryPollNew')
-      }
+      this.$router.push('/CategoryPollNew')
     },
     goToAddcodes (val, val2) {
       this.$router.push({path: '/CategoryPollFormAddCodes/' + val + '/' + val2})
@@ -246,13 +260,6 @@ export default {
         console.log(err)
       })
     },
-    getband () {
-      if (this.$route.params.isgeneral === '1') {
-        this.bandgeneral = true
-      } else {
-        this.bandgeneral = false
-      }
-    },
     save (val) {
       this.snack = true
       this.snackColor = 'success'
@@ -273,24 +280,15 @@ export default {
     }
   },
   computed: {
-    ...mapState('category-poll', {loading: 'isFindPending'}),
-    ...mapState('category-poll', { paginationVal: 'pagination' }),
-    ...mapGetters('category-poll', {findCategoriesInStore: 'find'}),
+    ...mapGetters('question-types', {findQuestiontypes2: 'find'}),
     getCategories () {
-      // console.log(this.findCategoriesInStore({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findCategoriesInStore({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-    },
-    getLength () {
-      return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
-    },
-    getSkip () {
-      return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+      console.log(this.findQuestiontypes2({query: {removed: false, ...this.query}}).data)
+      return this.findQuestiontypes2({query: {removed: false, ...this.query}}).data
     }
   },
-  watch: {
+  /* watch: {
     '$route' (to, from) { // react to route changes...
-      this.getband()
-      this.findCategory({query: {$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}}).then(response => {
+      this.findCategory({$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
@@ -298,23 +296,19 @@ export default {
       })
     },
     page () {
-      this.getband()
       this.findCategory({query: {removed: false, _iscodegeneral: this.bandgeneral, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
-  },
+  }, */
   created () {
-    this.getband()
-    this.findCategory({query: {$skip: this.getSkip, $limit: this.limit, removed: false, _iscodegeneral: this.bandgeneral, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.categories = response.data
+    this.findQuestiontypes({removed: false, ...this.query}).then(response => {
+      console.log('entra')
+      this.itemSelectedconfig = response.data
+      console.log('TRAE: ', this.itemSelectedconfig)
     })
-  },
-  components: {LoadingComponent, EditableField}
+  }
 }
 </script>
 

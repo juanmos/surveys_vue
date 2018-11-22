@@ -1,31 +1,19 @@
 <template>
-<div>
+<div >
     <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Clientes</v-subheader>
-              <v-card-title>
-                <v-flex xs6>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="search"
-                      label="Buscar..."
-                      single-line
-                      hide-details
-                    ></v-text-field>
-                </v-flex>
-              </v-card-title>
+              <v-subheader>Servicios del API de encuestas</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getCustomers"
+                  :items="getCategories"
                   hide-actions
                   item-key="name"
-                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
+                      <td>
                         <v-edit-dialog
                           :return-value.sync="props.item.name"
                           lazy
@@ -40,42 +28,46 @@
                             label="Editar Nombre"
                             single-line
                             counter
+                            :rules="MyRules"
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-                      <td class="text-xs-left">
+                      <td>
                         <v-edit-dialog
-                          :return-value.sync="props.item.ruc"
+                          :return-value.sync="props.item.url"
                           lazy
-                          @save="edit(props.item.ruc, props.item, 'ruc')"
+                          @save="edit(props.item.url, props.item, 'url')"
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.ruc }}
+                        > {{ props.item.url }}
                           <v-text-field
                             slot="input"
-                            v-model="props.item.ruc"
-                            label="Editar Ruc"
+                            v-model="props.item.url"
+                            label="Editar Nombre"
                             single-line
                             counter
+                            :rules="MyRules"
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-                      <td class="text-xs-left">
+                      <td>
                         <v-edit-dialog
-                          :return-value.sync="props.item.address"
+                          :return-value.sync="props.item.description"
                           lazy
-                          @save="edit(props.item.address, props.item, 'address')"
+                          @save="edit(props.item.description, props.item, 'description')"
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.address }}
+                        > {{ props.item.description }}
                           <v-text-field
                             slot="input"
-                            v-model="props.item.address"
-                            label="Editar Direccion"
+                            v-model="props.item.description"
+                            label="Editar Descripción"
                             single-line
                             counter
+                            required
+                            :rules="MyRules"
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
@@ -93,12 +85,41 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToView(props.item._id)">
-                                <v-list-tile-title>Ver Info</v-list-tile-title>
+                            <v-list-tile @click="dialog = true;itemSelected=props.item">
+                              <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToEdit(props.item)">
-                              <v-list-tile-title>Modificar</v-list-tile-title>
-                            </v-list-tile>
+                            <v-dialog
+                              v-model="dialog"
+                              max-width="290"
+                            >
+                              <v-card>
+                                <v-card-title class="headline">Eliminar categoría</v-card-title>
+
+                                <v-card-text>
+                                  Esta seguro que desea eliminar la categoría?
+                                </v-card-text>
+
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+
+                                  <v-btn
+                                    color="red darken-4"
+                                    flat="flat"
+                                    @click="dialog = false"
+                                  >
+                                    Cancelar
+                                  </v-btn>
+
+                                  <v-btn
+                                    color="teal darken-3"
+                                    flat="flat"
+                                    @click="dialog = false, del()"
+                                  >
+                                    Aceptar
+                                  </v-btn>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
                           </v-list>
                         </v-menu>
                       </td>
@@ -140,7 +161,7 @@
 
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
-
+import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 export default {
@@ -150,75 +171,46 @@ export default {
         {
           text: 'Nombre',
           align: 'left',
-          sortable: false,
+          sortable: true,
           value: 'name'
         },
-        { text: 'Ruc',
-          value: 'ruc',
+        { text: 'URL',
+          value: 'url',
           sortable: false
         },
-        {
-          text: 'Direccion',
-          value: 'address',
+        { text: 'Descripción',
+          value: 'description',
           sortable: false
         },
-        {
-          text: 'Acciones',
+        { text: 'Acciones',
           value: 'name',
           sortable: false
         }
       ],
-      customers: [],
+      MyRules: [
+        v => !!v || 'El campo es requerido'
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+      ],
+      rules: validations,
       message: '',
-      search: '',
       showMsg: false,
       msgType: 'error',
       page: 1,
       limit: 20,
       total: 1,
+      itemSelected: null,
       loaded: false,
-      clients: [],
-      query: {}
+      categories: [],
+      query: {},
+      dialog: false
     }
   },
   methods: {
-    ...mapActions('customers', { findCustomers: 'find' }),
+    ...mapActions('restfuls', { findRestful: 'find' }),
     goToNew () {
-      this.$router.push('/new-customer')
-    },
-    goToView (codigo) {
-      // console.log('mi codigo es ', codigo)
-      this.$router.push('/customer-view/' + codigo)
-    },
-    goToEdit (element) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(element)
-      window.open('http://gestion.propraxis.ec/#/edit-client?_id=' + customer._id, '_blank')
-    },
-    edit (val, elem, field) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(elem)
-      customer[field] = val
-      customer.patch().then((result) => {
-        this.findCustomers({ query: {removed: false} }).then(response => {
-          const customers = response.data || response
-          console.log(customers)
-        })
-      })
-    },
-    del (element) {
-      const {Customer} = this.$FeathersVuex
-      const customer = new Customer(element)
-      customer.removed = true
-      customer.patch().then((result) => {
-        this.findCustomers({ query: {removed: false} }).then(response => {
-          const customers = response.data || response
-          console.log(customers)
-        })
-      })
+      this.$router.push('/restful-new')
     },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
@@ -234,15 +226,37 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
+      // console.log('Dialog closed', val)
+    },
+    edit (val, elem, field) {
+      if (val !== '') {
+        const {Restful} = this.$FeathersVuex
+        const restful = new Restful(elem)
+        restful[field] = val
+        restful.patch().then((result) => {
+          this.findRestful({ query: {removed: false} }).then(response => {
+            return response.data || response
+          })
+        })
+      }
+    },
+    del () {
+      const {Restful} = this.$FeathersVuex
+      const restfull = new Restful(this.itemSelected)
+      restfull.removed = true
+      restfull.patch().then((result) => {
+        this.findRestful({ query: {removed: false} }).then(response => {
+          return response.data || response
+        })
+      })
     }
   },
   computed: {
-    ...mapState('customers', {loading: 'isFindPending'}),
-    ...mapState('customers', { paginationVal: 'pagination' }),
-    ...mapGetters('customers', {findCustomersInStore: 'find'}),
-    getCustomers () {
-      return this.findCustomersInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('restfuls', {loading: 'isFindPending'}),
+    ...mapState('restfuls', { paginationVal: 'pagination' }),
+    ...mapGetters('restfuls', {findRestfulInStore: 'find'}),
+    getCategories () {
+      return this.findRestfulInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -253,24 +267,24 @@ export default {
   },
   watch: {
     page () {
-      this.findCustomers({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findRestful({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findCustomers({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findRestful({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.clients = response.data
+      this.categories = response.data
     })
   },
   components: {LoadingComponent, EditableField}
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

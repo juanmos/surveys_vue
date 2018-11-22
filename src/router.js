@@ -12,9 +12,19 @@ const Login = resolve => {
     resolve(require('./views/Login.vue'))
   }, 'login')
 }
+const Applications = resolve => {
+  require.ensure(['./views/Applications'], () => {
+    resolve(require('.//views/Applications'))
+  }, 'applications')
+}
 const CustomerNew = resolve => {
   require.ensure(['./views/customers/CustomerNew.vue'], () => {
     resolve(require('./views/customers/CustomerNew.vue'))
+  }, 'customers')
+}
+const CustomerEdit = resolve => {
+  require.ensure(['./views/customers/CustomerEdit.vue'], () => {
+    resolve(require('./views/customers/CustomerEdit.vue'))
   }, 'customers')
 }
 const CustomerList = resolve => {
@@ -25,7 +35,27 @@ const CustomerList = resolve => {
 const Dashboard = resolve => {
   require.ensure(['./views/Dashboard.vue'], () => {
     resolve(require('./views/Dashboard.vue'))
-  }, 'login')
+  }, 'dashboard')
+}
+const UserEdit = resolve => {
+  require.ensure(['./views/users/UserEdit.vue'], () => {
+    resolve(require('./views/users/UserEdit.vue'))
+  }, 'userEdit')
+}
+const UserForm = resolve => {
+  require.ensure(['./views/users/UserForm.vue'], () => {
+    resolve(require('./views/users/UserForm.vue'))
+  }, 'userForm')
+}
+const UserListAccess = resolve => {
+  require.ensure(['./views/users/UserListAccess.vue'], () => {
+    resolve(require('./views/users/UserListAccess.vue'))
+  }, 'userListAccess')
+}
+const UserRol = resolve => {
+  require.ensure(['./views/users/UserRol.vue'], () => {
+    resolve(require('./views/users/UserRol.vue'))
+  }, 'userListAccess')
 }
 const RegionList = resolve => {
   require.ensure(['./views/regions/RegionList.vue'], () => {
@@ -43,13 +73,16 @@ const CategoryPollList = resolve => {
   }, 'category-poll')
 }
 const CategoryPollNew = resolve => {
-  // cambiar despues
   require.ensure(['./views/category-poll/CategoryPollNew.vue'], () => {
     resolve(require('./views/category-poll/CategoryPollNew.vue'))
   }, 'category-poll')
 }
+const CategoryGeneralNew = resolve => {
+  require.ensure(['./views/category-poll/CategoryGeneralNew.vue'], () => {
+    resolve(require('./views/category-poll/CategoryGeneralNew.vue'))
+  }, 'category-poll')
+}
 const CategoryPollAddCode = resolve => {
-  // cambiar despues
   require.ensure(['./views/category-poll/CategoryPollFormAddCodes.vue'], () => {
     resolve(require('./views/category-poll/CategoryPollFormAddCodes.vue'))
   }, 'codes-category-polls')
@@ -89,6 +122,26 @@ const RolesNew = resolve => {
     resolve(require('./views/roles/RolesNew.vue'))
   }, 'roles')
 }
+const RolesEdit = resolve => {
+  require.ensure(['./views/roles/RolesEdit.vue'], () => {
+    resolve(require('./views/roles/RolesEdit.vue'))
+  }, 'roles')
+}
+const AssignRol = resolve => {
+  require.ensure(['./views/roles/AssignRol.vue'], () => {
+    resolve(require('./views/roles/AssignRol.vue'))
+  }, 'roles')
+}
+const QuestionTypeList = resolve => {
+  require.ensure(['./views/question-types/QuestionTypeList.vue'], () => {
+    resolve(require('./views/question-types/QuestionTypeList.vue'))
+  }, 'questiontypes')
+}
+const QuestionBuilder = resolve => {
+  require.ensure(['./views/question-builder/QuesBuildIndex.vue'], () => {
+    resolve(require('./views/question-builder/QuesBuildIndex.vue'))
+  }, 'questionbuilder')
+}
 const MenuNew = resolve => {
   require.ensure(['./views/menus/MenuNew.vue'], () => {
     resolve(require('./views/menus/MenuNew.vue'))
@@ -119,9 +172,59 @@ const PermissionNew = resolve => {
     resolve(require('./views/permissions/PermissionNew.vue'))
   }, 'permission')
 }
+const CategorysegmentList = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentList.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentList.vue'))
+  }, 'category-segmentation')
+}
+const CategorysegmentNew = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentNew.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentNew.vue'))
+  }, 'category-segmentation')
+}
+const CategorysegmentEdit = resolve => {
+  require.ensure(['./views/category-segmentation/CatsegmentForm.vue'], () => {
+    resolve(require('./views/category-segmentation/CatsegmentForm.vue'))
+  }, 'category-segmentation')
+}
+const PollsList = resolve => {
+  require.ensure(['./views/polls-project/PollsList.vue'], () => {
+    resolve(require('./views/polls-project/PollsList.vue'))
+  }, 'polls-project')
+}
+const PollsListNew = resolve => {
+  require.ensure(['./views/polls-project/PollsNew.vue'], () => {
+    resolve(require('./views/polls-project/PollsNew.vue'))
+  }, 'polls-project')
+}
+const PollsListEdit = resolve => {
+  require.ensure(['./views/polls-project/PollsForm.vue'], () => {
+    resolve(require('./views/polls-project/PollsForm.vue'))
+  }, 'polls-project')
+}
+const PollsListView = resolve => {
+  require.ensure(['./views/polls-project/PollsView.vue'], () => {
+    resolve(require('./views/polls-project/PollsView.vue'))
+  }, 'polls-project')
+}
+const UsersPollsList = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsList.vue'))
+  }, 'users-polls')
+}
+const UsersPollsNew = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsNew.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsNew.vue'))
+  }, 'users-polls')
+}
+const UsersPollsEdit = resolve => {
+  require.ensure(['./views/users-polls/UsersPollsEdit.vue'], () => {
+    resolve(require('./views/users-polls/UsersPollsEdit.vue'))
+  }, 'users-polls')
+}
 
 Vue.use(Router)
-const enviroment = require('./../config/enviroment')
+// const enviroment = require('./../config/enviroment')
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -136,8 +239,8 @@ export default new Router({
           next()
         }).catch((err) => {
           console.log(err)
-          window.location = enviroment[enviroment.currentEnviroment].urlAuth
-          // next('/pages/login')
+          // window.location = enviroment[enviroment.currentEnviroment].urlAuth
+          next('/pages/login')
         })
       },
       children: [
@@ -145,6 +248,31 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'user-edit',
+          name: 'userEdit',
+          component: UserEdit
+        },
+        {
+          path: 'userForm',
+          name: 'UserForm',
+          component: UserForm
+        },
+        {
+          path: 'list-access',
+          name: 'UserListAccess',
+          component: UserListAccess
+        },
+        {
+          path: 'user-rol/:_id',
+          name: 'UserRol',
+          component: UserRol
+        },
+        {
+          path: 'applications',
+          name: 'Applications',
+          component: Applications
         },
         {
           path: 'customers',
@@ -157,9 +285,19 @@ export default new Router({
           component: CustomerNew
         },
         {
+          path: 'customer-view/:_id',
+          name: 'CustomerEdit',
+          component: CustomerEdit
+        },
+        {
           path: 'CategoryPollNew',
           name: 'NewCategoryPoll',
           component: CategoryPollNew
+        },
+        {
+          path: 'CategoryGeneralNew',
+          name: 'NewCategoryGeneral',
+          component: CategoryGeneralNew
         },
         {
           path: 'CategoryPollList/:isgeneral',
@@ -171,6 +309,16 @@ export default new Router({
           name: 'CategoryPollAddCode',
           component: CategoryPollAddCode,
           props: true
+        },
+        {
+          path: 'QuestionTypeList',
+          name: 'QuestionTypeList',
+          component: QuestionTypeList
+        },
+        {
+          path: 'QuesBuildIndex',
+          name: 'QuesBuildIndex',
+          component: QuestionBuilder
         },
         {
           path: 'regions',
@@ -218,6 +366,16 @@ export default new Router({
           component: RolesNew
         },
         {
+          path: 'edit-roles/:_id',
+          name: 'RolesEdit',
+          component: RolesEdit
+        },
+        {
+          path: 'assign-rol',
+          name: 'AssignRol',
+          component: AssignRol
+        },
+        {
           path: 'menu-new',
           name: 'MenuNew',
           component: MenuNew
@@ -246,6 +404,56 @@ export default new Router({
           path: 'new-permission',
           name: 'NewPermission',
           component: PermissionNew
+        },
+        {
+          path: 'category-segmentation',
+          name: 'Categorysegmentation',
+          component: CategorysegmentList
+        },
+        {
+          path: 'new-category-segmentation',
+          name: 'NewCategorysegmentation',
+          component: CategorysegmentNew
+        },
+        {
+          path: 'Edit-category-segmentation',
+          name: 'EditCategorysegmentation',
+          component: CategorysegmentEdit
+        },
+        {
+          path: 'polls-project',
+          name: 'Pollslist',
+          component: PollsList
+        },
+        {
+          path: 'new-polls-project',
+          name: 'NewPollslist',
+          component: PollsListNew
+        },
+        {
+          path: 'edit-polls-project',
+          name: 'EditPollsprojects',
+          component: PollsListEdit
+        },
+        {
+          path: 'view-polls-project',
+          name: 'ViewPollsprojects',
+          component: PollsListView
+        },
+        {
+          path: 'users-polls',
+          name: 'UsersPollsList',
+          component: UsersPollsList
+        },
+        {
+          path: 'users-polls-new',
+          name: 'UsersPollsNew',
+          component: UsersPollsNew
+        },
+        {
+          path: 'users-polls-edit/:_id',
+          name: 'UsersPollsEdit',
+          component: UsersPollsEdit
         }
       ]
     },

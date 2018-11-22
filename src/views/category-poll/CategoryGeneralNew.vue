@@ -4,8 +4,8 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nuevo de Usuarios</v-subheader>
-                <user-form @dataSubmited="create"></user-form>
+                <v-subheader>Nueva Categoría de tipo General</v-subheader>
+                <category-form @dataSubmited="create"></category-form>
                 <v-btn
                 absolute
                 dark
@@ -26,28 +26,27 @@
 <script>
 import {mapState} from 'vuex'
 
-import UserForm from './UserForm'
+import CategoryForm from './CategoryGeneralForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   methods: {
     create (values) {
-      // method with feathers vuex to create an user
-      const { User } = this.$FeathersVuex
-      const user = new User(values)
-      user.save().then((result) => {
+      const { CategoryPoll } = this.$FeathersVuex
+      const CategoryPollF = new CategoryPoll(values)
+      CategoryPollF.save().then((result) => {
         this.goToList()
       }, (err) => {
         console.log(err)
       })
     },
     goToList () {
-      this.$router.push('/users')
+      this.$router.push('/CategoryPollList/1')
     }
   },
   computed: {
-    ...mapState('users', {loading: 'isCreatePending'})
+    ...mapState('category-poll', {loading: 'isCreatePending'})
   },
-  components: {UserForm, LoadingComponent}
+  components: {CategoryForm, LoadingComponent}
 }
 </script>
 <style>

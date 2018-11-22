@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Roles de Usuarios</v-subheader>
+              <v-subheader>Roles de Usuarios </v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getRoles"
@@ -13,46 +13,8 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">
-                        {{ props.item.code }}
-                      </td>
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.description"
-                          lazy
-                          @save="edit(props.item.description, props.item, 'description')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.description }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.description"
-                            label="Editar Descripción"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-
+                        <td class="text-xs-left">{{props.item.name}}</td>
+                        <td class="text-xs-left">{{props.item.description}}</td>
                        <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -67,6 +29,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="edita(props.item._id)">
+                              <v-list-tile-title>Editar</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -124,12 +89,6 @@ export default {
       dialogTitle: 'Eliminar Rol',
       dialogText: 'Desea eliminar este Rol?',
       headers: [
-        {
-          text: 'Codigo',
-          align: 'left',
-          sortable: false,
-          value: 'code'
-        },
         { text: 'Nombre',
           value: 'name',
           sortable: true
@@ -170,15 +129,8 @@ export default {
     goToNew () {
       this.$router.push('/new-roles')
     },
-    edit (val, elem, field) {
-      const {Role} = this.$FeathersVuex
-      let roles = new Role(elem)
-      roles[field] = val
-      roles.patch().then((result) => {
-        this.getData()
-        this.setSnackMessage('Rol Editado')
-        this.setShowSnack(true)
-      })
+    edita (id) {
+      this.$router.push('/edit-roles/' + id)
     },
     del (element) {
       this.dialogTitle = 'Eliminar Rol : ' + element.name
@@ -216,7 +168,6 @@ export default {
       this.snackText = 'Dialog opened'
     },
     close (val) {
-      console.log('Dialog closed', val)
     },
     getData () {
       this.findRoles({query: {removed: false, $skip: 0}}).then(response => {
@@ -224,7 +175,6 @@ export default {
         this.total = response.total
         this.loaded = true
         this.roles = response.data
-        console.log('estas son los roles', this.roles)
       })
     }
   },
@@ -232,6 +182,7 @@ export default {
     ...mapState('roles', {loading: 'isFindPending'}),
     ...mapState('roles', { paginationVal: 'pagination' }),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
+    ...mapState('auth', { user: 'user' }),
     getRoles () {
       return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },

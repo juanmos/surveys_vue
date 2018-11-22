@@ -16,6 +16,11 @@ export default {
       title: 'Categorías de encuesta'
     },
     {
+      icon: 'poll',
+      url: '/QuesBuildIndex',
+      title: 'Constructor de Preguntas'
+    },
+    {
       icon: 'menu',
       url: '/menu-item',
       title: 'Menú Items'
@@ -24,6 +29,11 @@ export default {
       icon: 'view_list',
       url: '/menu',
       title: 'Configuración de menús'
+    },
+    {
+      icon: 'comment',
+      url: '/polls-project',
+      title: 'Proyectos de Encuestas'
     }
   ]
 }

@@ -8,18 +8,7 @@
       <v-subheader>INGRESO DE CODIGOS A CATEGORIA</v-subheader>
       </v-flex>
       <v-spacer></v-spacer>
-      <v-btn
-                absolute
-                dark
-                fab
-                small
-                top
-                right
-                color="pink"
-                @click="goToList"
-                >
-                <v-icon>list</v-icon>
-                </v-btn>
+
       <v-form
             v-model="valid"
             @submit.prevent="createcode"
@@ -59,7 +48,7 @@
            </v-card>
             <v-data-table
                   :headers="headers"
-                  :items="getCodes, codes_category"
+                  :items="getCodes, codes_generales"
                   hide-actions
                   item-key="name"
                   striped hover
@@ -84,7 +73,7 @@
                             mask="####"
                           ></v-text-field>
                         </v-edit-dialog></td>
-                    <td class="text-xs-left">
+                    <td class="text-xs-center">
                       <v-edit-dialog
                           :return-value.sync="props.item.name"
                           @save="edit(props.item.name, props.item, 'name')"
@@ -110,34 +99,6 @@
           >
             delete
           </v-icon>
-          <v-dialog
-                          v-model="dialog"
-                          max-width="380"
-                          max-heigth="500"
-                        >
-                          <v-card>
-                            <v-card-title class="headline">Está seguro que desea eliminar el código: {{ itemSelectedname }}</v-card-title>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-
-                              <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialog = false"
-                              >
-                                NO
-                              </v-btn>
-
-                              <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialog = false, del()"
-                              >
-                                SI
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
                     </td>
                   </tr>
                 </template>
@@ -148,7 +109,8 @@
             <tbody>
                 <tr v-for="(item) in codes_generales" :key = "item.code">
                     <td class="text-xs-left">{{ item.code }}</td>
-                    <td class="text-xs-left">{{ item.name }}</td>
+                    <td class="text-xs-center">{{ item.name }}</td>
+                    <td></td>
                     <td></td>
                 </tr>
             </tbody>
@@ -191,7 +153,6 @@ export default {
         }
       ],
       categories: [],
-      codes_category: [],
       codes_generales: [],
       category_consult: {},
       test: false,
@@ -207,7 +168,6 @@ export default {
       itemSelectedname: null,
       query: {},
       query2: {},
-      query3: {},
       valid: false,
       rules: validations,
       dialog: false
@@ -217,7 +177,6 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     ...mapActions('codescategorypolls', { findCodes: 'find' }),
     ...mapActions('category-poll', { findCategory: 'find' }),
-    ...mapActions('codescategorypolls', { findCodesGeneral: 'find' }),
     createcode () {
       if (parseFloat(this.codescategory.code) > 90 && this.category_consult[0]._iscodegeneral === false) {
         alert('No se pueden ingresar valores mayores a 90 ya que son de códigos generales')
@@ -226,13 +185,12 @@ export default {
         const { Codescategorypoll } = this.$FeathersVuex
         let codecategory = new Codescategorypoll(this.codescategory)
         codecategory.save().then((res) => {
-          this.findCodes({ query: { $sort: { code: '1' }, $limit: null } }).then(res => {
+          this.findCodes({ query: { $limit: null } }).then(res => {
             // console.log('dato final', res.data)
             this.setSnackMessage('Registro Ingresado')
             // this.setSnackColor('success')
             this.setShowSnack(true)
             this.limpiarCampos()
-            this.$router.go(0)
           })
         }, (err) => {
           this.setSnackMessage('Error al guardar')
@@ -251,15 +209,12 @@ export default {
         let codecategory = new Codescategorypoll(elem)
         codecategory[field] = val
         codecategory.patch().then((result) => {
-          this.findCodes({ query: {$sort: { code: '1' }, removed: false} }).then(response => {
+          this.findCodes({ query: {removed: false} }).then(response => {
             const codescategoriesR = response.data || response
             console.log(codescategoriesR)
             this.setSnackMessage('Registro Modificado')
             // this.setSnackColor('success')
             this.setShowSnack(true)
-            // this.created()
-            // this.action = true
-            this.$router.go(0)
           })
         })
       }
@@ -270,7 +225,7 @@ export default {
       const codecategory = new Codescategorypoll(this.itemSelected)
       codecategory.removed = true
       codecategory.patch().then((result) => {
-        this.findCodes({ query: {$sort: { code: '1' }, removed: false} }).then(response => {
+        this.findCodes({ query: {removed: false} }).then(response => {
           const categoriesR = response.data || response
           console.log(categoriesR)
           this.setSnackMessage('Registro Eliminado')
@@ -284,7 +239,7 @@ export default {
       this.codescategory.name = ''
     },
     goToList () {
-      this.$router.push('/CategoryPollList/0')
+      this.$router.push('/categorypoll-list/0')
     },
     save (val) {
       this.snack = true
@@ -306,45 +261,6 @@ export default {
     }
   },
   created () {
-    this.codescategory._categorypoll_id = this.$route.params.category_id
-    this.category_id = this.$route.params.category_id
-    this.findCodes({query: {$sort: { code: '1' }, _categorypoll_id: this.category_id, removed: false, ...this.query}}).then(response => {
-      this.codes_category = response.data
-    })
-    // CONSULTA DE A LA CATEGORÍA PARA SABER SI CONTIENE CODIGOS GENERALES O NO
-    let codetemp = []
-    let codigostemporales = []
-    this.findCategory({query: {_id: this.category_id, ...this.query}}).then(response => {
-      this.category_consult = response.data
-      // console.log('PRIMER RESPONSIVE 1: ', this.category_consult)
-      if (this.category_consult[0]._contains_codegeneral === true) {
-        // CONSULTA DE LOS CODIGOS EN CASO DE QUE SEA TRUE EL CAMPO
-        this.findCategory({query: {_iscodegeneral: true, ...this.query}}).then(response2 => {
-          // console.log('LOS CODIGOS ', response2.data)
-          response2.data.map(function (value, key) {
-            // console.log('VALOR DE MAPEO: ', value._id)
-            codetemp.push(value._id)
-          })
-          // console.log('CODIGOS GENERALES DE BUSQUEDA: ', codetemp)
-          for (let i = 0; i < codetemp.length; i++) {
-            // console.log('VALOR FOR ' + i + codetemp[i])
-            this.findCodes({query: {_categorypoll_id: codetemp[i], removed: false, ...this.query}}).then(response => {
-              this.categories = response.data
-              // console.log('ESTE ES LA RESPUESTA: ', response.data)
-              response.data.map(function (value, key) {
-                codigostemporales.push(value)
-              })
-            })
-          }
-          // console.log('CODIGOS HHH: ', codigostemporales)
-          this.codes_generales = codigostemporales
-        })
-      } else {
-        // NO CONTIEN CODIGOS GENERALES
-      }
-    })
-  },
-  created2 () {
     this.codescategory._categorypoll_id = this.$route.params.category_id
     this.category_id = this.$route.params.category_id
     this.findCodes({removed: false, ...this.query}).then(response => {
@@ -370,6 +286,7 @@ export default {
     ...mapGetters('codescategorypolls', {findCodesInStore: 'find'}),
     ...mapGetters('category-poll', { findMainCategory: 'find' }),
     getCodes () {
+      // console.log('Trae el NUEVO get , ', this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data)
       return this.findCodesInStore({query: {removed: false, _categorypoll_id: this.category_id, ...this.query}}).data
     }
   }
