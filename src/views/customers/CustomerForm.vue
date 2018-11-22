@@ -9,8 +9,10 @@
             <v-card flat>
             <v-card-text>
               <v-layout align-center mb-3>
-                <v-avatar color="grey" class="mr-3"></v-avatar>
-                <strong class="title">Nombre: {{customer.name}}</strong>
+                <v-avatar color="blue">
+                  <v-icon dark>account_circle</v-icon>
+                </v-avatar>
+                <strong style="margin-left: 10px;" class="title">Cliente: {{customer.name}}</strong>
                 <v-spacer></v-spacer>
                 <v-btn icon>
                   <v-icon>mdi-account</v-icon>
