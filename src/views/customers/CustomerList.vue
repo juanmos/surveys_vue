@@ -96,8 +96,8 @@
                             <v-list-tile @click="goToView(props.item._id)">
                                 <v-list-tile-title>Ver Info</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="del(props.item)">
-                              <v-list-tile-title>Eliminar</v-list-tile-title>
+                            <v-list-tile @click="goToEdit(props.item)">
+                              <v-list-tile-title>Modificar</v-list-tile-title>
                             </v-list-tile>
                           </v-list>
                         </v-menu>
@@ -189,6 +189,12 @@ export default {
     goToView (codigo) {
       // console.log('mi codigo es ', codigo)
       this.$router.push('/customer-view/' + codigo)
+    },
+    goToEdit (element) {
+      const {Customer} = this.$FeathersVuex
+      const customer = new Customer(element)
+      // window.open('http://gestion.propraxis.ec/#/edit-client?_id=' + customer._id, '_blank')
+      window.open('http://localhost:8081/#/edit-client?_id=' + customer._id, '_blank')
     },
     edit (val, elem, field) {
       const {Customer} = this.$FeathersVuex
