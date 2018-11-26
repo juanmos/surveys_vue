@@ -70,6 +70,9 @@
                             <v-list-tile @click="ver(props.item)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="goToUsersProjects(props.item._id)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
@@ -245,6 +248,9 @@ export default {
     },
     ver (item) {
       this.$router.push({ name: 'ViewPollsprojects', params: { id: item._id } })
+    },
+    goToUsersProjects (id) {
+      this.$router.push('/users-projects/' + id)
     },
     del () {
       const {PollsProject} = this.$FeathersVuex
