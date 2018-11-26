@@ -174,6 +174,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('users-projects', {
+      instanceDefaults: {
+        _user_id: null,
+        _project_id: null,
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

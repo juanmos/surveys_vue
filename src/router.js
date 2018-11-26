@@ -222,6 +222,16 @@ const UsersPollsEdit = resolve => {
     resolve(require('./views/users-polls/UsersPollsEdit.vue'))
   }, 'users-polls')
 }
+const UsersProjectsList = resolve => {
+  require.ensure(['./views/users-projects/UsersProjectsList.vue'], () => {
+    resolve(require('./views/users-projects/UsersProjectsList.vue'))
+  }, 'users-projects')
+}
+const UsersProjectsNew = resolve => {
+  require.ensure(['./views/users-projects/UsersProjectsNew.vue'], () => {
+    resolve(require('./views/users-projects/UsersProjectsNew.vue'))
+  }, 'users-projects')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -454,6 +464,16 @@ export default new Router({
           path: 'users-polls-edit/:_id',
           name: 'UsersPollsEdit',
           component: UsersPollsEdit
+        },
+        {
+          path: 'users-projects/:_id',
+          name: 'UsersProjectsList',
+          component: UsersProjectsList
+        },
+        {
+          path: 'users-projects-new/:_id',
+          name: 'UsersProjectsNew',
+          component: UsersProjectsNew
         }
       ]
     },
