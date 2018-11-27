@@ -25,9 +25,10 @@
                   <v-icon>add</v-icon>
                 </v-btn>
             </v-card-title>
+            {{getUsersProjects}}
             <v-data-table
                   :headers="headers"
-                  :items="getpools"
+                  :items="usersProjects"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -71,7 +72,7 @@
                               <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
-                              <v-icon>view_list</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
+                              <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
@@ -209,7 +210,9 @@ export default {
       total: 1,
       loaded: false,
       Pollsprojects: [],
+      usersProjects: [],
       query: {},
+      user: null,
       dialog: false,
       search: '',
       itemsestado: [
@@ -236,6 +239,7 @@ export default {
   },
   methods: {
     ...mapActions('polls-project', { findPolls: 'find' }),
+    ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -292,17 +296,21 @@ export default {
     },
     getColorByStatus (status) {
       return this.colors[status]
+    },
+    getUserCurrent () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
     }
   },
   computed: {
-    ...mapState('polls-project', {loading: 'isFindPending'}),
-    ...mapState('polls-project', { paginationVal: 'pagination' }),
+    ...mapState('users-projects', {loading: 'isFindPending'}),
+    ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
+    ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     getpools () {
       if (!this.state_polls_filter || this.state_polls_filter === 0) {
         return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
       } else {
-        return this.findPollsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+        return this.findUsersProjectsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
       }
     },
     getLength () {
@@ -321,11 +329,18 @@ export default {
     }
   },
   created () {
+    this.user = this.getUserCurrent()
     this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
       this.pools = response.data
+    })
+    this.findUsersProjects({query: {removed: false, _user_id: this.user._id}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.usersProjects = response.data.map(data => (data.project))
     })
   },
   components: {LoadingComponent, EditableField}

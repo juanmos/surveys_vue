@@ -20,7 +20,7 @@
                   :headers="headers"
                   :items="getUsersProjects"
                   hide-actions
-                  item-key="user.name"
+                  item-key="name"
                   :search="search"
                 >
                   <template slot="items" slot-scope="props">
@@ -53,7 +53,7 @@
                                           <v-card-title class="headline">Eliminar del proyecto</v-card-title>
 
                                           <v-card-text>
-                                            Esta seguro que desea eliminar del proyecto?
+                                            Esta seguro de eliminar al usuario del proyecto?
                                           </v-card-text>
 
                                           <v-card-actions>
@@ -156,6 +156,7 @@ export default {
       search: '',
       msgType: 'error',
       page: 1,
+      user: null,
       limit: 20,
       total: 1,
       itemSelected: null,
