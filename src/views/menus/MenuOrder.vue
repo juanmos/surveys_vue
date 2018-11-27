@@ -1,4 +1,4 @@
-<template>
+s<template>
   <div class="fluid container">
       <!-- este es la cabecera
     <div class="form-group form-group-lg panel panel-default">

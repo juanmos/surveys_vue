@@ -17,7 +17,7 @@ export default {
     },
     {
       icon: 'poll',
-      url: '/QuesBuildIndex',
+      url: '/question-builder',
       title: 'Constructor de Preguntas'
     },
     {

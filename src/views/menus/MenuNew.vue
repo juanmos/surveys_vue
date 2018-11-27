@@ -42,7 +42,7 @@ export default {
       }, (err) => {
         this.setSnackMessage('Error al guardar')
         this.setShowSnack(true)
-        this.setSnackColor('error')
+        // this.setSnackColor('error')
         console.log(err)
       })
     },

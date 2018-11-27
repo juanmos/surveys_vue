@@ -174,6 +174,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('config-polls', {
+      instanceDefaults: {
+        name: '',
+        construct: '',
+        removed: false
+      }
+    }),
     service('users-projects', {
       instanceDefaults: {
         _user_id: null,
