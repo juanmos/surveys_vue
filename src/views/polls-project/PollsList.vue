@@ -67,14 +67,17 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="ver(props.item)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="goToUsersProjects(props.item._id)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="dialog = true; itemSelected=props.item">
                               <v-icon>delete</v-icon> <v-list-tile-title>Eliminar</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="ver(props.item)">
-                              <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
                             <v-dialog
                               v-model="dialog"
@@ -245,6 +248,9 @@ export default {
     },
     ver (item) {
       this.$router.push({ name: 'ViewPollsprojects', params: { id: item._id } })
+    },
+    goToUsersProjects (id) {
+      this.$router.push('/users-projects/' + id)
     },
     del () {
       const {PollsProject} = this.$FeathersVuex

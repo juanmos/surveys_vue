@@ -159,6 +159,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('poll-category', {
+      instanceDefaults: {
+        _polls_project_id: '',
+        _categorySegmentation_id: '',
+        removed: false
+      }
+    }),
     service('users-roles', {
       instanceDefaults: {
         _user_id: null,
@@ -171,6 +178,13 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         construct: '',
+        removed: false
+      }
+    }),
+    service('users-projects', {
+      instanceDefaults: {
+        _user_id: null,
+        _project_id: null,
         removed: false
       }
     }),

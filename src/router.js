@@ -232,6 +232,16 @@ const QuestionBuilderEdit = resolve => {
     resolve(require('./views/question-builder/QuestionBuilderEdit.vue'))
   }, 'questionbuilder')
 }
+const UsersProjectsList = resolve => {
+  require.ensure(['./views/users-projects/UsersProjectsList.vue'], () => {
+    resolve(require('./views/users-projects/UsersProjectsList.vue'))
+  }, 'users-projects')
+}
+const UsersProjectsNew = resolve => {
+  require.ensure(['./views/users-projects/UsersProjectsNew.vue'], () => {
+    resolve(require('./views/users-projects/UsersProjectsNew.vue'))
+  }, 'users-projects')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -474,6 +484,16 @@ export default new Router({
           path: 'question-builder-edit/:id',
           name: 'QuestionBuilderEdit',
           component: QuestionBuilderEdit
+        },
+        {
+          path: 'users-projects/:_id',
+          name: 'UsersProjectsList',
+          component: UsersProjectsList
+        },
+        {
+          path: 'users-projects-new/:_id',
+          name: 'UsersProjectsNew',
+          component: UsersProjectsNew
         }
       ]
     },

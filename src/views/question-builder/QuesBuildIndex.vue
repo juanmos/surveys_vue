@@ -175,8 +175,6 @@ export default {
         let config = new ConfigPoll(data)
         config.save().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
-            const config = response.data || response
-            console.log('edit ', config)
             // this.alertConfig('Registro Modificado', 'success')
             this.setSnackMessage('Registro guardado')
             this.setSnackColor('success')

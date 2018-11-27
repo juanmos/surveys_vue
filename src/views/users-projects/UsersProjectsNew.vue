@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Usuarios de encuestas</v-subheader>
+              <v-subheader>Agregar Personas</v-subheader>
               <v-card-title>
                 <v-flex xs6>
                     <v-text-field
@@ -14,13 +14,6 @@
                       single-line
                       hide-details
                     ></v-text-field>
-                    <v-select
-                      v-model="filterRol"
-                      v-bind:items="getRoles"
-                      item-text="name"
-                      item-value="_id"
-                      label="Rol"
-                    ></v-select>
                 </v-flex>
               </v-card-title>
             <v-data-table
@@ -32,45 +25,9 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                            :rules="MyRules"
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td>
-                        <v-edit-dialog
-                          :return-value.sync="props.item.email"
-                          lazy
-                          @save="edit(props.item.email, props.item, 'email')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.email }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.email"
-                            label="Editar email"
-                            single-line
-                            counter
-                            :rules="MyRules"
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
+                        <td class="text-xs-left">{{props.item.name}}</td>
+                        <td class="text-xs-left">{{props.item.email}}</td>
+                        <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -85,8 +42,8 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToEdit(props.item._id)">
-                                <v-list-tile-title >Editar</v-list-tile-title>
+                            <v-list-tile @click="addUserProject(props.item)">
+                                <v-list-tile-title >Agregar</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="dialog = true;itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
@@ -141,18 +98,6 @@
                     </v-card>
                   </v-flex>
                 </v-layout>
-                <v-btn
-                absolute
-                dark
-                fab
-                small
-                top
-                right
-                color="pink"
-                @click="goToNew()"
-                >
-                    <v-icon>add</v-icon>
-                </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
             </v-card>
@@ -165,7 +110,6 @@
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
-import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 export default {
   data () {
@@ -196,6 +140,7 @@ export default {
       ],
       filterRol: null,
       roles: null,
+      project: null,
       rules: validations,
       message: '',
       showMsg: false,
@@ -213,17 +158,36 @@ export default {
   },
   methods: {
     ...mapActions('users-polls', { findUsersPolls: 'find' }),
+    ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions(['setSnackMessage', 'setShowSnack']),
     goToNew (code) {
       this.$router.push('/users-projects-new/' + code)
     },
-    goToEdit (code) {
-      this.$router.push('/users-polls-edit/' + code)
+    addUserProject (values) {
+      let data = {'_user_id': values._id, '_project_id': this.project}
+      let check = this.checkExistUserToProject(values._id)
+      if (check === false) {
+        const { UsersProject } = this.$FeathersVuex
+        let usersProyect = new UsersProject(data)
+        let that = this
+        usersProyect.save().then((result) => {
+          that.$router.push('/users-projects/' + that.project)
+          that.setSnackMessage('Usuario ha sido asignado al proyecto')
+          that.setShowSnack(true)
+        }, (err) => { console.log(err) })
+      } else {
+        this.setSnackMessage('El usuario ya forma parte al proyecto')
+        this.setShowSnack(true)
+      }
     },
-    save (val) {
-      this.snack = true
-      this.snackColor = 'success'
-      this.snackText = 'Data saved'
+    checkExistUserToProject (code) {
+      let data = this.findUsersProjectsInStore({query: {_user_id: code, removed: false}}).data
+      let check = false
+      if (data.length > 0) {
+        check = true
+      }
+      return check
     },
     getNameRol (id) {
       let data = this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
@@ -245,28 +209,6 @@ export default {
     },
     close (val) {
       // console.log('Dialog closed', val)
-    },
-    edit (val, elem, field) {
-      if (val !== '') {
-        const {UsersPoll} = this.$FeathersVuex
-        const usersPolls = new UsersPoll(elem)
-        usersPolls[field] = val
-        usersPolls.patch().then((result) => {
-          this.findUsersPolls({ query: {removed: false} }).then(response => {
-            return response.data || response
-          })
-        })
-      }
-    },
-    del () {
-      const {UsersPoll} = this.$FeathersVuex
-      const userPolls = new UsersPoll(this.itemSelected)
-      userPolls.removed = true
-      userPolls.patch().then((result) => {
-        this.findUsersPolls({ query: {removed: false} }).then(response => {
-          return response.data || response
-        })
-      })
     }
   },
   computed: {
@@ -274,6 +216,7 @@ export default {
     ...mapState('users-polls', { paginationVal: 'pagination' }),
     ...mapGetters('users-polls', {findUsersPollsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
+    ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     getUsersPolls () {
       if (this.filterRol != null) {
         return this.findUsersPollsInStore({query: {removed: false, _rol_id: this.filterRol, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
@@ -295,6 +238,15 @@ export default {
       }
       listRoles.push(option)
       return listRoles
+    },
+    getUsersProyects () {
+      let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
+      let option = {
+        'name': 'TODOS',
+        '_id': null
+      }
+      listRoles.push(option)
+      return listRoles
     }
   },
   watch: {
@@ -306,11 +258,16 @@ export default {
     }
   },
   created () {
+    this.project = this.$route.params._id
     this.findUsersPolls({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.categories = response.data
+    })
+    this.findUsersProjects({$skip: this.getSkip, $limit: this.limit, _project_id: this.project, removed: false, ...this.query}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
     })
     this.findRoles({query: {removed: false, ...this.query}}).then(response => {
       this.limit = response.limit
@@ -319,7 +276,7 @@ export default {
       this.roles = response.data
     })
   },
-  components: {LoadingComponent, EditableField}
+  components: {LoadingComponent}
 }
 </script>
 
