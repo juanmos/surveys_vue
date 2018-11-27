@@ -3,7 +3,7 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
-    <survey-editor @dataSubmited = "getData"></survey-editor>
+    <survey-editor :jsonData = "PollId" @dataSubmited = "getData"></survey-editor>
     <v-btn
     absolute
     dark
@@ -20,7 +20,7 @@
 </template>
 <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
 <script>
-import SurveyEditor from './../../components/surveyjs/SurveyEditor'
+import SurveyEditor from './../../components/surveyjs/SurveyEditorLoad'
 import * as SurveyVue from 'survey-vue'
 // import './../../localization/spanish.ts'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -162,7 +162,9 @@ export default {
     }
     var model = new SurveyVue.Model(json)
     return {
-      survey: model
+      survey: model,
+      PollId: '',
+      _id: ''
     }
     namePoll = ''
   },
@@ -170,15 +172,16 @@ export default {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
-      let data = { name: this.namePoll, construct: value}
+      let data = { _id: this._id, name: this.namePoll, construct: value.trim()}
+     console.log('esta es mi data ', data)
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
-        config.save().then((result) => {
+        config.patch().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
             const config = response.data || response
             console.log('edit ', config)
             // this.alertConfig('Registro Modificado', 'success')
-            this.setSnackMessage('Registro guardado')
+            this.setSnackMessage('Registro modificado')
             this.setSnackColor('success')
             this.setShowSnack(true)
             this.gotoList()
@@ -193,7 +196,7 @@ export default {
      getData (value) {
        // console.log('value ', value)
        if (value) {
-         console.log('mi data recibida ', JSON.parse(value))
+        // console.log('mi data recibida ', JSON.parse(value))
         this.namePoll = JSON.parse(value).pages[0].name
         this.savePolls(value)
        }
@@ -203,6 +206,11 @@ export default {
     }
   },
   created () {
+    this.findConfigPolls({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
+      this.PollId = response.data[0].construct
+      this._id = response.data[0]._id
+      // console.log('dats ', this.PollId)
+    })
     // console.log('adessssss ', this.survey)
   }
 }

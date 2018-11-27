@@ -222,6 +222,16 @@ const UsersPollsEdit = resolve => {
     resolve(require('./views/users-polls/UsersPollsEdit.vue'))
   }, 'users-polls')
 }
+const QuestionBuilderList = resolve => {
+  require.ensure(['./views/question-builder/QuestionBuilderList.vue'], () => {
+    resolve(require('./views/question-builder/QuestionBuilderList.vue'))
+  }, 'questionbuilder')
+}
+const QuestionBuilderEdit = resolve => {
+  require.ensure(['./views/question-builder/QuestionBuilderEdit.vue'], () => {
+    resolve(require('./views/question-builder/QuestionBuilderEdit.vue'))
+  }, 'questionbuilder')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -454,6 +464,16 @@ export default new Router({
           path: 'users-polls-edit/:_id',
           name: 'UsersPollsEdit',
           component: UsersPollsEdit
+        },
+        {
+          path: 'question-builder',
+          name: 'QuestionBuilderList',
+          component: QuestionBuilderList
+        },
+        {
+          path: 'question-builder-edit/:id',
+          name: 'QuestionBuilderEdit',
+          component: QuestionBuilderEdit
         }
       ]
     },

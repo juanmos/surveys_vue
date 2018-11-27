@@ -167,6 +167,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('config-polls', {
+      instanceDefaults: {
+        name: '',
+        construct: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

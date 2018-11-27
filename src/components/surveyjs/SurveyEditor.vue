@@ -1,5 +1,6 @@
 <template>
-<div id="surveyEditorContainer"></div>
+<div id="surveyEditorContainer">
+</div>
 </template>
 
 <script>
@@ -28,14 +29,29 @@ export default {
   name: 'survey-editor',
   data () {
     return {
+      dataValue: ''
+    }
+  },
+  methods: {
+    sendData (data) {
+      this.$emit('dataSubmited', data)
     }
   },
   mounted () {
     let editorOptions = { showEmbededSurveyTab: true }
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
-    this.editor.saveSurveyFunc = function () {
-      console.log(JSON.stringify(this.text))
+    // this.editor.saveSurveyFunc = () => {
+    this.dataValue = this.editor.saveSurveyFunc = function () {
+      console.log('mi json ', JSON.parse(this.text))
+      // dats = JSON.parse(this.text)
+      // this.sendData(dats)
+      this.dataValue = JSON.parse(this.text)
+      send(this.text)
+      // return this.text
+      // datamu(JSON.parse(this.text))
+      // this.sendData(JSON.stringify(this.text))
     }
+    let send = (data) => this.sendData(data)
   }
 }
 </script>
