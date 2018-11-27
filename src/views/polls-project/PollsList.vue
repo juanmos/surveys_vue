@@ -25,7 +25,6 @@
                   <v-icon>add</v-icon>
                 </v-btn>
             </v-card-title>
-            {{getUsersProjects}}
             <v-data-table
                   :headers="headers"
                   :items="usersProjects"
@@ -239,6 +238,7 @@ export default {
   },
   methods: {
     ...mapActions('polls-project', { findPolls: 'find' }),
+    ...mapActions('roles', { findRoles: 'find' }),
     ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions([
       'setSnackMessage',
@@ -306,13 +306,7 @@ export default {
     ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
-    getpools () {
-      if (!this.state_polls_filter || this.state_polls_filter === 0) {
-        return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      } else {
-        return this.findUsersProjectsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      }
-    },
+    ...mapGetters('roles', {findRolesInStore: 'find'}),
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -329,14 +323,24 @@ export default {
     }
   },
   created () {
+    this.findRoles({query: {removed: false, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+    })
     this.user = this.getUserCurrent()
+    if (this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+      this.query = {}
+    } else {
+      this.query._user_id = this.user._id
+    }
     this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
       this.pools = response.data
     })
-    this.findUsersProjects({query: {removed: false, _user_id: this.user._id}}).then(response => {
+    this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
