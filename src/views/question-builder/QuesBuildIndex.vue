@@ -3,6 +3,17 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
+    <v-card color="white">
+      <v-text-field
+      v-model="nameConfigPolls"
+      label="Nombre de la encuesta"
+      single-line
+      box
+      hide-details
+      :rules= "MyRules"
+      required
+    ></v-text-field>
+    </v-card>
     <survey-editor @dataSubmited = "getData"></survey-editor>
     <v-btn
     absolute
@@ -20,6 +31,7 @@
 </template>
 <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
 <script>
+import {validations} from './../../utils/validations'
 import SurveyEditor from './../../components/surveyjs/SurveyEditor'
 import * as SurveyVue from 'survey-vue'
 // import './../../localization/spanish.ts'
@@ -46,6 +58,7 @@ widgets.autocomplete(SurveyVue)
 widgets.bootstrapslider(SurveyVue)
 
 export default {
+  props: ['pollsProjectId'],
   name: 'app',
   components: {
     Survey,
@@ -162,7 +175,15 @@ export default {
     }
     var model = new SurveyVue.Model(json)
     return {
-      survey: model
+      survey: model,
+      searchPollsProject: '',
+      nameConfigPolls: '',
+      MyRules: [
+        v => !!v || 'El campo es requerido'
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+      ],
+      valid: false,
+      rules: validations
     }
     namePoll = ''
   },
@@ -173,6 +194,8 @@ export default {
       let data = { name: this.namePoll, construct: value}
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
+        config['_polls_project_id'] = this.$route.params.id
+        config['name'] = this.nameConfigPolls
         config.save().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
             // this.alertConfig('Registro Modificado', 'success')
@@ -197,11 +220,28 @@ export default {
        }
      },
      gotoList () {
-      this.$router.push('/question-builder')
+       let name = ''
+       if (!this.$route.params.data) {
+         name = 'view-polls-project'
+       } else {
+         name = 'question-builder'
+       }
+       this.$router.push('/' + name +'/' + this.$route.params.id)
+    },
+    NameChange () {
+      if (this.nameConfigPolls !== '') {
+        this.valid = true
+      }
     }
   },
   created () {
-    // console.log('adessssss ', this.survey)
+    // console.log('adessssss ', this.$route.params.id)
+  },
+  computed: {
+    ...mapGetters('polls-project', {findPollsProjectInStore: 'find'}),
+    getPollsProject () {
+      return this.findPollsProjectInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
   }
 }
 </script>

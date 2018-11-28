@@ -16,11 +16,6 @@ export default {
       title: 'Categorías de encuesta'
     },
     {
-      icon: 'poll',
-      url: '/question-builder',
-      title: 'Constructor de Preguntas'
-    },
-    {
       icon: 'menu',
       url: '/menu-item',
       title: 'Menú Items'

@@ -70,6 +70,9 @@
                             <v-list-tile @click="ver(props.item)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="goToListConfigPolls(props.item._id)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
@@ -297,6 +300,9 @@ export default {
     getColorByStatus (status) {
       return this.colors[status]
     },
+    goToListConfigPolls (id) {
+      this.$router.push({ name: 'QuestionBuilderList', params: { id: id } })
+    },
     getUserCurrent () {
       return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
     }
@@ -305,6 +311,14 @@ export default {
     ...mapState('users-projects', {loading: 'isFindPending'}),
     ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
+    getpools () {
+      console.log('asdeeeeeeee ', this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
+      if (!this.state_polls_filter || this.state_polls_filter === 0) {
+        return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      } else {
+        return this.findPollsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      }
+    },
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getLength () {
@@ -345,12 +359,15 @@ export default {
       this.total = response.total
       this.loaded = true
       this.usersProjects = response.data.map(data => (data.project))
+      console.log('entra ', response.data)
     })
   },
   components: {LoadingComponent, EditableField}
 }
 </script>
 
-<style scoped>
-
+<style >
+.v-datatable{
+    overflow: hidden;
+  }
 </style>

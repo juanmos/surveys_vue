@@ -74,7 +74,7 @@
             <v-divider inset></v-divider>
           </v-layout>
         </v-list>
-          <v-flex lg6>
+          <v-flex >
              <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
              <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>
             <v-dialog  v-model="dialog"  max-width="400" >
@@ -105,6 +105,14 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <v-divider class="mx-3" inset vertical></v-divider>
+            <v-card color="white" >
+            <v-card-title><strong>CATEGORÍAS</strong></v-card-title>
+            <v-layout >
+      <v-flex xs2 sm2>
+       <v-spacer></v-spacer>
+      </v-flex>
+      <v-flex xs4 sm8>
             <v-data-table
                 :headers="headers"
                 :items="items"
@@ -169,6 +177,100 @@
               </div>
             </v-widget>
                -->
+      </v-flex>
+            </v-layout>
+            </v-card>
+               <v-divider class="mx-3" inset vertical></v-divider>
+            <v-card color="white" >
+      <v-card-title><strong>ENCUESTAS</strong></v-card-title>
+    <v-layout >
+      <v-flex xs2 sm2>
+       <v-spacer></v-spacer>
+      </v-flex>
+      <v-flex xs4 sm8>
+        <v-data-table
+                  :headers="headersConfigPolls"
+                  :items="getConfigPolls"
+                  hide-actions
+                  item-key="_id"
+                  striped hover
+                  outlined
+                >
+        <template slot="items" slot-scope="props">
+          <tr>
+                    <td class="text-xs-left">
+                      {{ props.item.name }}
+                      </td>
+                      <td>
+                         <v-menu
+                          bottom
+                          transition="slide-y-transition"
+                        >
+                          <v-btn
+                            slot="activator"
+                            color="primary"
+                            flat
+                            icon
+                          >
+                          <v-icon>more_vert</v-icon>
+                          </v-btn>
+                          <v-list>
+                            <v-list-tile @click="goToEditConfigPolls(props.item._id)">
+                              <v-list-tile-title>Editar encuesta</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
+                              <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
+                            </v-list-tile>
+                          </v-list>
+                          <v-dialog
+                          v-model="dialogDeleteConfigPolls"
+                          max-width="380"
+                          max-heigth="500"
+                        >
+                          <v-card>
+                            <v-card-title class="headline">Está seguro que desea eliminar la encuesta</v-card-title>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+
+                              <v-btn
+                                color="red darken-1"
+                                flat="flat"
+                                @click="dialogDeleteConfigPolls = false"
+                              >
+                                NO
+                              </v-btn>
+
+                              <v-btn
+                                color="green darken-1"
+                                flat="flat"
+                                @click="dialogDeleteConfigPolls = false, deleteConfigPolls()"
+                              >
+                                SI
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                         </v-menu>
+                      </td>
+                </tr>
+                </template>
+                </v-data-table>
+      </v-flex>
+      <v-flex xs4 sm2>
+       <v-btn
+                dark
+                fab
+                small
+                top
+                right
+                color="red"
+                @click="goToCreateConfigPolls"
+                >
+                <v-icon>add</v-icon>
+                </v-btn>
+      </v-flex>
+    </v-layout>
+  </v-card>
           </v-flex>
       </v-card>
         </v-container>
@@ -182,6 +284,7 @@ import Vue from 'vue'
 import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
 import VWidget from './../../components/VWidget'
+import QuestionBuildIndex from '../question-builder/QuesBuildIndex'
 Vue.use(VueMoment, {
   moment
 })
@@ -196,6 +299,19 @@ export default {
       },
       {text: 'Valor1', value: 'name'}
 
+    ],
+    headersConfigPolls: [
+      {
+        text: 'Nombre',
+        align: 'left',
+        sortable: false,
+        value: 'name'
+      },
+      {
+        text: 'Acciones',
+        value: 'name',
+        sortable: false
+      }
     ],
     poolsseg: {
       name: '',
@@ -217,6 +333,7 @@ export default {
     itemSelected2: null,
     titulo: '',
     titulosave: '',
+    ItemPollsConfigSelect: '',
     itemsestado: [
       { name: 'Creada', id: 1 },
       { name: 'Edición', id: 2 },
@@ -236,6 +353,9 @@ export default {
       6: 'blue',
       7: 'red'
     },
+    dialogEditConfiPolls: false,
+    addConfigPolls: false,
+    dialogDeleteConfigPolls: false,
     items: [],
     items2: {
       _polls_project_id: '',
@@ -245,7 +365,8 @@ export default {
     itemsegmento: []
   }),
   components: {
-    VWidget
+    VWidget,
+    QuestionBuildIndex
   },
   methods: {
     ...mapActions([
@@ -256,6 +377,7 @@ export default {
     ...mapActions('customers', {findcustomers: 'find'}),
     ...mapActions('poll-category', { findpollcateg: 'find' }),
     ...mapActions('category-segmentation', { findsegmentos: 'find' }),
+    ...mapActions('config-polls', { findConfigPolls: 'find' }),
     goToList () {
       this.$router.push('/polls-project')
     },
@@ -300,12 +422,34 @@ export default {
       }, (err) => {
         console.log(err)
       })
+    },
+    deleteConfigPolls () {
+      const {ConfigPoll} = this.$FeathersVuex
+      const Config = new ConfigPoll(this.ItemPollsConfigSelect)
+      Config.removed = true
+      Config.patch().then((result) => {
+        this.setSnackMessage('Registro Eliminado')
+        this.setShowSnack(true)
+      }, (err) => {
+        console.log(err)
+      })
+    },
+    goToCreateConfigPolls () {
+      this.$router.push({ name: 'QuesBuildIndex', params: { id: this.$route.params.id } })
+    },
+    goToEditConfigPolls (id) {
+      this.$router.push({ name: 'QuestionBuilderEdit', params: { id: id } })
     }
   },
   computed: {
     ...mapGetters('customers', {findcustomerslist: 'find'}),
+    ...mapGetters('config-polls', {findConfigPollsInStore: 'find'}),
     getcustomer () {
       return this.findcustomerslist({query: {removed: false}}).data
+    },
+    getConfigPolls () {
+      // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
+      return this.findConfigPollsInStore({query: {removed: false, _polls_project_id: this.$route.params.id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     }
   },
   mounted () {
@@ -317,6 +461,7 @@ export default {
   created () {
     this.findcustomers({ query: {removed: false} }).then(response => {
     })
+    this.findConfigPolls({ query: {removed: false} })
   }
 }
 </script>

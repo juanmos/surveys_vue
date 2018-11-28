@@ -456,7 +456,7 @@ export default new Router({
           component: PollsListEdit
         },
         {
-          path: 'view-polls-project',
+          path: 'view-polls-project/:id',
           name: 'ViewPollsprojects',
           component: PollsListView
         },
@@ -476,7 +476,7 @@ export default new Router({
           component: UsersPollsEdit
         },
         {
-          path: 'question-builder',
+          path: 'question-builder/:id',
           name: 'QuestionBuilderList',
           component: QuestionBuilderList
         },

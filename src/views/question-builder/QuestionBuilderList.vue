@@ -96,6 +96,18 @@
                 >
                     <v-icon>add</v-icon>
                 </v-btn>
+                <v-btn
+    absolute
+    dark
+    fab
+    small
+    top
+    right
+    color="pink"
+    @click="gotoList"
+    >
+        <v-icon>list</v-icon>
+    </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
             </v-card>
@@ -145,10 +157,13 @@ export default {
       'setShowSnack'
     ]),
     goToNew () {
-      this.$router.push('/QuesBuildIndex')
+      this.$router.push({ name: 'QuesBuildIndex', params: { id: this.$route.params.id, data: 'data' } })
     },
     goToEdit (id) {
       this.$router.push('/question-builder-edit/' + id)
+    },
+    gotoList () {
+      this.$router.push('/polls-project')
     },
     del () {
       const {ConfigPoll} = this.$FeathersVuex
@@ -194,7 +209,7 @@ export default {
     ...mapState('config-polls', { paginationVal: 'pagination' }),
     ...mapGetters('config-polls', {findConfigPollsInStore: 'find'}),
     getConfigPolls () {
-      return this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findConfigPollsInStore({query: {removed: false, _polls_project_id: this.$route.params.id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
