@@ -25,9 +25,9 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">{{props.item.user.name}}</td>
-                      <td class="text-xs-left">{{props.item.user.email}}</td>
-                      <td class="text-xs-left">{{getNameRol(props.item.user._rol_id)}}</td>
+                      <td class="text-xs-left">{{props.item.name}}</td>
+                      <td class="text-xs-left">{{props.item.email}}</td>
+                      <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -246,7 +246,7 @@ export default {
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersProjects () {
-      return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user))
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
