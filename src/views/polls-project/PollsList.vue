@@ -76,6 +76,9 @@
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="goToUsersProjects(props.item._id)">
+                              <v-icon>receipt</v-icon> <v-list-tile-title>Categorías</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
@@ -257,6 +260,9 @@ export default {
       this.$router.push({ name: 'ViewPollsprojects', params: { id: item._id } })
     },
     goToUsersProjects (id) {
+      this.$router.push('/users-projects/' + id)
+    },
+    goToCategories (id) {
       this.$router.push('/users-projects/' + id)
     },
     del () {
