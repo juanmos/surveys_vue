@@ -14,6 +14,13 @@
                       single-line
                       hide-details
                     ></v-text-field>
+                    <v-select
+                      v-model="filterRol"
+                      v-bind:items="getRoles"
+                      item-text="name"
+                      item-value="_id"
+                      label="Rol"
+                    ></v-select>
                 </v-flex>
               </v-card-title>
             <v-data-table
@@ -246,13 +253,26 @@ export default {
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersProjects () {
-      return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user))
+      if (this.filterRol) {
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user)).filter(data => data._rol_id === this.filterRol)
+      } else {
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user))
+      }
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
     getSkip () {
       return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+    },
+    getRoles () {
+      let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
+      let option = {
+        'name': 'TODOS',
+        '_id': null
+      }
+      listRoles.push(option)
+      return listRoles
     }
   },
   watch: {
