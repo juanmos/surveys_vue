@@ -70,6 +70,9 @@
                             <v-list-tile @click="ver(props.item)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="goToListConfigPolls(props.item._id)">
+                              <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
@@ -292,6 +295,9 @@ export default {
     },
     getColorByStatus (status) {
       return this.colors[status]
+    },
+    goToListConfigPolls (id) {
+      this.$router.push({ name: 'QuestionBuilderList', params: { id: id } })
     }
   },
   computed: {
@@ -299,6 +305,7 @@ export default {
     ...mapState('polls-project', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     getpools () {
+      console.log('asdeeeeeeee ', this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
       if (!this.state_polls_filter || this.state_polls_filter === 0) {
         return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
       } else {
@@ -332,6 +339,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style >
+.v-datatable{
+    overflow: hidden;
+  }
 </style>

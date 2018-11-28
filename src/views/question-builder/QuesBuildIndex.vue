@@ -3,6 +3,15 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
+    <v-card color="white">
+      <v-text-field
+      v-model="nameConfigPolls"
+      label="Nombre de la encuesta"
+      single-line
+      box
+      hide-details
+    ></v-text-field>
+    </v-card>
     <survey-editor @dataSubmited = "getData"></survey-editor>
     <v-btn
     absolute
@@ -46,6 +55,7 @@ widgets.autocomplete(SurveyVue)
 widgets.bootstrapslider(SurveyVue)
 
 export default {
+  props: ['pollsProjectId'],
   name: 'app',
   components: {
     Survey,
@@ -162,7 +172,9 @@ export default {
     }
     var model = new SurveyVue.Model(json)
     return {
-      survey: model
+      survey: model,
+      searchPollsProject: '',
+      nameConfigPolls: ''
     }
     namePoll = ''
   },
@@ -173,6 +185,8 @@ export default {
       let data = { name: this.namePoll, construct: value}
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
+        config['_polls_project_id'] = this.$route.params.id
+        config['name'] = this.nameConfigPolls
         config.save().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
             // this.alertConfig('Registro Modificado', 'success')
@@ -197,11 +211,23 @@ export default {
        }
      },
      gotoList () {
-      this.$router.push('/question-builder')
+       let name = ''
+       if (!this.$route.params.data) {
+         name = 'view-polls-project'
+       } else {
+         name = 'question-builder'
+       }
+       this.$router.push('/' + name +'/' + this.$route.params.id)
     }
   },
   created () {
-    // console.log('adessssss ', this.survey)
+    // console.log('adessssss ', this.$route.params.id)
+  },
+  computed: {
+    ...mapGetters('polls-project', {findPollsProjectInStore: 'find'}),
+    getPollsProject () {
+      return this.findPollsProjectInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
   }
 }
 </script>

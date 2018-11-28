@@ -39,7 +39,7 @@
               </p>
               <v-switch
                 v-model="customer.special_ruc"
-                readonly="true"
+                readonly
                 class="mt-0"
                 color="blue lighten-2"
                 hide-details
