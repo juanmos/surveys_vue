@@ -7,13 +7,6 @@
               <v-subheader>Personas del proyecto</v-subheader>
               <v-card-title>
                 <v-flex xs6>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="search"
-                      label="Buscar por nombre"
-                      single-line
-                      hide-details
-                    ></v-text-field>
                     <v-select
                       v-model="filterRol"
                       v-bind:items="getRoles"
@@ -32,9 +25,9 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="text-xs-left">{{props.item.name}}</td>
-                      <td class="text-xs-left">{{props.item.email}}</td>
-                      <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
+                      <td class="text-xs-left">{{props.item.user.name}}</td>
+                      <td class="text-xs-left">{{props.item.user.email}}</td>
+                      <td class="text-xs-left">{{getNameRol(props.item.user._rol_id)}}</td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -254,9 +247,9 @@ export default {
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersProjects () {
       if (this.filterRol) {
-        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user)).filter(data => data._rol_id === this.filterRol)
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.filter(data => data.user._rol_id === this.filterRol)
       } else {
-        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.map(data => (data.user))
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
       }
     },
     getLength () {
