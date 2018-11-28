@@ -285,12 +285,23 @@ export default {
       this.snackText = 'Dialog opened'
     },
     getData () {
-      this.findPolls({query: {removed: false, $skip: 0}}).then(response => {
-        this.limit = response.limit
-        this.total = response.total
-        this.loaded = true
-        this.pools = response.data
-      })
+      if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+        this.query = {}
+        this.findPolls({query: {removed: false, ...this.query}}).then(response => {
+          this.limit = response.limit
+          this.total = response.total
+          this.loaded = true
+          this.usersProjects = response.data
+        })
+      } else {
+        this.query._user_id = this.user._id
+        this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
+          this.limit = response.limit
+          this.total = response.total
+          this.loaded = true
+          this.usersProjects = response.data.map(data => (data.project))
+        })
+      }
     },
     customFilter (item, queryText, itemText) {
       const textOne = item.name.toLowerCase()
@@ -343,24 +354,7 @@ export default {
       this.loaded = true
     })
     this.user = this.getUserCurrent()
-    if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
-      this.query = {}
-    } else {
-      this.query._user_id = this.user._id
-    }
-    this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.pools = response.data
-    })
-    this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.usersProjects = response.data.map(data => (data.project))
-      console.log('entra ', response.data)
-    })
+    this.getData()
   },
   components: {LoadingComponent, EditableField}
 }
