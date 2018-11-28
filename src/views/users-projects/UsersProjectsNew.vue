@@ -14,6 +14,13 @@
                       single-line
                       hide-details
                     ></v-text-field>
+                    <v-select
+                      v-model="filterRol"
+                      v-bind:items="getRoles"
+                      item-text="name"
+                      item-value="_id"
+                      label="Rol"
+                    ></v-select>
                 </v-flex>
               </v-card-title>
             <v-data-table
