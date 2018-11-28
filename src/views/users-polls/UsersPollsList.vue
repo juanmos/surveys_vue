@@ -215,7 +215,7 @@ export default {
     ...mapActions('users-polls', { findUsersPolls: 'find' }),
     ...mapActions('roles', { findRoles: 'find' }),
     goToNew (code) {
-      this.$router.push('/users-projects-new/' + code)
+      this.$router.push('/users-polls-new')
     },
     goToEdit (code) {
       this.$router.push('/users-polls-edit/' + code)

@@ -7,6 +7,13 @@
               <v-subheader>Personas del proyecto</v-subheader>
               <v-card-title>
                 <v-flex xs6>
+                    <v-text-field
+                      v-model="search"
+                      append-icon="search"
+                      label="Buscar por nombre"
+                      single-line
+                      hide-details
+                    ></v-text-field>
                     <v-select
                       v-model="filterRol"
                       v-bind:items="getRoles"
