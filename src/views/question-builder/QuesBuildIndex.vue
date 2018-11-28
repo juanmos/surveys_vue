@@ -10,6 +10,8 @@
       single-line
       box
       hide-details
+      :rules= "MyRules"
+      required
     ></v-text-field>
     </v-card>
     <survey-editor @dataSubmited = "getData"></survey-editor>
@@ -29,6 +31,7 @@
 </template>
 <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
 <script>
+import {validations} from './../../utils/validations'
 import SurveyEditor from './../../components/surveyjs/SurveyEditor'
 import * as SurveyVue from 'survey-vue'
 // import './../../localization/spanish.ts'
@@ -174,7 +177,13 @@ export default {
     return {
       survey: model,
       searchPollsProject: '',
-      nameConfigPolls: ''
+      nameConfigPolls: '',
+      MyRules: [
+        v => !!v || 'El campo es requerido'
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+      ],
+      valid: false,
+      rules: validations
     }
     namePoll = ''
   },
@@ -218,6 +227,11 @@ export default {
          name = 'question-builder'
        }
        this.$router.push('/' + name +'/' + this.$route.params.id)
+    },
+    NameChange () {
+      if (this.nameConfigPolls !== '') {
+        this.valid = true
+      }
     }
   },
   created () {

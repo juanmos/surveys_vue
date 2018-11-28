@@ -7,20 +7,20 @@
               <v-subheader>Personas del proyecto</v-subheader>
               <v-card-title>
                 <v-flex xs6>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="search"
-                      label="Buscar por nombre"
-                      single-line
-                      hide-details
-                    ></v-text-field>
+                    <v-select
+                      v-model="filterRol"
+                      v-bind:items="getRoles"
+                      item-text="name"
+                      item-value="_id"
+                      label="Rol"
+                    ></v-select>
                 </v-flex>
               </v-card-title>
             <v-data-table
                   :headers="headers"
                   :items="getUsersProjects"
                   hide-actions
-                  item-key="user.name"
+                  item-key="name"
                   :search="search"
                 >
                   <template slot="items" slot-scope="props">
@@ -53,7 +53,7 @@
                                           <v-card-title class="headline">Eliminar del proyecto</v-card-title>
 
                                           <v-card-text>
-                                            Esta seguro que desea eliminar del proyecto?
+                                            Esta seguro de eliminar al usuario del proyecto?
                                           </v-card-text>
 
                                           <v-card-actions>
@@ -156,6 +156,7 @@ export default {
       search: '',
       msgType: 'error',
       page: 1,
+      user: null,
       limit: 20,
       total: 1,
       itemSelected: null,
@@ -245,13 +246,26 @@ export default {
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersProjects () {
-      return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      if (this.filterRol) {
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data.filter(data => data.user._rol_id === this.filterRol)
+      } else {
+        return this.findUsersProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      }
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
     getSkip () {
       return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
+    },
+    getRoles () {
+      let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
+      let option = {
+        'name': 'TODOS',
+        '_id': null
+      }
+      listRoles.push(option)
+      return listRoles
     }
   },
   watch: {

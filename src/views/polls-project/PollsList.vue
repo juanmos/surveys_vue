@@ -27,7 +27,7 @@
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getpools"
+                  :items="usersProjects"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -74,7 +74,7 @@
                               <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
-                              <v-icon>view_list</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
+                              <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
@@ -212,7 +212,9 @@ export default {
       total: 1,
       loaded: false,
       Pollsprojects: [],
+      usersProjects: [],
       query: {},
+      user: null,
       dialog: false,
       search: '',
       itemsestado: [
@@ -239,6 +241,8 @@ export default {
   },
   methods: {
     ...mapActions('polls-project', { findPolls: 'find' }),
+    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -298,11 +302,14 @@ export default {
     },
     goToListConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderList', params: { id: id } })
+    },
+    getUserCurrent () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
     }
   },
   computed: {
-    ...mapState('polls-project', {loading: 'isFindPending'}),
-    ...mapState('polls-project', { paginationVal: 'pagination' }),
+    ...mapState('users-projects', {loading: 'isFindPending'}),
+    ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     getpools () {
       console.log('asdeeeeeeee ', this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
@@ -312,6 +319,8 @@ export default {
         return this.findPollsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
       }
     },
+    ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
+    ...mapGetters('roles', {findRolesInStore: 'find'}),
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -328,11 +337,29 @@ export default {
     }
   },
   created () {
+    this.findRoles({query: {removed: false, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+    })
+    this.user = this.getUserCurrent()
+    if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+      this.query = {}
+    } else {
+      this.query._user_id = this.user._id
+    }
     this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
       this.pools = response.data
+    })
+    this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
+      this.usersProjects = response.data.map(data => (data.project))
+      console.log('entra ', response.data)
     })
   },
   components: {LoadingComponent, EditableField}

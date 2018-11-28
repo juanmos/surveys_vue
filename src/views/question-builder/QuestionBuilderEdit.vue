@@ -10,6 +10,7 @@
       single-line
       box
       hide-details
+      :rules= "MyRules"
     ></v-text-field>
     </v-card>
     <survey-editor :jsonData = "PollId" @dataSubmited = "getData"></survey-editor>
@@ -174,7 +175,11 @@ export default {
       survey: model,
       PollId: '',
       _id: '',
-      nameConfigPolls: ''
+      nameConfigPolls: '',
+      MyRules: [
+        v => !!v || 'El campo es requerido'
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+      ]
     }
     namePoll = ''
   },
@@ -183,7 +188,7 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
       let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim()}
-     console.log('esta es mi data ', data)
+      // console.log('esta es mi data ', data)
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config.patch().then((result) => {
@@ -219,7 +224,8 @@ export default {
     this.findConfigPolls({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.PollId = response.data[0].construct
       this._id = response.data[0]._id
-      // console.log('dats ', this.PollId)
+      this.nameConfigPolls = response.data[0].name
+      console.log('dats ', this.PollId)
     })
     // console.log('adessssss ', this.survey)
   }
