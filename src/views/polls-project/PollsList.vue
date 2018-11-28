@@ -329,7 +329,7 @@ export default {
       this.loaded = true
     })
     this.user = this.getUserCurrent()
-    if (this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+    if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
       this.query = {}
     } else {
       this.query._user_id = this.user._id
