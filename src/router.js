@@ -232,6 +232,11 @@ const QuestionBuilderEdit = resolve => {
     resolve(require('./views/question-builder/QuestionBuilderEdit.vue'))
   }, 'questionbuilder')
 }
+const QuestionBuilderView = resolve => {
+  require.ensure(['./views/question-builder/QuestionBuilderView.vue'], () => {
+    resolve(require('./views/question-builder/QuestionBuilderView.vue'))
+  }, 'questionbuilder')
+}
 const UsersProjectsList = resolve => {
   require.ensure(['./views/users-projects/UsersProjectsList.vue'], () => {
     resolve(require('./views/users-projects/UsersProjectsList.vue'))
@@ -524,6 +529,11 @@ export default new Router({
           path: 'category-segmentation-polls-edit/:_id',
           name: 'CategorySegmentationPollsEdit',
           component: CategorySegmentationPollsEdit
+        },
+        {
+          path: 'question-builder-view/:id',
+          name: 'QuestionBuilderView',
+          component: QuestionBuilderView
         }
       ]
     },

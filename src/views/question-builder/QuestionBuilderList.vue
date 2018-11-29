@@ -30,6 +30,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToView(props.item._id)">
+                              <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="goToEdit(props.item._id)">
                               <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
@@ -161,6 +164,9 @@ export default {
     },
     goToEdit (id) {
       this.$router.push('/question-builder-edit/' + id)
+    },
+    goToView (id) {
+      this.$router.push({ name: 'QuestionBuilderView', params: { id: id, data: 'data' } })
     },
     gotoList () {
       this.$router.push('/polls-project')
