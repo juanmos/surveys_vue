@@ -359,7 +359,7 @@ export default {
       this.total = response.total
       this.loaded = true
       this.usersProjects = response.data.map(data => (data.project))
-      console.log('entra ', response.data)
+      // console.log('entra ', response.data)
     })
   },
   components: {LoadingComponent, EditableField}
