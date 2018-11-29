@@ -191,12 +191,20 @@ export default {
         this.categoryseg.name = dataCategorySegmentation.name
         this.categoryseg._project_poll_id = this.$route.params._id
         this.categorysegver = dataCategorySegmentation.datos
+        state.datostemp = dataCategorySegmentation.datos.map(data => {
+          data.removed = false
+          return data
+        })
       }
     },
     setData (data) {
       let obj = Object.assign({}, data)
       this.categoryseg = obj
-      this.categorysegver = this.categoryseg.datos
+      this.categorysegver = this.categoryseg.datos.map(data => {
+        data.removed = false
+        return data
+      })
+      state.datostemp = this.categoryseg.datos
     },
     sendData () {
       if (this.valid) {
@@ -218,7 +226,7 @@ export default {
       this.$router.push('/category-segmentation')
     },
     savecategory () {
-      if (this.itemSelected3) {
+      if (this.itemSelected3 && this.categoryseg.datos.length === 0) {
         let itemactual = this.categoryseg.datos.findIndex(p => p.opciones === this.itemSelected3.opciones)
         this.categoryseg.datos[itemactual].opciones = this.opcion.toString()
         this.categoryseg.datos[itemactual].valor1 = this.valor1.toString()
