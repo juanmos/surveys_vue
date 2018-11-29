@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Categorias de segmentos asigandos para la Encuesta</v-subheader>
+              <v-subheader>Categorias de segmentos asigandos para la Encuesta: <strong>{{projectName}}</strong></v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="getCategorySegmentationPolls"
@@ -87,7 +87,7 @@ export default {
     return {
       dialog: false,
       dialogTitle: 'Eliminar categoria de segmentación',
-      dialogText: 'Desea eliminar este segmentación?',
+      dialogText: 'Desea eliminar esta categoría de segmentación?',
       headers: [
         { text: 'Nombre',
           value: 'name',
@@ -109,6 +109,7 @@ export default {
       ],
       rules: validations,
       message: '',
+      projectName: '',
       project: null,
       showMsg: false,
       msgType: 'error',
@@ -118,11 +119,12 @@ export default {
       loaded: false,
       roles: [],
       query: {},
-      rolId: ''
+      categorySegmentationPollsId: ''
     }
   },
   methods: {
     ...mapActions('category-segmantation-polls', { findCategorySegmentationPolls: 'find' }),
+    ...mapActions('polls-project', { findPollsProject: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -134,23 +136,23 @@ export default {
       this.$router.push('/category-segmentation-polls-edit/' + id)
     },
     del (element) {
-      this.dialogTitle = 'Eliminar Rol : ' + element.name
+      this.dialogTitle = 'Categoría de segmentación : ' + element.name
       this.dialog = true
-      this.rolId = element
+      this.categorySegmentationPollsId = element
     },
     onConfirm () {
-      const {Role} = this.$FeathersVuex
-      let rolesdelete = new Role(this.rolId)
-      rolesdelete.removed = true
-      rolesdelete.patch().then((result) => {
+      const {CategorySegmantationPoll} = this.$FeathersVuex
+      let categorySegmentationPoll = new CategorySegmantationPoll(this.categorySegmentationPollsId)
+      categorySegmentationPoll.removed = true
+      categorySegmentationPoll.patch().then((result) => {
         this.getData()
-        this.setSnackMessage('Rol Eliminado')
+        this.setSnackMessage('Categoría segmetación eliminada')
         this.setShowSnack(true)
       })
       this.dialog = false
     },
     onCancel () {
-      this.rolId = ''
+      this.categorySegmentationPollsId = ''
       this.dialog = false
     },
     save (val) {
@@ -175,7 +177,11 @@ export default {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.roles = response.data
+      })
+    },
+    getDataProject () {
+      this.findPollsProject({query: {removed: false, _id: this.project}}).then(response => {
+        this.projectName = response.data[0].name
       })
     }
   },
@@ -208,8 +214,8 @@ export default {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.roles = response.data
     })
+    this.getDataProject()
   },
   components: {LoadingComponent, EditableField, ConfirmDialog}
 }
