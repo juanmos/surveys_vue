@@ -215,6 +215,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToViewConfigPolls(props.item._id)">
+                              <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                               <v-list-tile-title>Editar encuesta</v-list-tile-title>
                             </v-list-tile>
@@ -439,6 +442,9 @@ export default {
     },
     goToEditConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderEdit', params: { id: id } })
+    },
+    goToViewConfigPolls (id) {
+      this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
     }
   },
   computed: {
