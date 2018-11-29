@@ -188,6 +188,15 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('category-segmantation-polls', {
+      instanceDefaults: {
+        name: null,
+        description: null,
+        _project_poll_id: null,
+        datos: [],
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

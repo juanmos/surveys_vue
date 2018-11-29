@@ -242,6 +242,16 @@ const UsersProjectsNew = resolve => {
     resolve(require('./views/users-projects/UsersProjectsNew.vue'))
   }, 'users-projects')
 }
+const CategorySegmentationPollsList = resolve => {
+  require.ensure(['./views/category-segmentation-polls/CategorySegmentationPollsList.vue'], () => {
+    resolve(require('./views/category-segmentation-polls/CategorySegmentationPollsList.vue'))
+  }, 'category-segmentation-polls')
+}
+const CategorySegmentationPollsNew = resolve => {
+  require.ensure(['./views/category-segmentation-polls/CategorySegmentationPollsNew.vue'], () => {
+    resolve(require('./views/category-segmentation-polls/CategorySegmentationPollsNew.vue'))
+  }, 'category-segmentation-polls')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -494,6 +504,16 @@ export default new Router({
           path: 'users-projects-new/:_id',
           name: 'UsersProjectsNew',
           component: UsersProjectsNew
+        },
+        {
+          path: 'category-segmentation-polls/:_id',
+          name: 'CategorySegmentationPollsList',
+          component: CategorySegmentationPollsList
+        },
+        {
+          path: 'category-segmentation-polls-new/:_id',
+          name: 'CategorySegmentationPollsNew',
+          component: CategorySegmentationPollsNew
         }
       ]
     },

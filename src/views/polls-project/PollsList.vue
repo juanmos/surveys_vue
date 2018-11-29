@@ -76,7 +76,7 @@
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToUsersProjects(props.item._id)">
+                            <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
                               <v-icon>receipt</v-icon> <v-list-tile-title>Categorías</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
@@ -262,8 +262,8 @@ export default {
     goToUsersProjects (id) {
       this.$router.push('/users-projects/' + id)
     },
-    goToCategories (id) {
-      this.$router.push('/users-projects/' + id)
+    goToCategoriesSegmentationPolls (id) {
+      this.$router.push('/category-segmentation-polls/' + id)
     },
     del () {
       const {PollsProject} = this.$FeathersVuex
