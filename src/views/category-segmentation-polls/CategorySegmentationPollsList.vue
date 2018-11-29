@@ -131,7 +131,7 @@ export default {
       this.$router.push('/category-segmentation-polls-new/' + this.project)
     },
     edita (id) {
-      this.$router.push('/edit-roles/' + id)
+      this.$router.push('/category-segmentation-polls-edit/' + id)
     },
     del (element) {
       this.dialogTitle = 'Eliminar Rol : ' + element.name

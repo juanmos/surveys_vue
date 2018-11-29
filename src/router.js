@@ -252,6 +252,11 @@ const CategorySegmentationPollsNew = resolve => {
     resolve(require('./views/category-segmentation-polls/CategorySegmentationPollsNew.vue'))
   }, 'category-segmentation-polls')
 }
+const CategorySegmentationPollsEdit = resolve => {
+  require.ensure(['./views/category-segmentation-polls/CategorySegmentationPollsEdit.vue'], () => {
+    resolve(require('./views/category-segmentation-polls/CategorySegmentationPollsEdit.vue'))
+  }, 'category-segmentation-polls')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -514,6 +519,11 @@ export default new Router({
           path: 'category-segmentation-polls-new/:_id',
           name: 'CategorySegmentationPollsNew',
           component: CategorySegmentationPollsNew
+        },
+        {
+          path: 'category-segmentation-polls-edit/:_id',
+          name: 'CategorySegmentationPollsEdit',
+          component: CategorySegmentationPollsEdit
         }
       ]
     },

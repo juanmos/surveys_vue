@@ -145,6 +145,7 @@ let state = {
   datostemp: []
 }
 export default {
+  props: ['values'],
   data: (vm) => ({
     categoryseg: {
       name: '',
@@ -191,6 +192,11 @@ export default {
         this.categoryseg._project_poll_id = this.$route.params._id
         this.categorysegver = dataCategorySegmentation.datos
       }
+    },
+    setData (data) {
+      let obj = Object.assign({}, data)
+      this.categoryseg = obj
+      this.categorysegver = this.categoryseg.datos
     },
     sendData () {
       if (this.valid) {
@@ -289,6 +295,12 @@ export default {
   watch: {
     selectCategorySegment (newVal) {
       this.setCategorySegment()
+    },
+    values: function (dat) {
+      this.setData(dat)
+      if (dat) {
+        this.newData = false
+      }
     }
   },
   mounted () {
