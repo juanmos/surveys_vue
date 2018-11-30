@@ -195,6 +195,14 @@ export default {
           data.removed = false
           return data
         })
+      } else {
+        this.categoryseg.name = ''
+        this.categoryseg.description = ''
+        this.categoryseg._project_poll_id = null
+        this.categoryseg.datos = []
+        this.categoryseg.removed = false
+        this.categorysegver = []
+        state.datostemp = []
       }
     },
     setData (data) {
@@ -297,7 +305,13 @@ export default {
     ...mapGetters('category-segmentation', {findCategorySegmentationInStore: 'find'}),
     ...mapState('auth', { user: 'user' }),
     getCategorySegmentation () {
-      return this.findCategorySegmentationInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      let listCategorySegmentation = this.findCategorySegmentationInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      let option = {
+        'name': 'NINGUNA',
+        '_id': null
+      }
+      listCategorySegmentation.push(option)
+      return listCategorySegmentation
     }
   },
   watch: {
