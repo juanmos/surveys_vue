@@ -76,6 +76,9 @@
                             <v-list-tile @click="goToUsersProjects(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
+                              <v-icon>receipt</v-icon> <v-list-tile-title>Segmentación</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
@@ -214,7 +217,7 @@ export default {
       Pollsprojects: [],
       usersProjects: [],
       query: {},
-      user: null,
+      user: {rol: null},
       dialog: false,
       search: '',
       itemsestado: [
@@ -259,6 +262,9 @@ export default {
     goToUsersProjects (id) {
       this.$router.push('/users-projects/' + id)
     },
+    goToCategoriesSegmentationPolls (id) {
+      this.$router.push('/category-segmentation-polls/' + id)
+    },
     del () {
       const {PollsProject} = this.$FeathersVuex
       let pollsp = new PollsProject(this.itemSelected)
@@ -285,7 +291,7 @@ export default {
       this.snackText = 'Dialog opened'
     },
     getData () {
-      if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+      if (this.user === null || !this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
         this.query = {}
         this.findPolls({query: {removed: false, ...this.query}}).then(response => {
           this.limit = response.limit
@@ -354,7 +360,7 @@ export default {
       this.loaded = true
     })
     this.user = this.getUserCurrent()
-    if (!this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
+    if (this.user === null || !this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
       this.query = {}
     } else {
       this.query._user_id = this.user._id

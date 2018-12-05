@@ -115,68 +115,16 @@
       <v-flex xs4 sm8>
             <v-data-table
                 :headers="headers"
-                :items="items"
+                :items="getCategorySegmentationPolls"
                 hide-actions
                 class="elevation-1"
                 ref="table"
               >
                 <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.categorysegment.name }}</td>
-                  <!-- <td>
-                    <v-icon
-                      small
-                      class="mr-2"
-                      @click="dialog = true; opcion =props.item.opciones; valor1 =props.item.valor1; itemSelected3=props.item"
-                    >
-                      edit
-                    </v-icon>
-                    <v-icon
-                      small
-                      @click="dialog2 = true; itemSelected2=props.item"
-                    >
-                      delete
-                    </v-icon>
-                    <v-dialog  v-model="dialog2"  max-width="290">
-                        <v-card>
-                          <v-card-title class="headline">Eliminar:</v-card-title>
-                          <v-card-text>
-                            Esta seguro que desea eliminar ítem ?
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="red darken-4" flat="flat" @click="dialog2 = false">
-                              Cancelar
-                            </v-btn>
-                            <v-btn
-                              color="teal darken-3"
-                              flat="flat"
-                              @click="dialog2 = false, delcateg()"
-                            >
-                              Aceptar
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                  </td> -->
+                  <td class="text-xs-left">{{ props.item.name }}</td>
+                  <td class="text-xs-left">{{props.item.description}}</td>
                 </template>
               </v-data-table>
-            <!-- <v-widget title="Categoria segmento" >
-              <div slot="widget-content">
-                <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
-                <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>
-
-              <v-expansion-panel focusable>
-                <v-expansion-panel-content v-for="(item,i) in items" :key="i">
-                  <div slot="header">{{item.categorysegment.name}}</div>
-
-                  <v-card>
-                    <v-card-text></v-card-text>
-                  </v-card>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              </div>
-            </v-widget>
-               -->
       </v-flex>
             </v-layout>
             </v-card>
@@ -300,7 +248,7 @@ export default {
         sortable: true,
         value: 'name'
       },
-      {text: 'Valor1', value: 'name'}
+      {text: 'Descripción', value: 'name'}
 
     ],
     headersConfigPolls: [
@@ -376,6 +324,7 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
+    ...mapActions('category-segmantation-polls', { findCategorySegmentationPolls: 'find' }),
     ...mapActions('polls-project', { findcatItems: 'find' }),
     ...mapActions('customers', {findcustomers: 'find'}),
     ...mapActions('poll-category', { findpollcateg: 'find' }),
@@ -445,13 +394,24 @@ export default {
     },
     goToViewConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
+    },
+    getDataCategorySegmentationPolls () {
+      this.findCategorySegmentationPolls({query: {removed: false, _project_poll_id: this.$route.params.id}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+      })
     }
   },
   computed: {
     ...mapGetters('customers', {findcustomerslist: 'find'}),
+    ...mapGetters('category-segmantation-polls', {findCategorySegmentationPollsInStore: 'find'}),
     ...mapGetters('config-polls', {findConfigPollsInStore: 'find'}),
     getcustomer () {
       return this.findcustomerslist({query: {removed: false}}).data
+    },
+    getCategorySegmentationPolls () {
+      return this.findCategorySegmentationPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, _project_poll_id: this.$route.params.id, ...this.query}}).data
     },
     getConfigPolls () {
       // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
@@ -468,6 +428,7 @@ export default {
     this.findcustomers({ query: {removed: false} }).then(response => {
     })
     this.findConfigPolls({ query: {removed: false} })
+    this.getDataCategorySegmentationPolls()
   }
 }
 </script>
