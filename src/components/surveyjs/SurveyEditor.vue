@@ -38,7 +38,8 @@ export default {
     }
   },
   mounted () {
-    let editorOptions = { showEmbededSurveyTab: true }
+    // questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix']
+    let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
     // this.editor.saveSurveyFunc = () => {
     this.dataValue = this.editor.saveSurveyFunc = function () {

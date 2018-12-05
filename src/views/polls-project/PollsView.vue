@@ -309,8 +309,11 @@ export default {
     dialogDeleteConfigPolls: false,
     items: [],
     items2: {
-      _polls_project_id: '',
+      name: '',
+      description: '',
+      _project_poll_id: '',
       _categorySegmentation_id: '',
+      datos: {},
       removed: false
     },
     itemsegmento: []
@@ -363,12 +366,16 @@ export default {
       return textOne.indexOf(searchText) > -1
     },
     savecategory () {
-      this.items2._polls_project_id = this.$route.params.id
+      console.log('el nombre ', this.itemsegmento)
+      this.items2._project_poll_id = this.$route.params.id
       this.items2._categorySegmentation_id = this.selectcategory.toString()
-      const {PollCategory} = this.$FeathersVuex
-      let savePolls = new PollCategory(this.items2)
+      this.items2.name = this.itemsegmento[0].name
+      this.items2.description = this.itemsegmento[0].description
+      this.items2.datos = this.itemsegmento[0].datos
+      const {CategorySegmantationPoll} = this.$FeathersVuex
+      let savePolls = new CategorySegmantationPoll(this.items2)
       savePolls.save().then((result) => {
-        this.setSnackMessage('Categoria Guardado')
+        this.setSnackMessage('Categoria Guardada')
         this.setShowSnack(true)
         this.cargaredicion()
       }, (err) => {

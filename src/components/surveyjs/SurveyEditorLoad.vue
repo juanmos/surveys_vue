@@ -33,7 +33,8 @@ export default {
     return {
       dataValue: '',
       miJson: "{'pages': [{'name': 'primerito'}]}",
-      loaded: false
+      loaded: false,
+      flag: 0
     }
   },
   methods: {
@@ -47,34 +48,36 @@ export default {
   },
   mounted () {
     // console.log('tengo la siguiente data ', this.jsonData)
-    let editorOptions = { showEmbededSurveyTab: true }
-    this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
-    /* this.editor.survey = function () {
-      this.surveyValue()['setJsonObject'](this.jsonData)
-    } */
-    /* this.editor.initSurvey = function (json = this.jsonData) {
-    } */
-    // this.editor.text = "{'pages': [{'name': 'asde'}]}"
-    // this.editor.text = this.jsonData
-    // this.editor.saveSurveyFunc = () => {
-    this.editor.saveSurveyFunc = function () {
-      // console.log('mi json ', JSON.parse(this.text))
-      // dats = JSON.parse(this.text)
-      // this.sendData(dats)
-      // this.dataValue = JSON.parse(this.text)
-      // this.text = "{pages: [{'name': 'bla blae'}]}"
-      send(this.text)
-      // return this.text
-      // datamu(JSON.parse(this.text))
-      // this.sendData(JSON.stringify(this.text))
+    if (this.flag === 0) {
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+      this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
+      /* this.editor.survey = function () {
+        this.surveyValue()['setJsonObject'](this.jsonData)
+      } */
+      /* this.editor.initSurvey = function (json = this.jsonData) {
+      } */
+      // this.editor.text = "{'pages': [{'name': 'asde'}]}"
+      // this.editor.text = this.jsonData
+      // this.editor.saveSurveyFunc = () => {
+      this.editor.saveSurveyFunc = function () {
+        // console.log('mi json ', JSON.parse(this.text))
+        // dats = JSON.parse(this.text)
+        // this.sendData(dats)
+        // this.dataValue = JSON.parse(this.text)
+        // this.text = "{pages: [{'name': 'bla blae'}]}"
+        send(this.text)
+        // return this.text
+        // datamu(JSON.parse(this.text))
+        // this.sendData(JSON.stringify(this.text))
+      }
+      // let enviar = this.miJson
+      /* this.dataJson =
+        "{pages: [{'name': 'bla blae'}]}"
+      } */
+      let send = (data) => this.sendData(data)
+      // this.editor.text = this.jsonData
     }
-    // let enviar = this.miJson
-    /* this.dataJson =
-      "{pages: [{'name': 'bla blae'}]}"
-    } */
-    let send = (data) => this.sendData(data)
-    // this.editor.text = this.jsonData
-
+    this.flag = 1
     // this.editor.loadSurvey('d5220f76-4802-40cf-ad67-61d7e55608e5')
   },
   created () {

@@ -350,6 +350,7 @@ export default {
       this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
+        this.getData()
       })
     }
   },
