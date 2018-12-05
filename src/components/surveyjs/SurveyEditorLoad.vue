@@ -49,7 +49,7 @@ export default {
   mounted () {
     // console.log('tengo la siguiente data ', this.jsonData)
     if (this.flag === 0) {
-      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix'] }
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
       this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
       /* this.editor.survey = function () {
         this.surveyValue()['setJsonObject'](this.jsonData)
