@@ -46,7 +46,7 @@ Survey.locale = 'es'
 // Survey.render()
 widgets.icheck(SurveyVue)
 widgets.select2(SurveyVue)
-widgets.inputmask(SurveyVue)
+// widgets.inputmask(SurveyVue)
 // widgets.jquerybarrating(SurveyVue)
 // widgets.jqueryuidatepicker(SurveyVue)
 widgets.nouislider(SurveyVue)
