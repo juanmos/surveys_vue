@@ -197,30 +197,7 @@ export default {
     ...mapActions('category-segmantation-polls', { findCategorySegmantationPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
-      let addJson = []
-      let name = this.segmentations[0].name
-      let choices = []
-      this.segmentations[0].datos.map((value, key) => {
-        choices.push(value.valor1)
-      })
-      addJson =
-        {
-          "name": name,
-          "elements": [
-            {
-              "type": "radiogroup",
-              "name": name,
-              "choices": choices
-            }
-          ]
-        }
-      // value.elements = addJson
-      let jsonSend = JSON.parse(value)
-      let pages = jsonSend.pages.length
-      jsonSend.pages[(pages)]  = addJson
-      console.log('addJson ', this.nameConfigPolls)
-      let data = { name: this.namePoll, construct: JSON.stringify(jsonSend)}
-      console.log('lo que voy a enviar',(jsonSend))
+      let data = { name: this.namePoll, construct: value}
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config['_polls_project_id'] = this.$route.params.id
@@ -241,9 +218,7 @@ export default {
         })
     },
      getData (value) {
-       // console.log('value ', value)
        if (value) {
-        console.log('mi data recibida ', JSON.parse(value))
         this.namePoll = JSON.parse(value).pages[0].name
         this.savePolls(value)
        }
@@ -264,7 +239,6 @@ export default {
     }
   },
   created () {
-    // console.log('adessssss ', this.$route.params.id)
     this.findCategorySegmantationPolls({query: {_project_poll_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.segmentations = response.data
     })

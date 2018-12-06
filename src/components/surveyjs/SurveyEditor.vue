@@ -43,7 +43,6 @@ export default {
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
     // this.editor.saveSurveyFunc = () => {
     this.dataValue = this.editor.saveSurveyFunc = function () {
-      console.log('mi json ', JSON.parse(this.text))
       // dats = JSON.parse(this.text)
       // this.sendData(dats)
       this.dataValue = JSON.parse(this.text)

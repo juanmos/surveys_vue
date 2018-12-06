@@ -129,7 +129,7 @@ export default {
       this._polls_id = response.data[0]._polls_project_id
       this._id = response.data[0]._id
       this.nameConfigPolls = response.data[0].name
-      console.log('dats ', this.PollId)
+      // console.log('dats ', this.PollId)
     })
     // console.log('adessssss ', this.survey)
   }
