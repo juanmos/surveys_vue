@@ -188,13 +188,11 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
       let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim()}
-      // console.log('esta es mi data ', data)
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config.patch().then((result) => {
           this.findConfigPolls({ query: {removed: false, _id: this._id} }).then(response => {
             const config = response.data || response
-            console.log('edit ', config)
             // this.alertConfig('Registro Modificado', 'success')
             this.setSnackMessage('Registro modificado')
             this.setSnackColor('success')
@@ -209,9 +207,7 @@ export default {
         })
     },
      getData (value) {
-       // console.log('value ', value)
        if (value) {
-        // console.log('mi data recibida ', JSON.parse(value))
         this.namePoll = JSON.parse(value).pages[0].name
         this.savePolls(value)
        }
@@ -225,9 +221,7 @@ export default {
       this.PollId = response.data[0].construct
       this._id = response.data[0]._id
       this.nameConfigPolls = response.data[0].name
-      console.log('dats ', this.PollId)
     })
-    // console.log('adessssss ', this.survey)
   }
 }
 </script>

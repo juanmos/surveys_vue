@@ -365,21 +365,76 @@ export default {
       const searchText = queryText.toLowerCase()
       return textOne.indexOf(searchText) > -1
     },
+    EditCategoryJson (arrayData, value, idConfigPolls, names) {
+      let addJson = []
+      let name = names
+      // console.log('el nombre ', arrayData.name)
+      let choices = []
+      arrayData.map((value, key) => {
+        choices.push(value.valor1)
+      })
+      addJson =
+        {
+          'name': name,
+          'elements': [
+            {
+              'type': 'radiogroup',
+              'name': name,
+              'choices': choices
+            }
+          ]
+        }
+      // value.elements = addJson
+      let flagRepeat = 0
+      let jsonSend = value
+      jsonSend.pages.map((value, key) => {
+        if (value.name === name) {
+          flagRepeat = 1
+        }
+      })
+      if (flagRepeat === 0) {
+        let pages = jsonSend.pages.length
+        jsonSend.pages[(pages)] = addJson
+        let data = {_id: idConfigPolls, name: name, construct: JSON.stringify(jsonSend)}
+        console.log('la data a enviar', data)
+        const {ConfigPoll} = this.$FeathersVuex
+        let config = new ConfigPoll(data)
+        config['_polls_project_id'] = this.$route.params.id
+        // config['name'] = this.nameConfigPolls
+        config.patch().then((result) => {
+          this.findConfigPolls({ query: {removed: false} }).then(response => {
+            // this.alertConfig('Registro Modificado', 'success')
+          })
+        }, (err) => {
+          this.setSnackMessage('Error al guardar')
+          this.setShowSnack(true)
+          // this.setSnackColor('error')
+          console.log(err)
+        })
+      }
+    },
+    getDatasend () {
+      this.findsegmentos({query: {removed: false, _id: this.items2._categorySegmentation_id}}).then(response => {
+
+      })
+    },
     savecategory () {
-      console.log('el nombre ', this.itemsegmento)
+      // console.log('el nombre ', this.itemsegmento)
       this.items2._project_poll_id = this.$route.params.id
       this.items2._categorySegmentation_id = this.selectcategory.toString()
-      this.items2.name = this.itemsegmento[0].name
-      this.items2.description = this.itemsegmento[0].description
-      this.items2.datos = this.itemsegmento[0].datos
-      const {CategorySegmantationPoll} = this.$FeathersVuex
-      let savePolls = new CategorySegmantationPoll(this.items2)
-      savePolls.save().then((result) => {
-        this.setSnackMessage('Categoria Guardada')
-        this.setShowSnack(true)
-        this.cargaredicion()
-      }, (err) => {
-        console.log(err)
+      this.findsegmentos({query: {removed: false, _id: this.items2._categorySegmentation_id}}).then(responseData => {
+        this.items2.name = responseData.data[0].name
+        this.items2.description = responseData.data[0].description
+        this.items2.datos = responseData.data[0].datos
+        const {CategorySegmantationPoll} = this.$FeathersVuex
+        let savePolls = new CategorySegmantationPoll(this.items2)
+        savePolls.save().then((result) => {
+          this.setSnackMessage('Categoria Guardada')
+          this.setShowSnack(true)
+          this.cargaredicion()
+        }, (err) => {
+          console.log(err)
+        })
       })
     },
     deleteConfigPolls () {
