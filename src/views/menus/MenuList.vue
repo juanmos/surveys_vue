@@ -41,7 +41,7 @@
                         {{ props.item.level }}
                       </td>
                       <td>
-                        <v-checkbox input-value="props.item.state" value disabled></v-checkbox>
+                        <v-checkbox input-value="props.item.state" value readonly color="primary"></v-checkbox>
                       </td>
                       <td>
                         <span class="group pa-2" v-for="item in props.item.rol" :key="item._id">
@@ -126,7 +126,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToNew()"
                 >
                     <v-icon>add</v-icon>

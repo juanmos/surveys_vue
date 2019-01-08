@@ -13,7 +13,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToList"
                 >
                     <v-icon>list</v-icon>

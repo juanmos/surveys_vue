@@ -15,7 +15,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToList"
                 >
                 <v-icon>list</v-icon>
@@ -57,9 +57,10 @@
             <v-card>
           <v-card-title><h4>{{ this.$route.params.category_name }}</h4></v-card-title>
            </v-card>
+           <!--:items="getCodes, codes_category" -->
             <v-data-table
                   :headers="headers"
-                  :items="getCodes, codes_category"
+                  :items="getCodes"
                   hide-actions
                   item-key="name"
                   striped hover

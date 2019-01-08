@@ -6,7 +6,7 @@
       v-model="mutableDrawer"
       enable-resize-watcher
       fixed
-      class="blue-grey lighten-5"
+      dark
       app>
       <v-list>
         <router-link

@@ -1,11 +1,11 @@
 <template>
-  <v-app>
+  <v-app dark>
     <side-menu :clipped="clipped" :drawer="drawer" :miniVariant="miniVariant" ></side-menu>
     <v-toolbar
       app
       :clipped-left="clipped"
       dark
-      color="primary">
+      color="black">
 
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-avatar
@@ -37,6 +37,8 @@
       fixed
       app
       width="1200"
+      class="white"
+      style="color: black"
     >
       <v-list>
         <v-list-tile @click="right = !right">
