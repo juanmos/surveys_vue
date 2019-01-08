@@ -124,7 +124,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToNew()"
                 >
                     <v-icon>add</v-icon>

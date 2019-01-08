@@ -33,8 +33,8 @@
                   color="blue-grey lighten-2"
                   required
                 ></v-text-field>
-                    <div>
-                        <v-toolbar flat color="white">
+                    <div >
+                        <v-toolbar flat>
                           <v-toolbar-title>Lista de Parametros</v-toolbar-title>
                           <v-spacer></v-spacer>
                             <div  max-width="500px">

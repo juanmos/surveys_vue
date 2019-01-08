@@ -76,7 +76,7 @@
         </v-list>
           <v-flex >
              <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
-             <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>
+             <!--<v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>-->
             <v-dialog  v-model="dialog"  max-width="400" >
                 <v-card>
                   <v-card-title class="headline">Agregar categoria</v-card-title>
@@ -106,7 +106,7 @@
                 </v-card>
               </v-dialog>
               <v-divider class="mx-3" inset vertical></v-divider>
-            <v-card color="white" >
+            <v-card  >
             <v-card-title><strong>CATEGORÍAS</strong></v-card-title>
             <v-layout >
       <v-flex xs2 sm2>
@@ -129,7 +129,7 @@
             </v-layout>
             </v-card>
                <v-divider class="mx-3" inset vertical></v-divider>
-            <v-card color="white" >
+            <v-card  >
       <v-card-title><strong>ENCUESTAS</strong></v-card-title>
     <v-layout >
       <v-flex xs2 sm2>

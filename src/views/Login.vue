@@ -5,7 +5,7 @@
           <particles-background class="particles"></particles-background>
           <v-layout align-center justify-center>
                 <v-card
-                  color="pink"
+                  color="primary"
                   style="min-width: 400px; margin: auto; margin-top: 10%;"
                   class="appear elevation-20"
                 >

@@ -7,7 +7,7 @@
                 <v-card-title :flat="true">
                           {{title}}
                           <v-spacer></v-spacer>
-                          <v-btn fab small color="pink"  @click="goToList">
+                          <v-btn fab small color="primary"  @click="goToList">
                             <v-icon>cancel</v-icon>
                           </v-btn>
                         </v-card-title>
