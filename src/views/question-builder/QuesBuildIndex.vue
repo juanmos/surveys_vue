@@ -228,6 +228,7 @@ export default {
     }
   },
   created () {
+    console.log('este es el id parametro', this.$route.params.id)
     this.findCategorySegmantationPolls({query: {_project_poll_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.segmentations = response.data
     })
