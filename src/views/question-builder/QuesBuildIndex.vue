@@ -3,17 +3,6 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
-    <v-card color="white">
-      <v-text-field
-      v-model="nameConfigPolls"
-      label="Nombre de la encuesta"
-      single-line
-      box
-      hide-details
-      :rules= "MyRules"
-      required
-    ></v-text-field>
-    </v-card>
     <survey-editor @dataSubmited = "getData"></survey-editor>
     <v-btn
     absolute

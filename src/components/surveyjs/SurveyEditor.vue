@@ -1,5 +1,5 @@
 <template>
-<div id="surveyEditorContainer">
+<div id="surveyEditorContainer" class="surveyContainer">
 </div>
 </template>
 
@@ -39,7 +39,13 @@ export default {
   },
   mounted () {
     // questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix']
+    // Changing the surveys's language
+    SurveyEditor.editorLocalization.currentLocale = 'es'
+    // Aplying different theme to the survey
+    SurveyEditor.StylesManager.applyTheme('winterstone')
+    // Editor Options
     let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
     // this.editor.saveSurveyFunc = () => {
     this.dataValue = this.editor.saveSurveyFunc = function () {
@@ -58,4 +64,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .surveyContainer >>> .svd_commercial_container {
+    display: none;
+  }
 </style>
