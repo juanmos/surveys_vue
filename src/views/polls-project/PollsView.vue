@@ -449,7 +449,7 @@ export default {
       })
     },
     goToCreateConfigPolls () {
-      this.$router.push({ name: 'QuesBuildIndex', params: { id: this.$route.params.id } })
+      this.$router.push({ path: `/QuesBuildIndex/${this.$route.params.id}` })
     },
     goToEditConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderEdit', params: { id: id } })

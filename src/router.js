@@ -356,9 +356,10 @@ export default new Router({
           component: QuestionTypeList
         },
         {
-          path: 'QuesBuildIndex',
+          path: 'QuesBuildIndex/:id',
           name: 'QuesBuildIndex',
-          component: QuestionBuilder
+          component: QuestionBuilder,
+          props: true
         },
         {
           path: 'regions',

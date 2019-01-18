@@ -3,17 +3,6 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
-    <v-card color="white">
-      <v-text-field
-      v-model="nameConfigPolls"
-      label="Nombre de la encuesta"
-      single-line
-      box
-      hide-details
-      :rules= "MyRules"
-      required
-    ></v-text-field>
-    </v-card>
     <survey-editor @dataSubmited = "getData"></survey-editor>
     <v-btn
     absolute
@@ -239,6 +228,7 @@ export default {
     }
   },
   created () {
+    console.log('este es el id parametro', this.$route.params.id)
     this.findCategorySegmantationPolls({query: {_project_poll_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.segmentations = response.data
     })
