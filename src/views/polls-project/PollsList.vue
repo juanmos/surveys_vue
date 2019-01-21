@@ -8,7 +8,7 @@
                 <span class="title text-sm-left">Proyecto Encuestas
                   <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
                 </span>
-                  <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
                 <span class="title text-sm-left">
                   <v-autocomplete
                       :filter="customFilter"
@@ -27,7 +27,7 @@
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="usersProjects"
+                  :items="getpools"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -73,7 +73,7 @@
                             <v-list-tile @click="goToListConfigPolls(props.item._id)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToUsersProjects(props.item._id)">
+                            <v-list-tile @click="openMembers(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
@@ -139,6 +139,54 @@
                 "></loading-component>
             </v-card>
         </v-flex>
+        <v-dialog v-model="membersDialog" persistent max-width="800">
+          <v-card>
+            <v-card-title class="headline"></v-card-title>
+            <v-card-text>
+              <v-list>
+                <v-list-tile
+                  v-for="member in selectedPoll.members"
+                  :key="member._id"
+                  avatar
+                >
+                  <v-list-tile-avatar>
+                    <img>
+                  </v-list-tile-avatar>
+
+                  <v-list-tile-content>
+                    <v-list-tile-title v-text="member.name"></v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-menu
+                          bottom
+                          transition="slide-y-transition"
+                        >
+                          <v-btn
+                            slot="activator"
+                            color="primary"
+                            flat
+                            icon
+                          >
+                          <v-icon>more_vert</v-icon>
+                          </v-btn>
+                          <v-list>
+                            <v-list-tile>
+                              <v-icon>delete</v-icon> <v-list-tile-title @click="deleteMember(member._id)">Quitar acceso a miembro</v-list-tile-title>
+                            </v-list-tile>
+                          </v-list>
+                        </v-menu>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-divider></v-divider>
+              </v-list>
+
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" flat @click="membersDialog = false">Cerrar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         </v-layout>
     </v-container>
 </div>
@@ -200,6 +248,7 @@ export default {
           sortable: false
         }
       ],
+      membersDialog: false,
       MyRules: [
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
@@ -239,11 +288,13 @@ export default {
         5: 'blue',
         6: 'blue',
         7: 'red'
-      }
+      },
+      selectedPoll: {}
     }
   },
   methods: {
     ...mapActions('polls-project', { findPolls: 'find' }),
+    ...mapActions('polls-project', { getSelectedPoll: 'get' }),
     ...mapActions('roles', { findRoles: 'find' }),
     ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions([
@@ -322,6 +373,19 @@ export default {
     },
     getUserCurrent () {
       return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    },
+    openMembers (id) {
+      this.getSelectedPoll(id).then(result => {
+        this.selectedPoll = Object.assign({}, result)
+        this.membersDialog = true
+        console.log('selected poll', this.selectedPoll)
+      }).catch(err => console.log('este es el error', err))
+    },
+    deleteMember (id) {
+      const {PollsProject} = this.$FeathersVuex
+      let pollProject = new PollsProject(this.selectedPoll)
+      pollProject.members = pollProject.members.filter(member => member._id !== id)
+      pollProject.save()
     }
   },
   computed: {
@@ -329,12 +393,7 @@ export default {
     ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     getpools () {
-      // console.log('asdeeeeeeee ', this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      if (!this.state_polls_filter || this.state_polls_filter === 0) {
-        return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      } else {
-        return this.findPollsInStore({query: {removed: false, state_polls: this.state_polls_filter, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      }
+      return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
