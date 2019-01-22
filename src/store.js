@@ -156,7 +156,8 @@ export default new Vuex.Store({
         _customer_contact_id: '',
         number_polls: '',
         state_polls: [],
-        removed: false
+        removed: false,
+        members: []
       }
     }),
     service('poll-category', {
