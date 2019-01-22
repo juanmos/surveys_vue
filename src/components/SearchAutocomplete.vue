@@ -2,18 +2,18 @@
     <v-layout m-2 row wrap>
         <v-flex xs10>
           <v-autocomplete
-                v-model="searchField"
-                :items="searchedResults"
-                box
-                color="blue-grey lighten-2"
-                :label="fromStudy ? '' : `Listado de ${label}`"
-                item-text="name"
-                item-value="_id"
-                hide-no-data
-                :search-input.sync="searchEvent"
-                :loading="isLoading"
-                :multiple="multiple"
-                >
+            v-model="searchField"
+            :items="searchedResults"
+            box
+            color="blue-grey lighten-2"
+            :label="fromStudy ? '' : `Listado de ${label}`"
+            item-text="name"
+            :item-value="(item) => ({name: item.name, '_id': item._id})"
+            hide-no-data
+            :search-input.sync="searchEvent"
+            :loading="isLoading"
+            :multiple="multiple"
+            >
                 <template
                     slot="selection"
                     slot-scope="data"
@@ -69,6 +69,7 @@ export default {
     },
     emitChanges () {
       this.$emit('selected', this.searchField)
+      this.searchField = null
     }
   },
   computed: {

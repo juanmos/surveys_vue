@@ -151,7 +151,7 @@
                   avatar
                 >
                   <v-list-tile-avatar>
-                    <img>
+                    <img :src="`${urlEnviroment}/images/avatar.png`">
                   </v-list-tile-avatar>
 
                   <v-list-tile-content>
@@ -202,6 +202,7 @@ import SearchAutocomplete from './../../components/SearchAutocomplete'
 import Vue from 'vue'
 import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
+const enviroment = require('./../../../config/enviroment.json')
 Vue.use(VueMoment, {
   moment
 })
@@ -291,7 +292,8 @@ export default {
         6: 'blue',
         7: 'red'
       },
-      selectedPoll: {}
+      selectedPoll: {},
+      urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase
     }
   },
   methods: {
@@ -301,6 +303,7 @@ export default {
     ...mapActions('users-projects', { findUsersProjects: 'find' }),
     ...mapActions([
       'setSnackMessage',
+      'setSnackColor',
       'setShowSnack'
     ]),
     goToNew () {
@@ -386,13 +389,23 @@ export default {
     deleteMember (id) {
       const {PollsProject} = this.$FeathersVuex
       let pollProject = new PollsProject(this.selectedPoll)
-      pollProject.members = pollProject.members.filter(member => member._id !== id)
+      pollProject.members = pollProject.members.length === 1 ? [] : pollProject.members.filter(member => member._id !== id)
       pollProject.save()
     },
     saveMembers (event, userId) {
+      console.log('esto recibo', event)
       const {PollsProject} = this.$FeathersVuex
       let pollsProject = new PollsProject(this.selectedPoll)
       pollsProject.members = [...new Set(this.selectedPoll.members.concat(event))]
+      pollsProject.save()
+        .then(response => {
+          this.setSnackMessage('Agregados involucrados en proyecto')
+          this.setShowSnack(true)
+        }).catch(err => {
+          this.setSnackColor('danger')
+          this.setSnackMessage(`Agregados involucrados en proyecto ${err}`)
+          this.setShowSnack(true)
+        })
       console.log('esto se va a guardar', pollsProject)
     }
   },
