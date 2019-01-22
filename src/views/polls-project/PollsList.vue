@@ -139,10 +139,11 @@
                 "></loading-component>
             </v-card>
         </v-flex>
-        <v-dialog v-model="membersDialog" persistent max-width="800">
+        <v-dialog v-model="membersDialog" persistent max-width="900">
           <v-card>
-            <v-card-title class="headline"></v-card-title>
-            <v-card-text>
+            <v-card-title class="headline">Involucrados en proyecto</v-card-title>
+             <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users`" label="Usuarios"></search-autocomplete>
+              <v-card-text>
               <v-list>
                 <v-list-tile
                   v-for="member in selectedPoll.members"
@@ -197,6 +198,7 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import SearchAutocomplete from './../../components/SearchAutocomplete'
 import Vue from 'vue'
 import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
@@ -386,6 +388,12 @@ export default {
       let pollProject = new PollsProject(this.selectedPoll)
       pollProject.members = pollProject.members.filter(member => member._id !== id)
       pollProject.save()
+    },
+    saveMembers (event, userId) {
+      const {PollsProject} = this.$FeathersVuex
+      let pollsProject = new PollsProject(this.selectedPoll)
+      pollsProject.members = [...new Set(this.selectedPoll.members.concat(event))]
+      console.log('esto se va a guardar', pollsProject)
     }
   },
   computed: {
@@ -440,7 +448,7 @@ export default {
     })
     this.getData()
   },
-  components: {LoadingComponent, EditableField}
+  components: {LoadingComponent, EditableField, SearchAutocomplete}
 }
 </script>
 
