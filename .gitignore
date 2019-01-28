@@ -25,5 +25,4 @@ yarn-error.log*
 
 # Package-lock
 package-lock.json
-
 config/*

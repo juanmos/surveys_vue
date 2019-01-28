@@ -8,7 +8,7 @@
             color="blue-grey lighten-2"
             :label="fromStudy ? '' : `Listado de ${label}`"
             item-text="name"
-            :item-value="(item) => ({name: item.name, '_id': item._id})"
+            item-value="_id"
             hide-no-data
             :search-input.sync="searchEvent"
             :loading="isLoading"
@@ -78,7 +78,7 @@ export default {
   watch: {
     searchEvent (val) {
       console.log(val)
-      if (this.searchField.length > 0) return
+      if (this.searchField && this.searchField.length > 0) return
       this.getValues(val).then(result => {
         this.searchedResults = result.data.slice()
       })

@@ -141,12 +141,12 @@
         </v-flex>
         <v-dialog v-model="membersDialog" persistent max-width="900">
           <v-card>
-            <v-card-title class="headline">Involucrados en proyecto</v-card-title>
-             <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users`" label="Usuarios"></search-autocomplete>
+            <v-card-title class="headline">Involucrados en proyecto <strong>&nbsp;{{selectedPoll.name}}</strong> </v-card-title>
+             <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users-polls`" label="Usuarios"></search-autocomplete>
               <v-card-text>
               <v-list>
                 <v-list-tile
-                  v-for="member in selectedPoll.members"
+                  v-for="member in selectedPoll.userPolls"
                   :key="member._id"
                   avatar
                 >
@@ -389,16 +389,20 @@ export default {
     deleteMember (id) {
       const {PollsProject} = this.$FeathersVuex
       let pollProject = new PollsProject(this.selectedPoll)
-      pollProject.members = pollProject.members.length === 1 ? [] : pollProject.members.filter(member => member._id !== id)
-      pollProject.save()
+      this.selectedPoll.userPolls = this.selectedPoll.userPolls.filter(userPoll => userPoll._id !== id)
+      pollProject.members = pollProject.members.length === 1 ? [] : pollProject.members.filter(member => member !== id)
+      pollProject.save().then(result => {
+        this.setSnackMessage('Eliminado Involucrado')
+        this.setShowSnack(true)
+      })
     },
     saveMembers (event, userId) {
-      console.log('esto recibo', event)
       const {PollsProject} = this.$FeathersVuex
       let pollsProject = new PollsProject(this.selectedPoll)
       pollsProject.members = [...new Set(this.selectedPoll.members.concat(event))]
       pollsProject.save()
         .then(response => {
+          this.selectedPoll = Object.assign({}, response)
           this.setSnackMessage('Agregados involucrados en proyecto')
           this.setShowSnack(true)
         }).catch(err => {
@@ -414,7 +418,7 @@ export default {
     ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     getpools () {
-      return this.findPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findPollsInStore().data
     },
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
@@ -446,7 +450,7 @@ export default {
     } else {
       this.query._user_id = this.user._id
     }
-    this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+    this.findPolls({query: {removed: false}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
@@ -457,7 +461,6 @@ export default {
       this.total = response.total
       this.loaded = true
       this.usersProjects = response.data.map(data => (data.project))
-      // console.log('entra ', response.data)
     })
     this.getData()
   },
