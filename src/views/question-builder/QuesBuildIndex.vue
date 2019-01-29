@@ -234,7 +234,7 @@ export default {
     saveImportedPoll (data) {
       const { ConfigPoll } = this.$FeathersVuex
       let configPoll = new ConfigPoll({
-        name: 'Encuesta Importada',
+        name: 'Encuesta Importada....',
         construct : 'test',
         imported: true,
         _polls_project_id: this.$route.params.id
