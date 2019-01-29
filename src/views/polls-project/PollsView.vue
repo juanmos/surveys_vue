@@ -147,7 +147,22 @@
         <template slot="items" slot-scope="props">
           <tr>
                     <td class="text-xs-left">
-                      {{ props.item.name }}
+                      <v-edit-dialog
+                          :return-value.sync="props.item.name"
+                          lazy
+                          @save="edit(props.item.name, props.item, 'name')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.name }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.name"
+                            label="Editar Nombre"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
                       </td>
                       <td>
                          <v-menu
@@ -463,6 +478,27 @@ export default {
         this.total = response.total
         this.loaded = true
       })
+    },
+    edit (val, elem, field) {
+      const {ConfigPoll} = this.$FeathersVuex
+      const configPoll = new ConfigPoll(elem)
+      configPoll[field] = val
+      configPoll.patch().then((result) => {
+        this.setSnackMessage('Encuesta Editada')
+        this.setShowSnack(true)
+      })
+    },
+    cancel () {
+      this.snack = true
+      this.snackColor = 'error'
+      this.snackText = 'Canceled'
+    },
+    open () {
+      this.snack = true
+      this.snackColor = 'info'
+      this.snackText = 'Dialog opened'
+    },
+    close (val) {
     }
   },
   computed: {
