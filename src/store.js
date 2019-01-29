@@ -179,6 +179,9 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         construct: '',
+        imported: false,
+        originalJson: '',
+        parsedJson: '',
         removed: false
       }
     }),
