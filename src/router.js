@@ -263,6 +263,11 @@ const CategorySegmentationPollsEdit = resolve => {
   }, 'category-segmentation-polls')
 }
 
+const PollResultsIndex = resolve => {
+  require.ensure(['./views/results-view/PollResultsIndex.vue'], () => {
+    resolve(require('./views/results-view/PollResultsIndex.vue'))
+  }, 'poll-results')
+}
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -535,6 +540,12 @@ export default new Router({
           path: 'question-builder-view/:id',
           name: 'QuestionBuilderView',
           component: QuestionBuilderView
+        },
+        {
+          path: 'poll-results/:id',
+          name: 'PollResultsIndex',
+          props: true,
+          component: PollResultsIndex
         }
       ]
     },
