@@ -178,6 +178,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToResultConfigPolls(props.item._id)">
+                              <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="goToViewConfigPolls(props.item._id)">
                               <v-list-tile-title>Ver encuesta</v-list-tile-title>
                             </v-list-tile>
@@ -471,6 +474,9 @@ export default {
     },
     goToViewConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
+    },
+    goToResultConfigPolls (id) {
+      this.$router.push({ path: `/poll-results/${id}` })
     },
     getDataCategorySegmentationPolls () {
       this.findCategorySegmentationPolls({query: {removed: false, _project_poll_id: this.$route.params.id}}).then(response => {
