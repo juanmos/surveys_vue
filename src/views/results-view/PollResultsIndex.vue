@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-md>
+    <v-container>
         <v-tabs
         v-model="active"
         color="secondary"
@@ -86,14 +86,31 @@ export default {
         'Rol'
       ].map(value => ({
         text: value,
-        align: 'left',
+        align: 'center',
         sortable: false
       }))
     },
     getTableVariableValues () {
-      return this.resultPoll ? Object.values(this.resultPoll.originalJson[0]).map(question => ({
-        name: question
+      return this.resultPoll ? Object.values(this.resultPoll.originalJson[0]).map((question, key) => ({
+        name: question,
+        type: 'Numerico',
+        anchor: 8,
+        decimals: 0,
+        label: question.split('_').slice(1, question.length).join(' '),
+        values: this.getPossibleValues[key],
+        lost: -1,
+        columns: 8,
+        align: 'Derecha',
+        size: 'Medida',
+        rol: 'Entrada'
       })) : []
+    },
+    getPossibleValues () {
+      let resultPossibleValues = []
+      for (let key in this.getTableDataValues[0]) {
+        resultPossibleValues.push([...new Set(Object.values(this.getTableDataValues.map(value => value[key])))])
+      }
+      return resultPossibleValues
     }
   },
   methods: {
