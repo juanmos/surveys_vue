@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-flex class="view-container">
         <v-tabs
         v-model="active"
         color="secondary"
@@ -34,13 +34,27 @@
                     <poll-results-table :headers="getVariableHeaders" :responses="getTableVariableValues"></poll-results-table>
                 </v-card>
             </v-tab-item>
+            <v-tab
+                ripple
+            >
+                Creador de Reportes
+                <v-icon>ballot</v-icon>
+
+            </v-tab>
+            <v-tab-item
+            >
+                <v-card flat>
+                    <report-creator :id="this.id"></report-creator>
+                </v-card>
+            </v-tab-item>
         </v-tabs>
-    </v-container>
+    </v-flex>
 </template>
 
 <script>
 import {mapActions} from 'vuex'
 import PollResultsTable from './PollResultsTable'
+import ReportCreator from './../reports-creator/ReportCreator'
 
 export default {
   props: ['id'],
@@ -121,7 +135,7 @@ export default {
       this.resultPoll = Object.assign({}, result)
     })
   },
-  components: { PollResultsTable }
+  components: { PollResultsTable, ReportCreator }
 }
 </script>
 
@@ -129,4 +143,10 @@ export default {
     .resultsTable {
       overflow: scroll
     }
+</style>
+
+<style scoped>
+  .view-container {
+    margin: 30px;
+  }
 </style>
