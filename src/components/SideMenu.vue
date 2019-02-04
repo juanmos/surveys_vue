@@ -104,6 +104,7 @@
 <script>
 import {mapActions} from 'vuex'
 import nav from './../_nav'
+const enviroment = require('./../../config/enviroment.json')
 export default {
   props: ['clipped', 'drawer', 'miniVariant'],
   data: () => ({
@@ -111,6 +112,7 @@ export default {
     fixed: false,
     right: true,
     rightDrawer: false,
+    urlEnviroment: enviroment[enviroment.currentEnviroment].closeSession,
     mutableClipped: null,
     mutableDrawer: null,
     mutableMiniVariant: null
@@ -126,7 +128,8 @@ export default {
     },
     exit () {
       this.closeSession().then((res) => {
-        this.$router.push('/pages/login')
+        window.localStorage.clear()
+        window.location.replace(this.urlEnviroment)
       })
     }
   },
