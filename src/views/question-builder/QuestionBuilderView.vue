@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="app" class="white" >
     <!-- If you want to show survey, uncomment the line below -->
     <survey :survey="survey"></survey>
     <!-- If you want to show survey editor, uncomment the line below -->
