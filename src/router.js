@@ -263,6 +263,18 @@ const CategorySegmentationPollsEdit = resolve => {
   }, 'category-segmentation-polls')
 }
 
+const PollResultsIndex = resolve => {
+  require.ensure(['./views/results-view/PollResultsIndex.vue'], () => {
+    resolve(require('./views/results-view/PollResultsIndex.vue'))
+  }, 'poll-results')
+}
+
+const ReportCreator = resolve => {
+  require.ensure(['./views/reports-creator/ReportCreator.vue'], () => {
+    resolve(require('./views/reports-creator/ReportCreator.vue'))
+  }, 'reports-creator')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -356,9 +368,10 @@ export default new Router({
           component: QuestionTypeList
         },
         {
-          path: 'QuesBuildIndex',
+          path: 'QuesBuildIndex/:id',
           name: 'QuesBuildIndex',
-          component: QuestionBuilder
+          component: QuestionBuilder,
+          props: true
         },
         {
           path: 'regions',
@@ -534,6 +547,18 @@ export default new Router({
           path: 'question-builder-view/:id',
           name: 'QuestionBuilderView',
           component: QuestionBuilderView
+        },
+        {
+          path: 'poll-results/:id',
+          name: 'PollResultsIndex',
+          props: true,
+          component: PollResultsIndex
+        },
+        {
+          path: 'report-creator/:id',
+          name: 'ReportCreator',
+          props: true,
+          component: ReportCreator
         }
       ]
     },

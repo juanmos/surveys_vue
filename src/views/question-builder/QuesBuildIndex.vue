@@ -3,18 +3,29 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
-    <v-card color="white">
-      <v-text-field
-      v-model="nameConfigPolls"
-      label="Nombre de la encuesta"
-      single-line
-      box
-      hide-details
-      :rules= "MyRules"
-      required
-    ></v-text-field>
-    </v-card>
-    <survey-editor @dataSubmited = "getData"></survey-editor>
+    <v-tabs
+      color="black"
+      show-arrows
+      dark
+      icons-and-text
+    >
+      <v-tabs-slider color="primary"></v-tabs-slider>
+
+      <v-tab
+        @click="newMode = true"
+      >
+        Nueva encuesta
+        <v-icon>add</v-icon>
+      </v-tab>
+      <v-tab
+        @click="newMode = false"
+      >
+        Importar desde spss
+        <v-icon>cloud_upload</v-icon>
+      </v-tab>
+    </v-tabs>
+    <survey-editor v-show="newMode" @dataSubmited = "getData"></survey-editor>
+    <polls-upload @pollImported="saveImportedPoll" v-show="!newMode"></polls-upload>
     <v-btn
     absolute
     dark
@@ -33,6 +44,7 @@
 <script>
 import {validations} from './../../utils/validations'
 import SurveyEditor from './../../components/surveyjs/SurveyEditor'
+import PollsUpload from './PollsUpload'
 import * as SurveyVue from 'survey-vue'
 // import './../../localization/spanish.ts'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -62,7 +74,8 @@ export default {
   name: 'app',
   components: {
     Survey,
-    SurveyEditor
+    SurveyEditor,
+    PollsUpload
   },
   data () {
     var json = {
@@ -175,6 +188,7 @@ export default {
     }
     var model = new SurveyVue.Model(json)
     return {
+      newMode: true,
       survey: model,
       searchPollsProject: '',
       nameConfigPolls: '',
@@ -217,6 +231,28 @@ export default {
           console.log(err)
         })
     },
+    saveImportedPoll (data) {
+      let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
+      const { ConfigPoll } = this.$FeathersVuex
+      let configPoll = new ConfigPoll({
+        name: 'Encuesta Importada....',
+        construct : 'test',
+        originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
+        imported: true,
+        _polls_project_id: this.$route.params.id
+      });
+      configPoll.save().then(result => {
+        this.setSnackMessage('Registro guardado')
+        this.setSnackColor('success')
+        this.setShowSnack(true)
+        this.gotoList()
+      }).catch(err => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
+        console.log(err)
+      })
+    },
      getData (value) {
        if (value) {
         this.namePoll = JSON.parse(value).pages[0].name
@@ -239,6 +275,7 @@ export default {
     }
   },
   created () {
+    console.log('este es el id parametro', this.$route.params.id)
     this.findCategorySegmantationPolls({query: {_project_poll_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.segmentations = response.data
     })

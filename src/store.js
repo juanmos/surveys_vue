@@ -156,7 +156,8 @@ export default new Vuex.Store({
         _customer_contact_id: '',
         number_polls: '',
         state_polls: [],
-        removed: false
+        removed: false,
+        userPolls: []
       }
     }),
     service('poll-category', {
@@ -178,6 +179,9 @@ export default new Vuex.Store({
       instanceDefaults: {
         name: '',
         construct: '',
+        imported: false,
+        originalJson: '',
+        parsedJson: '',
         removed: false
       }
     }),
