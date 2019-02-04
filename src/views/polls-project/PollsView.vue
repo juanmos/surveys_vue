@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <v-container grid-list-md text-xs-center>
+    <v-flex class="view-container">
       <v-card>
         <v-card-title>
             <v-list-tile-action class="title text-sm-left">
@@ -146,81 +145,81 @@
                 >
         <template slot="items" slot-scope="props">
           <tr>
-                    <td class="text-xs-left">
-                      <v-edit-dialog
-                          :return-value.sync="props.item.name"
-                          lazy
-                          @save="edit(props.item.name, props.item, 'name')"
-                          @cancel="cancel"
-                          @open="open"
-                          @close="close"
-                        > {{ props.item.name }}
-                          <v-text-field
-                            slot="input"
-                            v-model="props.item.name"
-                            label="Editar Nombre"
-                            single-line
-                            counter
-                          ></v-text-field>
-                        </v-edit-dialog>
-                      </td>
-                      <td>
-                         <v-menu
-                          bottom
-                          transition="slide-y-transition"
-                        >
-                          <v-btn
-                            slot="activator"
-                            color="primary"
-                            flat
-                            icon
-                          >
-                          <v-icon>more_vert</v-icon>
-                          </v-btn>
-                          <v-list>
-                            <v-list-tile @click="goToResultConfigPolls(props.item._id)">
-                              <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="goToViewConfigPolls(props.item._id)">
-                              <v-list-tile-title>Ver encuesta</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="goToEditConfigPolls(props.item._id)">
-                              <v-list-tile-title>Editar encuesta</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
-                              <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
-                            </v-list-tile>
-                          </v-list>
-                          <v-dialog
-                          v-model="dialogDeleteConfigPolls"
-                          max-width="380"
-                          max-heigth="500"
-                        >
-                          <v-card>
-                            <v-card-title class="headline">Está seguro que desea eliminar la encuesta</v-card-title>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
+            <td class="text-xs-left">
+              <v-edit-dialog
+                  :return-value.sync="props.item.name"
+                  lazy
+                  @save="edit(props.item.name, props.item, 'name')"
+                  @cancel="cancel"
+                  @open="open"
+                  @close="close"
+                > {{ props.item.name }}
+                  <v-text-field
+                    slot="input"
+                    v-model="props.item.name"
+                    label="Editar Nombre"
+                    single-line
+                    counter
+                  ></v-text-field>
+                </v-edit-dialog>
+              </td>
+              <td>
+                  <v-menu
+                  bottom
+                  transition="slide-y-transition"
+                >
+                  <v-btn
+                    slot="activator"
+                    color="primary"
+                    flat
+                    icon
+                  >
+                  <v-icon>more_vert</v-icon>
+                  </v-btn>
+                  <v-list>
+                    <v-list-tile @click="goToResultConfigPolls(props.item._id)">
+                      <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="goToViewConfigPolls(props.item._id)">
+                      <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="goToEditConfigPolls(props.item._id)">
+                      <v-list-tile-title>Editar encuesta</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
+                      <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                  <v-dialog
+                  v-model="dialogDeleteConfigPolls"
+                  max-width="380"
+                  max-heigth="500"
+                >
+                  <v-card>
+                    <v-card-title class="headline">Está seguro que desea eliminar la encuesta</v-card-title>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
 
-                              <v-btn
-                                color="red darken-1"
-                                flat="flat"
-                                @click="dialogDeleteConfigPolls = false"
-                              >
-                                NO
-                              </v-btn>
+                      <v-btn
+                        color="red darken-1"
+                        flat="flat"
+                        @click="dialogDeleteConfigPolls = false"
+                      >
+                        NO
+                      </v-btn>
 
-                              <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialogDeleteConfigPolls = false, deleteConfigPolls()"
-                              >
-                                SI
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
-                         </v-menu>
-                      </td>
+                      <v-btn
+                        color="green darken-1"
+                        flat="flat"
+                        @click="dialogDeleteConfigPolls = false, deleteConfigPolls()"
+                      >
+                        SI
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                  </v-menu>
+              </td>
                 </tr>
                 </template>
                 </v-data-table>
@@ -242,8 +241,7 @@
   </v-card>
           </v-flex>
       </v-card>
-        </v-container>
-  </div>
+        </v-flex>
 </template>
 
 <script>
@@ -536,3 +534,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .view-container {
+    margin: 30px;
+  }
+</style>

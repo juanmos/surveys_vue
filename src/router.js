@@ -268,6 +268,13 @@ const PollResultsIndex = resolve => {
     resolve(require('./views/results-view/PollResultsIndex.vue'))
   }, 'poll-results')
 }
+
+const ReportCreator = resolve => {
+  require.ensure(['./views/reports-creator/ReportCreator.vue'], () => {
+    resolve(require('./views/reports-creator/ReportCreator.vue'))
+  }, 'reports-creator')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -546,6 +553,12 @@ export default new Router({
           name: 'PollResultsIndex',
           props: true,
           component: PollResultsIndex
+        },
+        {
+          path: 'report-creator/:id',
+          name: 'ReportCreator',
+          props: true,
+          component: ReportCreator
         }
       ]
     },
