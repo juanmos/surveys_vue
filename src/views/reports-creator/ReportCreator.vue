@@ -61,19 +61,35 @@
                             </v-card-title>
 
                             <v-flex xs12>
-                                <draggable v-model="yQuestions" :options="{group:'questions'}">
+                                <draggable v-model="xQuestions" :options="{group:'questions'}">
                                     <v-card class="draggable" dark color="transparent">
                                         <v-card-text class="px-0"></v-card-text>
                                     </v-card>
                                 </draggable>
                             </v-flex>
-                            <v-flex xs1>
-                                <draggable v-model="xQuestions" :options="{group:'questions'}">
-                                    <v-card dark class="draggable draggable-x" color="transparent">
-                                        <v-card-text class="px-0"></v-card-text>
-                                    </v-card>
-                                </draggable>
-                            </v-flex>
+                            <v-layout class="table-wrap" row wrap>
+                                <v-flex xs1>
+                                    <draggable v-model="yQuestions" :options="{group:'questions'}">
+                                        <v-card dark class="draggable draggable-y" color="transparent">
+                                            <v-card-text class="px-0"></v-card-text>
+                                        </v-card>
+                                    </draggable>
+                                </v-flex>
+                                <v-flex class="table-wrap" xs11>
+                                        <table class="table-wrap" border="1">
+                                            <thead>
+                                                <th v-for="x in xQuestions" :key="x">
+                                                    {{x}}
+                                                </th>
+                                            </thead>
+                                            <tr v-for="y in yQuestions" :key="y">
+                                                <td v-for="x in xQuestions" :key="x">
+                                                    {{getCrossValue(x, y)}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                </v-flex>
+                            </v-layout>
                         </v-card>
                         <v-card v-else>
                             <v-card-title
@@ -135,6 +151,10 @@ export default {
     },
     getRandomColor () {
       return this.colors[Math.floor((Math.random() * 25) + 1)]
+    },
+    getCrossValue (q1, q2) {
+      console.log(q1, q2)
+      return 0
     }
   },
   computed: {
@@ -195,7 +215,7 @@ export default {
     .draggable {
         border: 1px dotted #ccc !important;
     }
-    .draggable-x {
+    .draggable-y {
         min-height: 600px;
     }
     .draggable-unique {
@@ -204,5 +224,83 @@ export default {
     .questionsList {
       max-height: 1000px;
       overflow: scroll;
+    }
+    table {
+      width: 800px;
+      border-collapse: collapse;
+      overflow: scroll;
+    }
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+        background: #eee;
+        }
+
+    th {
+        color: white;
+        font-weight: bold;
+        }
+
+    td, th {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+        font-size: 18px;
+        color: #000;
+        }
+
+    /*
+    Max width before this PARTICULAR table gets nasty
+    This query will take effect for any screen smaller than 760px
+    and also iPads specifically.
+    */
+    @media
+    only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+        table {
+            width: 100%;
+        }
+
+        /* Force table to not be like tables anymore */
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        tr { border: 1px solid #ccc; }
+
+        td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50%;
+        }
+
+        td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 6px;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+            /* Label the data */
+            content: attr(data-column);
+
+            color: #000;
+            font-weight: bold;
+        }
+        .table-wrap {
+          overflow: scroll;
+        }
+
     }
 </style>
