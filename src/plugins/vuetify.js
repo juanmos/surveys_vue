@@ -13,11 +13,9 @@ const messages = {
         noResultsText: 'No se encontraron registros coincidentes',
         nextPage: 'Siguiente',
         prevPage: 'Anterior',
-        'noDataText': 'Información no disponible',
-        dataTable: {
-          rowsPerPageText: 'Filas por página:'
-        }
-      }
+        rowsPerPageAll: 'All'
+      },
+      noDataText: 'Información no disponible'
     }
   }
 }
