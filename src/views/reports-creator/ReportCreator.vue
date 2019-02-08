@@ -42,10 +42,10 @@
                               <v-spacer></v-spacer>
                             </v-card-title>
                             <draggable v-model="questions" :options="{group:'questions'}">
-                                <template v-for="(item, key) in questions">
-                                    <v-flex :key="item">
+                                <template v-for="item in questions">
+                                    <v-flex :key="item.original">
                                         <v-card class="mr-2 ml-2 mb-2 mt-2" dark :color="`primary`">
-                                            <v-card-title>{{item}}{{key}}</v-card-title>
+                                            <v-card-title>{{item.label}}</v-card-title>
                                         </v-card>
                                     </v-flex>
                                 </template>
@@ -56,7 +56,7 @@
                         <v-card v-if="multipleMode">
                             <v-card-title
                               primary class="title">
-                                Tabla de Resultado
+                                Tabla de Resultados
                               <v-spacer></v-spacer>
                             </v-card-title>
 
@@ -94,7 +94,7 @@
                         <v-card v-else>
                             <v-card-title
                               primary class="title">
-                                Tabla de Resultado
+                                {{uniqueQuestion.map(q => q.label).join(', ')}}
                               <v-spacer></v-spacer>
                             </v-card-title>
 
@@ -177,21 +177,15 @@ export default {
     },
     uniqueQuestion (val) {
       console.log(val)
-      let responses = []
-      let keySelected = 'A'
-      for (let key in this.getTableVariableValues) {
-        if (this.getTableVariableValues[key] === val[0]) {
-          keySelected = key
-          responses = this.getPossibleResponses(key)
-        }
-      }
-      console.log(responses[0].map(response => ({
+      let responses = val[0].options
+      let keySelected = val[0].code
+      console.log(responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
       })))
       this.labels = []
-      this.datasets = responses[0].map(response => ({
+      this.datasets = responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
@@ -204,8 +198,9 @@ export default {
   },
   mounted () {
     this.getPoll(this.id).then(result => {
+      console.log('este es el result poll', result)
       this.resultPoll = Object.assign({}, result)
-      this.questions = this.resultPoll ? Object.values(Object.values(this.resultPoll.originalJson)[0]) : []
+      this.questions = this.resultPoll ? this.resultPoll.formatedConfiguration : []
     })
   }
 }

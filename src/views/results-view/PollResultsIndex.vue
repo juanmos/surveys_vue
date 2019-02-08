@@ -31,7 +31,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getVariableHeaders" :responses="getTableVariableValues"></poll-results-table>
+                    <poll-results-table :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -88,16 +88,9 @@ export default {
     getVariableHeaders () {
       return [
         'Nombre',
-        'Tipo',
-        'Anchura',
-        'Decimales',
         'Etiqueta',
         'Valores',
-        'Perdidos',
-        'Columnas',
-        'Alineacion',
-        'Medida',
-        'Rol'
+        'Perdidos'
       ].map(value => ({
         text: value,
         align: 'center',
@@ -105,18 +98,11 @@ export default {
       }))
     },
     getTableVariableValues () {
-      return this.resultPoll ? Object.values(this.resultPoll.originalJson[0]).map((question, key) => ({
-        name: question,
-        type: 'Numerico',
-        anchor: 8,
-        decimals: 0,
-        label: question.split('_').slice(1, question.length).join(' '),
-        values: this.getPossibleValues[key],
-        lost: -1,
-        columns: 8,
-        align: 'Derecha',
-        size: 'Medida',
-        rol: 'Entrada'
+      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((question, key) => ({
+        name: question.original,
+        label: question.label,
+        values: question.options,
+        lost: -1
       })) : []
     },
     getPossibleValues () {
