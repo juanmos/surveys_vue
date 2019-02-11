@@ -96,6 +96,9 @@
                               primary class="title">
                                 {{uniqueQuestion.map(q => q.label).join(', ')}}
                               <v-spacer></v-spacer>
+                              <v-btn @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
+                              <v-btn @click="graphComponent = 'PieGraph'" flat><v-icon>pie_chart</v-icon></v-btn>
+                              <v-btn @click="graphComponent = 'Map'" flat><v-icon>place</v-icon></v-btn>
                             </v-card-title>
 
                             <v-flex xs12>
@@ -119,6 +122,8 @@ import draggable from 'vuedraggable'
 import { mapActions } from 'vuex'
 
 import BarGraph from './../../components/graphs/BarGraph'
+import PieGraph from './../../components/graphs/PieGraph'
+import Map from './../../components/graphs/Map'
 import colors from './colors.js'
 
 export default {
@@ -194,7 +199,9 @@ export default {
   },
   components: {
     draggable,
-    BarGraph
+    BarGraph,
+    PieGraph,
+    Map
   },
   mounted () {
     this.getPoll(this.id).then(result => {
