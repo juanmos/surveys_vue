@@ -96,13 +96,16 @@
                               primary class="title">
                                 {{uniqueQuestion.map(q => q.label).join(', ')}}
                               <v-spacer></v-spacer>
+                              <v-btn @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
+                              <v-btn @click="graphComponent = 'PieGraph'" flat><v-icon>pie_chart</v-icon></v-btn>
+                              <v-btn @click="graphComponent = 'Map'" flat><v-icon>place</v-icon></v-btn>
                             </v-card-title>
 
                             <v-flex xs12>
                                 <draggable v-model="uniqueQuestion" :options="{group:'questions'}">
                                     <v-card class="draggable draggable-unique" dark color="white">
                                         <v-card-text class="px-0"></v-card-text>
-                                        <component :is="graphComponent" :chart-data="getChartData"></component>
+                                        <component :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers"></component>
                                     </v-card>
                                 </draggable>
                             </v-flex>
@@ -119,6 +122,8 @@ import draggable from 'vuedraggable'
 import { mapActions } from 'vuex'
 
 import BarGraph from './../../components/graphs/BarGraph'
+import PieGraph from './../../components/graphs/PieGraph'
+import Map from './../../components/graphs/Map'
 import colors from './colors.js'
 
 export default {
@@ -134,6 +139,7 @@ export default {
     chartData: {},
     labels: [],
     datasets: [],
+    mapMarkers: [],
     colors
   }),
   methods: {
@@ -190,11 +196,20 @@ export default {
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
       }))
+      this.mapMarkers = this.getTableDataValues.map(res => ({
+        answer: res[keySelected],
+        position: {
+          lat: Number(res['latLong'].lat),
+          lng: Number(res['latLong'].lng)
+        }
+      }))
     }
   },
   components: {
     draggable,
-    BarGraph
+    BarGraph,
+    PieGraph,
+    Map
   },
   mounted () {
     this.getPoll(this.id).then(result => {
