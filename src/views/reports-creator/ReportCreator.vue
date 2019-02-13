@@ -105,7 +105,7 @@
                                 <draggable v-model="uniqueQuestion" :options="{group:'questions'}">
                                     <v-card class="draggable draggable-unique" dark color="white">
                                         <v-card-text class="px-0"></v-card-text>
-                                        <component :is="graphComponent" :chart-data="getChartData"></component>
+                                        <component :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers"></component>
                                     </v-card>
                                 </draggable>
                             </v-flex>
@@ -139,6 +139,7 @@ export default {
     chartData: {},
     labels: [],
     datasets: [],
+    mapMarkers: [],
     colors
   }),
   methods: {
@@ -194,6 +195,13 @@ export default {
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
+      }))
+      this.mapMarkers = this.getTableDataValues.map(res => ({
+        answer: res[keySelected],
+        position: {
+          lat: Number(res['latLong'].lat),
+          lng: Number(res['latLong'].lng)
+        }
       }))
     }
   },
