@@ -103,9 +103,9 @@
 
                             <v-flex xs12>
                                 <draggable v-model="uniqueQuestion" :options="{group:'questions'}">
-                                    <v-card class="draggable draggable-unique" dark color="white">
+                                    <v-card class="draggable draggable-unique" dark :color="graphComponent === 'Map' ? '' : 'white'">
                                         <v-card-text class="px-0"></v-card-text>
-                                        <component :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers"></component>
+                                        <component :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers" :mapQuestions="mapQuestions"></component>
                                     </v-card>
                                 </draggable>
                             </v-flex>
@@ -121,10 +121,12 @@
 import draggable from 'vuedraggable'
 import { mapActions } from 'vuex'
 
+import enviroment from './../../../config/enviroment'
 import BarGraph from './../../components/graphs/BarGraph'
 import PieGraph from './../../components/graphs/PieGraph'
 import Map from './../../components/graphs/Map'
 import colors from './colors.js'
+import icons from './icons.js'
 
 export default {
   props: ['id'],
@@ -140,7 +142,10 @@ export default {
     labels: [],
     datasets: [],
     mapMarkers: [],
-    colors
+    mapQuestions: [],
+    urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
+    colors,
+    icons
   }),
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
@@ -157,6 +162,9 @@ export default {
     },
     getRandomColor () {
       return this.colors[Math.floor((Math.random() * 25) + 1)]
+    },
+    getRandomIcon () {
+      return `${this.urlEnviroment}/images/map-icons/${this.icons[Math.floor((Math.random() * 25) + 1)]}`
     },
     getCrossValue (q1, q2) {
       console.log(q1, q2)
@@ -175,6 +183,9 @@ export default {
         labels: this.labels,
         datasets: this.datasets
       }
+    },
+    getDataVariables () {
+      return this.resultPoll.formatedConfiguration
     }
   },
   watch: {
@@ -203,6 +214,11 @@ export default {
           lng: Number(res['latLong'].lng)
         }
       }))
+      this.mapQuestions = this.getDataVariables.filter(variable => variable.code === keySelected).map(filtered => filtered.options.map(opt => ({
+        name: opt,
+        icon: this.getRandomIcon()
+      }))).slice()[0]
+      console.log('map questions', this.mapQuestions)
     }
   },
   components: {
