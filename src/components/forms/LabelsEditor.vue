@@ -33,6 +33,7 @@
       </v-list>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-btn @click="$emit('close')"  flat color="grey">Cancelar</v-btn>
         <v-btn @click="saveValues" flat color="primary">Guardar</v-btn>
       </v-card-actions>
   </v-card>

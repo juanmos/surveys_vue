@@ -31,7 +31,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
+                    <poll-results-table @saveFormated="saveFormated" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -102,6 +102,7 @@ export default {
         name: question.original,
         label: question.label,
         values: question.options,
+        code: question.code,
         lost: -1
       })) : []
     },
@@ -114,7 +115,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions('config-polls', {getPoll: 'get'})
+    ...mapActions('config-polls', {getPoll: 'get'}),
+    saveFormated (values) {
+      const {ConfigPoll} = this.$FeathersVuex
+      let config = new ConfigPoll(this.resultPoll)
+      config.formatedConfiguration = values
+      config.save().then(result => {
+        console.log('eeehhh', result)
+      }).catch(err => console.log('este es el error', err))
+      console.log('a guardar', config)
+      console.log('esto vooo', values)
+    }
   },
   mounted () {
     this.getPoll(this.id).then(result => {
