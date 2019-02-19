@@ -145,7 +145,8 @@ export default {
     mapQuestions: [],
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
     colors,
-    icons
+    icons,
+    personalDataKeys: []
   }),
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
@@ -164,7 +165,7 @@ export default {
       return this.colors[Math.floor((Math.random() * 25) + 1)]
     },
     getRandomIcon () {
-      return `${this.urlEnviroment}/images/map-icons/${this.icons[Math.floor((Math.random() * 25) + 1)]}`
+      return `${this.urlEnviroment}/images/map-icons/${this.icons[Math.floor((Math.random() * 19) + 1)]}`
     },
     getCrossValue (q1, q2) {
       console.log(q1, q2)
@@ -209,6 +210,7 @@ export default {
       }))
       this.mapMarkers = this.getTableDataValues.map(res => ({
         answer: res[keySelected],
+        personalData: this.personalDataKeys.map(dataKey => res[dataKey.key]),
         position: {
           lat: Number(res['latLong'].lat),
           lng: Number(res['latLong'].lng)
@@ -232,6 +234,14 @@ export default {
       console.log('este es el result poll', result)
       this.resultPoll = Object.assign({}, result)
       this.questions = this.resultPoll ? this.resultPoll.formatedConfiguration : []
+      for (let key in this.resultPoll.originalJson[0]) {
+        if (['direccion', 'telefono', 'nombres'].includes(this.resultPoll.originalJson[0][key])) {
+          this.personalDataKeys.push({
+            name: this.resultPoll.originalJson[0][key],
+            key
+          })
+        }
+      }
     })
   }
 }

@@ -24,9 +24,10 @@
           >
             <v-avatar
               dark
-              class="primary"
-              v-text="data.item.slice(0, 1).toUpperCase()"
-            ></v-avatar>
+              class="transparent"
+            >
+            <img :src="mapQuestions.find(q => q.name === data.item).icon">
+            </v-avatar>
             {{ data.item }}
           </v-chip>
         </template>
@@ -47,7 +48,7 @@
     :position="m.position"
     :clickable="true"
     :draggable="false"
-    @click="openInfoWindowTemplate(m.position, m.answer)"
+    @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
     :icon="mapQuestions.filter(q => q.name === m.answer)[0].icon"
   />
 <gmap-info-window
@@ -55,9 +56,7 @@
     :position="infoWindow.position"
     :opened="infoWindow.open"
     @closeclick="infoWindow.open=false">
-    <v-card dark>
-      <h4 class="indigo">{{infoWindow.template}}</h4>
-    </v-card>
+    <div v-html="infoWindow.template"></div>
 </gmap-info-window>
 </GmapMap>
 </div>
@@ -86,14 +85,23 @@ export default {
     generateBounds () {
       return []
     },
-    openInfoWindowTemplate (position, answer) {
-      console.log(position)
+    openInfoWindowTemplate (position, answer, data) {
+      console.log(data)
       this.infoWindow.position = {
         lat: position.lat,
         lng: position.lng
       }
       this.infoWindow.open = true
-      this.infoWindow.template = answer
+      this.infoWindow.template = `<v-card class="blue-grey darken-4 font-weight-bold"> <v-list>${data.map(d => `<v-list-tile
+            avatar
+          >
+            <v-list-tile-action>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              ${d}
+            </v-list-tile-content>
+          </v-list-tile>`)}</v-list></v-card>`
     }
   },
   computed: {
