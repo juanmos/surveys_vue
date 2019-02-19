@@ -92,16 +92,21 @@ export default {
         lng: position.lng
       }
       this.infoWindow.open = true
-      this.infoWindow.template = `<v-card class="blue-grey darken-4 font-weight-bold"> <v-list>${data.map(d => `<v-list-tile
+      this.infoWindow.template = `
+      <v-list class=" pl-4 pt-4 blue-grey darken-4" font-weight-bold">
+      <v-list-tile>
+        <b class="title">${answer}</b>
+      </v-list-title>
+      ${data.map(d => `<v-list-tile
             avatar
           >
             <v-list-tile-action>
             </v-list-tile-action>
 
             <v-list-tile-content>
-              ${d}
+             ${d}
             </v-list-tile-content>
-          </v-list-tile>`)}</v-list></v-card>`
+          </v-list-tile>`)}</v-list`
     }
   },
   computed: {
