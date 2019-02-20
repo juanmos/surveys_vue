@@ -37,7 +37,7 @@
   <GmapMap
   v-if="markers"
   ref="gmap"
-  :center="markers[0].position? markers[0].position : {} "
+  :center="markers[0]? markers[0].position : {} "
   :zoom="13"
   map-type-id="roadmap"
   style="width: 100%; height: 800px"
@@ -52,7 +52,7 @@
     :icon="mapQuestions.filter(q => q.name === m.answer)[0].icon"
   />
 <gmap-info-window
-    :options="{maxWidth: 600}"
+    :options="{maxWidth: 1200}"
     :position="infoWindow.position"
     :opened="infoWindow.open"
     @closeclick="infoWindow.open=false">
@@ -114,6 +114,10 @@ export default {
       return this.select.length > 0 ? this.markers.filter(marker => this.select.includes(marker.answer)) : this.markers
     }
   },
+  watch: {
+    getMarkers (val) {
+    }
+  },
   monted () {
     // this.$refs.gmap.$mapCreated.then((map) => {
     //   map.fitBounds(this.generateBounds())
@@ -121,9 +125,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .info {
-    color: #000;
-  }
-</style>
