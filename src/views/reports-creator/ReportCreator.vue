@@ -94,7 +94,12 @@
                         <v-card v-else>
                             <v-card-title
                               primary class="title">
-                                {{uniqueQuestion.map(q => q.label).join(', ')}}
+                                <v-chip v-for="q in uniqueQuestion" :key="q.label + Math.random()">
+                                    <v-btn @click="delElement(q)" icon>
+                                      <v-icon color="grey">cancel</v-icon>
+                                    </v-btn>
+                                    <div >{{q.label}}</div>
+                                </v-chip>
                               <v-spacer></v-spacer>
                               <v-btn @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
                               <v-btn @click="graphComponent = 'PieGraph'" flat><v-icon>pie_chart</v-icon></v-btn>
@@ -146,7 +151,8 @@ export default {
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
     colors,
     icons,
-    personalDataKeys: []
+    personalDataKeys: [],
+    chip2: true
   }),
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
@@ -170,6 +176,9 @@ export default {
     getCrossValue (q1, q2) {
       console.log(q1, q2)
       return 0
+    },
+    delElement (el) {
+      this.uniqueQuestion = this.uniqueQuestion.filter(q => q.code !== el.code)
     }
   },
   computed: {
@@ -195,19 +204,15 @@ export default {
     },
     uniqueQuestion (val) {
       console.log(val)
-      let responses = val[0].options
-      let keySelected = val[0].code
-      console.log(responses.map(response => ({
-        label: response,
-        backgroundColor: this.getRandomColor(),
-        data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
-      })))
+      let responses = val[0] ? val[0].options : []
+      let keySelected = val[0] ? val[0].code : []
+      console.log('asi me queda el response', responses)
       this.labels = []
-      this.datasets = responses.map(response => ({
+      this.datasets = responses ? responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
-      }))
+      })) : []
       this.mapMarkers = this.getTableDataValues.map(res => ({
         answer: res[keySelected],
         personalData: this.personalDataKeys.map(dataKey => res[dataKey.key]),

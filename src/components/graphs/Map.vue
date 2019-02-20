@@ -37,7 +37,7 @@
   <GmapMap
   v-if="markers"
   ref="gmap"
-  :center="markers[0].position? markers[0].position : {} "
+  :center="markers[0]? markers[0].position : {} "
   :zoom="13"
   map-type-id="roadmap"
   style="width: 100%; height: 800px"
@@ -52,7 +52,7 @@
     :icon="mapQuestions.filter(q => q.name === m.answer)[0].icon"
   />
 <gmap-info-window
-    :options="{maxWidth: 600}"
+    :options="{maxWidth: 1200}"
     :position="infoWindow.position"
     :opened="infoWindow.open"
     @closeclick="infoWindow.open=false">
@@ -92,21 +92,30 @@ export default {
         lng: position.lng
       }
       this.infoWindow.open = true
-      this.infoWindow.template = `<v-card class="blue-grey darken-4 font-weight-bold"> <v-list>${data.map(d => `<v-list-tile
+      this.infoWindow.template = `
+      <v-list class=" pl-4 pt-4 blue-grey darken-4" font-weight-bold">
+      <v-list-tile>
+        <b class="title">${answer}</b>
+      </v-list-title>
+      ${data.map(d => `<v-list-tile
             avatar
           >
             <v-list-tile-action>
             </v-list-tile-action>
 
             <v-list-tile-content>
-              ${d}
+             ${d}
             </v-list-tile-content>
-          </v-list-tile>`)}</v-list></v-card>`
+          </v-list-tile>`)}</v-list`
     }
   },
   computed: {
     getMarkers () {
       return this.select.length > 0 ? this.markers.filter(marker => this.select.includes(marker.answer)) : this.markers
+    }
+  },
+  watch: {
+    getMarkers (val) {
     }
   },
   monted () {
@@ -116,9 +125,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .info {
-    color: #000;
-  }
-</style>

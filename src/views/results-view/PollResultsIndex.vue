@@ -116,15 +116,19 @@ export default {
   },
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     saveFormated (values) {
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(this.resultPoll)
       config.formatedConfiguration = values
       config.save().then(result => {
-        console.log('eeehhh', result)
+        this.setSnackMessage('Pregunta Editada')
+        this.setShowSnack(true)
+        // snack
       }).catch(err => console.log('este es el error', err))
-      console.log('a guardar', config)
-      console.log('esto vooo', values)
     }
   },
   mounted () {
