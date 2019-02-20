@@ -203,16 +203,15 @@ export default {
       console.log('nuevo Valor', val)
     },
     uniqueQuestion (val) {
-      console.log(val)
       let responses = val[0] ? val[0].options : []
       let keySelected = val[0] ? val[0].code : []
-      console.log('asi me queda el response', responses)
-      this.labels = []
+      this.labels = val.map(l => l.label)
       this.datasets = responses ? responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
       })) : []
+      console.log('dataset', this.datasets)
       this.mapMarkers = this.getTableDataValues.map(res => ({
         answer: res[keySelected],
         personalData: this.personalDataKeys.map(dataKey => res[dataKey.key]),
