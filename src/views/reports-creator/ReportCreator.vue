@@ -102,7 +102,6 @@
                                 </v-chip>
                               <v-spacer></v-spacer>
                               <v-btn @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
-                              <v-btn @click="graphComponent = 'PieGraph'" flat><v-icon>pie_chart</v-icon></v-btn>
                               <v-btn @click="graphComponent = 'Map'" flat><v-icon>place</v-icon></v-btn>
                             </v-card-title>
 
@@ -110,7 +109,8 @@
                                 <draggable v-model="uniqueQuestion" :options="{group:'questions'}">
                                     <v-card class="draggable draggable-unique" dark :color="graphComponent === 'Map' ? '' : 'white'">
                                         <v-card-text class="px-0"></v-card-text>
-                                        <component :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers" :mapQuestions="mapQuestions"></component>
+                                          <diagram-layout v-if="graphComponent !== 'Map'" :questions="getLayoutUniqueQuestion" :layout="1"></diagram-layout>
+                                          <component v-else :is="graphComponent" :chart-data="getChartData" :markers="mapMarkers" :mapQuestions="mapQuestions"></component>
                                     </v-card>
                                 </draggable>
                             </v-flex>
@@ -130,6 +130,7 @@ import enviroment from './../../../config/enviroment'
 import BarGraph from './../../components/graphs/BarGraph'
 import PieGraph from './../../components/graphs/PieGraph'
 import Map from './../../components/graphs/Map'
+import DiagramLayout from './../../components/graphs/DiagramLayout'
 import colors from './colors.js'
 import icons from './icons.js'
 
@@ -196,6 +197,18 @@ export default {
     },
     getDataVariables () {
       return this.resultPoll.formatedConfiguration
+    },
+    getLayoutUniqueQuestion () {
+      return this.uniqueQuestion.map(q => {
+        return {
+          ...q,
+          dataset: q.options ? q.options.map(response => ({
+            label: response,
+            backgroundColor: this.getRandomColor(),
+            data: [this.getTableDataValues.map(data => data[q.code]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[q.code]).filter(responseRow => responseRow === response).length]
+          })) : []
+        }
+      })
     }
   },
   watch: {
@@ -203,16 +216,19 @@ export default {
       console.log('nuevo Valor', val)
     },
     uniqueQuestion (val) {
-      console.log(val)
       let responses = val[0] ? val[0].options : []
       let keySelected = val[0] ? val[0].code : []
-      console.log('asi me queda el response', responses)
-      this.labels = []
+      this.labels = val.map(l => l.label)
       this.datasets = responses ? responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
         data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
+        // data: val.map(uniq => {
+        //   return this.getTableDataValues.map(data => uniq.code).filter(responseRow => responseRow === uniq.options).length
+        // })
+        // data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
       })) : []
+      console.log('dataset', this.datasets)
       this.mapMarkers = this.getTableDataValues.map(res => ({
         answer: res[keySelected],
         personalData: this.personalDataKeys.map(dataKey => res[dataKey.key]),
@@ -232,6 +248,7 @@ export default {
     draggable,
     BarGraph,
     PieGraph,
+    DiagramLayout,
     Map
   },
   mounted () {
