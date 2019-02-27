@@ -202,13 +202,21 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('panel-elements', {
+      instanceDefaults: {
+        _poll_id: 0,
+        questions: [],
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
     snackMessage: '',
     showSnack: false,
     snackColor: 'success',
-    currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase
+    currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase,
+    currentPoll: null
   },
   getters: {
     getSnackMessage: (state) => {
@@ -219,6 +227,9 @@ export default new Vuex.Store({
     },
     getSnackColor: (state) => {
       return state.getSnackColor
+    },
+    getCurrentPoll: (state) => {
+      return state.currentPoll
     }
   },
   mutations: {
@@ -230,6 +241,9 @@ export default new Vuex.Store({
     },
     setSnackColor (state, type) {
       state.snackColor = type
+    },
+    setCurrentPoll (state, poll) {
+      state.currentPoll = poll
     }
   },
   actions: {
@@ -241,6 +255,9 @@ export default new Vuex.Store({
     },
     setSnackColor: ({ commit }, show) => {
       commit('setSnackColor', show)
+    },
+    setCurrentPoll: ({ commit }, poll) => {
+      commit('setCurrentPoll', poll)
     }
   }
 })

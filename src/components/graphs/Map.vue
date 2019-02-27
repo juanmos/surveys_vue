@@ -32,6 +32,17 @@
           </v-chip>
         </template>
       </v-combobox>
+      <v-layout xs12 md4>
+          <v-combobox
+            v-for="segment in currentPoll.segmentationFields"
+            :key="segment.code"
+            :items="segment.options"
+            :label="`${segment.label}`"
+            @change="setFilter($event)"
+            >
+
+          </v-combobox>
+      </v-layout>
     </v-card>
     </v-flex>
   <GmapMap
@@ -63,6 +74,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['markers', 'mapQuestions'],
@@ -107,9 +119,16 @@ export default {
              ${d}
             </v-list-tile-content>
           </v-list-tile>`)}</v-list`
+    },
+    setFilter (value) {
+      console.log('markers', this.markers)
+      console.log('filtrar con esto', value)
     }
   },
   computed: {
+    ...mapState([
+      'currentPoll'
+    ]),
     getMarkers () {
       return this.select.length > 0 ? this.markers.filter(marker => this.select.includes(marker.answer)) : this.markers
     }
