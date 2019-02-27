@@ -30,7 +30,9 @@ export default {
   data () {
     return {
       selectedPoll: null,
-      currentPoll: {},
+      currentPoll: {
+        _polls_project_id: null
+      },
       selectedQuestion: null,
       dataResponse: null,
       questions: []
@@ -70,7 +72,7 @@ export default {
   computed: {
     ...mapGetters('config-polls', {findConfigPollsInStore: 'find'}),
     getConfigPolls () {
-      return this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findConfigPollsInStore({query: {removed: false, _polls_project_id: this.currentPoll._polls_project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     }
   },
   created () {
