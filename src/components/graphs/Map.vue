@@ -2,7 +2,6 @@
 <div>
   <v-flex xs12>
     <v-card dark>
-      {{filteringWords}}
       <v-combobox
         v-model="select"
         :items="mapQuestions.map(q => q.name)"
@@ -140,8 +139,9 @@ export default {
         return result
       } else {
         return result.filter(marker => {
-          return marker.personalData.some(personal => {
-            return this.filteringWords.includes(personal)
+          console.log(marker.personalData.slice(0, this.currentPoll.segmentationFields.length))
+          return this.filteringWords.every(word => {
+            return marker.personalData.slice(0, this.currentPoll.segmentationFields.length).includes(word)
           })
         })
       }
