@@ -13,8 +13,8 @@
                     </span>
                     <span v-else>{{ props.item[key] }}</span>
                 </td>
-                <td class="justify-center layout px-0" v-if="variablesMode">
-                  <v-menu
+                <td class="justify-center layout px-0">
+                  <v-menu v-if="variablesMode"
                     bottom
                     transition="slide-y-transition"
                   >
