@@ -53,6 +53,7 @@
                     :items="dataResponse.related"
                     hide-actions
                     item-key="question"
+                    style="overflow-y: auto !important;height: 350px !important;"
                   >
                     <template slot="items" slot-scope="props">
                       <tr>
@@ -203,5 +204,7 @@ export default {
 </script>
 
 <style scoped>
-
+.v-table__overflow {
+    overflow-x: auto;
+}
 </style>
