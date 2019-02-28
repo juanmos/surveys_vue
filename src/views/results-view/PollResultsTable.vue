@@ -4,7 +4,7 @@
             :headers="headers"
             :items="responses"
             class="elevation-1 resultsTable"
-            :rows-per-page-items="[100, 200, 300, 400]"
+            :rows-per-page-items="[200, 400]"
         >
             <template slot="items" slot-scope="props">
                 <td class="text-xs-center" v-for="(value, key) in props.item" :key="String(value) + Math.random()">
@@ -84,6 +84,9 @@ export default {
       copyResponses[this.arrIndex][this.fieldSelected] = value
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
+    },
+    openSegmentsDefinition () {
+      console.log('sdfkjdshfkdsjfhdskjfhdsfkjh')
     }
   },
   components: { LabelsEditor, LabelsPollEditor, RelatedQuestion }

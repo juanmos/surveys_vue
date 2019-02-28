@@ -1,5 +1,24 @@
 <template>
     <v-flex class="view-container">
+      <v-toolbar color="transparent">
+          <v-spacer></v-spacer>
+          <v-menu bottom left>
+            <v-btn
+              slot="activator"
+              dark
+              icon
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+
+            <v-list>
+              <v-list-tile
+              >
+                <v-list-tile-title @click="segmentationDialog = true">Definir Datos de Segmentacion</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-toolbar>
         <v-tabs
         v-model="active"
         color="secondary"
@@ -48,6 +67,48 @@
                 </v-card>
             </v-tab-item>
         </v-tabs>
+        <v-dialog
+          v-model="segmentationDialog"
+          width="800"
+        >
+        <v-card>
+          <v-toolbar>
+            <v-card-title
+              class="headline"
+              primary-title
+            >
+              Asignar campos de segmentacion
+            </v-card-title>
+            <v-spacer>
+            </v-spacer>
+            <v-btn @click="segmentationDialog = false" icon>
+                <v-icon>
+                  close
+                </v-icon>
+            </v-btn>
+
+          </v-toolbar>
+
+        <v-card-text>
+          <v-spacer></v-spacer>
+
+          <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+        </v-dialog>
     </v-flex>
 </template>
 
@@ -55,13 +116,15 @@
 import {mapActions} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
+import SegmentationFields from './../../components/SegmentationFields'
 
 export default {
   props: ['id'],
   data () {
     return {
       active: null,
-      resultPoll: null
+      resultPoll: null,
+      segmentationDialog: false
     }
   },
   computed: {
@@ -120,6 +183,9 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
+    ...mapActions([
+      'setCurrentPoll'
+    ]),
     saveFormated (values) {
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(this.resultPoll)
@@ -134,9 +200,10 @@ export default {
   mounted () {
     this.getPoll(this.id).then(result => {
       this.resultPoll = Object.assign({}, result)
+      this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
   },
-  components: { PollResultsTable, ReportCreator }
+  components: { PollResultsTable, ReportCreator, SegmentationFields }
 }
 </script>
 

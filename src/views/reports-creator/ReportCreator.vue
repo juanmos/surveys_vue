@@ -101,8 +101,18 @@
                                     <div >{{q.label}}</div>
                                 </v-chip>
                               <v-spacer></v-spacer>
-                              <v-btn @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
-                              <v-btn @click="graphComponent = 'Map'" flat><v-icon>place</v-icon></v-btn>
+                               <v-tooltip bottom>
+                                   <v-btn slot="activator" @click="saveGraphs" flat><v-icon>save</v-icon></v-btn>
+                                   <span >Guardar en panel</span>
+                               </v-tooltip>
+                               <v-tooltip bottom>
+                                   <v-btn  slot="activator" @click="graphComponent = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
+                                   <span >Mostrar Graficos</span>
+                               </v-tooltip>
+                               <v-tooltip bottom>
+                                   <v-btn  slot="activator" @click="graphComponent = 'Map'" flat><v-icon>place</v-icon></v-btn>
+                                   <span >Mostrar Mapa</span>
+                               </v-tooltip>
                             </v-card-title>
 
                             <v-flex xs12>
@@ -124,7 +134,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import enviroment from './../../../config/enviroment'
 import BarGraph from './../../components/graphs/BarGraph'
@@ -152,11 +162,16 @@ export default {
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
     colors,
     icons,
+    dataKeys: ['direccion', 'telefono', 'nombres'],
     personalDataKeys: [],
     chip2: true
   }),
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     getQuestionOptions (alias) {
       console.log('obtengo el alis', alias)
     },
@@ -180,6 +195,21 @@ export default {
     },
     delElement (el) {
       this.uniqueQuestion = this.uniqueQuestion.filter(q => q.code !== el.code)
+    },
+    saveGraphs () {
+      const { PanelElement } = this.$FeathersVuex
+      let panel = new PanelElement({
+        questions: [],
+        _poll_id: this.id
+      })
+      panel.save().then(result => {
+        this.setSnackMessage('Graficos Guardados en Panel')
+        this.setShowSnack(true)
+      }).catch(err => {
+        console.log(err)
+      })
+      console.log('Este servicio', panel)
+      console.log('questions', this.getLayoutUniqueQuestion)
     }
   },
   computed: {
@@ -209,6 +239,15 @@ export default {
           })) : []
         }
       })
+    },
+    getDataKeys () {
+      return this.dataKeys.concat(this.currentPoll ? this.currentPoll.segmentationFields.map(field => field.original) : [])
+    },
+    ...mapState([
+      'currentPoll'
+    ]),
+    getPersonalDataKeys () {
+      return []
     }
   },
   watch: {
@@ -242,6 +281,18 @@ export default {
         icon: this.getRandomIcon()
       }))).slice()[0]
       console.log('map questions', this.mapQuestions)
+    },
+    currentPoll (val) {
+      for (let key in val.originalJson[0]) {
+        if (this.getDataKeys.includes(val.originalJson[0][key])) {
+          if (!this.personalDataKeys.map(p => p.name).includes(val.originalJson[0][key])) {
+            this.personalDataKeys.push({
+              name: val.originalJson[0][key],
+              key
+            })
+          }
+        }
+      }
     }
   },
   components: {
@@ -256,14 +307,7 @@ export default {
       console.log('este es el result poll', result)
       this.resultPoll = Object.assign({}, result)
       this.questions = this.resultPoll ? this.resultPoll.formatedConfiguration : []
-      for (let key in this.resultPoll.originalJson[0]) {
-        if (['direccion', 'telefono', 'nombres'].includes(this.resultPoll.originalJson[0][key])) {
-          this.personalDataKeys.push({
-            name: this.resultPoll.originalJson[0][key],
-            key
-          })
-        }
-      }
+      console.log('data keys son estos', this.getDataKeys)
     })
   }
 }
