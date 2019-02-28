@@ -17,6 +17,7 @@
           <v-tab-item
           >
             <v-card-text>
+              <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
               <form>
                 <v-autocomplete
                   :items="getConfigPolls"
@@ -45,43 +46,46 @@
           </v-tab>
           <v-tab-item
           >
-            <v-data-table
-                  :headers="headers"
-                  :items="dataResponse.related"
-                  hide-actions
-                  item-key="question"
-                >
-                  <template slot="items" slot-scope="props">
-                    <tr>
-                      <td>{{getNamePoll(props.item.poll)}}</td>
-                      <td>{{getLabelQuestion(props.item.poll, props.item.question)}}</td>
-                      <td class="justify-center layout px-0">
-                        <v-menu
-                          bottom
-                          transition="slide-y-transition"
-                        >
-                          <v-btn
-                            slot="activator"
-                            color="primary"
-                            flat
-                            icon
+            <v-card-text>
+              <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
+              <v-data-table
+                    :headers="headers"
+                    :items="dataResponse.related"
+                    hide-actions
+                    item-key="question"
+                  >
+                    <template slot="items" slot-scope="props">
+                      <tr>
+                        <td>{{getNamePoll(props.item.poll)}}</td>
+                        <td>{{getLabelQuestion(props.item.poll, props.item.question)}}</td>
+                        <td class="justify-center layout px-0">
+                          <v-menu
+                            bottom
+                            transition="slide-y-transition"
                           >
-                          <v-icon>more_vert</v-icon>
-                          </v-btn>
-                          <v-list>
-                            <v-list-tile @click="deleteQuestion(props.item)">
-                                <v-list-tile-title>Eliminar</v-list-tile-title>
-                            </v-list-tile>
-                          </v-list>
-                        </v-menu>
-                      </td>
-                    </tr>
-                  </template>
-                </v-data-table>
-                <div>
-                  <v-btn @click="cancel">Cancelar</v-btn>
-                </div>
-            </v-tab-item>
+                            <v-btn
+                              slot="activator"
+                              color="primary"
+                              flat
+                              icon
+                            >
+                            <v-icon>more_vert</v-icon>
+                            </v-btn>
+                            <v-list>
+                              <v-list-tile @click="deleteQuestion(props.item)">
+                                  <v-list-tile-title>Eliminar</v-list-tile-title>
+                              </v-list-tile>
+                            </v-list>
+                          </v-menu>
+                        </td>
+                      </tr>
+                    </template>
+                  </v-data-table>
+                  <div>
+                    <v-btn @click="cancel">Cancelar</v-btn>
+                  </div>
+            </v-card-text>
+          </v-tab-item>
       </v-tabs>
   </v-flex>
 </template>
