@@ -2,7 +2,6 @@
 <div>
   <v-flex xs12>
     <v-card dark>
-      {{filteringWords}}
       <v-combobox
         v-model="select"
         :items="mapQuestions.map(q => q.name)"
