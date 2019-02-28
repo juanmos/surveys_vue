@@ -51,8 +51,8 @@
               <v-data-table
                     :headers="headers"
                     :items="dataResponse.related"
+                    item-key="name"
                     hide-actions
-                    item-key="question"
                     style="overflow-y: auto !important;height: 350px !important;"
                   >
                     <template slot="items" slot-scope="props">
@@ -111,13 +111,16 @@ export default {
           value: ''
         }
       ],
+      active: null,
       selectedPoll: null,
       currentPoll: {
         _polls_project_id: null,
         formatedConfiguration: []
       },
       selectedQuestion: null,
-      dataResponse: null,
+      dataResponse: {
+        label: ''
+      },
       questions: []
     }
   },
