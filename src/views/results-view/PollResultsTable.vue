@@ -49,7 +49,9 @@
             <v-flex xs12 style="background:#d9323a;color:white;height:45px;padding: 12px;">
               <h4 for="">Pregunta relacionada</h4>
             </v-flex>
-            <related-question :arrIndex="arrIndex" @close="dialogRelated = false"></related-question>
+            <v-card-text>
+              <related-question :arrIndex="arrIndex" @close="dialogRelated = false"></related-question>
+            </v-card-text>
           </v-card>
         </v-dialog>
     </div>
