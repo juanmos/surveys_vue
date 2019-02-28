@@ -2,6 +2,7 @@
 <div>
   <v-flex xs12>
     <v-card dark>
+      {{filteringWords}}
       <v-combobox
         v-model="select"
         :items="mapQuestions.map(q => q.name)"
@@ -16,7 +17,7 @@
         >
           <v-chip
             dark
-            :key="JSON.stringify(data.item)"
+            :key="JSON.stringify(data.item) + Math.random()"
             :selected="data.selected"
             :disabled="data.disabled"
             class="v-chip--select-multi"
@@ -35,13 +36,17 @@
       <v-layout xs12 md4>
           <v-combobox
             v-for="segment in currentPoll.segmentationFields"
-            :key="segment.code"
+            :key="segment.code + Math.random()"
             :items="segment.options"
             :label="`${segment.label}`"
             @change="setFilter($event)"
             >
-
           </v-combobox>
+      </v-layout>
+      <v-layout row wrap>
+            <v-chip  v-for="word in filteringWords" @click="setFilter(word)" :key="word">
+              {{word}}
+            </v-chip>
       </v-layout>
     </v-card>
     </v-flex>
@@ -86,12 +91,7 @@ export default {
       urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase
     },
     select: [],
-    items: [
-      'Programming',
-      'Design',
-      'Vue',
-      'Vuetify'
-    ]
+    filteringWords: []
   }),
   methods: {
     generateBounds () {
@@ -121,8 +121,13 @@ export default {
           </v-list-tile>`)}</v-list`
     },
     setFilter (value) {
-      console.log('markers', this.markers)
-      console.log('filtrar con esto', value)
+      if (value) {
+        if (this.filteringWords.includes(value)) {
+          this.filteringWords = this.filteringWords.filter(f => f !== value)
+        } else {
+          this.filteringWords.push(value)
+        }
+      }
     }
   },
   computed: {
@@ -130,7 +135,16 @@ export default {
       'currentPoll'
     ]),
     getMarkers () {
-      return this.select.length > 0 ? this.markers.filter(marker => this.select.includes(marker.answer)) : this.markers
+      let result = this.select.length > 0 ? this.markers.filter(marker => this.select.includes(marker.answer)) : this.markers
+      if (this.filteringWords.length === 0) {
+        return result
+      } else {
+        return result.filter(marker => {
+          return marker.personalData.some(personal => {
+            return this.filteringWords.includes(personal)
+          })
+        })
+      }
     }
   },
   watch: {

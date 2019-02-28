@@ -245,7 +245,10 @@ export default {
     },
     ...mapState([
       'currentPoll'
-    ])
+    ]),
+    getPersonalDataKeys () {
+      return []
+    }
   },
   watch: {
     yQuestions (val) {
@@ -280,7 +283,16 @@ export default {
       console.log('map questions', this.mapQuestions)
     },
     currentPoll (val) {
-      console.log('ha cambiado el current poll inside report creator', val)
+      for (let key in val.originalJson[0]) {
+        if (this.getDataKeys.includes(val.originalJson[0][key])) {
+          if (!this.personalDataKeys.map(p => p.name).includes(val.originalJson[0][key])) {
+            this.personalDataKeys.push({
+              name: val.originalJson[0][key],
+              key
+            })
+          }
+        }
+      }
     }
   },
   components: {
@@ -295,14 +307,7 @@ export default {
       console.log('este es el result poll', result)
       this.resultPoll = Object.assign({}, result)
       this.questions = this.resultPoll ? this.resultPoll.formatedConfiguration : []
-      for (let key in this.resultPoll.originalJson[0]) {
-        if (this.getDataKeys.includes(this.resultPoll.originalJson[0][key])) {
-          this.personalDataKeys.push({
-            name: this.resultPoll.originalJson[0][key],
-            key
-          })
-        }
-      }
+      console.log('data keys son estos', this.getDataKeys)
     })
   }
 }
