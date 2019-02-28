@@ -51,7 +51,6 @@
               <v-data-table
                     :headers="headers"
                     :items="dataResponse.related"
-                    item-key="name"
                     hide-actions
                     style="overflow-y: auto !important;height: 350px !important;"
                   >
