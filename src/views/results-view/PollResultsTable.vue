@@ -47,7 +47,7 @@
         <v-dialog v-model="dialogRelated" max-width="900">
           <v-card v-if="dialogRelated">
             <v-flex xs12 style="background:#d9323a;color:white;height:45px;padding: 12px;">
-              <h4 for="">Relacionar pregunta</h4>
+              <h4 for="">Pregunta relacionada</h4>
             </v-flex>
             <related-question :arrIndex="arrIndex" @close="dialogRelated = false"></related-question>
           </v-card>
