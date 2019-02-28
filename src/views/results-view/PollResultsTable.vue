@@ -27,7 +27,7 @@
                     <v-icon>more_vert</v-icon>
                     </v-btn>
                     <v-list>
-                      <v-list-tile @click="dialogRelated = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
+                      <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
                     </v-list>
