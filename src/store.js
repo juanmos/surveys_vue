@@ -183,7 +183,8 @@ export default new Vuex.Store({
         originalJson: '',
         formatedConfiguration: '',
         parsedJson: '',
-        removed: false
+        removed: false,
+        _polls_project_id: 0
       }
     }),
     service('users-projects', {

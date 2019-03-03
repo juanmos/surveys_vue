@@ -55,7 +55,7 @@
   :center="markers[0]? markers[0].position : {} "
   :zoom="13"
   map-type-id="roadmap"
-  style="width: 100%; height: 800px"
+  style="width: 100%; height: 800px;"
 >
 <GmapMarker
     :key="index + Math.random()"

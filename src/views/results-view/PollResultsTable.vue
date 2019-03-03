@@ -40,14 +40,13 @@
           max-width="600"
           >
           <labels-editor @close="editLabelDialog = false" v-if="fieldSelected === 'values'" :values="currentEdit"></labels-editor>
-
           <labels-poll-editor @saveValue="editVariables" @close="editLabelDialog = false" :value="currentEdit" v-else></labels-poll-editor>
         </v-dialog>
 
         <v-dialog v-model="dialogRelated" max-width="900">
           <v-card v-if="dialogRelated">
-            <v-flex xs12 style="background:#d9323a;color:white;height:45px;padding: 12px;">
-              <h4 for="">Pregunta relacionada</h4>
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Pregunta relacionada</h4>
             </v-flex>
             <v-card-text>
               <related-question :arrIndex="arrIndex" @close="dialogRelated = false"></related-question>
@@ -84,9 +83,6 @@ export default {
       copyResponses[this.arrIndex][this.fieldSelected] = value
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
-    },
-    openSegmentsDefinition () {
-      console.log('sdfkjdshfkdsjfhdskjfhdsfkjh')
     }
   },
   components: { LabelsEditor, LabelsPollEditor, RelatedQuestion }
