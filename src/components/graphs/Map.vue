@@ -5,7 +5,7 @@
       <v-combobox
         v-model="select"
         :items="mapQuestions.map(q => q.name)"
-        label="Selecciona Pregunta"
+        label="Selecciona Opcion de Respuesta"
         multiple
         chips
         dark

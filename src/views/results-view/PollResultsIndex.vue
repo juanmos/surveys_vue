@@ -1,6 +1,7 @@
 <template>
     <v-flex class="view-container">
       <v-toolbar color="transparent">
+          <span class="headline">{{currentPoll ? currentPoll.name : ''}}</span>
           <v-spacer></v-spacer>
           <v-menu bottom left>
             <v-btn
@@ -113,7 +114,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
 import SegmentationFields from './../../components/SegmentationFields'
@@ -128,6 +129,9 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'currentPoll'
+    ]),
     getDataHeaders () {
       let headersFormated = []
       let jsonFormated = Object.assign({}, this.resultPoll ? this.resultPoll.originalJson[0] : {})
@@ -193,6 +197,10 @@ export default {
       config.save().then(result => {
         this.setSnackMessage('Pregunta Editada')
         this.setShowSnack(true)
+        this.getPoll(this.id).then(result => {
+          this.resultPoll = Object.assign({}, result)
+          this.setCurrentPoll(Object.assign({}, this.resultPoll))
+        })
         // snack
       }).catch(err => console.log('este es el error', err))
     }
