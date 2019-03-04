@@ -170,7 +170,8 @@ export default {
         label: question.label,
         values: question.options,
         code: question.code,
-        lost: -1
+        lost: -1,
+        category: question.category
       })) : []
     },
     getPossibleValues () {

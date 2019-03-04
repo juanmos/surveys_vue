@@ -20,37 +20,31 @@
       </draggable>
       <v-flex class="mt-5 panel" xs10 offset-xs1>
         <v-card dark>
-          <v-card-title class="headline">Tomas de datos: </v-card-title>
+          {{getKeySelected}}
+          <v-card-title class="headline">Tomas de datos:   <v-spacer></v-spacer>
+                  <v-chip @click="currentQuestions = []" v-if="currentQuestions.length > 0">
+                    {{currentQuestions[0].label}}
+                  </v-chip>
+                  </v-card-title>
             <v-layout row>
                  <div v-for="take in getProjectTakes" :key="take._id" :style="{'border-right': 'solid 1px'}">
                     <v-btn :color="currentTake._id === take._id ? 'red': 'black'" @click="setCurrentTake(take)" >{{take.name}}</v-btn>
                   </div>
-                  <div v-if="getCurrentOptions.length > 0" class="options">
-                    <v-layout row>
-                      <span class="subheading mr-1">Opciones: </span>
-                      <div v-for="opt in getCurrentOptions" :key="opt._id">
-                        <v-btn >{{opt.name}}</v-btn>
-                      </div>
-                    </v-layout>
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-chip @click="currentQuestions = []" v-if="currentQuestions.length > 0">
-                    {{currentQuestions[0].label}}
-                  </v-chip>
             </v-layout>
         </v-card>
       </v-flex>
-      <v-flex class="mt-2 panel" xs12 sm2 md2  offset-xs1>
+      <v-flex v-if="questionsExpanded" class="mt-2 panel" xs12 sm2 md2  offset-xs1>
         <v-card class="questions" dark color="primary">
           <v-card-title
             primary class="title">
               Preguntas
             <v-spacer></v-spacer>
+            <v-btn @click="questionsExpanded = false" icon><v-icon>expand_less</v-icon></v-btn>
           </v-card-title>
-          <draggable v-model="questions" :options="{group:'questions'}">
+          <draggable class="mb-2" v-model="questions" :options="{group:'questions'}">
               <template v-for="item in questions">
                   <v-flex :key="item.original">
-                      <v-card class="mr-2 ml-2 mb-2 mt-2" dark :color="`red`">
+                      <v-card class="mr-2 ml-2 mb-2 mt-2 mb-2" dark :color="`black`">
                           <v-card-title>{{item.label}}</v-card-title>
                       </v-card>
                   </v-flex>
@@ -58,7 +52,49 @@
           </draggable>
         </v-card>
       </v-flex>
-
+      <v-flex v-else class="mt-2 panel" xs12 sm2 md2  offset-xs1>
+        <v-btn class="elevation-5" @click="questionsExpanded = true"  icon>
+          <v-icon  x-large color="red">arrow_drop_down_circle</v-icon>
+        </v-btn>
+      </v-flex>
+      <v-flex v-if="questionsExpanded" class="mt-2 panel" xs12 sm4 md4  offset-xs1>
+        <v-card dark v-if="getCurrentOptions.length > 0" class="options">
+          <v-layout justify-center align-center row>
+            <v-combobox
+              v-model="select"
+              :items=" getCurrentOptions.map(q => q.name)"
+              label="Seleccione Opcion"
+              multiple
+              chips
+              dark
+              class="ml-4"
+              persistent-hint
+            >
+              <template
+                slot="selection"
+                slot-scope="data"
+              >
+                <v-chip
+                  dark
+                  :key="JSON.stringify(data.item) + Math.random()"
+                  :selected="data.selected"
+                  :disabled="data.disabled"
+                  class="v-chip--select-multi"
+                  @input="data.parent.selectItem(data.item)"
+                >
+                  <v-avatar
+                    dark
+                    class="transparent"
+                  >
+                  <img :src="getCurrentOptions.find(q => q.name === data.item) ? getCurrentOptions.find(q => q.name === data.item).icon : ''">
+                  </v-avatar>
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-combobox>
+          </v-layout>
+        </v-card>
+      </v-flex>
     </div>
 </template>
 
@@ -77,7 +113,9 @@ export default {
     questions: [],
     currentQuestions: [],
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
-    icons
+    select: null,
+    icons,
+    questionsExpanded: true
   }),
   computed: {
     getProjectTakes () {
@@ -102,7 +140,7 @@ export default {
           lat: Number(take['latLong'].lat),
           lng: Number(take['latLong'].lng)
         },
-        icon: this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]).icon
+        icon: this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]) ? this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]).icon : ''
       })) : []
     }
   },
