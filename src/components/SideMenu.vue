@@ -113,6 +113,7 @@ export default {
     right: true,
     rightDrawer: false,
     urlEnviroment: enviroment[enviroment.currentEnviroment].closeSession,
+    application: enviroment[enviroment.currentEnviroment].application,
     mutableClipped: null,
     mutableDrawer: null,
     mutableMiniVariant: null
@@ -129,7 +130,7 @@ export default {
     exit () {
       this.closeSession().then((res) => {
         window.localStorage.clear()
-        window.location.replace(this.urlEnviroment)
+        window.location.replace(this.urlEnviroment + '?application=' + this.application)
       })
     }
   },
