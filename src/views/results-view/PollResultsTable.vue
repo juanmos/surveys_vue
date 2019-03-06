@@ -30,6 +30,9 @@
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
+                      <v-list-tile @click="dialogCategories = true;arrIndex = props.index; fieldSelected = 'category'">
+                          <v-list-tile-title>Agregar Categoria</v-list-tile-title>
+                      </v-list-tile>
                     </v-list>
                   </v-menu>
                 </td>
@@ -53,12 +56,17 @@
             </v-card-text>
           </v-card>
         </v-dialog>
+
+        <v-dialog v-model="dialogCategories" max-width="900">
+          <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
+        </v-dialog>
     </div>
 </template>
 
 <script>
 import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
+import CategoriesEditor from './../../components/forms/CategoriesEditor'
 import RelatedQuestion from './RelatedQuestion'
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
@@ -66,6 +74,7 @@ export default {
     return {
       editLabelDialog: false,
       dialogRelated: false,
+      dialogCategories: false,
       currentEdit: null,
       fieldSelected: '',
       arrIndex: null
@@ -83,9 +92,10 @@ export default {
       copyResponses[this.arrIndex][this.fieldSelected] = value
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
+      this.dialogCategories = false
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, CategoriesEditor }
 }
 </script>
 

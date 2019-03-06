@@ -5,7 +5,7 @@
       <v-combobox
         v-model="select"
         :items="mapQuestions.map(q => q.name)"
-        label="Selecciona Pregunta"
+        label="Selecciona Opcion de Respuesta"
         multiple
         chips
         dark
@@ -71,7 +71,7 @@
     :position="infoWindow.position"
     :opened="infoWindow.open"
     @closeclick="infoWindow.open=false">
-    <div v-html="infoWindow.template"></div>
+    <div style="overflow: scroll-x" v-html="infoWindow.template"></div>
 </gmap-info-window>
 </GmapMap>
 </div>
