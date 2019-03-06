@@ -9,18 +9,25 @@
           map-type-id="roadmap"
           >
           <GmapMarker
-            v-for="(m, index) in getMarkers"
+            v-for="(m, index) in getFilteredMarkers"
             :key="index + Math.random()"
             :position="m.position"
             :clickable="true"
             :draggable="false"
             :icon="m.icon"
+            @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
           />
+          <gmap-info-window
+              :options="{maxWidth: 1200}"
+              :position="infoWindow.position"
+              :opened="infoWindow.open"
+              @closeclick="infoWindow.open=false">
+              <div v-html="infoWindow.template" style="overflow: scroll-x" ></div>
+          </gmap-info-window>
         </GmapMap>
       </draggable>
       <v-flex class="mt-5 panel" xs10 offset-xs1>
         <v-card dark>
-          {{getKeySelected}}
           <v-card-title class="headline">Tomas de datos:   <v-spacer></v-spacer>
                   <v-chip @click="currentQuestions = []" v-if="currentQuestions.length > 0">
                     {{currentQuestions[0].label}}
@@ -88,7 +95,7 @@
                   >
                   <img :src="getCurrentOptions.find(q => q.name === data.item) ? getCurrentOptions.find(q => q.name === data.item).icon : ''">
                   </v-avatar>
-                  {{ data.item }}
+                  {{ data.item }} - <div class="title font-weight-bold" v-if="getCurrentOptionValues.length > 0" v-html="getCurrentOptionValues.find(v => v.label === data.item).percentage"></div>
                 </v-chip>
               </template>
             </v-combobox>
@@ -113,9 +120,15 @@ export default {
     questions: [],
     currentQuestions: [],
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
-    select: null,
+    select: [],
     icons,
-    questionsExpanded: true
+    questionsExpanded: true,
+    infoWindow: {
+      position: {lat: 0, lng: 0},
+      open: false,
+      template: ``,
+      urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase
+    }
   }),
   computed: {
     getProjectTakes () {
@@ -130,8 +143,13 @@ export default {
     getCurrentOptions () {
       return this.currentQuestions.length > 0 ? this.currentQuestions[0].options.map(q => ({
         name: q,
+        value: 1,
+        percentage: 1,
         icon: this.getRandomIcon()
       })) : []
+    },
+    getCurrentOptionValues () {
+      return this.currentQuestions.length > 0 ? this.currentQuestions[0].optionValues : []
     },
     getMarkers () {
       return this.currentQuestions.length > 0 ? this.getTakeValues.map(take => ({
@@ -142,6 +160,9 @@ export default {
         },
         icon: this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]) ? this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]).icon : ''
       })) : []
+    },
+    getFilteredMarkers () {
+      return this.select.length > 0 ? this.getMarkers.filter(marker => this.select.includes(marker.answer)) : this.getMarkers
     }
   },
   methods: {
@@ -152,6 +173,20 @@ export default {
     },
     getRandomIcon () {
       return `${this.urlEnviroment}/images/map-icons/${this.icons[Math.floor((Math.random() * 19) + 1)]}`
+    },
+    openInfoWindowTemplate (position, answer, data) {
+      console.log(data)
+      this.infoWindow.position = {
+        lat: position.lat,
+        lng: position.lng
+      }
+      this.infoWindow.open = true
+      this.infoWindow.template = `
+      <v-list class=" pl-4 pt-4" font-weight-bold">
+      <v-list-tile>
+        <b class="title">${answer}</b>
+      </v-list-title>
+      </v-list>`
     }
   },
   watch: {

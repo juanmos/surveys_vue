@@ -71,7 +71,7 @@
     :position="infoWindow.position"
     :opened="infoWindow.open"
     @closeclick="infoWindow.open=false">
-    <div v-html="infoWindow.template"></div>
+    <div style="overflow: scroll-x" v-html="infoWindow.template"></div>
 </gmap-info-window>
 </GmapMap>
 </div>
