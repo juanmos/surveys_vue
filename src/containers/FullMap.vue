@@ -37,6 +37,7 @@
                  <div v-for="take in getProjectTakes" :key="take._id" :style="{'border-right': 'solid 1px'}">
                     <v-btn :color="currentTake._id === take._id ? 'red': 'black'" @click="setCurrentTake(take)" >{{take.name}}</v-btn>
                   </div>
+                  <v-chip>No. Encuestas: <b>{{getPollSize}}</b></v-chip>
             </v-layout>
         </v-card>
       </v-flex>
@@ -163,6 +164,9 @@ export default {
     },
     getFilteredMarkers () {
       return this.select.length > 0 ? this.getMarkers.filter(marker => this.select.includes(marker.answer)) : this.getMarkers
+    },
+    getPollSize () {
+      return this.getTakeValues.length
     }
   },
   methods: {
