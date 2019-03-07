@@ -275,6 +275,12 @@ const ReportCreator = resolve => {
   }, 'reports-creator')
 }
 
+const FullMap = resolve => {
+  require.ensure(['./containers/FullMap.vue'], () => {
+    resolve(require('./containers/FullMap.vue'))
+  }, 'full-map')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -574,6 +580,31 @@ export default new Router({
           path: 'login',
           name: 'Login',
           component: Login
+        }
+      ]
+    },
+    {
+      path: '/map',
+      redirect: '/map/404',
+      name: 'Map',
+      component: {
+        render (c) { return c('router-view') }
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('auth/authenticate').then(() => {
+          next()
+        }).catch((err) => {
+          console.log(err)
+          // window.location = enviroment[enviroment.currentEnviroment].urlAuth
+          next('/pages/login')
+        })
+      },
+      children: [
+        {
+          path: 'full/:id',
+          props: true,
+          name: 'Full',
+          component: FullMap
         }
       ]
     },

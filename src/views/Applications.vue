@@ -1,7 +1,7 @@
 <template>
   <v-app id="applications">
     <v-layout row wrap>
-        <v-flex xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_propraxis === true">
+        <v-flex xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_propraxis.access === true">
           <v-card title="Gestión Propraxis">
             <v-img
               src="images/gestion.png"
@@ -20,7 +20,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.mind_map === true">
+        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.mind_map.access === true">
           <v-card title="Mapas Mentales">
             <v-img
               src="images/mapas_mentales.png"
@@ -39,7 +39,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_projectta === true">
+        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_projectta.access === true">
           <v-card title="Gestión Proyectta">
             <v-img
               src="images/gestion.png"
@@ -58,7 +58,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_proprint === true">
+        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.management_proprint.access === true">
           <v-card title="Gestión Proprint">
             <v-img
               src="images/gestion.png"
@@ -77,7 +77,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.polls === true">
+        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.polls.access === true">
           <v-card title="Encuestas">
             <v-img
               src="images/encuestas.png"
@@ -96,7 +96,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.territory === true">
+        <v-flex  xs12 sm4 style="margin:20px;" v-if="user.application_permissions.territory.access === true">
           <v-card title="Territorio">
             <v-img
               src="images/encuestas.png"

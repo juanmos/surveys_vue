@@ -3,6 +3,7 @@
         <v-layout row wrap>
             <v-flex xs8>
                 <v-text-field
+                    box
                     @click.stop="focus"
                     @keyup.enter="broadcastData"
                     v-if="type === 'text'"

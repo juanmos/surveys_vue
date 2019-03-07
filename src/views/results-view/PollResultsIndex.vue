@@ -1,5 +1,25 @@
 <template>
     <v-flex class="view-container">
+      <v-toolbar color="transparent">
+          <span class="headline">{{currentPoll ? currentPoll.name : ''}}</span>
+          <v-spacer></v-spacer>
+          <v-menu bottom left>
+            <v-btn
+              slot="activator"
+              dark
+              icon
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+
+            <v-list>
+              <v-list-tile
+              >
+                <v-list-tile-title @click="segmentationDialog = true">Definir Datos de Segmentacion</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-toolbar>
         <v-tabs
         v-model="active"
         color="secondary"
@@ -31,7 +51,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getVariableHeaders" :responses="getTableVariableValues"></poll-results-table>
+                    <poll-results-table @saveFormated="saveFormated" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -48,23 +68,70 @@
                 </v-card>
             </v-tab-item>
         </v-tabs>
+        <v-dialog
+          v-model="segmentationDialog"
+          width="800"
+        >
+        <v-card>
+          <v-toolbar>
+            <v-card-title
+              class="headline"
+              primary-title
+            >
+              Asignar campos de segmentacion
+            </v-card-title>
+            <v-spacer>
+            </v-spacer>
+            <v-btn @click="segmentationDialog = false" icon>
+                <v-icon>
+                  close
+                </v-icon>
+            </v-btn>
+
+          </v-toolbar>
+
+        <v-card-text>
+          <v-spacer></v-spacer>
+
+          <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+        </v-dialog>
     </v-flex>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
+import SegmentationFields from './../../components/SegmentationFields'
 
 export default {
   props: ['id'],
   data () {
     return {
       active: null,
-      resultPoll: null
+      resultPoll: null,
+      segmentationDialog: false
     }
   },
   computed: {
+    ...mapState([
+      'currentPoll'
+    ]),
     getDataHeaders () {
       let headersFormated = []
       let jsonFormated = Object.assign({}, this.resultPoll ? this.resultPoll.originalJson[0] : {})
@@ -88,16 +155,9 @@ export default {
     getVariableHeaders () {
       return [
         'Nombre',
-        'Tipo',
-        'Anchura',
-        'Decimales',
         'Etiqueta',
         'Valores',
-        'Perdidos',
-        'Columnas',
-        'Alineacion',
-        'Medida',
-        'Rol'
+        'Perdidos'
       ].map(value => ({
         text: value,
         align: 'center',
@@ -105,18 +165,13 @@ export default {
       }))
     },
     getTableVariableValues () {
-      return this.resultPoll ? Object.values(this.resultPoll.originalJson[0]).map((question, key) => ({
-        name: question,
-        type: 'Numerico',
-        anchor: 8,
-        decimals: 0,
-        label: question.split('_').slice(1, question.length).join(' '),
-        values: this.getPossibleValues[key],
+      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((question, key) => ({
+        name: question.original,
+        label: question.label,
+        values: question.options,
+        code: question.code,
         lost: -1,
-        columns: 8,
-        align: 'Derecha',
-        size: 'Medida',
-        rol: 'Entrada'
+        category: question.category
       })) : []
     },
     getPossibleValues () {
@@ -128,14 +183,36 @@ export default {
     }
   },
   methods: {
-    ...mapActions('config-polls', {getPoll: 'get'})
+    ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
+    ...mapActions([
+      'setCurrentPoll'
+    ]),
+    saveFormated (values) {
+      const {ConfigPoll} = this.$FeathersVuex
+      let config = new ConfigPoll(this.resultPoll)
+      config.formatedConfiguration = values
+      config.save().then(result => {
+        this.setSnackMessage('Pregunta Editada')
+        this.setShowSnack(true)
+        this.getPoll(this.id).then(result => {
+          this.resultPoll = Object.assign({}, result)
+          this.setCurrentPoll(Object.assign({}, this.resultPoll))
+        })
+        // snack
+      }).catch(err => console.log('este es el error', err))
+    }
   },
   mounted () {
     this.getPoll(this.id).then(result => {
       this.resultPoll = Object.assign({}, result)
+      this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
   },
-  components: { PollResultsTable, ReportCreator }
+  components: { PollResultsTable, ReportCreator, SegmentationFields }
 }
 </script>
 

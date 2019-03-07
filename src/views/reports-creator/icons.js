@@ -1,0 +1,22 @@
+export default [
+  'pin-1.png',
+  'pin-2.png',
+  'pin-3.png',
+  'pin-4.png',
+  'pin-5.png',
+  'pin-6.png',
+  'pin-7.png',
+  'pin-8.png',
+  'pin-9.png',
+  'pin-10.png',
+  'pin-11.png',
+  'pin-12.png',
+  'pin-13.png',
+  'pin-14.png',
+  'pin-15.png',
+  'pin-16.png',
+  'pin-17.png',
+  'pin-18.png',
+  'pin-19.png',
+  'pin-20.png'
+]

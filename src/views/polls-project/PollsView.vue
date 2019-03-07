@@ -7,6 +7,10 @@
             </v-list-tile-action>
             <span class="title text-sm-left">{{poolsseg.name}}</span>
             <v-spacer></v-spacer>
+            <v-tooltip bottom>
+              <v-btn :to="`/map/full/${this.$route.params.id}`" slot="activator" icon><v-icon large color="primary">map</v-icon></v-btn>
+              <span>Ver Mapa General</span>
+            </v-tooltip>
           </v-card-title>
         <v-divider inset></v-divider>
         <v-list two-line>
