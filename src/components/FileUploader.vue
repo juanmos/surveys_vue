@@ -76,7 +76,6 @@ export default {
           'Content-Type': 'multipart/form-data'
         },
         params}).then((result) => {
-        console.log('este fue el resultado', result)
         this.$emit('fileCreated', result.data)
         this.imageName = ''
         this.setShowSnack(true)
