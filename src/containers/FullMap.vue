@@ -7,9 +7,10 @@
           :center="{lat: -2.8807488, lng: -79.0347413} "
           :zoom="13"
           map-type-id="roadmap"
+          :options="mapOptions"
           >
           <GmapMarker
-            v-for="(m, index) in getFilteredMarkers"
+            v-for="(m, index) in getPolygonMarkers"
             :key="index + Math.random()"
             :position="m.position"
             :clickable="true"
@@ -71,7 +72,7 @@
             <v-combobox
               v-model="select"
               :items=" getCurrentOptions.map(q => q.name)"
-              label="Seleccione Opcion"
+              label="Seleccione Opcion (Global)"
               multiple
               chips
               dark
@@ -103,10 +104,49 @@
           </v-layout>
         </v-card>
       </v-flex>
+      <v-flex v-if="questionsExpanded && polygon" class="mt-2 panel" xs12 sm4 md4  offset-xs1>
+        <v-card dark v-if="getPolygonOptions.length > 0" class="options">
+          <v-layout justify-center align-center row>
+            <v-flex xs6>
+              <span class="subheading">Opciones dentro de Poligono</span>
+              <v-chip v-for="polygon in getPolygonOptions" :key="polygon">
+                  {{polygon.name}} - <span  class="title font-weight-bold">{{Math.round(polygon.polygonResult * 100) / 100}} %</span>
+              </v-chip>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+      <v-btn
+          @click="getMapObject"
+          absolute
+          dark
+          fab
+          bottom
+          right
+          :color="selectionMode ? 'red' : 'black'"
+          class="mb-5 ml-4"
+          >
+          <v-icon>change_history</v-icon>
+        </v-btn>
+      <v-btn
+        absolute
+        dark
+        fab
+        top
+        right
+        class="mt-5"
+        v-if="selectionMode"
+        color="blue"
+        @click="resetAll"
+        >
+        <v-icon>update</v-icon>
+      </v-btn>
+
     </div>
 </template>
 
 <script>
+import { gmapApi } from 'vue2-google-maps'
 import draggable from 'vuedraggable'
 import { mapActions } from 'vuex'
 
@@ -129,7 +169,25 @@ export default {
       open: false,
       template: ``,
       urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase
-    }
+    },
+    mapOptions: {
+      zoomControl: false,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
+      disableDefaultUi: false,
+      styles: [
+        {
+          featureType: 'poi',
+          stylers: [{visibility: 'off'}]
+        }
+      ]
+    },
+    mapselector: false,
+    polygon: null,
+    selectionMode: false
   }),
   computed: {
     getProjectTakes () {
@@ -149,6 +207,12 @@ export default {
         icon: this.getRandomIcon()
       })) : []
     },
+    getPolygonOptions () {
+      return this.getCurrentOptions ? this.getCurrentOptions.map(opt => ({
+        ...opt,
+        polygonResult: this.polygon ? ((this.getPolygonMarkers.filter(p => p.answer === opt.name).length * 100) / this.getPolygonMarkers.length).toFixed(2) : 0
+      })) : []
+    },
     getCurrentOptionValues () {
       return this.currentQuestions.length > 0 ? this.currentQuestions[0].optionValues : []
     },
@@ -159,11 +223,16 @@ export default {
           lat: Number(take['latLong'].lat),
           lng: Number(take['latLong'].lng)
         },
+        polygon: new window.google.maps.LatLng(Number(take['latLong'].lat), Number(take['latLong'].lng)),
         icon: this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]) ? this.getCurrentOptions.find(opt => opt.name === take[this.getKeySelected]).icon : ''
       })) : []
     },
     getFilteredMarkers () {
       return this.select.length > 0 ? this.getMarkers.filter(marker => this.select.includes(marker.answer)) : this.getMarkers
+    },
+    getPolygonMarkers () {
+      return this.polygon ? this.getFilteredMarkers
+        .filter(marker => (window.google.maps.geometry.poly.containsLocation(marker.polygon, this.polygon))) : this.getFilteredMarkers
     },
     getPollSize () {
       return this.getTakeValues.length
@@ -191,6 +260,39 @@ export default {
         <b class="title">${answer}</b>
       </v-list-title>
       </v-list>`
+    },
+    getMapObject () {
+      this.selectionMode = !this.selectionMode
+      const drawingManager = new window.google.maps.drawing.DrawingManager({
+        drawingControl: true,
+        drawingControlOptions: {
+          position: window.google.maps.ControlPosition.BOTTOM_CENTER,
+          drawingModes: ['polygon']
+        },
+        polygonOptions: {
+          fillColor: '000',
+          fillOpacity: 0.1,
+          strokeColor: '#f44336',
+          strokeWeight: 4,
+          editable: true
+        }
+      })
+      drawingManager.setMap(this.$refs['gmap'].$mapObject)
+      window.google.maps.event.addListener(drawingManager, 'overlaycomplete', event => {
+        console.log(event)
+        if (this.polygon) {
+          this.polygon.setMap(null)
+        }
+        drawingManager.setDrawingMode(null)
+        // creating a new editable polygon
+        this.polygon = event.overlay
+        this.polygon.setEditable(true)
+        console.log('este es el resultado de polygons', this.getPolygonMarkers)
+      })
+    },
+    resetAll () {
+      this.selectionMode = false
+      this.polygon = null
     }
   },
   watch: {
@@ -207,8 +309,10 @@ export default {
       this.currentProject = Object.assign({}, result)
       console.log('este es el current project', this.currentProject)
     })
+
+    console.log('el mapa', this.$refs.gmap.$gmapOptions)
   },
-  components: { draggable }
+  components: { draggable, gmapApi }
 }
 </script>
 
