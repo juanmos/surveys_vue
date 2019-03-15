@@ -214,10 +214,17 @@ export default new Vuex.Store({
   ],
   state: {
     snackMessage: '',
+    asideOpened: true,
     showSnack: false,
     snackColor: 'success',
     currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase,
-    currentPoll: null
+    currentPoll: null,
+    mapConfig: {
+      full: {
+        cluster: false,
+        drawingMode: false
+      }
+    }
   },
   getters: {
     getSnackMessage: (state) => {
@@ -231,6 +238,9 @@ export default new Vuex.Store({
     },
     getCurrentPoll: (state) => {
       return state.currentPoll
+    },
+    getAsideOpened: (state) => {
+      return state.asideOpened
     }
   },
   mutations: {
@@ -245,6 +255,9 @@ export default new Vuex.Store({
     },
     setCurrentPoll (state, poll) {
       state.currentPoll = poll
+    },
+    setAsideOpened (state, opened) {
+      state.asideOpened = opened
     }
   },
   actions: {
@@ -259,6 +272,9 @@ export default new Vuex.Store({
     },
     setCurrentPoll: ({ commit }, poll) => {
       commit('setCurrentPoll', poll)
+    },
+    setAsideOpened: ({ commit }, opened) => {
+      commit('setAsideOpened', opened)
     }
   }
 })

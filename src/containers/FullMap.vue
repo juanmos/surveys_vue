@@ -9,15 +9,15 @@
           map-type-id="roadmap"
           :options="mapOptions"
           >
-          <GmapMarker
-            v-for="(m, index) in getPolygonMarkers"
-            :key="index + Math.random()"
-            :position="m.position"
-            :clickable="true"
-            :draggable="false"
-            :icon="m.icon"
-            @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
-          />
+            <GmapMarker
+              v-for="(m, index) in getPolygonMarkers"
+              :key="index + Math.random()"
+              :position="m.position"
+              :clickable="true"
+              :draggable="false"
+              :icon="m.icon"
+              @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
+            />
           <gmap-info-window
               :options="{maxWidth: 1200}"
               :position="infoWindow.position"
@@ -141,15 +141,50 @@
         >
         <v-icon>update</v-icon>
       </v-btn>
+      <v-navigation-drawer
+        temporary
+        right
+        :value="asideOpened"
+        fixed
+        app
+        width="400"
+        dark
+      >
+      <v-card flat>
+        <v-toolbar>
+          <span class="title">Configuracion de mapa</span>
+        </v-toolbar>
+        <v-list subheader>
+          <v-subheader>Componentes de mapa</v-subheader>
+          <v-list-tile v-for="item in optionItems" :key="item.label">
+            <v-list-tile-content>
+              <v-list-tile-title>{{item.label}}</v-list-tile-title>
+            </v-list-tile-content>
+             <v-list-tile-action>
+              <v-switch
+                @change="setConfigValue($event, item.field)"
+                color="red"
+                :value="true"
+              ></v-switch>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list-tile>
+          <v-list-tile-content>
+           <v-btn>Resetear configuracion</v-btn>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-card>
+    </v-navigation-drawer>
 
     </div>
 </template>
 
 <script>
-import { gmapApi } from 'vue2-google-maps'
 import draggable from 'vuedraggable'
-import { mapActions } from 'vuex'
-
+import { mapActions, mapState } from 'vuex'
+import GmapCluster from 'vue2-google-maps/dist/components/cluster'
 import enviroment from './../../config/enviroment'
 import icons from './../views/reports-creator/icons'
 
@@ -187,7 +222,25 @@ export default {
     },
     mapselector: false,
     polygon: null,
-    selectionMode: false
+    selectionMode: false,
+    items: [
+      { title: 'Click Me' },
+      { title: 'Click Me' },
+      { title: 'Click Me' },
+      { title: 'Click Me 2' }
+    ],
+    rightDrawer: true,
+    right: true,
+    optionItems: [
+      {
+        label: 'Agrupar Marcadores',
+        field: 'cluster'
+      },
+      {
+        label: 'Habilitar Poligonos',
+        field: 'drawingMode'
+      }
+    ]
   }),
   computed: {
     getProjectTakes () {
@@ -236,11 +289,17 @@ export default {
     },
     getPollSize () {
       return this.getTakeValues.length
-    }
+    },
+    ...mapState([
+      'asideOpened'
+    ])
   },
   methods: {
     ...mapActions('polls-project', {getProject: 'get'}),
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions([
+      'setAsideOpened'
+    ]),
     setCurrentTake (take) {
       this.currentTake = Object.assign({}, take)
     },
@@ -263,6 +322,7 @@ export default {
     },
     getMapObject () {
       this.selectionMode = !this.selectionMode
+      this.setAsideOpened(!this.asideOpened)
       const drawingManager = new window.google.maps.drawing.DrawingManager({
         drawingControl: true,
         drawingControlOptions: {
@@ -293,6 +353,9 @@ export default {
     resetAll () {
       this.selectionMode = false
       this.polygon = null
+    },
+    setConfigValue (event, item) {
+      console.log(event, item)
     }
   },
   watch: {
@@ -301,7 +364,14 @@ export default {
       this.questions = val ? val.formatedConfiguration.slice().filter(q => q.category === 'Intencion') : {}
     },
     currentQuestions (question) {
-      console.log('current question cambiada', this.currentQuestions)
+      let bounds = new window.google.maps.LatLngBounds()
+      this.getMarkers.forEach(marker => {
+        let loc = new window.google.maps.LatLng(marker.polygon.lat(), marker.polygon.lng())
+        bounds.extend(loc)
+      })
+      this.$refs['gmap'].fitBounds(bounds)
+      this.$refs['gmap'].panToBounds(bounds)
+      this.$refs['gmap'].$emit('g-fitBounds', bounds)
     }
   },
   mounted () {
@@ -310,9 +380,9 @@ export default {
       console.log('este es el current project', this.currentProject)
     })
 
-    console.log('el mapa', this.$refs.gmap.$gmapOptions)
+    console.log('el mapa', GmapCluster)
   },
-  components: { draggable, gmapApi }
+  components: { draggable, GmapCluster }
 }
 </script>
 
@@ -335,8 +405,18 @@ export default {
     .panel {
       opacity: 0.8;
     }
-    .questions {
+    div[title="Stop drawing"] {
+      content: url(https://cdn2.iconfinder.com/data/icons/font-awesome/1792/hand-stop-o-512.png) !important;
+      height: 50px;
+      width: 50px;
+      cursor: pointer;
+      margin: 2px;
     }
-    .options {
+    div[title="Draw a shape"] {
+      content: url(https://cdn2.iconfinder.com/data/icons/miscellaneous-12/24/miscellaneous-41-512.png) !important;
+      height: 50px;
+      width: 50px;
+      cursor: pointer;
+      margin: 2px;
     }
 </style>
