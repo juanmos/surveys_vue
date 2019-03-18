@@ -9,7 +9,19 @@
           map-type-id="roadmap"
           :options="mapOptions"
           >
+          <GmapCluster v-if="mapConfig.cluster">
             <GmapMarker
+              v-for="(m, index) in getPolygonMarkers"
+              :key="index + Math.random()"
+              :position="m.position"
+              :clickable="true"
+              :draggable="false"
+              :icon="m.icon"
+              @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
+            />
+          </GmapCluster>
+          <GmapMarker
+              v-else
               v-for="(m, index) in getPolygonMarkers"
               :key="index + Math.random()"
               :position="m.position"
@@ -29,6 +41,7 @@
       </draggable>
       <v-flex class="mt-5 panel" xs10 offset-xs1>
         <v-card dark>
+          {{mapConfig}}
           <v-card-title class="headline">Tomas de datos:   <v-spacer></v-spacer>
                   <v-chip @click="currentQuestions = []" v-if="currentQuestions.length > 0">
                     {{currentQuestions[0].label}}
@@ -109,7 +122,7 @@
           <v-layout justify-center align-center row>
             <v-flex xs6>
               <span class="subheading">Opciones dentro de Poligono</span>
-              <v-chip v-for="polygon in getPolygonOptions" :key="polygon">
+              <v-chip v-for="polygon in getPolygonOptions" :key="polygon.name">
                   {{polygon.name}} - <span  class="title font-weight-bold">{{Math.round(polygon.polygonResult * 100) / 100}} %</span>
               </v-chip>
             </v-flex>
@@ -123,24 +136,10 @@
           fab
           bottom
           right
-          :color="selectionMode ? 'red' : 'black'"
           class="mb-5 ml-4"
           >
-          <v-icon>change_history</v-icon>
+          <v-icon>reorder</v-icon>
         </v-btn>
-      <v-btn
-        absolute
-        dark
-        fab
-        top
-        right
-        class="mt-5"
-        v-if="selectionMode"
-        color="blue"
-        @click="resetAll"
-        >
-        <v-icon>update</v-icon>
-      </v-btn>
       <v-navigation-drawer
         temporary
         right
@@ -153,6 +152,15 @@
       <v-card flat>
         <v-toolbar>
           <span class="title">Configuracion de mapa</span>
+          <v-spacer></v-spacer>
+          <v-btn
+            fab
+            flat
+            small
+            @click="closeConfiguration"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-list subheader>
           <v-subheader>Componentes de mapa</v-subheader>
@@ -223,12 +231,6 @@ export default {
     mapselector: false,
     polygon: null,
     selectionMode: false,
-    items: [
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me 2' }
-    ],
     rightDrawer: true,
     right: true,
     optionItems: [
@@ -243,6 +245,10 @@ export default {
     ]
   }),
   computed: {
+    ...mapState([
+      'asideOpened',
+      'mapConfig'
+    ]),
     getProjectTakes () {
       return this.currentProject.pollTakes
     },
@@ -289,16 +295,14 @@ export default {
     },
     getPollSize () {
       return this.getTakeValues.length
-    },
-    ...mapState([
-      'asideOpened'
-    ])
+    }
   },
   methods: {
     ...mapActions('polls-project', {getProject: 'get'}),
     ...mapActions('config-polls', {getPoll: 'get'}),
     ...mapActions([
-      'setAsideOpened'
+      'setAsideOpened',
+      'setMapConfig'
     ]),
     setCurrentTake (take) {
       this.currentTake = Object.assign({}, take)
@@ -321,8 +325,10 @@ export default {
       </v-list>`
     },
     getMapObject () {
-      this.selectionMode = !this.selectionMode
       this.setAsideOpened(!this.asideOpened)
+      this.selectionMode = true
+    },
+    enableDrawing () {
       const drawingManager = new window.google.maps.drawing.DrawingManager({
         drawingControl: true,
         drawingControlOptions: {
@@ -347,15 +353,20 @@ export default {
         // creating a new editable polygon
         this.polygon = event.overlay
         this.polygon.setEditable(true)
-        console.log('este es el resultado de polygons', this.getPolygonMarkers)
       })
     },
     resetAll () {
       this.selectionMode = false
       this.polygon = null
     },
-    setConfigValue (event, item) {
-      console.log(event, item)
+    setConfigValue (value, field) {
+      this.setMapConfig({
+        ...this.mapConfig,
+        [field]: value
+      })
+    },
+    closeConfiguration () {
+      this.setAsideOpened(false)
     }
   },
   watch: {
@@ -372,12 +383,21 @@ export default {
       this.$refs['gmap'].fitBounds(bounds)
       this.$refs['gmap'].panToBounds(bounds)
       this.$refs['gmap'].$emit('g-fitBounds', bounds)
+    },
+    mapConfig (val) {
+      console.log('map config has changed', val)
+      if (val.drawingMode === true) {
+        this.selectionMode = true
+        this.enableDrawing()
+      }
+    },
+    asideOpened (val) {
+      console.log('aside opened', val)
     }
   },
   mounted () {
     this.getProject(this.id).then(result => {
       this.currentProject = Object.assign({}, result)
-      console.log('este es el current project', this.currentProject)
     })
 
     console.log('el mapa', GmapCluster)

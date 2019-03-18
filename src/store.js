@@ -214,17 +214,16 @@ export default new Vuex.Store({
   ],
   state: {
     snackMessage: '',
-    asideOpened: true,
+    mapConfigmapConfig: false,
     showSnack: false,
     snackColor: 'success',
     currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase,
     currentPoll: null,
     mapConfig: {
-      full: {
-        cluster: false,
-        drawingMode: false
-      }
-    }
+      cluster: false,
+      drawingMode: false
+    },
+    asideOpened: false
   },
   getters: {
     getSnackMessage: (state) => {
@@ -241,6 +240,9 @@ export default new Vuex.Store({
     },
     getAsideOpened: (state) => {
       return state.asideOpened
+    },
+    getMapConfig (state) {
+      return state.mapConfig
     }
   },
   mutations: {
@@ -258,6 +260,9 @@ export default new Vuex.Store({
     },
     setAsideOpened (state, opened) {
       state.asideOpened = opened
+    },
+    setMapConfig (state, config) {
+      state.mapConfig = {...config}
     }
   },
   actions: {
@@ -275,6 +280,9 @@ export default new Vuex.Store({
     },
     setAsideOpened: ({ commit }, opened) => {
       commit('setAsideOpened', opened)
+    },
+    setMapConfig: ({ commit }, config) => {
+      commit('setMapConfig', config)
     }
   }
 })
