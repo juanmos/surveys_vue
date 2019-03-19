@@ -41,7 +41,6 @@
       </draggable>
       <v-flex class="mt-5 panel" xs10 offset-xs1>
         <v-card dark>
-          {{mapConfig}}
           <v-card-title class="headline">Tomas de datos:   <v-spacer></v-spacer>
                   <v-chip @click="currentQuestions = []" v-if="currentQuestions.length > 0">
                     {{currentQuestions[0].label}}
