@@ -76,18 +76,7 @@
                                     </draggable>
                                 </v-flex>
                                 <v-flex class="table-wrap" xs11>
-                                        <table class="table-wrap" border="1">
-                                            <thead>
-                                                <th v-for="x in xQuestions" :key="x">
-                                                    {{x}}
-                                                </th>
-                                            </thead>
-                                            <tr v-for="y in yQuestions" :key="y">
-                                                <td v-for="x in xQuestions" :key="x">
-                                                    {{getCrossValue(x, y)}}
-                                                </td>
-                                            </tr>
-                                        </table>
+                                  <cross-table :xQuestions="xQuestions" :yQuestions="yQuestions"></cross-table>
                                 </v-flex>
                             </v-layout>
                         </v-card>
@@ -141,6 +130,7 @@ import BarGraph from './../../components/graphs/BarGraph'
 import PieGraph from './../../components/graphs/PieGraph'
 import Map from './../../components/graphs/Map'
 import DiagramLayout from './../../components/graphs/DiagramLayout'
+import CrossTable from './../../components/crossQuestionTables/crossTable'
 import colors from './colors.js'
 import icons from './icons.js'
 
@@ -300,7 +290,8 @@ export default {
     BarGraph,
     PieGraph,
     DiagramLayout,
-    Map
+    Map,
+    CrossTable
   },
   mounted () {
     this.getPoll(this.id).then(result => {
