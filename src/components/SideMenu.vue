@@ -77,7 +77,6 @@
                 <v-list-tile-title v-text="'Roles'"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-
         </v-list-group>
         <v-list-tile :to="'/category-segmentation'">
           <v-list-tile-action>
@@ -85,6 +84,24 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="'Categoría Segmentación'"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile :to="'/question-categories'">
+          <v-list-tile-action>
+            <v-icon>category</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Categoria de Preguntas</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile :to="'/actors'">
+          <v-list-tile-action>
+            <v-icon>person</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="'Actores'"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 

@@ -281,6 +281,30 @@ const FullMap = resolve => {
   }, 'full-map')
 }
 
+const QuestionCategories = resolve => {
+  require.ensure(['./views/question-categories/QuestionCategoriesList.vue'], () => {
+    resolve(require('./views/question-categories/QuestionCategoriesList.vue'))
+  }, 'question-categories')
+}
+
+const QuestionCategoriesNew = resolve => {
+  require.ensure(['./views/question-categories/QuestionCategoriesNew.vue'], () => {
+    resolve(require('./views/question-categories/QuestionCategoriesNew.vue'))
+  }, 'question-categories')
+}
+
+const Actors = resolve => {
+  require.ensure(['./views/actors/ActorsList.vue'], () => {
+    resolve(require('./views/actors/ActorsList.vue'))
+  }, 'actors')
+}
+
+const ActorsNew = resolve => {
+  require.ensure(['./views/actors/ActorsNew.vue'], () => {
+    resolve(require('./views/actors/ActorsNew.vue'))
+  }, 'actors')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -565,6 +589,30 @@ export default new Router({
           name: 'ReportCreator',
           props: true,
           component: ReportCreator
+        },
+        {
+          path: 'actors',
+          name: 'actors',
+          props: true,
+          component: Actors
+        },
+        {
+          path: 'actors-new',
+          name: 'actors-new',
+          props: true,
+          component: ActorsNew
+        },
+        {
+          path: 'question-categories',
+          name: 'question-categories',
+          props: true,
+          component: QuestionCategories
+        },
+        {
+          path: 'question-categories-new',
+          name: 'question-categories-new',
+          props: true,
+          component: QuestionCategoriesNew
         }
       ]
     },

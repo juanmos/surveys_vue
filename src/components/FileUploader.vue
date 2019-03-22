@@ -24,7 +24,7 @@ import {mapActions, mapState} from 'vuex'
 import axios from 'axios'
 const enviroment = require('./../../config/enviroment.json')
 export default {
-  props: ['label', 'inputType'],
+  props: ['label', 'inputType', 'folder'],
   data () {
     return {
       imageName: '',
@@ -76,7 +76,6 @@ export default {
           'Content-Type': 'multipart/form-data'
         },
         params}).then((result) => {
-        console.log('este fue el resultado', result)
         this.$emit('fileCreated', result.data)
         this.imageName = ''
         this.setShowSnack(true)
