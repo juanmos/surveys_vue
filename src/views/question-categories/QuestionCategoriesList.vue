@@ -5,14 +5,10 @@
 <script>
 export default {
   computed: {
-
   },
   mounted () {
-
   }
 }
 </script>
-
-<style>
-
+<style scoped>
 </style>
