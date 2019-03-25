@@ -210,6 +210,22 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('actors', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        code: '',
+        tags: [],
+        removed: false
+      }
+    }),
+    service('question-categories', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
