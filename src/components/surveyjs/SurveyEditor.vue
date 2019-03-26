@@ -6,12 +6,10 @@
 <script>
 import * as SurveyEditor from 'surveyjs-editor'
 import 'surveyjs-editor/surveyeditor.css'
-
 import * as SurveyKo from 'survey-knockout'
 import * as widgets from 'surveyjs-widgets'
 
 import 'inputmask/dist/inputmask/phone-codes/phone.js'
-
 widgets.icheck(SurveyKo)
 widgets.select2(SurveyKo)
 widgets.inputmask(SurveyKo)
@@ -40,6 +38,13 @@ export default {
   mounted () {
     // questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix']
     // Changing the surveys's language
+    // const Survey = SurveyVue.Survey
+    SurveyKo.JsonObject.metaData.addProperty('question', {
+      name: 'Categoria',
+      default: 'Categoria 1',
+      choices: ['Categoria 1', 'categoria 2', 'Categoria 3']
+    })
+
     SurveyEditor.editorLocalization.currentLocale = 'es'
     // Aplying different theme to the survey
     SurveyEditor.StylesManager.applyTheme('winterstone')
