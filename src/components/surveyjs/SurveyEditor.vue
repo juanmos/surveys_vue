@@ -44,7 +44,6 @@ export default {
       default: 'Categoria 1',
       choices: ['Categoria 1', 'categoria 2', 'Categoria 3']
     })
-
     SurveyEditor.editorLocalization.currentLocale = 'es'
     // Aplying different theme to the survey
     SurveyEditor.StylesManager.applyTheme('winterstone')
