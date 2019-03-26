@@ -41,8 +41,12 @@ export default {
     // const Survey = SurveyVue.Survey
     SurveyKo.JsonObject.metaData.addProperty('question', {
       name: 'Categoria',
-      default: 'Categoria 1',
-      choices: ['Categoria 1', 'categoria 2', 'Categoria 3']
+      default: 1,
+      choices: [
+        {value: 0, text: 'Valor 1'},
+        {value: 1, text: 'Valor 2'},
+        {value: 2, text: 'Valor 3'}
+      ]
     })
     SurveyEditor.editorLocalization.currentLocale = 'es'
     // Aplying different theme to the survey
