@@ -5,14 +5,14 @@
               <v-flex xs12>
                   <v-card :flat="true">
                     <v-card-title>
-                        <span class="title">Categoria de Preguntas
+                        <span class="title">Actores
                         </span>
                         <v-spacer></v-spacer>
-                        <v-btn to="/question-categories-new" class="deep-orange darken-3" fab small dark>
+                        <v-btn to="/actors-new" class="deep-orange darken-3" fab small dark>
                         <v-icon>add</v-icon>
                         </v-btn>
                     </v-card-title>
-                    <categories-table @delActor="refreshCategories" :headers="getHeaders" :elements="categories"></categories-table>
+                    <actors-table @delActor="refreshActors" :headers="getHeaders" :elements="actors"></actors-table>
                     <v-layout justify-center>
                       <v-flex xs8>
                         <v-card flat>
@@ -34,19 +34,25 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import CategoriesTable from './QuestionCategoriesTable'
+import ActorsTable from './ActorsTable'
 export default {
   data: () => ({
     page: 1,
     limit: 20,
     total: 100,
     loaded: false,
-    categories: []
+    actors: []
   }),
   computed: {
-    ...mapGetters('question-category', {getCategoriesFromStore: 'find'}),
+    ...mapGetters('actors', {getActorsFromStore: 'find'}),
     getHeaders () {
       return [
+        {
+          text: '',
+          align: 'left',
+          sortable: false,
+          value: 'avatar'
+        },
         {
           text: 'Nombre',
           value: 'name',
@@ -57,6 +63,11 @@ export default {
           value: 'description',
           sortable: true
         },
+        {
+          text: 'Tags',
+          value: 'tags',
+          sortable: false
+        },
         { text: 'Acciones',
 
           sortable: false
@@ -64,7 +75,7 @@ export default {
       ]
     },
     getElements () {
-      return this.getCategoriesFromStore({removed: false}).data
+      return this.getActorsFromStore({removed: false}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -75,33 +86,33 @@ export default {
   },
   watch: {
     page () {
-      this.findCategories({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findActors({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
-        this.categories = response.data
+        this.actors = response.data
       })
     }
   },
   methods: {
-    ...mapActions('question-categories', {findCategories: 'find'}),
-    refreshCategories () {
-      this.findCategories({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
+    ...mapActions('actors', {findActors: 'find'}),
+    refreshActors () {
+      this.findActors({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.categories = response.data
+        this.actors = response.data
       })
     }
   },
   mounted () {
-    this.findCategories({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
+    this.findActors({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.categories = response.data
+      this.actors = response.data
     })
   },
-  components: {CategoriesTable}
+  components: {ActorsTable}
 }
 </script>
 

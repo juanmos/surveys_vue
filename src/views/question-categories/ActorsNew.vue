@@ -5,15 +5,15 @@
               <v-flex xs12>
                   <v-card :flat="true">
                     <v-card-title>
-                        <span class="title">Categorias de Preguntas
+                        <span class="title">Actores nuevo
                         </span>
                         <v-spacer></v-spacer>
-                        <v-btn to="/question-categories" class="deep-orange darken-3" fab small dark>
+                        <v-btn to="/actors" class="deep-orange darken-3" fab small dark>
                         <v-icon>list
                         </v-icon>
                         </v-btn>
                     </v-card-title>
-                    <question-categories-form @saveCategory="saveCategory"></question-categories-form>
+                    <actors-form @saveActor="saveActor"></actors-form>
                   </v-card>
               </v-flex>
           </v-layout>
@@ -23,7 +23,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import QuestionCategoriesForm from './QuestionCategoriesForm'
+import ActorsForm from './ActorsForm'
 export default {
   computed: {
   },
@@ -33,13 +33,13 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    saveCategory (categoryData) {
-      const {QuestionCategory} = this.$FeathersVuex
-      let category = new QuestionCategory(categoryData)
-      category.save().then(result => {
-        this.setSnackMessage('Categoria Guardada')
+    saveActor (actorData) {
+      const {Actor} = this.$FeathersVuex
+      let actor = new Actor(actorData)
+      actor.save().then(result => {
+        this.setSnackMessage('Actor Guardado')
         this.setShowSnack(true)
-        this.$router.push('/question-categories')
+        this.$router.push('/actors')
       }).catch(err => {
         console.log(err)
       })
@@ -47,7 +47,7 @@ export default {
   },
   mounted () {
   },
-  components: {QuestionCategoriesForm}
+  components: {ActorsForm}
 }
 </script>
 
