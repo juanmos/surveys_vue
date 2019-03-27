@@ -25,7 +25,12 @@ widgets.bootstrapslider(SurveyKo)
 
 export default {
   name: 'survey-editor',
-  listQuestionCategories: [],
+  listQuestionCategories: [
+    {
+      value: '0',
+      text: 'Seleccionar'
+    }
+  ],
   data () {
     return {
       dataValue: ''
@@ -57,11 +62,15 @@ export default {
     ...mapGetters('question-categories', {findQuestionCategoriesInStore: 'find'})
   },
   mounted () {
-    this.findQuestionCategories({format: true, $skip: 0, $limit: null, removed: false}).then(response => {
+    this.findQuestionCategories({$skip: 0, $limit: null, removed: false}).then(response => {
       if (response.data.length > 0) {
-        this.listQuestionCategories = response.data.map(category => {
+        let list = response.data.map(category => {
           return { 'value': category.code, 'text': category.name }
         })
+        this.listQuestionCategories = [ ...[{
+          value: '0',
+          text: 'Ninguno'
+        }], ...list]
       }
       this.configPoll()
     })
