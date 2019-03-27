@@ -32,7 +32,7 @@
                         color="blue-grey lighten-2"
                       ></v-text-field>
                       <v-layout row>
-                        <v-chip dark v-for="(tag, index) in actorData.tags" :key="tag"><span class="font-weight-bold" @click="deleteTag(index)">#{{tag}} {{index}}</span></v-chip>
+                        <v-chip dark v-for="(tag, index) in actorData.tags" :key="tag"><span class="font-weight-bold" @click="deleteTag(index)">#{{tag}}</span></v-chip>
                       </v-layout>
                     <v-btn @click="saveActor" :disabled="incomplete">Guardar Actor</v-btn>
                 </v-flex>
