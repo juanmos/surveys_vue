@@ -6,12 +6,10 @@
 <script>
 import * as SurveyEditor from 'surveyjs-editor'
 import 'surveyjs-editor/surveyeditor.css'
-
 import * as SurveyKo from 'survey-knockout'
 import * as widgets from 'surveyjs-widgets'
-
+import {mapGetters, mapActions} from 'vuex'
 import 'inputmask/dist/inputmask/phone-codes/phone.js'
-
 widgets.icheck(SurveyKo)
 widgets.select2(SurveyKo)
 widgets.inputmask(SurveyKo)
@@ -27,37 +25,55 @@ widgets.bootstrapslider(SurveyKo)
 
 export default {
   name: 'survey-editor',
+  listQuestionCategories: [
+    {
+      value: '0',
+      text: 'Seleccionar'
+    }
+  ],
   data () {
     return {
       dataValue: ''
     }
   },
   methods: {
+    ...mapActions('question-categories', { findQuestionCategories: 'find' }),
     sendData (data) {
       this.$emit('dataSubmited', data)
+    },
+    configPoll () {
+      SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'category',
+        default: 0,
+        choices: this.listQuestionCategories
+      })
+      SurveyEditor.editorLocalization.currentLocale = 'es'
+      SurveyEditor.StylesManager.applyTheme('winterstone')
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+      this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
+      this.dataValue = this.editor.saveSurveyFunc = function () {
+        this.dataValue = JSON.parse(this.text)
+        send(this.text)
+      }
+      let send = (data) => this.sendData(data)
     }
   },
+  computed: {
+    ...mapGetters('question-categories', {findQuestionCategoriesInStore: 'find'})
+  },
   mounted () {
-    // questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix']
-    // Changing the surveys's language
-    SurveyEditor.editorLocalization.currentLocale = 'es'
-    // Aplying different theme to the survey
-    SurveyEditor.StylesManager.applyTheme('winterstone')
-    // Editor Options
-    let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
-
-    this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
-    // this.editor.saveSurveyFunc = () => {
-    this.dataValue = this.editor.saveSurveyFunc = function () {
-      // dats = JSON.parse(this.text)
-      // this.sendData(dats)
-      this.dataValue = JSON.parse(this.text)
-      send(this.text)
-      // return this.text
-      // datamu(JSON.parse(this.text))
-      // this.sendData(JSON.stringify(this.text))
-    }
-    let send = (data) => this.sendData(data)
+    this.findQuestionCategories({$skip: 0, $limit: null, removed: false}).then(response => {
+      if (response.data.length > 0) {
+        let list = response.data.map(category => {
+          return { 'value': category.code, 'text': category.name }
+        })
+        this.listQuestionCategories = [ ...[{
+          value: '0',
+          text: 'Ninguno'
+        }], ...list]
+      }
+      this.configPoll()
+    })
   }
 }
 </script>

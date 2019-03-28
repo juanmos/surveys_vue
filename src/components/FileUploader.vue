@@ -24,7 +24,7 @@ import {mapActions, mapState} from 'vuex'
 import axios from 'axios'
 const enviroment = require('./../../config/enviroment.json')
 export default {
-  props: ['label', 'inputType'],
+  props: ['label', 'inputType', 'folder'],
   data () {
     return {
       imageName: '',
