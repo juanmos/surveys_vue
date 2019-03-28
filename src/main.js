@@ -12,7 +12,7 @@ Vue.use(VueParticles)
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDy_B9Hr_yJ2hgWKsuTA1WBd2owjTa2cbA',
-    libraries: 'places' // This is required if you use the Autocomplete plugin
+    libraries: 'drawing,places' // This is required if you use the Autocomplete plugin
   }
 })
 
