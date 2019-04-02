@@ -5,7 +5,8 @@
               <v-flex xs12>
                   <v-card :flat="true">
                     <v-card-title>
-                        <span class="title">Categoria de Preguntas
+                        <span class="title">
+                          Categoria de Preguntas
                         </span>
                         <v-spacer></v-spacer>
                         <v-btn to="/question-categories-new" class="deep-orange darken-3" fab small dark>
@@ -55,6 +56,11 @@ export default {
         {
           text: 'Descripcion',
           value: 'description',
+          sortable: true
+        },
+        {
+          text: 'Codigo',
+          value: 'code',
           sortable: true
         },
         { text: 'Acciones',
