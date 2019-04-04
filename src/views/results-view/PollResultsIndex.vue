@@ -68,6 +68,19 @@
                     <report-creator :id="this.id"></report-creator>
                 </v-card>
             </v-tab-item>
+            <v-tab
+                ripple
+            >
+                Codificar Preguntas
+                <v-icon>grain</v-icon>
+
+            </v-tab>
+            <v-tab-item
+            >
+                <v-card flat>
+                    <questions-codificator></questions-codificator>
+                </v-card>
+            </v-tab-item>
         </v-tabs>
         <v-dialog
           v-model="segmentationDialog"
@@ -118,6 +131,7 @@
 import {mapActions, mapState} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
+import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
 import SegmentationFields from './../../components/SegmentationFields'
 
 export default {
@@ -158,7 +172,9 @@ export default {
         'Nombre',
         'Etiqueta',
         'Valores',
-        'Perdidos'
+        'Codigo',
+        'Perdido',
+        'Acciones'
       ].map(value => ({
         text: value,
         align: 'center',
@@ -213,7 +229,7 @@ export default {
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
   },
-  components: { PollResultsTable, ReportCreator, SegmentationFields }
+  components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator }
 }
 </script>
 
