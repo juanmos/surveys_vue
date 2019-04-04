@@ -77,7 +77,7 @@
                             </v-edit-dialog>
                       </td>
                       <td>
-
+                        {{props.item.tags}}
                       </td>
                       <td>
                         <v-menu

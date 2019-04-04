@@ -224,7 +224,8 @@ export default {
     }
   },
   mounted () {
-    this.getPoll(this.id).then(result => {
+    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
+      console.log('este es el result que recibo', result)
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
