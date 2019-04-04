@@ -32,6 +32,24 @@
                         </v-edit-dialog>
                       </td>
                       <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.code"
+                          lazy
+                          @save="edit(props.item.code, props.item, 'code')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > <div >{{ props.item.code }}</div>
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.code"
+                            label="Editar Codigo"
+                            single-line
+                            counter
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
+                      <td>
                           <v-edit-dialog
                             :return-value.sync="props.item.description"
                             lazy
