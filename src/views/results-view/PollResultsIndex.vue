@@ -65,7 +65,20 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <report-creator :id="this.id"></report-creator>
+                    <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
+                </v-card>
+            </v-tab-item>
+            <v-tab
+                ripple
+            >
+                Codificar Preguntas
+                <v-icon>grain</v-icon>
+
+            </v-tab>
+            <v-tab-item
+            >
+                <v-card flat>
+                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -118,6 +131,7 @@
 import {mapActions, mapState} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
+import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
 import SegmentationFields from './../../components/SegmentationFields'
 
 export default {
@@ -134,31 +148,25 @@ export default {
       'currentPoll'
     ]),
     getDataHeaders () {
-      let headersFormated = []
-      let jsonFormated = Object.assign({}, this.resultPoll ? this.resultPoll.originalJson[0] : {})
-      if (jsonFormated) {
-        for (let key in jsonFormated) {
-          if (jsonFormated.hasOwnProperty(key)) {
-            headersFormated.push({
-              text: jsonFormated[key],
-              align: 'left',
-              sortable: false,
-              value: key
-            })
-          }
-        }
-        return headersFormated
-      }
+      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
+        text: q.label ? q.label : q.original,
+        align: 'left',
+        sortable: false,
+        value: key,
+        open: q.open
+      })) : []
     },
     getTableDataValues () {
-      return this.resultPoll ? this.resultPoll.originalJson.slice(1, this.resultPoll.originalJson.length) : []
+      return this.resultPoll && this.resultPoll.PollInstances ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
     },
     getVariableHeaders () {
       return [
         'Nombre',
         'Etiqueta',
         'Valores',
-        'Perdidos'
+        'Codigo',
+        'Perdido',
+        'Acciones'
       ].map(value => ({
         text: value,
         align: 'center',
@@ -208,12 +216,13 @@ export default {
     }
   },
   mounted () {
-    this.getPoll(this.id).then(result => {
+    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
+      console.log('este es el result que recibo', result)
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
   },
-  components: { PollResultsTable, ReportCreator, SegmentationFields }
+  components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator }
 }
 </script>
 
