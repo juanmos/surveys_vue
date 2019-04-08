@@ -65,7 +65,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <report-creator :id="this.id"></report-creator>
+                    <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -78,7 +78,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <questions-codificator></questions-codificator>
+                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -148,24 +148,16 @@ export default {
       'currentPoll'
     ]),
     getDataHeaders () {
-      let headersFormated = []
-      let jsonFormated = Object.assign({}, this.resultPoll ? this.resultPoll.originalJson[0] : {})
-      if (jsonFormated) {
-        for (let key in jsonFormated) {
-          if (jsonFormated.hasOwnProperty(key)) {
-            headersFormated.push({
-              text: jsonFormated[key],
-              align: 'left',
-              sortable: false,
-              value: key
-            })
-          }
-        }
-        return headersFormated
-      }
+      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
+        text: q.label ? q.label : q.original,
+        align: 'left',
+        sortable: false,
+        value: key,
+        open: q.open
+      })) : []
     },
     getTableDataValues () {
-      return this.resultPoll ? this.resultPoll.originalJson.slice(1, this.resultPoll.originalJson.length) : []
+      return this.resultPoll && this.resultPoll.PollInstances ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
     },
     getVariableHeaders () {
       return [
