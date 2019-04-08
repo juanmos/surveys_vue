@@ -69,13 +69,15 @@
                 </v-card>
             </v-tab-item>
             <v-tab
-                ripple
+              ripple
+              v-if="resultPoll && !resultPoll.imported"
             >
                 Codificar Preguntas
                 <v-icon>grain</v-icon>
 
             </v-tab>
             <v-tab-item
+              v-if="resultPoll && !resultPoll.imported"
             >
                 <v-card flat>
                     <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
