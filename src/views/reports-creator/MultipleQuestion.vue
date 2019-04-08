@@ -58,18 +58,19 @@
                               primary class="title">
                                 Tabla de Resultados
                               <v-spacer></v-spacer>
-                              <v-btn  title="Procesar" slot="activator" @click="processData()" flat><v-icon>build</v-icon></v-btn>
                             </v-card-title>
 
-                            <v-flex xs12 v-if="showTableResult === false">
+                            <v-flex xs12>
+                              x
                                 <draggable v-model="xQuestions" :options="{group:'questions'}">
                                     <v-card class="draggable" dark color="transparent">
                                         <v-card-text class="px-0"></v-card-text>
                                     </v-card>
                                 </draggable>
                             </v-flex>
-                            <v-layout class="table-wrap" row wrap v-if="showTableResult === false">
+                            <v-layout class="table-wrap" row wrap>
                                 <v-flex xs1>
+                                  y
                                     <draggable v-model="yQuestions" :options="{group:'questions'}">
                                         <v-card dark class="draggable draggable-y" color="transparent">
                                             <v-card-text class="px-0"></v-card-text>
@@ -80,11 +81,6 @@
                                   <cross-table :xQuestions="xQuestions" :yQuestions="yQuestions"></cross-table>
                                 </v-flex>
                             </v-layout>
-                            <v-flex d-flex xs12 sm12 md12 v-if="showTableResult === true">
-                                <v-card>
-                                    <table-result :results="answers"></table-result>
-                                </v-card>
-                            </v-flex>
                         </v-card>
                         <v-card v-else>
                             <v-card-title
@@ -137,7 +133,6 @@ import PieGraph from './../../components/graphs/PieGraph'
 import Map from './../../components/graphs/Map'
 import DiagramLayout from './../../components/graphs/DiagramLayout'
 import CrossTable from './../../components/crossQuestionTables/crossTable'
-import TableResult from './../../components/crossQuestionTables/TableResult'
 import colors from './colors.js'
 import icons from './icons.js'
 
@@ -147,8 +142,6 @@ export default {
     resultPoll: null,
     yQuestions: [],
     xQuestions: [],
-    answers: null,
-    showTableResult: false,
     uniqueQuestion: [],
     questions: [],
     multipleMode: false,
@@ -194,20 +187,6 @@ export default {
     },
     delElement (el) {
       this.uniqueQuestion = this.uniqueQuestion.filter(q => q.code !== el.code)
-    },
-    processData () {
-      const {ConfigPoll} = this.$FeathersVuex
-      let config = new ConfigPoll(this.resultPoll)
-      config.xQuestions = this.xQuestions
-      config.yQuestions = this.yQuestions
-      config.reportCreator = true
-      config.save().then(result => {
-        console.log('listo---', result.data)
-        this.showTableResult = true
-        this.answers = result.data
-        // this.setSnackMessage('Pregunta Editada')
-        // this.setShowSnack(true)
-      }).catch(err => console.log('este es el error', err))
     },
     saveGraphs () {
       const { PanelElement } = this.$FeathersVuex
@@ -314,8 +293,7 @@ export default {
     PieGraph,
     DiagramLayout,
     Map,
-    CrossTable,
-    TableResult
+    CrossTable
   },
   mounted () {
     this.getPoll(this.id).then(result => {
