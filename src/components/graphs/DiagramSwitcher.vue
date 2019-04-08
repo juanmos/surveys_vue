@@ -77,10 +77,14 @@ export default {
             hoverBorderWidth: 3
           }
         }
-      } : {}
+      } : {
+        tooltips: {
+          enabled: true
+        }
+      }
     }
   },
-  components: {BarGraph, PieGraph, Map}
+  components: { BarGraph, PieGraph, Map }
 }
 </script>
 

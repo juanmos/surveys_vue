@@ -112,19 +112,39 @@
           <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
         </v-card-text>
 
-        <v-divider></v-divider>
+           <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                flat
+                @click="dialog = false"
+              >
+                Cerrar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog
+          v-model="loading"
+          hide-overlay
+          persistent
+          width="300"
+        >
+          <v-card
             color="primary"
-            flat
-            @click="dialog = false"
+            dark
           >
-            Cerrar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <v-card-text>
+              Cargando respuestas...
+              <v-progress-linear
+                indeterminate
+                color="white"
+                class="mb-0"
+              ></v-progress-linear>
+            </v-card-text>
+          </v-card>
         </v-dialog>
     </v-flex>
 </template>
@@ -146,6 +166,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState([
       'currentPoll'
     ]),
@@ -219,7 +240,6 @@ export default {
   },
   mounted () {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-      console.log('este es el result que recibo', result)
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })

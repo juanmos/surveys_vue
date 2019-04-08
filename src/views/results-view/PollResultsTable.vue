@@ -3,8 +3,8 @@
         <v-data-table
             :headers="headers"
             :items="responses"
+            hide-actions
             class="elevation-1 resultsTable"
-            :rows-per-page-items="[200, 400]"
         >
             <template slot="items" slot-scope="props">
                 <td class="text-xs-center" v-for="(value, key) in props.item" :key="String(value) + Math.random()">
