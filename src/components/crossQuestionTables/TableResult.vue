@@ -11,7 +11,6 @@
                   :headers="getHeaders"
                   :items="getData"
                   item-key="name"
-                  v-scroll-table="onScroll"
                   striped hover
                   outlined
                   bordered
