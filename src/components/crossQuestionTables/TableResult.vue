@@ -11,6 +11,7 @@
                   :headers="getHeaders"
                   :items="getData"
                   item-key="name"
+                  v-scroll-table="onScroll"
                   striped hover
                   outlined
                   bordered
@@ -21,10 +22,9 @@
                       <td class="text-xs-center" @click="goToDetailsPerson(props.item._id)" style="min-width: 200px;">
                        {{ props.item.label }} --> {{props.item.option}}
                       </td>
-                      <td v-for="answer in props.item.answers" :key="`6${answer}`" class="text-xs-left">
+                      <td v-for="answer in props.item.answers" :key="`${answer}`" class="text-xs-left">
                         {{ answer.total  }}
                       </td>
-
                     </tr>
                   </template>
                 </v-data-table>
