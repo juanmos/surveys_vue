@@ -11,7 +11,12 @@
                     <span v-if="variablesMode && (key === 'values' || key === 'label')" @click="editLabelDialog = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
                         {{ props.item[key] }}
                     </span>
-                    <span v-else>{{ props.item[key] }}</span>
+                    <span v-else>
+                      <v-chip dark color="primary" class="font-weight-bold" v-if="key === 'category' && props.item[key]">
+                        {{ props.item[key] }}
+                      </v-chip>
+                      <span v-else>{{ props.item[key] }}</span>
+                    </span>
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"

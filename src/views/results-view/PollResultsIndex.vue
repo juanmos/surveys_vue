@@ -189,6 +189,7 @@ export default {
         'Valores',
         'Codigo',
         'Perdido',
+        'Categoria',
         'Acciones'
       ].map(value => ({
         text: value,
@@ -234,7 +235,6 @@ export default {
           this.resultPoll = Object.assign({}, result)
           this.setCurrentPoll(Object.assign({}, this.resultPoll))
         })
-        // snack
       }).catch(err => console.log('este es el error', err))
     }
   },
