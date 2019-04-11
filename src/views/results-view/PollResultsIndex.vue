@@ -190,6 +190,7 @@ export default {
         'Codigo',
         'Perdido',
         'Categoria',
+        'Actor',
         'Acciones'
       ].map(value => ({
         text: value,
@@ -204,7 +205,8 @@ export default {
         values: question.options,
         code: question.code,
         lost: -1,
-        category: question.category
+        category: question.category,
+        actor: question.actor
       })) : []
     },
     getPossibleValues () {

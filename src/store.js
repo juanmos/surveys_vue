@@ -219,6 +219,12 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('actor-categories', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
     service('question-categories', {
       instanceDefaults: {
         name: '',
