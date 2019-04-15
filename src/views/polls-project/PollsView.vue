@@ -363,7 +363,7 @@ export default {
       this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
         this.Listcat = response.data
         this.poolsseg._id = this.$route.params.id
-        this.poolsseg.name = this.Listcat[0].name
+        this.poolsseg.name = this.Listcat ? this.Listcat[0].name : ''
         this.poolsseg.date_start = moment.tz(this.Listcat[0].date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
         this.poolsseg.date_end = moment.tz(this.Listcat[0].date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
         this.poolsseg.date_deliver = moment.tz(this.Listcat[0].date_deliver, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')

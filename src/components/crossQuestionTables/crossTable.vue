@@ -1,15 +1,32 @@
 <template>
     <v-flex class="table-wrap" xs11>
-            {{getCrossedRows}}
             <table class="table-wrap" border="1">
                 <thead>
-                    <th v-for="x in xQuestions" :key="x.code">
+                    <th>
+                      Data
+                    </th>
+                    <th v-for="x in xQuestions" :key="x.toString()">
                         {{x.label}}
+                        <tr>
+                          <th v-for="optionX in x.options" :key="optionX.toString()">
+                            {{optionX}}
+                          </th>
+                        </tr>
                     </th>
                 </thead>
-                <tr v-for="y in yQuestions" :key="y">
-                    <td v-for="x in xQuestions" :key="x.code">
-                        {{getCrossValue(x, y)}}
+                <tr v-for="y in yQuestions" :key="y.toString()">
+                    <td>
+                      <v-layout row wrap>
+                        <v-flex xs6>
+                          {{y.label}}
+                        </v-flex>
+                          <v-flex xs6>
+                            <span v-for="optionY in y.options" :key="optionY.toString()">
+                              {{optionY}} <br />
+                            </span>
+                          </v-flex>
+                      </v-layout>
+
                     </td>
                 </tr>
             </table>

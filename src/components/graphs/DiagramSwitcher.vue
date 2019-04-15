@@ -10,6 +10,7 @@
         datasets: question.dataset
         }"
         :is="currentGraph"
+        :options="getOptions"
         >
     </component>
 </v-card>
@@ -25,7 +26,65 @@ export default {
   data: () => ({
     currentGraph: 'BarGraph'
   }),
-  components: {BarGraph, PieGraph, Map}
+  computed: {
+    getOptions () {
+      return this.currentGraph === 'PieGraph' ? {
+        tooltips: {
+          enabled: true,
+          callbacks: {
+            beforeLabel: (tooltipItems, data) => {
+              let currentValue = data.datasets[0].data[tooltipItems.index]
+              let totalValues = data.datasets[0].data.reduce((a, b) => {
+                return a + b
+              }, 0)
+              return `${Math.floor(((currentValue / totalValues) * 100) + 0.5)} % `
+            },
+            label: (tooltipItems, data) => {
+              let currentValue = data.datasets[0].data[tooltipItems.index]
+              // this.showDetailModal = true
+              // this.currentYear = tooltipItems.xLabel
+              return `${currentValue}`
+            }
+          }
+        },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            categoryPercentage: 0.5,
+            barPercentage: 1,
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }],
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero: true,
+              maxTicksLimit: 10,
+              stepSize: Math.ceil(this.maxVal / 10),
+              max: this.maxVal
+            },
+            gridLines: {
+              display: true
+            }
+          }]
+        },
+        elements: {
+          point: {
+            radius: 0,
+            hitRadius: 10,
+            hoverRadius: 4,
+            hoverBorderWidth: 3
+          }
+        }
+      } : {
+        tooltips: {
+          enabled: true
+        }
+      }
+    }
+  },
+  components: { BarGraph, PieGraph, Map }
 }
 </script>
 

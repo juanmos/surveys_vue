@@ -65,7 +65,22 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <report-creator :id="this.id"></report-creator>
+                    <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
+                </v-card>
+            </v-tab-item>
+            <v-tab
+              ripple
+              v-if="resultPoll && !resultPoll.imported"
+            >
+                Codificar Preguntas
+                <v-icon>grain</v-icon>
+
+            </v-tab>
+            <v-tab-item
+              v-if="resultPoll && !resultPoll.imported"
+            >
+                <v-card flat>
+                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -97,19 +112,39 @@
           <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
         </v-card-text>
 
-        <v-divider></v-divider>
+           <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                flat
+                @click="dialog = false"
+              >
+                Cerrar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog
+          v-model="loading"
+          hide-overlay
+          persistent
+          width="300"
+        >
+          <v-card
             color="primary"
-            flat
-            @click="dialog = false"
+            dark
           >
-            Cerrar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <v-card-text>
+              Cargando respuestas...
+              <v-progress-linear
+                indeterminate
+                color="white"
+                class="mb-0"
+              ></v-progress-linear>
+            </v-card-text>
+          </v-card>
         </v-dialog>
     </v-flex>
 </template>
@@ -118,6 +153,7 @@
 import {mapActions, mapState} from 'vuex'
 import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
+import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
 import SegmentationFields from './../../components/SegmentationFields'
 
 export default {
@@ -130,35 +166,30 @@ export default {
     }
   },
   computed: {
+    ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState([
       'currentPoll'
     ]),
     getDataHeaders () {
-      let headersFormated = []
-      let jsonFormated = Object.assign({}, this.resultPoll ? this.resultPoll.originalJson[0] : {})
-      if (jsonFormated) {
-        for (let key in jsonFormated) {
-          if (jsonFormated.hasOwnProperty(key)) {
-            headersFormated.push({
-              text: jsonFormated[key],
-              align: 'left',
-              sortable: false,
-              value: key
-            })
-          }
-        }
-        return headersFormated
-      }
+      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
+        text: q.label ? q.label : q.original,
+        align: 'left',
+        sortable: false,
+        value: key,
+        open: q.open
+      })) : []
     },
     getTableDataValues () {
-      return this.resultPoll ? this.resultPoll.originalJson.slice(1, this.resultPoll.originalJson.length) : []
+      return this.resultPoll && this.resultPoll.PollInstances ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
     },
     getVariableHeaders () {
       return [
         'Nombre',
         'Etiqueta',
         'Valores',
-        'Perdidos'
+        'Codigo',
+        'Perdido',
+        'Acciones'
       ].map(value => ({
         text: value,
         align: 'center',
@@ -208,12 +239,12 @@ export default {
     }
   },
   mounted () {
-    this.getPoll(this.id).then(result => {
+    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
     })
   },
-  components: { PollResultsTable, ReportCreator, SegmentationFields }
+  components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator }
 }
 </script>
 

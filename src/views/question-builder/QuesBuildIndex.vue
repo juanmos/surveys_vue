@@ -210,8 +210,12 @@ export default {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions('category-segmantation-polls', { findCategorySegmantationPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
-    savePolls (value) {
-      let data = { name: this.namePoll, construct: value}
+    savePolls (name, value) {
+      let data = {
+        name,
+        construct: value,
+        fromSurvey: true
+      }
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config['_polls_project_id'] = this.$route.params.id
@@ -232,6 +236,7 @@ export default {
         })
     },
     saveImportedPoll (data) {
+      console.log('esta es la data que recibo', data)
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
       let configPoll = new ConfigPoll({
@@ -242,6 +247,7 @@ export default {
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {
+        console.log('este es el result', result)
         this.setSnackMessage('Registro guardado')
         this.setSnackColor('success')
         this.setShowSnack(true)
@@ -255,8 +261,7 @@ export default {
     },
      getData (value) {
        if (value) {
-        this.namePoll = JSON.parse(value).pages[0].name
-        this.savePolls(value)
+        this.savePolls(JSON.parse(value).pages[0].name, value)
        }
      },
      gotoList () {
@@ -275,7 +280,6 @@ export default {
     }
   },
   created () {
-    console.log('este es el id parametro', this.$route.params.id)
     this.findCategorySegmantationPolls({query: {_project_poll_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.segmentations = response.data
     })

@@ -7,6 +7,13 @@
                         v-model="categoryData.name"
                         label="Nombre"
                         box
+                        @input="setCode"
+                    ></v-text-field>
+                    <v-text-field
+                        v-model="categoryData.code"
+                        label="Codigo"
+                        :disabled="true"
+                        box
                     ></v-text-field>
                     <v-textarea
                         v-model="categoryData.description"
@@ -26,6 +33,7 @@ export default {
     currentImage: null,
     categoryData: {
       name: null,
+      code: null,
       description: null
     },
     categoryInput: ''
@@ -33,6 +41,9 @@ export default {
   methods: {
     saveCategory () {
       this.$emit('saveCategory', Object.assign({}, this.categoryData))
+    },
+    setCode () {
+      this.categoryData.code = this.categoryData.name.toUpperCase().split(' ').join('_')
     }
   },
   computed: {
