@@ -244,6 +244,8 @@ export default {
         construct : 'test',
         originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
         imported: true,
+        take: data.take,
+        status: data.status,
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {
