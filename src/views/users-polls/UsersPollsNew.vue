@@ -41,8 +41,8 @@ export default {
   methods: {
     create (values) {
       // method with feathers vuex to create an category project
-      const { UsersPoll } = this.$FeathersVuex
-      let userPoll = new UsersPoll(values)
+      const { User } = this.$FeathersVuex
+      let userPoll = new User(values)
       userPoll.save().then((result) => {
         let userRol = {
           _user_id: result._id,
