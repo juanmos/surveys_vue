@@ -142,7 +142,7 @@
         <v-dialog v-model="membersDialog" persistent max-width="900">
           <v-card>
             <v-card-title class="headline">Involucrados en proyecto <strong>&nbsp;{{selectedPoll.name}}</strong> </v-card-title>
-             <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users-polls`" label="Usuarios"></search-autocomplete>
+             <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users`" label="Usuarios"></search-autocomplete>
               <v-card-text>
               <v-list>
                 <v-list-tile
