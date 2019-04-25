@@ -47,10 +47,10 @@ export default {
   },
   methods: {
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
-    ...mapActions('users-polls', { findUserPolls: 'find' }),
+    ...mapActions('users', { findUserPolls: 'find' }),
     create (values) {
-      const {UsersPoll} = this.$FeathersVuex
-      const usersPolls = new UsersPoll(values)
+      const {User} = this.$FeathersVuex
+      const usersPolls = new User(values)
       usersPolls.patch().then((result) => {
         this.findUserPolls({ query: {removed: false} }).then(response => {
           this.setShowSnack(true)

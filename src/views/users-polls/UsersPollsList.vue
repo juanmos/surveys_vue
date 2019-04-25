@@ -212,7 +212,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('users-polls', { findUsersPolls: 'find' }),
+    ...mapActions('users', { findUsersPolls: 'find' }),
     ...mapActions('roles', { findRoles: 'find' }),
     goToNew (code) {
       this.$router.push('/users-polls-new')
@@ -270,9 +270,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('users-polls', {loading: 'isFindPending'}),
-    ...mapState('users-polls', { paginationVal: 'pagination' }),
-    ...mapGetters('users-polls', {findUsersPollsInStore: 'find'}),
+    ...mapState('users', {loading: 'isFindPending'}),
+    ...mapState('users', { paginationVal: 'pagination' }),
+    ...mapGetters('users', {findUsersPollsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersPolls () {
       if (this.filterRol != null) {
