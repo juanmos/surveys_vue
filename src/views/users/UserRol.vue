@@ -39,7 +39,7 @@ export default {
   }),
   methods: {
     ...mapActions('roles', { findRoles: 'find' }),
-    ...mapActions('users-roles', { findUsersRoles: 'find' }),
+    ...mapActions('users', { findUsersRoles: 'find' }),
     saveUserRol () {
       if (this.valid) {
         const {UsersRole} = this.$FeathersVuex
