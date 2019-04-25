@@ -23,6 +23,19 @@
                         label="Descripcion"
                         box
                     ></v-textarea>
+                    <v-combobox
+                        v-model="actorData.actor_type"
+                        :items="actorTypes"
+                        label="Seleccione el Tipo de Actor"
+                        box
+                      ></v-combobox>
+                    <v-combobox
+                        v-model="actorData.actorCategories"
+                        :items="categories"
+                        label="Seleccione Categoria"
+                        multiple
+                        box
+                    ></v-combobox>
                     <v-text-field
                         v-model="categoryInput"
                         @keyup.enter="addTag"
@@ -42,6 +55,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import PictureUpload from './PictureUpload'
 export default {
   data: (state) => ({
@@ -53,9 +68,16 @@ export default {
       code: null,
       tags: []
     },
-    categoryInput: ''
+    categoryInput: '',
+    actorTypes: [
+      'PERSONA',
+      'SUCESO',
+      'ELEMENTO'
+    ],
+    categories: []
   }),
   methods: {
+    ...mapActions('actor-categories', { findCategories: 'find' }),
     setCurrentImg (data) {
       this.actorData.image = data.path
     },
@@ -77,6 +99,11 @@ export default {
     incomplete () {
       return Object.values(this.actorData).includes(null)
     }
+  },
+  mounted () {
+    this.findCategories({ query: {removed: false} }).then(response => {
+      this.categories = response.data
+    })
   },
   watch: {
   },

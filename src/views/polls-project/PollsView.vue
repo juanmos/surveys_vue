@@ -140,33 +140,69 @@
       </v-flex>
       <v-flex xs4 sm8>
         <v-data-table
-                  :headers="headersConfigPolls"
-                  :items="getConfigPolls"
-                  hide-actions
-                  item-key="_id"
-                  striped hover
-                  outlined
-                >
+          :headers="headersConfigPolls"
+          :items="getConfigPolls"
+          hide-actions
+          item-key="_id"
+          striped hover
+          outlined
+        >
         <template slot="items" slot-scope="props">
           <tr>
             <td class="text-xs-left">
               <v-edit-dialog
-                  :return-value.sync="props.item.name"
-                  lazy
-                  @save="edit(props.item.name, props.item, 'name')"
-                  @cancel="cancel"
-                  @open="open"
-                  @close="close"
-                > {{ props.item.name }}
-                  <v-text-field
-                    slot="input"
-                    v-model="props.item.name"
-                    label="Editar Nombre"
-                    single-line
-                    counter
-                  ></v-text-field>
-                </v-edit-dialog>
-              </td>
+                :return-value.sync="props.item.take"
+                lazy
+                @save="edit(props.item.take, props.item, 'take')"
+                @cancel="cancel"
+                @open="open"
+                @close="close"
+              > {{ props.item.take }}
+                <v-text-field
+                  slot="input"
+                  v-model="props.item.take"
+                  label="Editar Toma"
+                  single-line
+                  counter
+                ></v-text-field>
+              </v-edit-dialog>
+            </td>
+            <td class="text-xs-left">
+              <v-edit-dialog
+                :return-value.sync="props.item.name"
+                lazy
+                @save="edit(props.item.name, props.item, 'name')"
+                @cancel="cancel"
+                @open="open"
+                @close="close"
+              > {{ props.item.name }}
+                <v-text-field
+                  slot="input"
+                  v-model="props.item.name"
+                  label="Editar Nombre"
+                  single-line
+                  counter
+                ></v-text-field>
+              </v-edit-dialog>
+            </td>
+            <td class="text-xs-left">
+              <v-edit-dialog
+                :return-value.sync="props.item.status"
+                lazy
+                @save="edit(props.item.status, props.item, 'status')"
+                @cancel="cancel"
+                @open="open"
+                @close="close"
+              > {{ props.item.status }}
+                <v-text-field
+                  slot="input"
+                  v-model="props.item.status"
+                  label="Editar Status"
+                  single-line
+                  counter
+                ></v-text-field>
+              </v-edit-dialog>
+            </td>
               <td>
                   <v-menu
                   bottom
@@ -226,7 +262,7 @@
               </td>
                 </tr>
                 </template>
-                </v-data-table>
+        </v-data-table>
       </v-flex>
       <v-flex xs4 sm2>
        <v-btn
@@ -273,10 +309,22 @@ export default {
     ],
     headersConfigPolls: [
       {
+        text: 'Toma',
+        align: 'left',
+        sortable: false,
+        value: 'take'
+      },
+      {
         text: 'Nombre',
         align: 'left',
         sortable: false,
         value: 'name'
+      },
+      {
+        text: 'Estatus',
+        align: 'left',
+        sortable: false,
+        value: 'status'
       },
       {
         text: 'Acciones',

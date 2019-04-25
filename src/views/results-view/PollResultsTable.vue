@@ -11,7 +11,14 @@
                     <span v-if="variablesMode && (key === 'values' || key === 'label')" @click="editLabelDialog = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
                         {{ props.item[key] }}
                     </span>
-                    <span v-else>{{ props.item[key] }}</span>
+                    <span v-else>
+                      <v-chip dark :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
+                        <avatar :image="props.item[key].image" v-if="key === 'actor'">
+                        </avatar>
+                        {{ key === 'actor' ? props.item[key].code : props.item[key] }}
+                      </v-chip>
+                      <span v-else>{{ props.item[key] }}</span>
+                    </span>
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"
@@ -68,6 +75,7 @@ import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
 import CategoriesEditor from './../../components/forms/CategoriesEditor'
 import RelatedQuestion from './RelatedQuestion'
+import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
   data () {
@@ -95,7 +103,7 @@ export default {
       this.dialogCategories = false
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, CategoriesEditor }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, CategoriesEditor, Avatar }
 }
 </script>
 

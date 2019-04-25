@@ -213,6 +213,7 @@ export default {
     savePolls (name, value) {
       let data = {
         name,
+        status: 'CREADA',
         construct: value,
         fromSurvey: true
       }
@@ -244,6 +245,9 @@ export default {
         construct : 'test',
         originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
         imported: true,
+        take: data.take,
+        dateFinished: data.dateFinished,
+        status: data.status,
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {

@@ -184,7 +184,8 @@ export default new Vuex.Store({
         formatedConfiguration: '',
         parsedJson: '',
         removed: false,
-        _polls_project_id: 0
+        _polls_project_id: 0,
+        dateCreated: ''
       }
     }),
     service('users-projects', {
@@ -216,6 +217,12 @@ export default new Vuex.Store({
         description: '',
         code: '',
         tags: [],
+        removed: false
+      }
+    }),
+    service('actor-categories', {
+      instanceDefaults: {
+        name: '',
         removed: false
       }
     }),

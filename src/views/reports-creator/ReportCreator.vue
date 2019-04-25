@@ -242,13 +242,14 @@ export default {
       return this.resultPoll.formatedConfiguration
     },
     getLayoutUniqueQuestion () {
+      let questionValues = this.uniqueQuestion[0] ? this.uniqueQuestion[0].total : {}
       return this.uniqueQuestion.map(q => {
         return {
           ...q,
           dataset: q.options ? q.options.map(response => ({
             label: response,
             backgroundColor: this.getRandomColor(),
-            data: [this.getTableDataValues.map(data => data[q.code]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[q.code]).filter(responseRow => responseRow === response).length]
+            data: [questionValues[response].total, questionValues[response].total]
           })) : []
         }
       })
@@ -269,18 +270,14 @@ export default {
     },
     uniqueQuestion (val) {
       let responses = val[0] ? val[0].options : []
+      let questionValues = val[0] ? val[0].total : {}
       let keySelected = val[0] ? val[0].code : []
       this.labels = val.map(l => l.label)
       this.datasets = responses ? responses.map(response => ({
         label: response,
         backgroundColor: this.getRandomColor(),
-        data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
-        // data: val.map(uniq => {
-        //   return this.getTableDataValues.map(data => uniq.code).filter(responseRow => responseRow === uniq.options).length
-        // })
-        // data: [this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length, this.getTableDataValues.map(data => data[keySelected]).filter(responseRow => responseRow === response).length]
+        data: [questionValues[response].total, questionValues[response].total]
       })) : []
-      console.log('dataset', this.datasets)
       this.mapMarkers = this.getTableDataValues.map(res => ({
         answer: res[keySelected],
         personalData: this.personalDataKeys.map(dataKey => res[dataKey.key]),
@@ -319,10 +316,8 @@ export default {
   },
   mounted () {
     this.getPoll(this.id).then(result => {
-      console.log('este es el result poll', result)
       this.resultPoll = Object.assign({}, result)
       this.questions = this.resultPoll ? this.resultPoll.formatedConfiguration : []
-      console.log('data keys son estos', this.getDataKeys)
     })
   }
 }
