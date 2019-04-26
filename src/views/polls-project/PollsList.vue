@@ -349,7 +349,7 @@ export default {
     getData () {
       if (this.user === null || !this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
         this.query = {}
-        this.findPolls({query: {removed: false, ...this.query}}).then(response => {
+        this.findPolls({query: {removed: false, noPollTakes: true, ...this.query}}).then(response => {
           this.limit = response.limit
           this.total = response.total
           this.loaded = true
