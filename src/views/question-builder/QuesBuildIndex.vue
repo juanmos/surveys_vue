@@ -241,11 +241,11 @@ export default {
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
       let configPoll = new ConfigPoll({
-        name: 'Encuesta Importada....',
         construct : 'test',
         originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
         imported: true,
         take: data.take,
+        name: data.name,
         dateFinished: data.dateFinished,
         status: data.status,
         _polls_project_id: this.$route.params.id
