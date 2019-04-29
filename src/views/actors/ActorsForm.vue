@@ -47,6 +47,23 @@
                       <v-layout row>
                         <v-chip dark v-for="(tag, index) in actorData.tags" :key="tag"><span class="font-weight-bold" @click="deleteTag(index)">#{{tag}}</span></v-chip>
                       </v-layout>
+                      <v-layout row>
+                        <v-switch
+                          color="primary"
+                          v-model="actorData.international"
+                          :label="`Internacional`"
+                        ></v-switch>
+                        <v-switch
+                          color="primary"
+                          v-model="actorData.national"
+                          :label="`Nacional`"
+                        ></v-switch>
+                        <v-switch
+                          color="primary"
+                          v-model="actorData.local"
+                          :label="`Local`"
+                        ></v-switch>
+                      </v-layout>
                     <v-btn @click="saveActor" :disabled="incomplete">Guardar Actor</v-btn>
                 </v-flex>
            </v-layout>
@@ -66,7 +83,10 @@ export default {
       description: null,
       image: null,
       code: null,
-      tags: []
+      tags: [],
+      local: false,
+      international: false,
+      national: false
     },
     categoryInput: '',
     actorTypes: [
@@ -97,7 +117,8 @@ export default {
   },
   computed: {
     incomplete () {
-      return Object.values(this.actorData).includes(null)
+      let {national, international, local, ...rest} = this.actorData
+      return Object.values(rest).includes(null)
     }
   },
   mounted () {
