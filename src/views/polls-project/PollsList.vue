@@ -453,13 +453,13 @@ export default {
     this.findPolls({query: {removed: false}}).then(response => {
       this.limit = response.limit
       this.total = response.total
-      this.loaded = true
+      // this.loaded = true
       this.pools = response.data
     })
     this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total
-      this.loaded = true
+      // this.loaded = true
       this.usersProjects = response.data.map(data => (data.project))
     })
     this.getData()
