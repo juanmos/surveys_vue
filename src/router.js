@@ -305,6 +305,12 @@ const ActorsNew = resolve => {
   }, 'actors')
 }
 
+const ActorsEdit = resolve => {
+  require.ensure(['./views/actors/ActorsEdit.vue'], () => {
+    resolve(require('./views/actors/ActorsEdit.vue'))
+  }, 'actors')
+}
+
 const ActorCategories = resolve => {
   require.ensure(['./views/actor-categories/ActorCategoriesList.vue'], () => {
     resolve(require('./views/actor-categories/ActorCategoriesList.vue'))
@@ -613,6 +619,12 @@ export default new Router({
           name: 'actors-new',
           props: true,
           component: ActorsNew
+        },
+        {
+          path: 'actors-edit/:id',
+          name: 'actors-edit',
+          props: true,
+          component: ActorsEdit
         },
         {
           path: 'question-categories',
