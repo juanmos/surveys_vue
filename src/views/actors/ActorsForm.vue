@@ -3,7 +3,7 @@
        <v-container>
            <v-layout xs10 offset-xs1>
                <v-flex xs2>
-                    <picture-upload @fileCreated="setCurrentImg"></picture-upload>
+                    <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
                 </v-flex>
                 <v-flex xs7>
                     <v-text-field
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import PictureUpload from './PictureUpload'
 export default {
@@ -117,6 +117,9 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'currentEnv'
+    ]),
     incomplete () {
       let {national, international, local, ...rest} = this.actorData
       return Object.values(rest).includes(null)
@@ -130,6 +133,7 @@ export default {
   watch: {
     actor: function (val) {
       if (val) {
+        this.currentImage = val.image
         this.actorData = val
       }
     }
