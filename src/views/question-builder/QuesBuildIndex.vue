@@ -237,9 +237,16 @@ export default {
         })
     },
     saveImportedPoll (data) {
-      console.log('esta es la data que recibo', data)
+      // console.log('esta es la data que recibo', data)
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
+      data.spss[fileKey].map(data => {
+        Object.keys(data).forEach(function (key) {
+          let str = data[key].toString()
+          // console.log('cambiando---', str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          data[key]=str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        })
+      })
       let configPoll = new ConfigPoll({
         construct : 'test',
         originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
