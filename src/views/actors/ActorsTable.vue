@@ -93,6 +93,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToEdit(props.item)">
+                              <v-list-tile-title>Editar</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -138,6 +141,9 @@ export default {
     ...mapActions('actors', { findActors: 'find' }),
     goToNew () {
       this.$router.push('/new-actor')
+    },
+    goToEdit (actor) {
+      this.$router.push('/actors-edit/' + actor._id)
     },
     edit (val, elem, field) {
       const {Actor} = this.$FeathersVuex

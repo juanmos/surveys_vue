@@ -76,6 +76,7 @@ import { mapActions } from 'vuex'
 
 import PictureUpload from './PictureUpload'
 export default {
+  props: ['actor'],
   data: (state) => ({
     currentImage: null,
     actorData: {
@@ -127,6 +128,11 @@ export default {
     })
   },
   watch: {
+    actor: function (val) {
+      if (val) {
+        this.actorData = val
+      }
+    }
   },
   components: {PictureUpload}
 }
