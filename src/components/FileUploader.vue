@@ -79,7 +79,7 @@ export default {
         this.$emit('fileCreated', result.data)
         this.imageName = ''
         this.setShowSnack(true)
-        this.setSnackMessage(this.inputType ? 'Archivo Excel SPSS Guardado' : 'Imagen Guardada')
+        this.setSnackMessage(this.inputType ? 'Archivo Excel SPSS Guardado' : 'Imagen Cargada')
       }).catch((err) => {
         this.setShowSnack(true)
         this.setSnackMessage('Error al Guardar')
