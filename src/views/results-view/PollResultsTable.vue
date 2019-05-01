@@ -34,6 +34,9 @@
                     <v-icon>more_vert</v-icon>
                     </v-btn>
                     <v-list>
+                      <v-list-tile @click="dialogActors = true;arrIndex = props.index">
+                          <v-list-tile-title>Agregar Actores</v-list-tile-title>
+                      </v-list-tile>
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
@@ -64,6 +67,17 @@
           </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialogActors" max-width="900">
+          <v-card v-if="dialogActors">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Relacionar actores</h4>
+            </v-flex>
+            <v-card-text>
+              <related-actor-question :arrIndex="arrIndex" @close="dialogActors = false" @refresh="refresh"></related-actor-question>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
         <v-dialog v-model="dialogCategories" max-width="900">
           <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
         </v-dialog>
@@ -75,6 +89,7 @@ import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
 import CategoriesEditor from './../../components/forms/CategoriesEditor'
 import RelatedQuestion from './RelatedQuestion'
+import RelatedActorQuestion from './RelatedActorQuestion'
 import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
@@ -83,6 +98,7 @@ export default {
       editLabelDialog: false,
       dialogRelated: false,
       dialogCategories: false,
+      dialogActors: false,
       currentEdit: null,
       fieldSelected: '',
       arrIndex: null
@@ -101,9 +117,13 @@ export default {
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
       this.dialogCategories = false
+    },
+    refresh () {
+      this.dialogActors = false
+      this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, CategoriesEditor, Avatar }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, Avatar }
 }
 </script>
 
