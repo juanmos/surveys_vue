@@ -109,7 +109,7 @@ export default {
     }
   },
   created () {
-    this.findActors({ query: {removed: false} })
+    this.findActors({ query: {removed: false, $limit: null, $skip: 0} })
   },
   mounted () {
     this.getPoll(this.$route.params.id).then(result => {
