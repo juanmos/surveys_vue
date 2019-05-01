@@ -11,22 +11,49 @@
           <v-tab
               ripple
           >
-              Seleccione actor
+              Seleccione {{dataText}}
               <v-icon>add_circle</v-icon>
           </v-tab>
           <v-tab-item
           >
             <v-card-text>
-              <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
+              <div class="question">
+                <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
+              </div>
+              <div class="question" v-if="dataResponse.category ==='INTENCION'">
+                <span style="font-weight: bold;">LISTADO DE ACTORES</span>
+              </div>
               <form>
-                <v-autocomplete
+                <v-autocomplete v-if="dataResponse.category !=='INTENCION'"
                   :items="getActors"
                   v-model="selectedActor"
                   item-text="name"
                   item-value="_id"
                   label="Actores"
                 ></v-autocomplete>
-                <v-btn @click="format">Relacionar</v-btn>
+                <div v-else class="overflow">
+                  <v-data-table
+                        :headers="headers"
+                        :items="getActors"
+                        hide-actions
+                        item-key="name"
+                      >
+                        <template slot="items" slot-scope="props">
+                          <tr @click="props.expanded = !props.expanded">
+                            <td>
+                              {{props.item.name}}
+                            </td>
+                            <td style="cursor: pointer;">
+                              <v-list-tile-action @click="addActor(props.item)">
+                                <v-icon class="blue--text text--lighten-2">add</v-icon>
+                              </v-list-tile-action>
+                            </td>
+                          </tr>
+                        </template>
+                      </v-data-table>
+                </div>
+                <v-btn @click="format" v-if="dataResponse.category !=='INTENCION'">Relacionar</v-btn>
+                <v-btn @click="formatActors" v-else>Relacionar actores</v-btn>
                 <v-btn @click="cancel">Cancelar</v-btn>
               </form>
             </v-card-text>
@@ -43,18 +70,15 @@ export default {
     return {
       headers: [
         {
-          text: 'Encuesta',
+          text: 'Nombre',
           align: 'left',
-          value: 'poll'
+          value: 'name'
         },
-        { text: 'Código',
-          value: 'question',
-          sortable: true
-        },
-        { text: '',
+        { text: 'Acciones',
           value: ''
         }
       ],
+      dataText: '',
       active: null,
       selectedActor: null,
       currentPoll: {
@@ -62,6 +86,7 @@ export default {
         formatedConfiguration: []
       },
       selectedQuestion: null,
+      actors: [],
       dataResponse: {
         label: ''
       },
@@ -80,10 +105,50 @@ export default {
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
+    formatActors () {
+      this.dataResponse.actors = this.actors
+      this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
+      this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
+    },
     deleteQuestion (value) {
       /* this.dataResponse.related = this.dataResponse.related.filter(item => (value !== item))
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       this.save(this.currentPoll, false, 'Pregunta relacionada eliminada.') */
+    },
+    addActor (actor) {
+      let message = ''
+      let exist = this.actors.filter(data => data.code === actor.code)
+      if (exist.length === 0) {
+        this.actors.push(actor)
+        this.formatTotal(actor)
+        message = 'Actor agregado, listo para guardar cambios'
+      } else {
+        message = 'Actor ya agregado.'
+      }
+      this.setSnackMessage(message)
+      this.setShowSnack(true)
+    },
+    formatTotal (actorAdd) {
+      let self = this
+      let find = false
+      Object.keys(self.dataResponse.total).forEach(function (key) {
+        if (actorAdd.name === key) {
+          find = true
+          self.dataResponse.total[key]._id = actorAdd._id
+          self.dataResponse.total[key].code = actorAdd.code
+        }
+      })
+      if (find === false) {
+        this.formatActorTotalNew(actorAdd)
+      }
+    },
+    formatActorTotalNew (actorAdd) {
+      this.dataResponse.total[actorAdd.name] = {
+        code: actorAdd.code,
+        percentage: 0,
+        total: 0,
+        _id: actorAdd._id
+      }
     },
     save (values, close, message) {
       const {ConfigPoll} = this.$FeathersVuex
@@ -115,6 +180,10 @@ export default {
     this.getPoll(this.$route.params.id).then(result => {
       this.currentPoll = Object.assign({}, result)
       this.dataResponse = Object.assign({}, this.currentPoll.formatedConfiguration[this.arrIndex])
+      this.dataText = (this.dataResponse.category !== 'INTENCION') ? 'actor' : 'actores'
+      if (this.dataResponse.hasOwnProperty('actors')) {
+        this.actors = this.dataResponse.actors
+      }
     })
   },
   watch: {
@@ -129,7 +198,11 @@ export default {
 </script>
 
 <style scoped>
-.v-table__overflow {
-    overflow-x: auto;
+.overflow {
+  height: 300px;
+  overflow: auto;
+}
+.question {
+  margin-bottom: 30px;
 }
 </style>
