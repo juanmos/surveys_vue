@@ -247,10 +247,10 @@ export default {
     }
   },
   mounted () {
-    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-      this.resultPoll = Object.assign({}, result)
-      this.setCurrentPoll(Object.assign({}, this.resultPoll))
-    })
+    // this.refresh()
+  },
+  created () {
+    this.refresh()
   },
   components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator }
 }
