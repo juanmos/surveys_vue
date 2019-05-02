@@ -12,12 +12,18 @@
                         {{ props.item[key] }}
                     </span>
                     <span v-else>
+                      <span v-if="key === 'actor'">
+                        <div class="row" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                          <avatar :image="actorQuestion.image">
+                          </avatar>
+                          <span>{{actorQuestion.code}}</span>
+                        </div>
+                      </span>
                       <v-chip dark :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
                         <avatar :image="props.item[key].image" v-if="key === 'actor'">
                         </avatar>
                         {{ key === 'actor' ? props.item[key].code : props.item[key] }}
                       </v-chip>
-                      <span v-else>{{ props.item[key] }}</span>
                     </span>
                 </td>
                 <td class="justify-center layout px-0">

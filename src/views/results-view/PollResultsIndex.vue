@@ -206,7 +206,8 @@ export default {
         code: question.code,
         lost: -1,
         category: question.category,
-        actor: question.actor
+        actor: question.actor,
+        actors: (question.actors) ? question.actors : []
       })) : []
     },
     getPossibleValues () {
