@@ -4,7 +4,7 @@
            <v-layout xs10 offset-xs1>
                 <v-flex xs7>
                     <v-text-field
-                        v-model="actorData.name"
+                        v-model="currentQuestion.name"
                         label="Nombre"
                         box
                     ></v-text-field>
@@ -19,38 +19,19 @@
 import { mapActions } from 'vuex'
 export default {
   data: (state) => ({
-    currentImage: null,
-    actorData: {
-      text: '',
-      label: '',
-      coding_questions: {
-        name: '',
-        code: 0
-      },
-      type: '',
-      options: null,
-      graphic_type: ''
+    currentQuestion: {
+      name: null
     }
   }),
   methods: {
     ...mapActions('actor-categories', { findCategories: 'find' }),
     saveActor () {
-      this.$emit('saveActor', Object.assign({}, this.actorData))
+      this.$emit('saveActor', Object.assign({}, this.currentQuestion))
     }
   },
-  computed: {
-    incomplete () {
-      let {national, international, local, ...rest} = this.actorData
-      return Object.values(rest).includes(null)
-    }
-  },
-  mounted () {
-    this.findCategories({ query: {removed: false} }).then(response => {
-      this.categories = response.data
-    })
-  },
-  watch: {
-  },
+  computed: {},
+  mounted () {},
+  watch: {},
   components: {}
 }
 </script>

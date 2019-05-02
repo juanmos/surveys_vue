@@ -106,10 +106,18 @@
         </v-list-tile>
         <v-list-tile :to="'/actor-categories'">
           <v-list-tile-action>
-            <v-icon>person</v-icon>
+            <v-icon>assignment_ind</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="'Categorías de actores'"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile :to="'/master-questions'">
+          <v-list-tile-action>
+            <v-icon>assignment</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="'Master de preguntas'"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
