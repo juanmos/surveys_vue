@@ -12,17 +12,19 @@
                         {{ props.item[key] }}
                     </span>
                     <span v-else>
-                    <v-chip v-if="key === 'actor'" dark :color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
-                            <avatar :image="actorQuestion.image">
-                            </avatar>
-                            {{actorQuestion.code}}
-                    </v-chip>
-                      <v-chip dark :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
+                      <v-chip v-if="key === 'actor'" :color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                              <avatar :image="actorQuestion.image">
+                              </avatar>
+                              {{actorQuestion.code}}
+                      </v-chip>
+                      <v-chip :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
                         <avatar :image="props.item[key].image" v-if="key === 'actor'">
                         </avatar>
                         {{ key === 'actor' ? props.item[key].code : props.item[key] }}
                       </v-chip>
+                      <span v-else>{{ props.item[key] }}</span>
                     </span>
+
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"
