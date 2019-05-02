@@ -12,7 +12,7 @@
                         {{ props.item[key] }}
                     </span>
                     <span v-else>
-                      <v-chip v-if="key === 'actor'" :color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                      <v-chip v-if="key === 'actor'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
                               <avatar :image="actorQuestion.image">
                               </avatar>
                               {{actorQuestion.code}}
