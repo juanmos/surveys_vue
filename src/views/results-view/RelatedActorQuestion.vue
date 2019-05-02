@@ -11,7 +11,7 @@
           <v-tab
               ripple
           >
-              Seleccione {{dataText}}
+              Agregar {{dataText}}
               <v-icon>add_circle</v-icon>
           </v-tab>
           <v-tab-item
@@ -58,6 +58,48 @@
               </form>
             </v-card-text>
           </v-tab-item>
+          <v-tab v-if="dataResponse.category ==='INTENCION'"
+              ripple
+          >
+              Asignar
+              <v-icon>reorder</v-icon>
+          </v-tab>
+          <v-tab-item
+          >
+            <v-card-text>
+              <div class="overflow">
+                <v-data-table
+                      :headers="headersOptions"
+                      :items="options"
+                      hide-actions
+                      item-key="name"
+                    >
+                      <template slot="items" slot-scope="props">
+                        <tr @click="props.expanded = !props.expanded">
+                          <td>
+                            {{props.item.name}}
+                          </td>
+                          <td>
+                            <v-autocomplete
+                              :items="getActors"
+                              v-model="props.item._id"
+                              item-text="name"
+                              @change="changeActorsExists(props)"
+                              item-value="_id"
+                              label="Actores"
+                            ></v-autocomplete>
+                          </td>
+                          <td>
+                            <span>{{props.code}}</span>
+                          </td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+              </div>
+              <v-btn @click="formatOptions">Modificar actores</v-btn>
+              <v-btn @click="cancel">Cancelar</v-btn>
+            </v-card-text>
+          </v-tab-item>
       </v-tabs>
   </v-flex>
 </template>
@@ -78,6 +120,21 @@ export default {
           value: ''
         }
       ],
+      headersOptions: [
+        {
+          text: 'Nombre',
+          align: 'left',
+          value: 'name'
+        },
+        {
+          text: 'Relacionar',
+          align: 'left',
+          value: 'name'
+        },
+        { text: 'Acciones',
+          value: ''
+        }
+      ],
       dataText: '',
       active: null,
       selectedActor: null,
@@ -87,6 +144,7 @@ export default {
       },
       selectedQuestion: null,
       actors: [],
+      options: [],
       dataResponse: {
         label: ''
       },
@@ -106,6 +164,11 @@ export default {
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
     formatActors () {
+      this.dataResponse.actors = this.actors
+      this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
+      this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
+    },
+    formatOptions () {
       this.dataResponse.actors = this.actors
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
@@ -163,6 +226,30 @@ export default {
         }
       }).catch(err => console.log('este es el error', err))
     },
+    getCodeActor (id) {
+      return this.getActors.filter(data => id === data._id)[0]
+    },
+    changeActorsExists (props) {
+      let actor = this.getCodeActor(props.item._id)
+      console.log('actor--', actor)
+      this.dataResponse.options[props.index] = {
+        name: props.item.name,
+        _id: props.item._id,
+        code: actor.code,
+        image: actor.image
+      }
+      console.log('actor modificado---', this.dataResponse.options[props.index])
+      this.addActor(actor)
+    },
+    getOptionsFormat () {
+      this.options = this.dataResponse.options.map(data => {
+        if (data.constructor === Object) {
+          return data
+        } else {
+          return {_id: null, name: data, code: null}
+        }
+      })
+    },
     cancel () {
       this.$emit('close')
     }
@@ -183,7 +270,9 @@ export default {
       this.dataText = (this.dataResponse.category !== 'INTENCION') ? 'actor' : 'actores'
       if (this.dataResponse.hasOwnProperty('actors')) {
         this.actors = this.dataResponse.actors
+        console.log('data--', this.dataResponse)
       }
+      this.getOptionsFormat()
     })
   },
   watch: {

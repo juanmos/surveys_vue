@@ -206,7 +206,8 @@ export default {
         code: question.code,
         lost: -1,
         category: question.category,
-        actor: question.actor
+        actor: question.actor,
+        actors: question.actors
       })) : []
     },
     getPossibleValues () {
@@ -229,6 +230,7 @@ export default {
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
+        console.log('resul--', result)
         this.setCurrentPoll(Object.assign({}, this.resultPoll))
       })
     },
