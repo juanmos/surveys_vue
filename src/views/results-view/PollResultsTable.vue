@@ -22,6 +22,10 @@
                         </avatar>
                         {{ key === 'actor' ? props.item[key].code : props.item[key] }}
                       </v-chip>
+                      <span v-else>
+                          <span v-if="key !=='actors'">
+                              {{ props.item[key] }}</span>
+                          </span>
                     </span>
 
                 </td>
