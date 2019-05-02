@@ -231,14 +231,12 @@ export default {
     },
     changeActorsExists (props) {
       let actor = this.getCodeActor(props.item._id)
-      console.log('actor--', actor)
       this.dataResponse.options[props.index] = {
         name: props.item.name,
         _id: props.item._id,
         code: actor.code,
         image: actor.image
       }
-      console.log('actor modificado---', this.dataResponse.options[props.index])
       this.addActor(actor)
     },
     getOptionsFormat () {
@@ -270,7 +268,6 @@ export default {
       this.dataText = (this.dataResponse.category !== 'INTENCION') ? 'actor' : 'actores'
       if (this.dataResponse.hasOwnProperty('actors')) {
         this.actors = this.dataResponse.actors
-        console.log('data--', this.dataResponse)
       }
       this.getOptionsFormat()
     })
