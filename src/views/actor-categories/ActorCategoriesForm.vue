@@ -21,15 +21,7 @@ export default {
   data: (state) => ({
     currentImage: null,
     actorData: {
-      text: '',
-      label: '',
-      coding_questions: {
-        name: '',
-        code: 0
-      },
-      type: '',
-      options: null,
-      graphic_type: ''
+      name: null
     }
   }),
   methods: {

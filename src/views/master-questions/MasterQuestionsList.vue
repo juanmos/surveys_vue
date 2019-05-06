@@ -12,55 +12,22 @@
                         <v-icon>add</v-icon>
                         </v-btn>
                     </v-card-title>
-                    {{getElements}}
                     <v-data-table
                           :headers="headers"
-                          :items="getElements"
+                          :items="masterQuestions"
                           hide-actions
                           item-key="name"
                         >
                           <template slot="items" slot-scope="props">
                             <tr @click="props.expanded = !props.expanded">
                               <td>
+                                {{props.item.text}}
                               </td>
                               <td>
-                                <v-edit-dialog
-                                  :return-value.sync="props.item.name"
-                                  lazy
-                                  @save="edit(props.item.name, props.item, 'name')"
-                                  @cancel="cancel"
-                                  @open="open"
-                                  @close="close"
-                                > <div >{{ props.item.name }}</div>
-                                  <v-text-field
-                                    slot="input"
-                                    v-model="props.item.name"
-                                    label="Editar Nombre"
-                                    single-line
-                                    counter
-                                  ></v-text-field>
-                                </v-edit-dialog>
+                                  {{props.item.coding_questions.name}}
                               </td>
                               <td>
-                                  <v-edit-dialog
-                                    :return-value.sync="props.item.description"
-                                    lazy
-                                    @save="edit(props.item.description, props.item, 'description')"
-                                    @cancel="cancel"
-                                    @open="open"
-                                    @close="close"
-                                    > <div >{{ props.item.description }}</div>
-                                    <v-text-field
-                                        slot="input"
-                                        v-model="props.item.description"
-                                        label="Editar Descripcion"
-                                        single-line
-                                        counter
-                                    ></v-text-field>
-                                    </v-edit-dialog>
-                              </td>
-                              <td>
-                                {{props.item.tags}}
+                                  {{props.item.type}}
                               </td>
                               <td>
                                 <v-menu
@@ -120,7 +87,7 @@ export default {
         value: 'text'
       },
       {
-        text: 'Categoria',
+        text: 'Codificación',
         value: 'name',
         sortable: true
       },
@@ -132,14 +99,11 @@ export default {
     ],
     total: 100,
     loaded: false,
-    actors: []
+    masterQuestions: []
   }),
   computed: {
     ...mapGetters('master-questions', {getMasterQuestionInStore: 'find'}),
     ...mapState('master-questions', {loading: 'isFindPending'}),
-    getElements () {
-      return this.getMasterQuestionInStore({removed: false}).data
-    },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -152,7 +116,7 @@ export default {
       this.findMasterQuestions({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
-        this.actors = response.data
+        this.masterQuestions = response.data
       })
     }
   },
@@ -163,7 +127,7 @@ export default {
         this.limit = response.limit
         this.total = response.total
         this.loaded = true
-        this.actors = response.data
+        this.masterQuestions = response.data
       })
     }
   },
@@ -172,7 +136,8 @@ export default {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.actors = response.data
+      console.log('response data---', response.data)
+      this.masterQuestions = response.data
     })
   },
   components: {LoadingComponent}

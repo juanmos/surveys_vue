@@ -242,6 +242,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('coding-questions', {
+      instanceDefaults: {
+        name: '',
+        value: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
