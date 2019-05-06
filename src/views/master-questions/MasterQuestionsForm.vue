@@ -15,12 +15,12 @@
                     ></v-text-field>
 
                     <v-autocomplete
-                      :items="codes"
+                      :items="categories"
                       v-model="selectedCoding"
                       item-text="name"
-                      @change="changeCode"
+                      @change="changeCategory"
                       item-value="code"
-                      label="Código:"
+                      label="Categoría:"
                     ></v-autocomplete>
                     <v-autocomplete
                       :items="listGraphicType"
@@ -42,7 +42,7 @@ export default {
     currentQuestion: {
       text: '',
       label: '',
-      coding_questions: {
+      category_questions: {
         name: '',
         code: 0
       },
@@ -51,14 +51,14 @@ export default {
       graphic_type: ''
     },
     listGraphicType: ['bar', 'pie', 'line'],
-    codes: [],
+    categories: [],
     selectedCoding: null,
     selectedgraphicType: null
   }),
   methods: {
-    ...mapActions('coding-questions', { findCodingQuestions: 'find' }),
-    changeCode (selected) {
-      this.currentQuestion.coding_questions = this.codes.filter(data => data.name === selected)[0]
+    ...mapActions('category-questions', { findCodingQuestions: 'find' }),
+    changeCategory (selected) {
+      this.currentQuestion.category_questions = this.categories.filter(data => data.name === selected)[0]
     },
     changeGraphicType (selected) {
       this.currentQuestion.graphic_type = selected
@@ -70,7 +70,7 @@ export default {
   computed: {},
   created () {
     this.findCodingQuestions({ query: {removed: false, $skip: 0, $limit: null} }).then(response => {
-      this.codes = response.data
+      this.categories = response.data
     })
   },
   watch: {},

@@ -24,7 +24,7 @@
                                 {{props.item.text}}
                               </td>
                               <td>
-                                  {{props.item.coding_questions.name}}
+                                  {{props.item.category_questions.name}}
                               </td>
                               <td>
                                   {{props.item.type}}
@@ -83,11 +83,11 @@ export default {
     headers: [
       {
         text: 'Pregunta',
-        align: 'left',
+        align: 'Center',
         value: 'text'
       },
       {
-        text: 'Codificación',
+        text: 'Categoría',
         value: 'name',
         sortable: true
       },
@@ -136,7 +136,6 @@ export default {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      console.log('response data---', response.data)
       this.masterQuestions = response.data
     })
   },

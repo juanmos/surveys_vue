@@ -242,7 +242,7 @@ export default new Vuex.Store({
         removed: false
       }
     }),
-    service('coding-questions', {
+    service('category-questions', {
       instanceDefaults: {
         name: '',
         value: '',
