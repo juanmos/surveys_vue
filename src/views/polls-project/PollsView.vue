@@ -569,7 +569,6 @@ export default {
     },
     getConfigPolls () {
       // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      console.log('id--', this.$route.params.id)
       return this.findConfigPollsInStore({query: {_polls_project_id: this.$route.params.id}}).data
     }
   },
