@@ -20,13 +20,13 @@
                         >
                           <template slot="items" slot-scope="props">
                             <tr @click="props.expanded = !props.expanded">
-                              <td>
+                              <td class="text-xs-left">
                                 {{props.item.text}}
                               </td>
-                              <td>
+                              <td class="text-xs-left">
                                   {{props.item.category_questions.name}}
                               </td>
-                              <td>
+                              <td class="text-xs-left">
                                   {{props.item.type}}
                               </td>
                               <td>
@@ -42,6 +42,11 @@
                                   >
                                   <v-icon>more_vert</v-icon>
                                   </v-btn>
+                                  <v-list>
+                                    <v-list-tile @click="edit(props.item)">
+                                      <v-list-tile-title>Editar</v-list-tile-title>
+                                    </v-list-tile>
+                                  </v-list>
                                   <v-list>
                                     <v-list-tile @click="del(props.item)">
                                       <v-list-tile-title>Eliminar</v-list-tile-title>
@@ -83,16 +88,18 @@ export default {
     headers: [
       {
         text: 'Pregunta',
-        align: 'Center',
+        align: 'left',
         value: 'text'
       },
       {
         text: 'Categoría',
+        align: 'left',
         value: 'name',
         sortable: true
       },
       {
         text: 'Tipo de Pregunta',
+        align: 'left',
         value: 'type',
         sortable: true
       }
@@ -122,6 +129,9 @@ export default {
   },
   methods: {
     ...mapActions('master-questions', {findMasterQuestions: 'find'}),
+    edit (master) {
+      this.$router.push('/master-questions-edit/' + master._id)
+    },
     refreshActors () {
       this.findMasterQuestions({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
         this.limit = response.limit

@@ -19,7 +19,7 @@
                       v-model="selectedCoding"
                       item-text="name"
                       @change="changeCategory"
-                      item-value="code"
+                      item-value="_id"
                       label="Categoría:"
                     ></v-autocomplete>
                     <v-autocomplete
@@ -38,6 +38,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
+  props: ['masterCurrent'],
   data: (state) => ({
     currentQuestion: {
       text: '',
@@ -58,7 +59,7 @@ export default {
   methods: {
     ...mapActions('category-questions', { findCodingQuestions: 'find' }),
     changeCategory (selected) {
-      this.currentQuestion.category_questions = this.categories.filter(data => data.name === selected)[0]
+      this.currentQuestion.category_questions = this.categories.filter(data => data._id === selected)[0]
     },
     changeGraphicType (selected) {
       this.currentQuestion.graphic_type = selected
@@ -68,16 +69,21 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    masterCurrent (val) {
+      if (val) {
+        this.currentQuestion = val
+        this.selectedCoding = val.category_questions._id
+        this.category_questions = val.category_questions
+        this.selectedgraphicType = val.graphic_type
+      }
+    }
+  },
   created () {
     this.findCodingQuestions({ query: {removed: false, $skip: 0, $limit: null} }).then(response => {
       this.categories = response.data
     })
   },
-  watch: {},
   components: {}
 }
 </script>
-
-<style>
-
-</style>
