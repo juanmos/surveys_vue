@@ -12,22 +12,22 @@
                         {{ props.item[key] }}
                     </span>
                     <span v-else>
-                      <v-chip v-if="key === 'actor'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                      <v-chip v-if="key === 'actors'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
                               <avatar :image="actorQuestion.image">
                               </avatar>
                               {{actorQuestion.code}}
                       </v-chip>
-                      <v-chip :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
-                        <avatar :image="props.item[key].image" v-if="key === 'actor'">
+                      <v-chip :color="key === 'category' ? 'primary' : (key === 'state') ? 'complete': 'grey-darken-4'"  class="font-weight-bold" v-if="(key ==='category' || key === 'state') && props.item[key]">
+                        <avatar :image="props.item[key].image" v-if="key === 'actors'">
                         </avatar>
-                        {{ key === 'actor' ? props.item[key].code : props.item[key] }}
+                        {{ key === 'actors' ? props.item[key].code : props.item[key] }}
                       </v-chip>
                       <span v-else>
-                          <span v-if="key !=='actors'">
-                              {{ props.item[key] }}</span>
+                          <span v-if="key !=='actors' && key !=='state'">
+                              {{ props.item[key] }}
                           </span>
+                      </span>
                     </span>
-
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"
@@ -154,5 +154,8 @@ export default {
 </script>
 
 <style scoped>
-
+.complete {
+    background-color: #407a42 !important;
+    border-color: #407a42 !important;
+}
 </style>

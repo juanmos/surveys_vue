@@ -44,7 +44,7 @@ export default {
       const {MasterQuestion} = this.$FeathersVuex
       let dataSave = new MasterQuestion(question)
       dataSave.save().then(result => {
-        this.setSnackMessage('Pregunta master guardad')
+        this.setSnackMessage('Pregunta master actualizada.')
         this.setShowSnack(true)
         this.$router.push('/master-questions')
       }).catch(err => {
