@@ -69,6 +69,7 @@ export default {
       }
       this.dataResponse.questionMaster = questionMaster
       this.dataResponse.categoryQuestion = categoryQuestion
+      this.dataResponse.graphicType = this.selectedMasterQuestion.graphic_type
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
     changeMasterQuestion (selected) {
