@@ -180,7 +180,8 @@ export default {
       })) : []
     },
     getTableDataValues () {
-      return this.resultPoll && this.resultPoll.PollInstances ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
+      let data = (this.resultPoll && this.resultPoll.PollInstances) ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
+      return data
     },
     getVariableHeaders () {
       return [
@@ -247,7 +248,7 @@ export default {
       }).catch(err => console.log('este es el error', err))
     }
   },
-  mounted () {
+  created () {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
