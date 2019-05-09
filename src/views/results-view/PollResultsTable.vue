@@ -11,7 +11,23 @@
                     <span v-if="variablesMode && (key === 'values' || key === 'label')" @click="editLabelDialog = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
                         {{ props.item[key] }}
                     </span>
-                    <span v-else>{{ props.item[key] }}</span>
+                    <span v-else>
+                      <v-chip v-if="key === 'actor'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                              <avatar :image="actorQuestion.image">
+                              </avatar>
+                              {{actorQuestion.code}}
+                      </v-chip>
+                      <v-chip :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
+                        <avatar :image="props.item[key].image" v-if="key === 'actor'">
+                        </avatar>
+                        {{ key === 'actor' ? props.item[key].code : props.item[key] }}
+                      </v-chip>
+                      <span v-else>
+                          <span v-if="key !=='actors'">
+                              {{ props.item[key] }}</span>
+                          </span>
+                    </span>
+
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"
@@ -27,6 +43,9 @@
                     <v-icon>more_vert</v-icon>
                     </v-btn>
                     <v-list>
+                      <v-list-tile @click="dialogActors = true;arrIndex = props.index">
+                          <v-list-tile-title>Agregar Actores</v-list-tile-title>
+                      </v-list-tile>
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
@@ -57,6 +76,17 @@
           </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialogActors" max-width="900">
+          <v-card v-if="dialogActors">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Relacionar actores</h4>
+            </v-flex>
+            <v-card-text>
+              <related-actor-question :arrIndex="arrIndex" @close="dialogActors = false" @refresh="refresh"></related-actor-question>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
         <v-dialog v-model="dialogCategories" max-width="900">
           <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
         </v-dialog>
@@ -68,6 +98,8 @@ import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
 import CategoriesEditor from './../../components/forms/CategoriesEditor'
 import RelatedQuestion from './RelatedQuestion'
+import RelatedActorQuestion from './RelatedActorQuestion'
+import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
   data () {
@@ -75,6 +107,7 @@ export default {
       editLabelDialog: false,
       dialogRelated: false,
       dialogCategories: false,
+      dialogActors: false,
       currentEdit: null,
       fieldSelected: '',
       arrIndex: null
@@ -93,9 +126,13 @@ export default {
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
       this.dialogCategories = false
+    },
+    refresh () {
+      this.dialogActors = false
+      this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, CategoriesEditor }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, Avatar }
 }
 </script>
 

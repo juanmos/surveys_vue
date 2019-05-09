@@ -19,16 +19,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: ['value', 'type', 'model'],
   data () {
     return {
       mutableValues: null,
       fieldValue: '',
-      items: ['Intencion', 'Conocimiento', 'Grado']
+      items: []
     }
   },
   methods: {
+    ...mapActions('question-categories', { findCategories: 'find' }),
     broadcastData () {
       this.$emit('dataChanged', this.mutableValue)
       this.$emit('cancel')
@@ -46,8 +48,11 @@ export default {
     }
   },
   components: {},
-  created () {
+  mounted () {
     this.fieldValue = this.value
+    this.findCategories({ query: {removed: false} }).then(result => {
+      this.items = result.data.map(category => category.code)
+    })
   }
 }
 </script>

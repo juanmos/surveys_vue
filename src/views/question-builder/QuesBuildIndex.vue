@@ -213,6 +213,7 @@ export default {
     savePolls (name, value) {
       let data = {
         name,
+        status: 'CREADA',
         construct: value,
         fromSurvey: true
       }
@@ -236,14 +237,24 @@ export default {
         })
     },
     saveImportedPoll (data) {
-      console.log('esta es la data que recibo', data)
+      // console.log('esta es la data que recibo', data)
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
+      data.spss[fileKey].map(data => {
+        Object.keys(data).forEach(function (key) {
+          let str = data[key].toString()
+          // console.log('cambiando---', str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          data[key]=str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        })
+      })
       let configPoll = new ConfigPoll({
-        name: 'Encuesta Importada....',
         construct : 'test',
         originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
         imported: true,
+        take: data.take,
+        name: data.name,
+        dateFinished: data.dateFinished,
+        status: data.status,
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {

@@ -52,7 +52,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table @saveFormated="saveFormated" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
+                    <poll-results-table @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -189,6 +189,8 @@ export default {
         'Valores',
         'Codigo',
         'Perdido',
+        'Categoria',
+        'Actor',
         'Acciones'
       ].map(value => ({
         text: value,
@@ -203,7 +205,9 @@ export default {
         values: question.options,
         code: question.code,
         lost: -1,
-        category: question.category
+        category: question.category,
+        actor: question.actor,
+        actors: (question.actors) ? question.actors : []
       })) : []
     },
     getPossibleValues () {
@@ -223,6 +227,12 @@ export default {
     ...mapActions([
       'setCurrentPoll'
     ]),
+    refresh () {
+      this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
+        this.resultPoll = Object.assign({}, result)
+        this.setCurrentPoll(Object.assign({}, this.resultPoll))
+      })
+    },
     saveFormated (values) {
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(this.resultPoll)
@@ -234,7 +244,6 @@ export default {
           this.resultPoll = Object.assign({}, result)
           this.setCurrentPoll(Object.assign({}, this.resultPoll))
         })
-        // snack
       }).catch(err => console.log('este es el error', err))
     }
   },

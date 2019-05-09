@@ -305,6 +305,24 @@ const ActorsNew = resolve => {
   }, 'actors')
 }
 
+const ActorsEdit = resolve => {
+  require.ensure(['./views/actors/ActorsEdit.vue'], () => {
+    resolve(require('./views/actors/ActorsEdit.vue'))
+  }, 'actors')
+}
+
+const ActorCategories = resolve => {
+  require.ensure(['./views/actor-categories/ActorCategoriesList.vue'], () => {
+    resolve(require('./views/actor-categories/ActorCategoriesList.vue'))
+  }, 'actors')
+}
+
+const ActorCategoriesNew = resolve => {
+  require.ensure(['./views/actor-categories/ActorCategoriesNew.vue'], () => {
+    resolve(require('./views/actor-categories/ActorCategoriesNew.vue'))
+  }, 'actors')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -603,6 +621,12 @@ export default new Router({
           component: ActorsNew
         },
         {
+          path: 'actors-edit/:id',
+          name: 'actors-edit',
+          props: true,
+          component: ActorsEdit
+        },
+        {
           path: 'question-categories',
           name: 'question-categories',
           props: true,
@@ -613,6 +637,18 @@ export default new Router({
           name: 'question-categories-new',
           props: true,
           component: QuestionCategoriesNew
+        },
+        {
+          path: 'actor-categories',
+          name: 'actor-categories',
+          props: true,
+          component: ActorCategories
+        },
+        {
+          path: 'actor-categories-new',
+          name: 'actors-categories-new',
+          props: true,
+          component: ActorCategoriesNew
         }
       ]
     },

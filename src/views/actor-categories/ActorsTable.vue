@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Listado de Actores</v-subheader>
+              <v-subheader>Listado de categorias de actores</v-subheader>
             <v-data-table
                   :headers="headers"
                   :items="elements"
@@ -14,31 +14,7 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td>
-                        <div class="mt-1">
-                          <v-avatar
-                          class="mt-1 mb-1 elevation-5"
-                          :tile="false"
-                          :size="50"
-                        >
-                          <v-img
-                              :src="props.item.image ? `${currentEnv}/${props.item.image}`: require('./../../assets/placeholder.png')"
-                              :lazy-src="props.item.image ? `${currentEnv}/${props.item.image}`: ''"
-                              aspect-ratio="0.5"
-                              class="grey lighten-2"
-                              max-height="400"
-                            >
-                              <v-layout
-                                slot="placeholder"
-                                fill-height
-                                align-center
-                                justify-center
-                                ma-0
-                              >
-                                <v-progress-circular v-if="loading" indeterminate ></v-progress-circular>
-                              </v-layout>
-                          </v-img>
-                        </v-avatar>
-                        </div>
+
                       </td>
                       <td>
                         <v-edit-dialog
@@ -93,9 +69,6 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToEdit(props.item)">
-                              <v-list-tile-title>Editar</v-list-tile-title>
-                            </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -138,12 +111,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('actors', { findActors: 'find' }),
+    ...mapActions('actor-categories', { findActors: 'find' }),
     goToNew () {
       this.$router.push('/new-actor')
-    },
-    goToEdit (actor) {
-      this.$router.push('/actors-edit/' + actor._id)
     },
     edit (val, elem, field) {
       const {Actor} = this.$FeathersVuex
@@ -154,11 +124,10 @@ export default {
     },
     del (element) {
       console.log('este hay que borrar', element)
-      const {Actor} = this.$FeathersVuex
-      const actor = new Actor(element)
+      const {ActorCategory} = this.$FeathersVuex
+      const actor = new ActorCategory(element)
       actor.removed = true
       actor.save().then((result) => {
-        console.log('se cambio', result)
         this.$emit('delActor')
       })
     },
@@ -191,12 +160,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('actors', {loading: 'isFindPending'}),
+    ...mapState('actor-categories', {loading: 'isFindPending'}),
     ...mapState('actos', { paginationVal: 'pagination' }),
     ...mapState([
       'currentEnv'
     ]),
-    ...mapGetters('actors', {findActorsInStore: 'find'}),
+    ...mapGetters('actor-categories', {findActorsInStore: 'find'}),
     getActors () {
       return this.findActorsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },

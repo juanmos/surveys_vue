@@ -19,6 +19,7 @@
 import {mapState} from 'vuex'
 import FileUploader from './../../components/FileUploader'
 export default {
+  props: ['url'],
   data: () => ({
     dialog: false,
     currentImg: null
@@ -33,6 +34,13 @@ export default {
       this.currentImg = data.path
       this.dialog = false
       this.$emit('fileCreated', data)
+    }
+  },
+  watch: {
+    url: function (val) {
+      if (val) {
+        this.currentImg = val
+      }
     }
   },
   components: {FileUploader}
