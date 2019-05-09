@@ -276,7 +276,7 @@ export default {
     selectedActor (value) {
       this.getActor(value).then(result => {
         let resultActor = Object.assign({}, result)
-        this.dataResponse.actor = resultActor
+        this.dataResponse.actors = [resultActor]
       })
     }
   }
