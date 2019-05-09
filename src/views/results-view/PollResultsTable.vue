@@ -12,22 +12,22 @@
                         {{ props.item[key] }}
                     </span>
                     <span v-else>
-                      <v-chip v-if="key === 'actor'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
+                      <v-chip v-if="key === 'actors'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
                               <avatar :image="actorQuestion.image">
                               </avatar>
                               {{actorQuestion.code}}
                       </v-chip>
-                      <v-chip :color="key === 'category' ? 'primary' : 'grey-darken-4'" class="font-weight-bold" v-if="(key ==='category' || key === 'actor') && props.item[key]">
-                        <avatar :image="props.item[key].image" v-if="key === 'actor'">
+                      <v-chip :color="key === 'category' ? 'primary' : (key === 'state') ? 'complete': 'grey-darken-4'"  class="font-weight-bold" v-if="(key ==='category' || key === 'state') && props.item[key]">
+                        <avatar :image="props.item[key].image" v-if="key === 'actors'">
                         </avatar>
-                        {{ key === 'actor' ? props.item[key].code : props.item[key] }}
+                        {{ key === 'actors' ? props.item[key].code : props.item[key] }}
                       </v-chip>
                       <span v-else>
-                          <span v-if="key !=='actors'">
-                              {{ props.item[key] }}</span>
+                          <span v-if="key !=='actors' && key !=='state'">
+                              {{ props.item[key] }}
                           </span>
+                      </span>
                     </span>
-
                 </td>
                 <td class="justify-center layout px-0">
                   <v-menu v-if="variablesMode"
@@ -51,6 +51,9 @@
                       </v-list-tile>
                       <v-list-tile @click="dialogCategories = true;arrIndex = props.index; fieldSelected = 'category'">
                           <v-list-tile-title>Agregar Categoria</v-list-tile-title>
+                      </v-list-tile>
+                      <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
+                          <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
                       </v-list-tile>
                     </v-list>
                   </v-menu>
@@ -90,6 +93,17 @@
         <v-dialog v-model="dialogCategories" max-width="900">
           <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
         </v-dialog>
+
+        <v-dialog v-model="dialogMasterQuestions" max-width="900">
+            <v-card v-if="dialogMasterQuestions">
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h4>Seleccionar Master</h4>
+              </v-flex>
+              <v-card-text>
+                <master-questions-editor @refresh="refresh" :arrIndex="arrIndex" @close="dialogMasterQuestions = false"></master-questions-editor>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -97,6 +111,7 @@
 import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
 import CategoriesEditor from './../../components/forms/CategoriesEditor'
+import MasterQuestionsEditor from './../../components/forms/MasterQuestionsEditor'
 import RelatedQuestion from './RelatedQuestion'
 import RelatedActorQuestion from './RelatedActorQuestion'
 import Avatar from './../../components/Avatar'
@@ -108,6 +123,7 @@ export default {
       dialogRelated: false,
       dialogCategories: false,
       dialogActors: false,
+      dialogMasterQuestions: false,
       currentEdit: null,
       fieldSelected: '',
       arrIndex: null
@@ -115,7 +131,6 @@ export default {
   },
   methods: {
     editVariables (value) {
-      console.log(value, this.arrIndex, this.fieldSelected)
       let copyResponses = this.responses.slice().map(response => ({
         original: response.name,
         label: response.label,
@@ -126,16 +141,21 @@ export default {
       this.$emit('saveFormated', copyResponses)
       this.editLabelDialog = false
       this.dialogCategories = false
+      this.dialogMasterQuestions = false
     },
     refresh () {
       this.dialogActors = false
+      this.dialogMasterQuestions = false
       this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, Avatar }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar }
 }
 </script>
 
 <style scoped>
-
+.complete {
+    background-color: #407a42 !important;
+    border-color: #407a42 !important;
+}
 </style>

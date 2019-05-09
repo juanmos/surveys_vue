@@ -233,6 +233,22 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('master-questions', {
+      instanceDefaults: {
+        text: '',
+        category: '',
+        type: '',
+        options: '',
+        removed: false
+      }
+    }),
+    service('category-questions', {
+      instanceDefaults: {
+        name: '',
+        value: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

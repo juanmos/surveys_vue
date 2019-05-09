@@ -323,6 +323,24 @@ const ActorCategoriesNew = resolve => {
   }, 'actors')
 }
 
+const MasterQuestions = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsList.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsList.vue'))
+  }, 'master-questions')
+}
+
+const MasterQuestionsNew = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsNew.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsNew.vue'))
+  }, 'master-questions')
+}
+
+const MasterQuestionsEdit = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsEdit.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsEdit.vue'))
+  }, 'master-questions')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -649,6 +667,24 @@ export default new Router({
           name: 'actors-categories-new',
           props: true,
           component: ActorCategoriesNew
+        },
+        {
+          path: 'master-questions',
+          name: 'master-questions',
+          props: true,
+          component: MasterQuestions
+        },
+        {
+          path: 'master-questions-new',
+          name: 'master-questions-new',
+          props: true,
+          component: MasterQuestionsNew
+        },
+        {
+          path: 'master-questions-edit/:id',
+          name: 'master-questions-edit',
+          props: true,
+          component: MasterQuestionsEdit
         }
       ]
     },

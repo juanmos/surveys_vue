@@ -180,7 +180,8 @@ export default {
       })) : []
     },
     getTableDataValues () {
-      return this.resultPoll && this.resultPoll.PollInstances ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
+      let data = (this.resultPoll && this.resultPoll.PollInstances) ? this.resultPoll.PollInstances.map(poll => poll.response_received) : []
+      return data
     },
     getVariableHeaders () {
       return [
@@ -191,6 +192,7 @@ export default {
         'Perdido',
         'Categoria',
         'Actor',
+        'Master',
         'Acciones'
       ].map(value => ({
         text: value,
@@ -206,8 +208,8 @@ export default {
         code: question.code,
         lost: -1,
         category: question.category,
-        actor: question.actor,
-        actors: (question.actors) ? question.actors : []
+        actors: (question.actors) ? question.actors : [],
+        state: (question.questionMaster && question.categoryQuestion) ? question.categoryQuestion.name.toUpperCase() : ''
       })) : []
     },
     getPossibleValues () {
@@ -247,7 +249,7 @@ export default {
       }).catch(err => console.log('este es el error', err))
     }
   },
-  mounted () {
+  created () {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
