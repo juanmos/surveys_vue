@@ -64,7 +64,6 @@
             >
                 Creador de Reportes
                 <v-icon>ballot</v-icon>
-
             </v-tab>
             <v-tab-item
             >
@@ -107,17 +106,13 @@
                   close
                 </v-icon>
             </v-btn>
-
           </v-toolbar>
-
         <v-card-text>
           <v-spacer></v-spacer>
 
           <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
         </v-card-text>
-
            <v-divider></v-divider>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
