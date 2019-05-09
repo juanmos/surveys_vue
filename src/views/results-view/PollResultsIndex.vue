@@ -16,7 +16,11 @@
             <v-list>
               <v-list-tile
               >
-                <v-list-tile-title @click="segmentationDialog = true">Definir Datos de Segmentacion</v-list-tile-title>
+                <v-list-tile-title @click="segmentationDialog = true" class="pointer">Definir Datos de Segmentacion</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile
+              >
+                <v-list-tile-title @click="processData" class="pointer">Procesar Datos</v-list-tile-title>
               </v-list-tile>
             </v-list>
           </v-menu>
@@ -60,7 +64,6 @@
             >
                 Creador de Reportes
                 <v-icon>ballot</v-icon>
-
             </v-tab>
             <v-tab-item
             >
@@ -103,17 +106,13 @@
                   close
                 </v-icon>
             </v-btn>
-
           </v-toolbar>
-
         <v-card-text>
           <v-spacer></v-spacer>
 
           <segmentation-fields :questions="this.resultPoll ? this.resultPoll.formatedConfiguration : []"></segmentation-fields>
         </v-card-text>
-
            <v-divider></v-divider>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -155,7 +154,8 @@ import PollResultsTable from './PollResultsTable'
 import ReportCreator from './../reports-creator/ReportCreator'
 import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
 import SegmentationFields from './../../components/SegmentationFields'
-
+import axios from 'axios'
+const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['id'],
   data () {
@@ -167,6 +167,7 @@ export default {
   },
   computed: {
     ...mapState('config-polls', { loading: 'isGetPending' }),
+    ...mapState('auth', { accessToken: 'accessToken' }),
     ...mapState([
       'currentPoll'
     ]),
@@ -229,6 +230,24 @@ export default {
     ...mapActions([
       'setCurrentPoll'
     ]),
+    processData () {
+      let axiosIntance = axios.create({
+        baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
+      })
+      axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
+      axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
+      let params = new URLSearchParams()
+      params.append('bigdata', true)
+      params.append('_id', this.id)
+      axiosIntance.get('/config-polls', { params }).then((result) => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Data procesada correctamente.')
+      }).catch(err => {
+        this.setShowSnack(true)
+        this.setSnackMessage('Error al Guardar')
+        console.log(err)
+      })
+    },
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
@@ -268,5 +287,9 @@ export default {
 <style scoped>
   .view-container {
     margin: 30px;
+  }
+  .pointer:hover {
+      cursor: pointer;
+      background-color: #fa000b;
   }
 </style>
