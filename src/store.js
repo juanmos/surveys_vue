@@ -242,6 +242,11 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('consolidates', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
     service('category-questions', {
       instanceDefaults: {
         name: '',
