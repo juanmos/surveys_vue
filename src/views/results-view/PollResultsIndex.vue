@@ -167,6 +167,7 @@ export default {
   },
   computed: {
     ...mapState('config-polls', { loading: 'isGetPending' }),
+    ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState('auth', { accessToken: 'accessToken' }),
     ...mapState([
       'currentPoll'
@@ -223,6 +224,7 @@ export default {
   },
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions('consolidates', {findConsolidate: 'find'}),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -231,6 +233,19 @@ export default {
       'setCurrentPoll'
     ]),
     processData () {
+      this.checkExistData()
+    },
+    checkExistData () {
+      this.findConsolidate({query: {_config_poll_id: this.id}}).then(response => {
+        if (response.data.length > 0) {
+          this.setShowSnack(true)
+          this.setSnackMessage('La encuesta ya fue procesada.')
+        } else {
+          this.initialProcessConsolidate()
+        }
+      })
+    },
+    initialProcessConsolidate () {
       let axiosIntance = axios.create({
         baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
       })
@@ -244,7 +259,7 @@ export default {
         this.setSnackMessage('Data procesada correctamente.')
       }).catch(err => {
         this.setShowSnack(true)
-        this.setSnackMessage('Error al Guardar')
+        this.setSnackMessage('Error al Guardar. Revise que la encuestra este asignado con el master de preguntas.')
         console.log(err)
       })
     },
