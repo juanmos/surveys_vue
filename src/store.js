@@ -273,6 +273,11 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('electoral-records', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

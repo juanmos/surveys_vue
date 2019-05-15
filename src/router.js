@@ -355,6 +355,21 @@ const ElectoralProjectsEdit = resolve => {
     resolve(require('./views/electoral-projects/ElectoralProjectEdit.vue'))
   }, 'electoral-projects')
 }
+const ElectoralRecords = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsList.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsList.vue'))
+  }, 'electoral-records')
+}
+const ElectoralRecordsNew = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsNew.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsNew.vue'))
+  }, 'electoral-records')
+}
+const ElectoralRecordsEdit = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsEdit.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsEdit.vue'))
+  }, 'electoral-records')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -718,6 +733,24 @@ export default new Router({
           name: 'electoral-projects-edit',
           props: true,
           component: ElectoralProjectsEdit
+        },
+        {
+          path: 'electoral-projects/:id',
+          name: 'electoral-records',
+          props: true,
+          component: ElectoralRecords
+        },
+        {
+          path: 'electoral-records-new/:id',
+          name: 'electoral-records-new',
+          props: true,
+          component: ElectoralRecordsNew
+        },
+        {
+          path: 'electoral-records-edit/:id',
+          name: 'electoral-records-edit',
+          props: true,
+          component: ElectoralRecordsEdit
         }
       ]
     },

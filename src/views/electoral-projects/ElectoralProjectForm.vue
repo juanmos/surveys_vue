@@ -8,7 +8,7 @@
           <v-flex xs12>
             <v-form
             v-model="valid"
-            @submit.prevent="sendData"
+            @submit.prevent="saveCheck"
             @keydown.prevent.enter
             >
                 <v-text-field
@@ -21,9 +21,9 @@
                 ></v-text-field>
                 <v-autocomplete
                   :items="positions"
-                  v-model="selectedposition"
+                  v-model="project.position"
                   item-text="name"
-                  item-value="_id"
+                  item-value="name"
                   label="Cargo"
                 ></v-autocomplete>
                 <v-autocomplete
@@ -112,7 +112,7 @@
                               :items="zones"
                               item-text="name"
                               item-value="name"
-                              v-model="project.zona"
+                              v-model="project.zone"
                               hide-no-data
                               hide-details
                               label="Buscar zona..."
@@ -135,7 +135,8 @@
               <br />
 
                 <v-date-picker v-model="project.date" color="red lighten-1" locale="es-es" header-color="primary"></v-date-picker>
-                <v-btn type="submit" :disabled="!valid"  small color="info">Guardar</v-btn>
+                <v-btn @click="dialogActors = true">AGREGAR ACTORES</v-btn>
+                <v-btn type="submit" :disabled="!valid"  small color="info">GUARDAR PROYECTO</v-btn>
             </v-form>
           </v-flex>
         </v-layout>
@@ -195,12 +196,23 @@
           </v-card-text>
         </v-card>
      </v-dialog>
+      <v-dialog v-model="dialogActors" max-width="900">
+        <v-card v-if="dialogActors">
+          <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+            <h4>Crear zona para: {{this.project.parroquia}}</h4>
+          </v-flex>
+          <v-card-text>
+              <form-actors @getActors="setActors"></form-actors>
+          </v-card-text>
+        </v-card>
+     </v-dialog>
     </v-card>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {validations} from './../../utils/validations'
+import FormActors from './FormActors'
 export default {
   data: (vm) => ({
     project: {
@@ -218,6 +230,7 @@ export default {
     newDistrict: '',
     newParish: '',
     newZone: '',
+    dialogActors: false,
     disabledDistrict: true,
     dialogNewDistrict: false,
     dialogNewZone: false,
@@ -235,6 +248,10 @@ export default {
   methods: {
     ...mapActions('position-actors', { findPositionActors: 'find' }),
     ...mapActions('provinces', { findProvinces: 'find' }),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     saveNewDistrict () {
       let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
         if (this.project.province === province.name) {
@@ -253,6 +270,10 @@ export default {
         }
       })
       this.updateProvince(newArray[0])
+    },
+    setActors (value) {
+      this.project.actors = value
+      this.dialogActors = false
     },
     saveNewParish () {
       let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
@@ -388,10 +409,26 @@ export default {
         this.cleanData()
       })
     },
-    sendData () {
-      if (this.valid) {
-        this.$emit('dataSubmited', this.project)
+    saveCheck () {
+      if (this.valid && this.project.actors && this.project.actors.length > 0) {
+        this.saveData(this.project)
+      } else {
+        this.setSnackMessage('Por favor agregue actores al proyecto')
+        this.setShowSnack(true)
       }
+    },
+    saveData (values) {
+      const {ElectoralProject} = this.$FeathersVuex
+      const project = new ElectoralProject(values)
+      project.save().then((result) => {
+        this.setSnackMessage('Proyecto almacenado correctamente.')
+        this.setShowSnack(true)
+        this.$router.push('/electoral-projects')
+      }, (err) => {
+        console.log(err)
+        this.setSnackMessage('No se puedo almacenar el proyecto.')
+        this.setShowSnack(true)
+      })
     }
   },
   computed: {
@@ -402,7 +439,8 @@ export default {
     this.findPositionActors({ query: {removed: false, $skip: 0, $limit: null} }).then(resp => {
       this.positions = resp.data
     })
-  }
+  },
+  components: { FormActors }
 }
 </script>
 

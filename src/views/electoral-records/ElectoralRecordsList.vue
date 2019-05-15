@@ -4,23 +4,32 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Proyectos de control electoral</v-subheader>
+              <v-subheader>Actas Registradas</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getProjects"
+                  :items="getRecords"
                   hide-actions
                   item-key="name"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        {{props.item.date}}
-                      </td>
-                      <td class="justify-left">
-                        {{props.item.name}}
+                        {{props.item.number}}
                       </td>
                       <td class="justify-left">
                         {{props.item.position}}
+                      </td>
+                      <td class="justify-left">
+                        {{props.item.province}}
+                      </td>
+                      <td class="justify-left">
+                        {{props.item.canton}}
+                      </td>
+                      <td class="justify-left">
+                        {{props.item.parroquia}}
+                      </td>
+                      <td class="justify-left">
+                        {{props.item.table}}
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -36,8 +45,8 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="getRecords(props.item)">
-                              <v-list-tile-title >Agregar Acta</v-list-tile-title>
+                            <v-list-tile @click="goToEdit(props.item)">
+                              <v-list-tile-title >Editar</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="dialog = true;itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
@@ -50,7 +59,7 @@
                                 <v-card-title class="headline">Eliminar categoría</v-card-title>
 
                                 <v-card-text>
-                                  Esta seguro que desea eliminar el projecto?
+                                  Esta seguro que desea eliminar el acta?
                                 </v-card-text>
 
                                 <v-card-actions>
@@ -99,7 +108,7 @@
                 small
                 top
                 right
-                title="Agregar nuevo proyecto"
+                title="Agregar nueva acta"
                 color="primary"
                 @click="goToNew()"
                 >
@@ -124,21 +133,33 @@ export default {
     return {
       headers: [
         {
-          text: 'Fecha',
+          text: 'Acta',
           align: 'left',
           sortable: true,
-          value: 'date'
-        },
-        { text: 'Nombre',
-          value: 'name',
-          sortable: false
+          value: 'number'
         },
         { text: 'Cargo',
           value: 'position',
           sortable: false
         },
+        { text: 'Provincia',
+          value: 'province',
+          sortable: false
+        },
+        { text: 'Canton',
+          value: 'canton',
+          sortable: false
+        },
+        { text: 'Parroquia',
+          value: 'parroquia',
+          sortable: false
+        },
+        { text: 'Mesa',
+          value: 'table',
+          sortable: false
+        },
         { text: 'Acciones',
-          value: 'name',
+          value: '',
           sortable: false
         }
       ],
@@ -147,6 +168,7 @@ export default {
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
       rules: validations,
+      project_id: null,
       message: '',
       showMsg: false,
       msgType: 'error',
@@ -161,13 +183,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('electoral-projects', { findElectoralProjects: 'find' }),
+    ...mapActions('electoral-records', { findRecords: 'find' }),
     goToNew () {
-      this.$router.push('/electoral-projects-new')
-    },
-    getRecords (project) {
-      console.log('project', project._id)
-      this.$router.push('/electoral-projects/' + project._id)
+      this.$router.push('/electoral-records-new/' + this.project_id)
     },
     save (val) {
       this.snack = true
@@ -179,31 +197,31 @@ export default {
       this.snackColor = 'error'
       this.snackText = 'Canceled'
     },
+    goToEdit (record) {
+      this.$router.push('/electoral-records-edit/' + record._id)
+    },
     open () {
       this.snack = true
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
     },
-    close (val) {
-      // console.log('Dialog closed', val)
-    },
     del () {
-      const {Restful} = this.$FeathersVuex
-      const restfull = new Restful(this.itemSelected)
-      restfull.removed = true
-      restfull.patch().then((result) => {
-        this.findElectoralProjects({ query: {removed: false} }).then(response => {
+      const {ElectoralRecord} = this.$FeathersVuex
+      const electoralRecord = new ElectoralRecord(this.itemSelected)
+      electoralRecord.removed = true
+      electoralRecord.patch().then((result) => {
+        this.findRecords({ query: {removed: false} }).then(response => {
           return response.data || response
         })
       })
     }
   },
   computed: {
-    ...mapState('electoral-projects', {loading: 'isFindPending'}),
-    ...mapState('electoral-projects', { paginationVal: 'pagination' }),
-    ...mapGetters('electoral-projects', {findElectoralProjectsInStore: 'find'}),
-    getProjects () {
-      return this.findElectoralProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    ...mapState('electoral-records', {loading: 'isFindPending'}),
+    ...mapState('electoral-records', { paginationVal: 'pagination' }),
+    ...mapGetters('electoral-records', {findElectoralRecords: 'find'}),
+    getRecords () {
+      return this.findElectoralRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -214,14 +232,15 @@ export default {
   },
   watch: {
     page () {
-      this.findElectoralProjects({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findElectoralProjects({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.project_id = this.$route.params.id
+    this.findRecords({$skip: this.getSkip, _electoral_project_id: this.project_id, $limit: this.limit, removed: false}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
