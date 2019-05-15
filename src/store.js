@@ -254,6 +254,25 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('position-actors', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('provinces', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('electoral-projects', {
+      instanceDefaults: {
+        date: '',
+        position: '',
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

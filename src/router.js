@@ -340,6 +340,21 @@ const MasterQuestionsEdit = resolve => {
     resolve(require('./views/master-questions/MasterQuestionsEdit.vue'))
   }, 'master-questions')
 }
+const ElectoralProjects = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectList.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectList.vue'))
+  }, 'electoral-projects')
+}
+const ElectoralProjectsNew = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectNew.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectNew.vue'))
+  }, 'electoral-projects')
+}
+const ElectoralProjectsEdit = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectEdit.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectEdit.vue'))
+  }, 'electoral-projects')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -685,6 +700,24 @@ export default new Router({
           name: 'master-questions-edit',
           props: true,
           component: MasterQuestionsEdit
+        },
+        {
+          path: 'electoral-projects',
+          name: 'electoral-projects',
+          props: true,
+          component: ElectoralProjects
+        },
+        {
+          path: 'electoral-projects-new',
+          name: 'electoral-projects-new',
+          props: true,
+          component: ElectoralProjectsNew
+        },
+        {
+          path: 'electoral-projects-edit/:id',
+          name: 'electoral-projects-edit',
+          props: true,
+          component: ElectoralProjectsEdit
         }
       ]
     },
