@@ -299,6 +299,13 @@ export default {
       this.updateProvince(newArray[0])
     },
     saveNewZone () {
+      if (this.districts.length > 0) {
+        this.saveNewZoneToDistrict()
+      } else {
+        this.saveNewZoneToWithoutDistrict()
+      }
+    },
+    saveNewZoneToDistrict () {
       let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
         if (this.project.province === province.name) {
           province.canton.map(canton => {
@@ -316,6 +323,29 @@ export default {
                       }
                     }
                   })
+                }
+              })
+            }
+          })
+          return province
+        }
+      })
+      this.updateProvince(newArray[0])
+    },
+    saveNewZoneToWithoutDistrict () {
+      let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
+        if (this.project.province === province.name) {
+          province.canton.map(canton => {
+            if (this.project.canton === canton.name) {
+              canton.parish.map(parish => {
+                if (this.project.parroquia === parish.name) {
+                  let zona = {name: this.newZone.toUpperCase(), _parish_id: parish.name, number_voter: 0}
+                  if (parish.zone) {
+                    let arrayZone = [...parish.zone, zona]
+                    parish.zone = arrayZone
+                  } else {
+                    parish.zone = [zona]
+                  }
                 }
               })
             }
