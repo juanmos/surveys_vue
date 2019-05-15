@@ -188,10 +188,10 @@ export default {
       // console.log('Dialog closed', val)
     },
     del () {
-      const {Restful} = this.$FeathersVuex
-      const restfull = new Restful(this.itemSelected)
-      restfull.removed = true
-      restfull.patch().then((result) => {
+      const {ElectoralProject} = this.$FeathersVuex
+      const electoralproject = new ElectoralProject(this.itemSelected)
+      electoralproject.removed = true
+      electoralproject.patch().then((result) => {
         this.findElectoralProjects({ query: {removed: false} }).then(response => {
           return response.data || response
         })
