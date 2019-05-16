@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-                <v-subheader>Nueva Acta</v-subheader>
+                <v-subheader>NUEVA ACTA</v-subheader>
                 <electoral-records-form @dataSubmited="create" :project="currentProject"></electoral-records-form>
                 <v-btn
                 absolute
