@@ -92,7 +92,7 @@
                   item-text="name"
                   item-value="name"
                   v-model="record.province"
-                  disabled="false"
+                  disabled
                   cache-items
                   hide-no-data
                   hide-details
@@ -143,7 +143,7 @@
               </v-flex>
 
               <v-flex xs10>
-                  <v-autocomplete
+                  <v-autocomplete class="background: #333;"
                           :items="parroquias"
                           item-text="name"
                           item-value="name"
@@ -653,6 +653,10 @@ export default {
 </script>
 
 <style>
+.v-input--is-disabled:not(.v-input--is-readonly) {
+    pointer-events: none;
+    background: #b25050;
+}
 .upcase input{
   text-transform: uppercase
 }
