@@ -1,7 +1,6 @@
 <template>
   <v-flex class="view-container">
       <v-tabs
-      v-model="active"
       color="secondary"
       centered
       dark

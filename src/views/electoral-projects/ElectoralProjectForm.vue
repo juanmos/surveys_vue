@@ -119,7 +119,7 @@
             <h4>Crear zona para: {{this.project.parroquia}}</h4>
           </v-flex>
           <v-card-text>
-              <form-actors @getActors="setActors"></form-actors>
+              <form-actors @getActors="setActors" @close="dialogActors = false"></form-actors>
           </v-card-text>
         </v-card>
      </v-dialog>
@@ -191,6 +191,8 @@ export default {
     setActors (value) {
       this.project.actors = value
       this.dialogActors = false
+      this.setSnackMessage('Actores agregados correctamente.')
+      this.setShowSnack(true)
     },
     saveNewParish () {
       let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
