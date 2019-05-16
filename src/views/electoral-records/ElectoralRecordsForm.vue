@@ -6,6 +6,9 @@
       >
       <v-layout row>
           <v-flex xs12>
+            <label for="">PROYECTO: <span>{{record.project_name}}</span></label>
+          </v-flex>
+          <v-flex xs12>
             <label for="">Fecha: <span>{{record.date | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}</span></label>
           </v-flex>
           <v-flex xs3>
@@ -314,6 +317,7 @@ export default {
     record: {
       number: '',
       date: null,
+      project_name: '',
       country: '',
       province: '',
       image: null,
@@ -590,9 +594,7 @@ export default {
         if (this.project.district !== '') {
           this.selectedDistrict()
         }
-        if (this.project.parroquia !== '') {
-          this.selectedParroquia()
-        }
+        this.selectedParroquia()
         this.cleanData()
       })
     },
@@ -625,6 +627,7 @@ export default {
       this.record.position = val.position
       this.record.actors = val.actors
       this.record._electoral_project_id = val._id
+      this.record.project_name = val.name
       if (this.record.position === 'ALCALDE') {
         this.disabledCantones = true
       } else {
