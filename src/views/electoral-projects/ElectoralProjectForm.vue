@@ -39,7 +39,7 @@
                 @change="selectetedProvince"
               ></v-autocomplete>
               <br />
-              <v-autocomplete
+              <v-autocomplete v-if="project.position === 'ALCALDE'"
                       :items="cantones"
                       item-text="name"
                       item-value="name"
@@ -51,89 +51,6 @@
                       @change="selectedCanton"
                     ></v-autocomplete>
               <br />
-              <v-layout row>
-                  <v-flex xs10>
-                    <v-autocomplete
-                            :items="districts"
-                            item-text="name"
-                            item-value="name"
-                            v-model="project.district"
-                            hide-no-data
-                            :disabled="disabledDistrict"
-                            hide-details
-                            label="Buscar circunscripción cantonal..."
-                            solo-inverted
-                            @change="selectedDistrict"
-                          ></v-autocomplete>
-                  </v-flex>
-                  <v-flex xs2>
-                      <v-btn
-                      dark
-                      fab
-                      small
-                      title="Agregar Circunscripción"
-                      color="primary"
-                      @click="dialogNewDistrict = true"
-                      >
-                          <v-icon>add</v-icon>
-                      </v-btn>
-                  </v-flex>
-              </v-layout>
-              <v-layout row>
-                  <v-flex xs10>
-                      <v-autocomplete
-                              :items="parroquias"
-                              item-text="name"
-                              item-value="name"
-                              v-model="project.parroquia"
-                              hide-no-data
-                              hide-details
-                              label="Buscar parroquias..."
-                              solo-inverted
-                              @change="selectedParroquia"
-                            ></v-autocomplete>
-                  </v-flex>
-                  <v-flex xs2>
-                      <v-btn
-                      dark
-                      fab
-                      small
-                      title="Agregar Parroquia"
-                      color="primary"
-                      @click="dialogNewParishDistrict = true"
-                      >
-                          <v-icon>add</v-icon>
-                      </v-btn>
-                  </v-flex>
-              </v-layout>
-              <v-layout row>
-                  <v-flex xs10>
-                      <v-autocomplete
-                              :items="zones"
-                              item-text="name"
-                              item-value="name"
-                              v-model="project.zone"
-                              hide-no-data
-                              hide-details
-                              label="Buscar zona..."
-                              solo-inverted
-                            ></v-autocomplete>
-                  </v-flex>
-                  <v-flex xs2>
-                      <v-btn
-                      dark
-                      fab
-                      small
-                      title="Agregar Zona"
-                      color="primary"
-                      @click="dialogNewZone = true"
-                      >
-                          <v-icon>add</v-icon>
-                      </v-btn>
-                  </v-flex>
-              </v-layout>
-              <br />
-
                 <v-date-picker v-model="project.date" color="red lighten-1" locale="es-es" header-color="primary"></v-date-picker>
                 <v-btn @click="dialogActors = true">AGREGAR ACTORES</v-btn>
                 <v-btn type="submit" :disabled="!valid"  small color="info">GUARDAR PROYECTO</v-btn>
