@@ -6,7 +6,7 @@
       >
       <v-layout row>
           <v-flex xs12>
-            <label for="">Fecha: <span>{{record.date}}</span></label>
+            <label for="">Fecha: <span>{{record.date | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}</span></label>
           </v-flex>
           <v-flex xs3>
             <label for="">Cargo: <span>{{record.position}}</span></label>
@@ -301,7 +301,13 @@ import {mapActions, mapGetters} from 'vuex'
 import PictureUpload from './PictureUpload'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 import {validations} from './../../utils/validations'
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
 const enviroment = require('./../../../config/enviroment.json')
+Vue.use(VueMoment, {
+  moment
+})
 export default {
   props: ['project', 'currentRecord'],
   data: (vm) => ({
