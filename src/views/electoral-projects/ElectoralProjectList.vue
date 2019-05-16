@@ -14,7 +14,7 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        {{props.item.date}}
+                          {{props.item.date | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
                       <td class="justify-left">
                         {{props.item.name}}
@@ -119,6 +119,12 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+Vue.use(VueMoment, {
+  moment
+})
 export default {
   data () {
     return {
