@@ -81,7 +81,13 @@
                       ></v-text-field>
                   </v-flex>
                   <v-flex xs3>
-                        <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
+                            <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
+                            <a :href="currentImageDownload" download title="Descargar" target="_blank">
+                              <v-icon>arrow_drop_down</v-icon>
+                            </a>
+                  </v-flex>
+                  <v-flex xs3>
+
                     </v-flex>
               </v-layout>
               <v-layout row>
@@ -136,6 +142,7 @@ import {mapActions, mapGetters} from 'vuex'
 import PictureUpload from './PictureUpload'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
 import {validations} from './../../utils/validations'
+const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['project', 'currentRecord'],
   data: (vm) => ({
@@ -160,6 +167,7 @@ export default {
       _electoral_project_id: null
     },
     currentImage: null,
+    currentImageDownload: null,
     resultHeaders: [{
       text: 'Candidato',
       align: 'left',
@@ -226,6 +234,8 @@ export default {
     },
     currentRecord: function (val) {
       this.record = val
+      this.currentImage = val.image
+      this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image
     }
   },
   computed: {
