@@ -4,24 +4,26 @@
         fluid
         grid-list-lg
       >
+      <v-layout>
+          <v-flex xs12>
+            <label for="">PROYECTO: <span class="titleRecord">{{record.project_name}}</span></label>
+          </v-flex>
+          <v-flex xs12>
+            <label for="">Fecha: <span class="titleRecord">{{record.date | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}</span></label>
+          </v-flex>
+      </v-layout>
       <v-layout row>
-          <v-flex xs12>
-            <label for="">PROYECTO: <span>{{record.project_name}}</span></label>
+          <v-flex xs4>
+            <label for="">Cargo: <span class="titleRecord">{{record.position}}</span></label>
           </v-flex>
-          <v-flex xs12>
-            <label for="">Fecha: <span>{{record.date | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}</span></label>
+          <v-flex xs4>
+            <label for="">Provincia: <span class="titleRecord">{{record.province}}</span></label>
           </v-flex>
-          <v-flex xs3>
-            <label for="">Cargo: <span>{{record.position}}</span></label>
+          <v-flex xs4>
+            <label for="">Cantón: <span class="titleRecord">{{record.canton}}</span></label>
           </v-flex>
-          <v-flex xs3>
-            <label for="">Provincia: <span>{{record.province}}</span></label>
-          </v-flex>
-          <v-flex xs3>
-            <label for="">Cantón: <span>{{record.canton}}</span></label>
-          </v-flex>
-          <v-flex xs3>
-            <label for="">Parroquia: <span>{{record.parroquia}}</span></label>
+          <v-flex xs4>
+            <label for="">Parroquia: <span class="titleRecord">{{record.parroquia}}</span></label>
           </v-flex>
       </v-layout>
       <v-form
@@ -656,6 +658,11 @@ export default {
 .v-input--is-disabled:not(.v-input--is-readonly) {
     pointer-events: none;
     background: #b25050;
+}
+
+.titleRecord {
+    text-transform: uppercase;;
+    font-weight: bold;
 }
 .upcase input{
   text-transform: uppercase
