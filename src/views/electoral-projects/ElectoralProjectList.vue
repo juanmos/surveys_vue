@@ -172,7 +172,6 @@ export default {
       this.$router.push('/electoral-projects-new')
     },
     getRecords (project) {
-      console.log('project', project._id)
       this.$router.push('/electoral-projects/' + project._id)
     },
     save (val) {
