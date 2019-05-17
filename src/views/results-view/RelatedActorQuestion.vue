@@ -180,9 +180,10 @@ export default {
     },
     addActor (actor) {
       let message = ''
-      let exist = this.actors.filter(data => data.code === actor.code)
+      let exist = this.actors.filter(data => data === actor.code)
       if (exist.length === 0) {
-        this.actors.push(actor)
+        this.actors.push(actor.code)
+        console.log('console---', this.actors)
         this.formatTotal(actor)
         message = 'Actor agregado, listo para guardar cambios'
       } else {
@@ -276,7 +277,7 @@ export default {
     selectedActor (value) {
       this.getActor(value).then(result => {
         let resultActor = Object.assign({}, result)
-        this.dataResponse.actors = [resultActor]
+        this.dataResponse.actors = [resultActor.code]
       })
     }
   }
