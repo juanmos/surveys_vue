@@ -5,6 +5,26 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-subheader>Proyectos de control electoral</v-subheader>
+              <v-card-title>
+              <span class="title text-sm-left">
+                <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
+              </span>
+              <v-spacer></v-spacer>
+              <span class="title text-sm-left">
+                <v-autocomplete
+                    label="Filtro por cargo"
+                    v-model="selectedPosition"
+                    :items="positions"
+                    item-text="name"
+                    item-value="id"
+                ></v-autocomplete>
+              </span>
+
+              <v-spacer></v-spacer>
+              <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
+                <v-icon>add</v-icon>
+              </v-btn>
+            </v-card-title>
             <v-data-table
                   :headers="headers"
                   :items="getProjects"
@@ -161,13 +181,17 @@ export default {
       total: 1,
       itemSelected: null,
       loaded: false,
+      selectedPosition: null,
       projects: [],
+      positions: [],
+      search: '',
       query: {},
       dialog: false
     }
   },
   methods: {
     ...mapActions('electoral-projects', { findElectoralProjects: 'find' }),
+    ...mapActions('position-actors', { findPositionActors: 'find' }),
     goToNew () {
       this.$router.push('/electoral-projects-new')
     },
@@ -207,8 +231,12 @@ export default {
     ...mapState('electoral-projects', {loading: 'isFindPending'}),
     ...mapState('electoral-projects', { paginationVal: 'pagination' }),
     ...mapGetters('electoral-projects', {findElectoralProjectsInStore: 'find'}),
+    ...mapGetters('position-actors', { findPositionActorsInStore: 'find' }),
     getProjects () {
       return this.findElectoralProjectsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    },
+    getPositions () {
+      return this.findPositionActorsInStore({query: {removed: false, $skip: 0, $limit: null}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -223,6 +251,9 @@ export default {
         this.limit = response.limit
         this.total = response.total
       })
+    },
+    search: function (val) {
+      console.log('watchh---', val)
     }
   },
   created () {
@@ -231,6 +262,9 @@ export default {
       this.total = response.total
       this.loaded = true
       this.projects = response.data
+    })
+    this.findPositionActors({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+      this.positions = response.data
     })
   },
   components: {LoadingComponent, EditableField}
