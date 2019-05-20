@@ -135,7 +135,7 @@ export default {
         {
           text: 'Acta',
           align: 'left',
-          sortable: true,
+          sortable: false,
           value: 'number'
         },
         { text: 'Cargo',
@@ -152,7 +152,7 @@ export default {
         },
         { text: 'Parroquia',
           value: 'parroquia',
-          sortable: false
+          sortable: true
         },
         { text: 'Mesa',
           value: 'table',
