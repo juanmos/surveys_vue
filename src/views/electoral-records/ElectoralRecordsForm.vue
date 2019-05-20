@@ -552,6 +552,8 @@ export default {
         } else {
           this.disabledDistrict = true
           this.parroquias = currentCanton.parish
+          let currentParsih = currentCanton.parish.filter(parish => parish.name === this.record.parroquia)[0]
+          this.zones = currentParsih.zone
         }
       }
     },
