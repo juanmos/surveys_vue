@@ -13,9 +13,9 @@
                     </span>
                     <span v-else>
                       <v-chip v-if="key === 'actors'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
-                              <avatar :image="actorQuestion.image">
-                              </avatar>
-                              {{actorQuestion.code}}
+                             <!-- <avatar :image="actorQuestion.image">
+                             </avatar> -->
+                              {{actorQuestion}}
                       </v-chip>
                       <v-chip :color="key === 'category' ? 'primary' : (key === 'state') ? 'complete': 'grey-darken-4'"  class="font-weight-bold" v-if="(key ==='category' || key === 'state') && props.item[key]">
                         <avatar :image="props.item[key].image" v-if="key === 'actors'">
