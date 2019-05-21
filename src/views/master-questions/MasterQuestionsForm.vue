@@ -8,11 +8,11 @@
                         label="Texto de la pregunta:"
                         box
                     ></v-text-field>
-                    <v-text-field
-                        v-model="currentQuestion.type"
-                        label="Tipo de pregunta:"
-                        box
-                    ></v-text-field>
+                    <v-autocomplete
+                      :items="listTypeQuestion"
+                      v-model="currentQuestion.type"
+                      label="Tipo de pregunta:"
+                    ></v-autocomplete>
 
                     <v-autocomplete
                       :items="categories"
@@ -52,6 +52,7 @@ export default {
       graphic_type: ''
     },
     listGraphicType: ['bar', 'pie', 'line'],
+    listTypeQuestion: ['ABIERTA', 'SELECCION MULTIPLE', 'SELECCION UNICA'],
     categories: [],
     selectedCoding: null,
     selectedgraphicType: null

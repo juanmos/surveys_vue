@@ -5,7 +5,7 @@
               <v-flex xs12>
                   <v-card :flat="true">
                     <v-card-title>
-                        <span class="title">Categorias de Preguntas
+                        <span class="title">MASTER DE PREGUNTAS Crear
                         </span>
                         <v-spacer></v-spacer>
                         <v-btn to="/question-categories" class="deep-orange darken-3" fab small dark>
