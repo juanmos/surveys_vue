@@ -211,7 +211,7 @@ export default {
         lost: -1,
         category: question.category,
         actors: (question.actors) ? question.actors : [],
-        state: (question.questionMaster && question.categoryQuestion) ? question.categoryQuestion.name.toUpperCase() : ''
+        state: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '' : ''
       })) : []
     },
     getPossibleValues () {
