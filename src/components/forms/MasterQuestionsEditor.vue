@@ -11,7 +11,6 @@
           v-model="selectedCategoryQuestion"
           item-text="name"
           item-value="_id"
-          @change="changeCategoryQuestion"
           label="Categoría:"
         ></v-autocomplete>
         <v-autocomplete
@@ -19,7 +18,6 @@
           v-model="selectedMasterQuestion"
           item-text="text"
           item-value="_id"
-          @change="changeMasterQuestion"
           label="Pregunta:"
         ></v-autocomplete>
         <v-btn @click="format">Relacionar</v-btn>
@@ -100,6 +98,14 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    selectedCategoryQuestion: function (val) {
+      this.changeCategoryQuestion(val)
+    },
+    selectedMasterQuestion: function (val) {
+      this.changeMasterQuestion(val)
+    }
+  },
   created () {
     this.findCategoryQuestions({ query: {removed: false, $limit: null, $skip: 0} }).then(response => {
       this.categoryQuestions = response.data
