@@ -116,7 +116,7 @@
       <v-dialog v-model="dialogActors" max-width="900">
         <v-card v-if="dialogActors">
           <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-            <h4>Crear zona para: {{this.project.parroquia}}</h4>
+            <h4>AGREGAR ACTORES</h4>
           </v-flex>
           <v-card-text>
               <form-actors @getActors="setActors" @close="dialogActors = false"></form-actors>

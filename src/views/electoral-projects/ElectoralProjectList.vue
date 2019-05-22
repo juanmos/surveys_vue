@@ -21,9 +21,6 @@
               </span>
 
               <v-spacer></v-spacer>
-              <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
-                <v-icon>add</v-icon>
-              </v-btn>
             </v-card-title>
             <v-data-table
                   :headers="headers"

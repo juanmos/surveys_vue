@@ -16,7 +16,7 @@
           <v-tab-item
           >
             <v-card-text>
-              <div class="question">
+              <div class="">
                 <span style="font-weight: bold;">SELECCIONAR ACTORES</span>
               </div>
               <form>
@@ -75,10 +75,10 @@ export default {
 
 <style scoped>
 .overflow {
-  height: 300px;
+  /*height: 300px;*/
   overflow: auto;
 }
-.question {
+. {
   margin-bottom: 30px;
 }
 </style>
