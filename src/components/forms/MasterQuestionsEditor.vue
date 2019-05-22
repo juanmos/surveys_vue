@@ -7,7 +7,7 @@
       </div>
       <form>
         <v-autocomplete
-          :items="categoryQuestions"
+          :items="getCategoryQuestions"
           v-model="selectedCategoryQuestion"
           item-text="name"
           item-value="_id"
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
   props: ['arrIndex'],
   data () {
@@ -40,6 +40,8 @@ export default {
       },
       selectedMasterQuestion: null,
       selectedCategoryQuestion: null,
+      currentMaster: null,
+      currentCategory: null,
       masterQuestions: [],
       categoryQuestions: [],
       dataResponse: {
@@ -58,12 +60,12 @@ export default {
     format () {
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       let questionMaster = {
-        _id: this.selectedMasterQuestion._id,
-        text: this.selectedMasterQuestion.text
+        _id: this.currentMaster._id,
+        text: this.currentMaster.text
       }
       let categoryQuestion = {
-        _id: this.selectedCategoryQuestion._id,
-        name: this.selectedCategoryQuestion.name
+        _id: this.currentCategory._id,
+        name: this.currentCategory.name
       }
       this.dataResponse.questionMaster = questionMaster
       this.dataResponse.categoryQuestion = categoryQuestion
@@ -71,11 +73,12 @@ export default {
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
     changeMasterQuestion (selected) {
-      this.selectedMasterQuestion = this.masterQuestions.filter(data => data._id === selected)[0]
+      this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
     },
     changeCategoryQuestion (selected) {
-      this.selectedCategoryQuestion = this.categoryQuestions.filter(data => data._id === selected)[0]
+      this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
       this.findMasterQuestions({ query: {removed: false, $limit: null, $skip: 0, category: selected} }).then(response => {
+        this.masterQuestions = []
         this.masterQuestions = response.data
       })
     },
@@ -97,7 +100,12 @@ export default {
       this.$emit('close')
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('category-questions', {findCategoryQuestionsInStore: 'find'}),
+    getCategoryQuestions () {
+      return this.findCategoryQuestionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
+  },
   watch: {
     selectedCategoryQuestion: function (val) {
       this.changeCategoryQuestion(val)
