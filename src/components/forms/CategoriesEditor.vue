@@ -42,7 +42,7 @@ export default {
       this.$emit('saveValue', this.fieldValue)
     },
     orderItems () {
-      this.items.sort(function (a, b) {
+      this.items = this.items.sort(function (a, b) {
         var x = a.name
         var y = b.name
         if (x < y) { return -1 }
@@ -61,7 +61,7 @@ export default {
     this.fieldValue = this.value
     this.findCategories({ query: {removed: false} }).then(result => {
       this.items = result.data.map(category => category.code)
-      this.orderItems()
+      // this.orderItems()
     })
   }
 }
