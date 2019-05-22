@@ -76,7 +76,9 @@ export default {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
     },
     changeCategoryQuestion (selected) {
-      this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
+      if (selected && this.categoryQuestions.length > 0) {
+        this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
+      }
       this.findMasterQuestions({ query: {removed: false, $limit: null, $skip: 0, category: selected} }).then(response => {
         this.masterQuestions = []
         this.masterQuestions = response.data
@@ -125,9 +127,10 @@ export default {
       this.currentPoll = Object.assign({}, result)
       this.dataResponse = Object.assign({}, this.currentPoll.formatedConfiguration[this.arrIndex])
       if (this.dataResponse.categoryQuestion && this.dataResponse.questionMaster) {
-        this.changeCategoryQuestion(this.dataResponse.categoryQuestion._id)
         this.selectedCategoryQuestion = this.dataResponse.categoryQuestion
         this.selectedMasterQuestion = this.dataResponse.questionMaster
+        this.currentCategory = this.dataResponse.categoryQuestion
+        this.currentMaster = this.dataResponse.questionMaster
       }
     })
   }
