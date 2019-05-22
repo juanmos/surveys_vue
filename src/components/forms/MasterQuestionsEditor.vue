@@ -101,6 +101,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('master-questions', { findMasterQuestionsInStore: 'find' }),
     ...mapGetters('category-questions', {findCategoryQuestionsInStore: 'find'}),
     getCategoryQuestions () {
       return this.findCategoryQuestionsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
