@@ -323,6 +323,54 @@ const ActorCategoriesNew = resolve => {
   }, 'actors')
 }
 
+const MasterQuestions = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsList.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsList.vue'))
+  }, 'master-questions')
+}
+
+const MasterQuestionsNew = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsNew.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsNew.vue'))
+  }, 'master-questions')
+}
+
+const MasterQuestionsEdit = resolve => {
+  require.ensure(['./views/master-questions/MasterQuestionsEdit.vue'], () => {
+    resolve(require('./views/master-questions/MasterQuestionsEdit.vue'))
+  }, 'master-questions')
+}
+const ElectoralProjects = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectList.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectList.vue'))
+  }, 'electoral-projects')
+}
+const ElectoralProjectsNew = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectNew.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectNew.vue'))
+  }, 'electoral-projects')
+}
+const ElectoralProjectsEdit = resolve => {
+  require.ensure(['./views/electoral-projects/ElectoralProjectEdit.vue'], () => {
+    resolve(require('./views/electoral-projects/ElectoralProjectEdit.vue'))
+  }, 'electoral-projects')
+}
+const ElectoralRecords = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsList.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsList.vue'))
+  }, 'electoral-records')
+}
+const ElectoralRecordsNew = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsNew.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsNew.vue'))
+  }, 'electoral-records')
+}
+const ElectoralRecordsEdit = resolve => {
+  require.ensure(['./views/electoral-records/ElectoralRecordsEdit.vue'], () => {
+    resolve(require('./views/electoral-records/ElectoralRecordsEdit.vue'))
+  }, 'electoral-records')
+}
+
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
 export default new Router({
@@ -649,6 +697,60 @@ export default new Router({
           name: 'actors-categories-new',
           props: true,
           component: ActorCategoriesNew
+        },
+        {
+          path: 'master-questions',
+          name: 'master-questions',
+          props: true,
+          component: MasterQuestions
+        },
+        {
+          path: 'master-questions-new',
+          name: 'master-questions-new',
+          props: true,
+          component: MasterQuestionsNew
+        },
+        {
+          path: 'master-questions-edit/:id',
+          name: 'master-questions-edit',
+          props: true,
+          component: MasterQuestionsEdit
+        },
+        {
+          path: 'electoral-projects',
+          name: 'electoral-projects',
+          props: true,
+          component: ElectoralProjects
+        },
+        {
+          path: 'electoral-projects-new',
+          name: 'electoral-projects-new',
+          props: true,
+          component: ElectoralProjectsNew
+        },
+        {
+          path: 'electoral-projects-edit/:id',
+          name: 'electoral-projects-edit',
+          props: true,
+          component: ElectoralProjectsEdit
+        },
+        {
+          path: 'electoral-projects/:id',
+          name: 'electoral-records',
+          props: true,
+          component: ElectoralRecords
+        },
+        {
+          path: 'electoral-records-new/:id',
+          name: 'electoral-records-new',
+          props: true,
+          component: ElectoralRecordsNew
+        },
+        {
+          path: 'electoral-records-edit/:id',
+          name: 'electoral-records-edit',
+          props: true,
+          component: ElectoralRecordsEdit
         }
       ]
     },

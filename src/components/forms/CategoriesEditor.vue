@@ -50,7 +50,7 @@ export default {
   components: {},
   mounted () {
     this.fieldValue = this.value
-    this.findCategories({ query: {removed: false} }).then(result => {
+    this.findCategories({ query: {$sort: { code: '1' }, removed: false} }).then(result => {
       this.items = result.data.map(category => category.code)
     })
   }

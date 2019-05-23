@@ -106,7 +106,8 @@ export default {
       this.$emit('saveActor', Object.assign({}, this.actorData))
     },
     setCodeField (val) {
-      this.actorData.code = val.toUpperCase().split(' ').join('_')
+      let str = val.toUpperCase().split(' ').join('_')
+      this.actorData.code = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     },
     addTag () {
       this.actorData.tags.push(this.categoryInput)

@@ -4,7 +4,7 @@ np<template>
         <v-flex class="ml-5 mr-5">
           <v-text-field
             label="Nombre de la toma"
-            placeholder="Ejem: Febrero 2015"
+            placeholder="Ejem: Febrero 2019"
             v-model="name"
           ></v-text-field>
         </v-flex>

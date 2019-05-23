@@ -243,7 +243,6 @@ export default {
       data.spss[fileKey].map(data => {
         Object.keys(data).forEach(function (key) {
           let str = data[key].toString()
-          // console.log('cambiando---', str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
           data[key]=str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         })
       })
@@ -258,7 +257,6 @@ export default {
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {
-        console.log('este es el result', result)
         this.setSnackMessage('Registro guardado')
         this.setSnackColor('success')
         this.setShowSnack(true)

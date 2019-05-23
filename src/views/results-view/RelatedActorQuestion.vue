@@ -32,72 +32,19 @@
                   label="Actores"
                 ></v-autocomplete>
                 <div v-else class="overflow">
-                  <v-data-table
-                        :headers="headers"
-                        :items="getActors"
-                        hide-actions
-                        item-key="name"
-                      >
-                        <template slot="items" slot-scope="props">
-                          <tr @click="props.expanded = !props.expanded">
-                            <td>
-                              {{props.item.name}}
-                            </td>
-                            <td style="cursor: pointer;">
-                              <v-list-tile-action @click="addActor(props.item)">
-                                <v-icon class="blue--text text--lighten-2">add</v-icon>
-                              </v-list-tile-action>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
+                  <v-autocomplete
+                    :items="getActors"
+                    v-model="selectedActorsList"
+                    item-text="name"
+                    label="Actores"
+                    return-object
+                    multiple
+                  ></v-autocomplete>
                 </div>
                 <v-btn @click="format" v-if="dataResponse.category !=='INTENCION'">Relacionar</v-btn>
                 <v-btn @click="formatActors" v-else>Relacionar actores</v-btn>
                 <v-btn @click="cancel">Cancelar</v-btn>
               </form>
-            </v-card-text>
-          </v-tab-item>
-          <v-tab v-if="dataResponse.category ==='INTENCION'"
-              ripple
-          >
-              Asignar
-              <v-icon>reorder</v-icon>
-          </v-tab>
-          <v-tab-item
-          >
-            <v-card-text>
-              <div class="overflow">
-                <v-data-table
-                      :headers="headersOptions"
-                      :items="options"
-                      hide-actions
-                      item-key="name"
-                    >
-                      <template slot="items" slot-scope="props">
-                        <tr @click="props.expanded = !props.expanded">
-                          <td>
-                            {{props.item.name}}
-                          </td>
-                          <td>
-                            <v-autocomplete
-                              :items="getActors"
-                              v-model="props.item._id"
-                              item-text="name"
-                              @change="changeActorsExists(props)"
-                              item-value="_id"
-                              label="Actores"
-                            ></v-autocomplete>
-                          </td>
-                          <td>
-                            <span>{{props.code}}</span>
-                          </td>
-                        </tr>
-                      </template>
-                    </v-data-table>
-              </div>
-              <v-btn @click="formatOptions">Modificar actores</v-btn>
-              <v-btn @click="cancel">Cancelar</v-btn>
             </v-card-text>
           </v-tab-item>
       </v-tabs>
@@ -138,6 +85,7 @@ export default {
       dataText: '',
       active: null,
       selectedActor: null,
+      selectedActorsList: [],
       currentPoll: {
         _polls_project_id: null,
         formatedConfiguration: []
@@ -164,7 +112,7 @@ export default {
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
     formatActors () {
-      this.dataResponse.actors = this.actors
+      this.dataResponse.actors = this.selectedActorsList.map(data => data.code)
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
     },
@@ -177,41 +125,6 @@ export default {
       /* this.dataResponse.related = this.dataResponse.related.filter(item => (value !== item))
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
       this.save(this.currentPoll, false, 'Pregunta relacionada eliminada.') */
-    },
-    addActor (actor) {
-      let message = ''
-      let exist = this.actors.filter(data => data.code === actor.code)
-      if (exist.length === 0) {
-        this.actors.push(actor)
-        this.formatTotal(actor)
-        message = 'Actor agregado, listo para guardar cambios'
-      } else {
-        message = 'Actor ya agregado.'
-      }
-      this.setSnackMessage(message)
-      this.setShowSnack(true)
-    },
-    formatTotal (actorAdd) {
-      let self = this
-      let find = false
-      Object.keys(self.dataResponse.total).forEach(function (key) {
-        if (actorAdd.name === key) {
-          find = true
-          self.dataResponse.total[key]._id = actorAdd._id
-          self.dataResponse.total[key].code = actorAdd.code
-        }
-      })
-      if (find === false) {
-        this.formatActorTotalNew(actorAdd)
-      }
-    },
-    formatActorTotalNew (actorAdd) {
-      this.dataResponse.total[actorAdd.name] = {
-        code: actorAdd.code,
-        percentage: 0,
-        total: 0,
-        _id: actorAdd._id
-      }
     },
     save (values, close, message) {
       const {ConfigPoll} = this.$FeathersVuex
@@ -276,7 +189,7 @@ export default {
     selectedActor (value) {
       this.getActor(value).then(result => {
         let resultActor = Object.assign({}, result)
-        this.dataResponse.actor = resultActor
+        this.dataResponse.actors = [resultActor.code]
       })
     }
   }
@@ -285,7 +198,6 @@ export default {
 
 <style scoped>
 .overflow {
-  height: 300px;
   overflow: auto;
 }
 .question {

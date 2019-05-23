@@ -569,7 +569,7 @@ export default {
     },
     getConfigPolls () {
       // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findConfigPollsInStore({query: {removed: false, _polls_project_id: this.$route.params.id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findConfigPollsInStore({query: {_polls_project_id: this.$route.params.id}}).data
     }
   },
   mounted () {
@@ -581,7 +581,7 @@ export default {
   created () {
     this.findcustomers({ query: {removed: false} }).then(response => {
     })
-    this.findConfigPolls({ query: {removed: false} })
+    this.findConfigPolls({ query: {removed: false, _polls_project_id: this.$route.params.id, $skip: 0, $limit: null} })
     this.getDataCategorySegmentationPolls()
   }
 }
