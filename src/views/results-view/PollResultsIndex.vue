@@ -1,5 +1,15 @@
 <template>
     <v-flex class="view-container">
+      <v-dialog v-model="dialogProcessdata" max-width="900">
+          <v-card v-if="dialogProcessdata">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>PROCESANDO ENCUESTA</h4>
+            </v-flex>
+            <v-card-text>
+              <h4>PROCESANDO DATOS DE LA ENCUESTA CARGADA AL SISTEMA. ESPERE POR FAVOR...</h4>
+            </v-card-text>
+          </v-card>
+      </v-dialog>
       <v-toolbar color="transparent">
           <span class="headline">{{currentPoll ? currentPoll.name : ''}}</span>
           <v-spacer></v-spacer>
@@ -162,7 +172,8 @@ export default {
     return {
       active: null,
       resultPoll: null,
-      segmentationDialog: false
+      segmentationDialog: false,
+      dialogProcessdata: false
     }
   },
   computed: {
@@ -241,6 +252,7 @@ export default {
           this.setShowSnack(true)
           this.setSnackMessage('La encuesta ya fue procesada.')
         } else {
+          this.dialogProcessdata = true
           this.initialProcessConsolidate()
         }
       })
@@ -256,9 +268,11 @@ export default {
       params.append('_id', this.id)
       axiosIntance.get('/config-polls', { params }).then((result) => {
         this.setShowSnack(true)
+        this.dialogProcessdata = false
         this.setSnackMessage('Data procesada correctamente.')
       }).catch(err => {
         this.setShowSnack(true)
+        this.dialogProcessdata = false
         this.setSnackMessage('Error al Guardar. Revise que la encuestra este asignado con el master de preguntas.')
         console.log(err)
       })
