@@ -176,6 +176,7 @@ export default {
       PollId: '',
       _id: '',
       nameConfigPolls: '',
+      _polls_project_id: '',
       MyRules: [
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
@@ -187,7 +188,7 @@ export default {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
-      let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim()}
+      let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim() , _polls_project_id : this._polls_project_id}
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config.patch().then((result) => {
@@ -221,6 +222,7 @@ export default {
       this.PollId = response.data[0].construct
       this._id = response.data[0]._id
       this.nameConfigPolls = response.data[0].name
+      this._polls_project_id = response.data[0]._polls_project_id
     })
   }
 }
