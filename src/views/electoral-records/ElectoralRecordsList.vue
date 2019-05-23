@@ -222,7 +222,7 @@ export default {
     ...mapState('electoral-records', { paginationVal: 'pagination' }),
     ...mapGetters('electoral-records', {findElectoralRecords: 'find'}),
     getRecords () {
-      return this.findElectoralRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: 0, $limit: null}}).data
+      return this.findElectoralRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -239,9 +239,12 @@ export default {
       })
     }
   },
-  mounted () {
+  created () {
     this.project_id = this.$route.params.id
-    this.findRecords({$skip: 0, _electoral_project_id: this.project_id, $limit: null, removed: false}).then(response => {
+    this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit}}).then(response => {
+      this.limit = response.limit
+      this.total = response.total
+      this.loaded = true
       this.recordsList = response.data
     })
   },
