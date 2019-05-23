@@ -24,6 +24,9 @@
                 <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
                   <v-icon>add</v-icon>
                 </v-btn>
+                <v-btn class="deep-orange darken-3" fab small dark :href="urlEnviroment + '/uploads/app-debug.apk'" target="_blank">
+                  <v-icon>cloud_download</v-icon>
+                </v-btn >
             </v-card-title>
             <v-data-table
                   :headers="headers"
