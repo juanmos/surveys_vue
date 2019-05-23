@@ -7,7 +7,7 @@
               <v-subheader>Actas Registradas</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getRecords"
+                  :items="recordsList"
                   hide-actions
                   item-key="name"
                 >
@@ -178,6 +178,7 @@ export default {
       itemSelected: null,
       loaded: false,
       projects: [],
+      recordsList: [],
       query: {},
       dialog: false
     }
@@ -240,11 +241,11 @@ export default {
   },
   created () {
     this.project_id = this.$route.params.id
-    this.findRecords({$skip: this.getSkip, _electoral_project_id: this.project_id, $limit: this.limit, removed: false}).then(response => {
+    this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit}}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.projects = response.data
+      this.recordsList = response.data
     })
   },
   components: {LoadingComponent, EditableField}
