@@ -7,7 +7,7 @@
               <v-subheader>Actas Registradas</v-subheader>
             <v-data-table
                   :headers="headers"
-                  :items="getRecords"
+                  :items="recordsList"
                   hide-actions
                   item-key="name"
                 >
@@ -178,6 +178,7 @@ export default {
       itemSelected: null,
       loaded: false,
       projects: [],
+      recordsList: [],
       query: {},
       dialog: false
     }
@@ -221,7 +222,7 @@ export default {
     ...mapState('electoral-records', { paginationVal: 'pagination' }),
     ...mapGetters('electoral-records', {findElectoralRecords: 'find'}),
     getRecords () {
-      return this.findElectoralRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findElectoralRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: 0, $limit: null}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
@@ -238,13 +239,10 @@ export default {
       })
     }
   },
-  created () {
+  mounted () {
     this.project_id = this.$route.params.id
-    this.findRecords({$skip: this.getSkip, _electoral_project_id: this.project_id, $limit: this.limit, removed: false}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.projects = response.data
+    this.findRecords({$skip: 0, _electoral_project_id: this.project_id, $limit: null, removed: false}).then(response => {
+      this.recordsList = response.data
     })
   },
   components: {LoadingComponent, EditableField}
