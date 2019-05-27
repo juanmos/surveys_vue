@@ -236,6 +236,7 @@ export default {
       this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
+        this.recordsList = response.data
       })
     }
   },
