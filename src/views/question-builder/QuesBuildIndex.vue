@@ -254,6 +254,11 @@ export default {
         name: data.name,
         dateFinished: data.dateFinished,
         status: data.status,
+        country: data.country,
+        province: data.province,
+        canton: data.canton,
+        parroquia: data.parroquia,
+        zone: data.zone,
         _polls_project_id: this.$route.params.id
       });
       configPoll.save().then(result => {
