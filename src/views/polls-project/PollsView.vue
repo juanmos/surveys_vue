@@ -569,7 +569,7 @@ export default {
     },
     getConfigPolls () {
       // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findConfigPollsInStore({query: {_polls_project_id: this.$route.params.id}}).data
+      return this.findConfigPollsInStore({query: {$sort: { dateFinished: '-1' }, _polls_project_id: this.$route.params.id}}).data
     }
   },
   mounted () {
