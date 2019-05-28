@@ -278,6 +278,11 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('countries', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
