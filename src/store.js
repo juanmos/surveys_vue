@@ -181,6 +181,7 @@ export default new Vuex.Store({
         construct: '',
         imported: false,
         originalJson: '',
+        PollInstances: [],
         formatedConfiguration: '',
         parsedJson: '',
         removed: false,

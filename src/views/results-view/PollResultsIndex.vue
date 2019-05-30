@@ -6,7 +6,16 @@
               <h4>PROCESANDO ENCUESTA</h4>
             </v-flex>
             <v-card-text>
-              <h4>PROCESANDO DATOS DE LA ENCUESTA CARGADA AL SISTEMA. ESPERE POR FAVOR...</h4>
+                <center>
+                    <v-img
+                      src="/images/loader.gif"
+                      img-alt="Image"
+                      height="70"
+                      width="70"
+                      aspect-ratio="2.75"
+                    ></v-img>
+                  <h5>PROCESANDO DATOS DE LA ENCUESTA CARGADA AL SISTEMA. ESPERE POR FAVOR...</h5>
+                </center>
             </v-card-text>
           </v-card>
       </v-dialog>
@@ -53,7 +62,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getDataHeaders" :responses="getTableDataValues"></poll-results-table>
+                    <poll-results-table :headers="getDataHeaders" :responses="viewData"></poll-results-table>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -173,6 +182,7 @@ export default {
       active: null,
       resultPoll: null,
       segmentationDialog: false,
+      viewData: [],
       dialogProcessdata: false
     }
   },
@@ -297,11 +307,17 @@ export default {
       }).catch(err => console.log('este es el error', err))
     }
   },
-  created () {
-    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
+  mounted () {
+    this.getPoll(this.id).then(result => {
+      this.viewData = result.PollInstances.map(poll => poll.response_received)
       this.resultPoll = Object.assign({}, result)
       this.setCurrentPoll(Object.assign({}, this.resultPoll))
-    })
+    }).catch(err => console.log('este es el error', err))
+  },
+  watch: {
+    resultPoll: function (value) {
+      this.viewData = value.PollInstances.map(poll => poll.response_received)
+    }
   },
   components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator }
 }
