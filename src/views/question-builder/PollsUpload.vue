@@ -34,7 +34,7 @@ np<template>
                   <v-autocomplete
                   :items="provinces"
                   item-text="name"
-                  item-value="name"
+                  item-value="_id"
                   v-model="province"
                   hide-no-data
                   hide-details
@@ -48,7 +48,7 @@ np<template>
                   dark
                   fab
                   small
-                  title="Agregar Circunscripción"
+                  title="Agregar Provincia"
                   color="primary"
                   @click="addNewItem('province')"
                   >
@@ -65,6 +65,7 @@ np<template>
                           hide-details
                           label="Buscar cantón..."
                           solo-inverted
+                          multiple
                           @change="selectedCanton"
                         ></v-autocomplete>
               </v-flex>
@@ -73,84 +74,9 @@ np<template>
                   dark
                   fab
                   small
-                  title="Agregar Circunscripción"
+                  title="Agregar Cantón"
                   color="primary"
                   @click="addNewItem('canton')"
-                  >
-                      <v-icon>add</v-icon>
-                  </v-btn>
-              </v-flex>
-              <v-flex xs10>
-                <v-autocomplete
-                        :items="districts"
-                        item-text="name"
-                        item-value="name"
-                        v-model="district"
-                        hide-no-data
-                        :disabled="disabledDistrict"
-                        hide-details
-                        label="Buscar circunscripción cantonal..."
-                        solo-inverted
-                        @change="selectedDistrict"
-                      ></v-autocomplete>
-              </v-flex>
-              <v-flex xs2>
-                  <v-btn
-                  dark
-                  fab
-                  small
-                  title="Agregar Circunscripción"
-                  color="primary"
-                  @click="addNewItem('district')"
-                  >
-                      <v-icon>add</v-icon>
-                  </v-btn>
-              </v-flex>
-              <v-flex xs10>
-                  <v-autocomplete class="background: #333;"
-                          :items="parroquias"
-                          item-text="name"
-                          item-value="name"
-                          v-model="parroquia"
-                          hide-no-data
-                          hide-details
-                          label="Buscar parroquias..."
-                          solo-inverted
-                          @change="selectedParroquia"
-                        ></v-autocomplete>
-              </v-flex>
-              <v-flex xs2>
-                  <v-btn
-                  dark
-                  fab
-                  small
-                  title="Agregar Parroquia"
-                  color="primary"
-                  @click="addNewItem('parroquia')"
-                  >
-                      <v-icon>add</v-icon>
-                  </v-btn>
-              </v-flex>
-              <v-flex xs10>
-                  <v-autocomplete
-                          :items="zones"
-                          item-text="name"
-                          item-value="name"
-                          v-model="zone"
-                          hide-no-data
-                          hide-details
-                          label="Buscar zona..."
-                          solo-inverted
-                        ></v-autocomplete>
-              </v-flex>
-              <v-flex xs2>
-                  <v-btn
-                  dark
-                  fab
-                  small
-                  title="Agregar Zona"
-                  color="primary"
-                  @click="addNewItem('zona')"
                   >
                       <v-icon>add</v-icon>
                   </v-btn>
@@ -194,7 +120,7 @@ export default {
     country: null,
     province: null,
     newTextAddItem: '',
-    canton: null,
+    canton: [],
     district: null,
     parroquia: null,
     zone: null,
@@ -236,14 +162,12 @@ export default {
       event.country = this.country
       event.province = this.province
       event.canton = this.canton
-      event.parroquia = this.parroquia
-      event.zone = this.zone
       event.status = 'FINALIZADA'
       this.$emit('pollImported', Object.assign({}, event))
     },
     selectetedCountry () {
       this.province = null
-      this.canton = null
+      this.canton = []
       this.district = null
       this.parroquia = null
       this.zone = null
@@ -262,7 +186,7 @@ export default {
       this.loadCantones()
     },
     loadCantones () {
-      this.findProvinces({query: {name: this.province, $skip: 0, $limit: null}}).then(response => {
+      this.findProvinces({query: {_id: this.province, $skip: 0, $limit: null}}).then(response => {
         this.cantones = response.data[0].canton
         this.orderCantones()
         if (this.canton !== '' && this.canton) {
@@ -271,22 +195,7 @@ export default {
       })
     },
     selectedCanton () {
-      this.districts = []
-      this.parroquias = []
-      this.zones = []
-      let currentCanton = this.cantones.filter(canton => canton.name === this.canton)[0]
-      if (currentCanton) {
-        if (currentCanton.district && currentCanton.district.length > 0) {
-          this.disabledDistrict = false
-          this.districts = currentCanton.district
-        } else {
-          this.disabledDistrict = true
-          this.parroquias = currentCanton.parish
-        }
-        this.district = ''
-        this.parroquia = ''
-        this.zone = ''
-      }
+      // console.log('canton--', this.canton)
     },
     loadDataEdit () {
       this.districts = []
