@@ -254,7 +254,8 @@ export default {
       'setCurrentPoll'
     ]),
     processData () {
-      this.checkExistData()
+      // this.checkExistData()
+      this.initialProcessConsolidate()
     },
     checkExistData () {
       this.findConsolidate({query: {_config_poll_id: this.id}}).then(response => {
