@@ -28,6 +28,10 @@
                       @change="changeGraphicType"
                       label="Tipo de gráfico:"
                     ></v-autocomplete>
+                    <v-checkbox
+                      v-model="currentQuestion.typeMatrix"
+                      label="Tipo matriz:"
+                    ></v-checkbox>
                     <v-btn @click="save">Guardar</v-btn>
                 </v-flex>
            </v-layout>
@@ -49,6 +53,7 @@ export default {
       },
       type: '',
       options: null,
+      typeMatrix: false,
       graphic_type: ''
     },
     listGraphicType: ['bar', 'pie', 'line'],
