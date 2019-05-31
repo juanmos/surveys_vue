@@ -29,6 +29,13 @@
                               <td class="text-xs-left">
                                   {{props.item.type}}
                               </td>
+                              <td class="text-xs-left">
+                                <v-checkbox
+                                  v-model="props.item.typeMatrix"
+                                  v-on:change="saveEdit(props.item)"
+                                  label="Tipo matriz"
+                                ></v-checkbox>
+                              </td>
                               <td>
                                 <v-menu
                                   bottom
@@ -102,6 +109,12 @@ export default {
         align: 'left',
         value: 'type',
         sortable: true
+      },
+      {
+        text: 'Modificar',
+        align: 'left',
+        value: 'type',
+        sortable: true
       }
     ],
     total: 100,
@@ -111,6 +124,10 @@ export default {
   computed: {
     ...mapGetters('master-questions', {getMasterQuestionInStore: 'find'}),
     ...mapState('master-questions', {loading: 'isFindPending'}),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -131,6 +148,17 @@ export default {
     ...mapActions('master-questions', {findMasterQuestions: 'find'}),
     edit (master) {
       this.$router.push('/master-questions-edit/' + master._id)
+    },
+    saveEdit (question) {
+      const {MasterQuestion} = this.$FeathersVuex
+      let dataSave = new MasterQuestion(question)
+      dataSave.save().then(result => {
+        this.setSnackMessage('Pregunta master actualizada.')
+        this.setShowSnack(true)
+        // this.$router.push('/master-questions')
+      }).catch(err => {
+        console.log(err)
+      })
     },
     refreshActors () {
       this.findMasterQuestions({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
