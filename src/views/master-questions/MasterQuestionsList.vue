@@ -124,10 +124,6 @@ export default {
   computed: {
     ...mapGetters('master-questions', {getMasterQuestionInStore: 'find'}),
     ...mapState('master-questions', {loading: 'isFindPending'}),
-    ...mapActions([
-      'setSnackMessage',
-      'setShowSnack'
-    ]),
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -146,15 +142,20 @@ export default {
   },
   methods: {
     ...mapActions('master-questions', {findMasterQuestions: 'find'}),
+    ...mapActions([
+      'setSnackMessage',
+      'setShowSnack'
+    ]),
     edit (master) {
       this.$router.push('/master-questions-edit/' + master._id)
     },
     saveEdit (question) {
       const {MasterQuestion} = this.$FeathersVuex
       let dataSave = new MasterQuestion(question)
+      let that = this
       dataSave.save().then(result => {
-        this.setSnackMessage('Pregunta master actualizada.')
-        this.setShowSnack(true)
+        that.setSnackMessage('Pregunta master actualizada.')
+        that.setShowSnack(true)
         // this.$router.push('/master-questions')
       }).catch(err => {
         console.log(err)
