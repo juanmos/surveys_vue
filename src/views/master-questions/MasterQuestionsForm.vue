@@ -28,6 +28,14 @@
                       @change="changeGraphicType"
                       label="Tipo de gráfico:"
                     ></v-autocomplete>
+                    <v-autocomplete
+                      :items="getSubCategories"
+                      v-model="selectedSubCategory"
+                      item-text="name"
+                      @change="changeSubCategory"
+                      label="Sub-Categoría:"
+                      return-object
+                    ></v-autocomplete>
                     <v-checkbox
                       v-model="currentQuestion.typeMatrix"
                       label="Tipo matriz:"
@@ -40,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   props: ['masterCurrent'],
   data: (state) => ({
@@ -49,7 +57,11 @@ export default {
       label: '',
       category_questions: {
         name: '',
-        code: 0
+        _id: null
+      },
+      subcategory_questions: {
+        name: '',
+        _id: null
       },
       type: '',
       options: null,
@@ -60,21 +72,31 @@ export default {
     listTypeQuestion: ['ABIERTA', 'SELECCION MULTIPLE', 'SELECCION UNICA'],
     categories: [],
     selectedCoding: null,
+    selectedSubCategory: null,
     selectedgraphicType: null
   }),
   methods: {
     ...mapActions('category-questions', { findCodingQuestions: 'find' }),
+    ...mapActions('question-categories', { findQuestionCategories: 'find' }),
     changeCategory (selected) {
       this.currentQuestion.category_questions = this.categories.filter(data => data._id === selected)[0]
     },
     changeGraphicType (selected) {
       this.currentQuestion.graphic_type = selected
     },
+    changeSubCategory (selected) {
+      this.currentQuestion.subcategory_questions = selected
+    },
     save () {
       this.$emit('save', Object.assign({}, this.currentQuestion))
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('question-categories', {findQuestionCategoriesInStore: 'find'}),
+    getSubCategories () {
+      return this.findQuestionCategoriesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+    }
+  },
   watch: {
     masterCurrent (val) {
       if (val) {
@@ -82,6 +104,7 @@ export default {
         this.selectedCoding = val.category_questions._id
         this.category_questions = val.category_questions
         this.selectedgraphicType = val.graphic_type
+        this.selectedSubCategory = val.subcategory_questions
       }
     }
   },
@@ -89,6 +112,7 @@ export default {
     this.findCodingQuestions({ query: {removed: false, $skip: 0, $limit: null} }).then(response => {
       this.categories = response.data
     })
+    this.findQuestionCategories({ query: {removed: false, $limit: null, $skip: 0} })
   },
   components: {}
 }

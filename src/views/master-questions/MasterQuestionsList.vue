@@ -122,6 +122,9 @@ export default {
     masterQuestions: []
   }),
   computed: {
+    ...mapGetters([
+      'getPage'
+    ]),
     ...mapGetters('master-questions', {getMasterQuestionInStore: 'find'}),
     ...mapState('master-questions', {loading: 'isFindPending'}),
     getLength () {
@@ -132,7 +135,7 @@ export default {
     }
   },
   watch: {
-    page () {
+    page (val) {
       this.findMasterQuestions({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
@@ -144,9 +147,11 @@ export default {
     ...mapActions('master-questions', {findMasterQuestions: 'find'}),
     ...mapActions([
       'setSnackMessage',
-      'setShowSnack'
+      'setShowSnack',
+      'setPage'
     ]),
     edit (master) {
+      this.setPage(this.page)
       this.$router.push('/master-questions-edit/' + master._id)
     },
     saveEdit (question) {
@@ -171,6 +176,10 @@ export default {
     }
   },
   mounted () {
+    console.log('page---', this.getPage)
+    if (this.getPage) {
+      this.page = this.getPage
+    }
     this.findMasterQuestions({query: {$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}}).then(response => {
       this.limit = response.limit
       this.total = response.total

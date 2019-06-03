@@ -297,6 +297,7 @@ export default new Vuex.Store({
       cluster: false,
       drawingMode: false
     },
+    page: 8,
     asideOpened: false
   },
   getters: {
@@ -305,6 +306,9 @@ export default new Vuex.Store({
     },
     getShowSnack: (state) => {
       return state.getShowSnack
+    },
+    getPage: (state) => {
+      return state.page
     },
     getSnackColor: (state) => {
       return state.getSnackColor
@@ -326,6 +330,9 @@ export default new Vuex.Store({
     setShowSnack (state, show) {
       state.showSnack = show
     },
+    setPage (state, page) {
+      state.page = page
+    },
     setSnackColor (state, type) {
       state.snackColor = type
     },
@@ -345,6 +352,9 @@ export default new Vuex.Store({
     },
     setShowSnack: ({ commit }, show) => {
       commit('setShowSnack', show)
+    },
+    setPage: ({ commit }, page) => {
+      commit('setPage', page)
     },
     setSnackColor: ({ commit }, show) => {
       commit('setSnackColor', show)

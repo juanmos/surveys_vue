@@ -46,7 +46,8 @@ export default {
       dataSave.save().then(result => {
         this.setSnackMessage('Pregunta master actualizada.')
         this.setShowSnack(true)
-        this.$router.push('/master-questions')
+        // this.$router.push('/master-questions')
+        this.$router.go(-1)
       }).catch(err => {
         console.log(err)
       })
