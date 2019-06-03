@@ -297,7 +297,7 @@ export default new Vuex.Store({
       cluster: false,
       drawingMode: false
     },
-    page: 8,
+    page: 1,
     asideOpened: false
   },
   getters: {
