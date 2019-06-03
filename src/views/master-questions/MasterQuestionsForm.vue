@@ -68,7 +68,7 @@ export default {
       typeMatrix: false,
       graphic_type: ''
     },
-    listGraphicType: ['bar', 'pie', 'line'],
+    listGraphicType: ['column', 'bar', 'pie', 'line'],
     listTypeQuestion: ['ABIERTA', 'SELECCION MULTIPLE', 'SELECCION UNICA'],
     categories: [],
     selectedCoding: null,
