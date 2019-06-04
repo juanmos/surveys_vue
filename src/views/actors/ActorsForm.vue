@@ -93,7 +93,8 @@ export default {
     actorTypes: [
       'PERSONA',
       'SUCESO',
-      'ELEMENTO'
+      'ELEMENTO',
+      'PARTIDO POLITICO'
     ],
     categories: []
   }),
