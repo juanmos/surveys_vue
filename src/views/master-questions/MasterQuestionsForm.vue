@@ -23,18 +23,18 @@
                       label="Categoría:"
                     ></v-autocomplete>
                     <v-autocomplete
-                      :items="listGraphicType"
-                      v-model="selectedgraphicType"
-                      @change="changeGraphicType"
-                      label="Tipo de gráfico:"
-                    ></v-autocomplete>
-                    <v-autocomplete
                       :items="getSubCategories"
                       v-model="selectedSubCategory"
                       item-text="name"
                       @change="changeSubCategory"
                       label="Sub-Categoría:"
                       return-object
+                    ></v-autocomplete>
+                    <v-autocomplete
+                      :items="listGraphicType"
+                      v-model="selectedgraphicType"
+                      @change="changeGraphicType"
+                      label="Tipo de gráfico:"
                     ></v-autocomplete>
                     <v-checkbox
                       v-model="currentQuestion.typeMatrix"
@@ -66,14 +66,14 @@ export default {
       type: '',
       options: null,
       typeMatrix: false,
-      graphic_type: ''
+      graphic_type: 'bar'
     },
     listGraphicType: ['column', 'bar', 'pie', 'line'],
     listTypeQuestion: ['ABIERTA', 'SELECCION MULTIPLE', 'SELECCION UNICA'],
     categories: [],
     selectedCoding: null,
     selectedSubCategory: null,
-    selectedgraphicType: null
+    selectedgraphicType: 'bar'
   }),
   methods: {
     ...mapActions('category-questions', { findCodingQuestions: 'find' }),

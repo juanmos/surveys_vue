@@ -49,9 +49,6 @@
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
-                      <v-list-tile @click="dialogCategories = true;arrIndex = props.index; fieldSelected = 'category'">
-                          <v-list-tile-title>Agregar Categoria</v-list-tile-title>
-                      </v-list-tile>
                       <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
                           <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
                       </v-list-tile>
