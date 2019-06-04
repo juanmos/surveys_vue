@@ -213,7 +213,7 @@ export default {
         'Valores',
         'Codigo',
         'Perdido',
-        'Categoria',
+        // 'Sub-Categoría',
         'Actor',
         'Master',
         'Acciones'
@@ -230,7 +230,7 @@ export default {
         values: question.options,
         code: question.code,
         lost: -1,
-        category: question.category,
+        // subcategory: (question.subcategory_question) ? question.subcategory_question.name.toUpperCase() : '',
         actors: (question.actors) ? question.actors : [],
         state: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '' : ''
       })) : []
