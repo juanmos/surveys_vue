@@ -8,6 +8,11 @@
                         label="Texto de la pregunta:"
                         box
                     ></v-text-field>
+                    <v-text-field
+                        v-model="currentQuestion.label"
+                        label="Etiqueta de la pregunta:"
+                        box
+                    ></v-text-field>
                     <v-autocomplete
                       :items="listTypeQuestion"
                       v-model="currentQuestion.type"
