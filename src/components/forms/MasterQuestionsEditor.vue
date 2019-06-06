@@ -62,7 +62,6 @@ export default {
     ...mapActions('config-polls', {getPoll: 'get'}),
     format () {
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
-      console.log('id--', this.currentMaster)
       let questionMaster = {
         _id: this.currentMaster._id,
         text: this.currentMaster.text
@@ -80,6 +79,7 @@ export default {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
     },
     changeCategoryQuestion (selected) {
+      this.selectedMasterQuestion = null
       if (selected && this.categoryQuestions.length > 0) {
         this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
       }
@@ -104,9 +104,8 @@ export default {
         this.showMessage = false
         this.$emit('refresh')
       }).catch(err => {
-        console.log('este es el error', err)
-        this.showMessage = false
         this.message = 'Error...'
+        console.log('err--', err)
       })
     },
     cancel () {
