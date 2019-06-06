@@ -79,7 +79,9 @@ export default {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
     },
     changeCategoryQuestion (selected) {
-      this.selectedMasterQuestion = null
+      if (this.currentMaster._id === null) {
+        this.selectedMasterQuestion = null
+      }
       if (selected && this.categoryQuestions.length > 0) {
         this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
       }
