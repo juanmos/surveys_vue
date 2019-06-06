@@ -168,7 +168,7 @@ export default {
   computed: {
     ...mapGetters('actors', {findActorsInStore: 'find'}),
     getActors () {
-      return this.findActorsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return [{'name': 'Ninguno', '_id': 0}, ...this.findActorsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data]
     }
   },
   created () {
@@ -187,10 +187,14 @@ export default {
   },
   watch: {
     selectedActor (value) {
-      this.getActor(value).then(result => {
-        let resultActor = Object.assign({}, result)
-        this.dataResponse.actors = [resultActor.code]
-      })
+      if (value === 0) {
+        this.dataResponse.actors = []
+      } else {
+        this.getActor(value).then(result => {
+          let resultActor = Object.assign({}, result)
+          this.dataResponse.actors = [resultActor.code]
+        })
+      }
     }
   }
 }
