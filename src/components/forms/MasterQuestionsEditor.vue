@@ -79,9 +79,6 @@ export default {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
     },
     changeCategoryQuestion (selected) {
-      if (this.currentMaster._id === null) {
-        this.selectedMasterQuestion = null
-      }
       if (selected && this.categoryQuestions.length > 0) {
         this.currentCategory = this.categoryQuestions.filter(data => data._id === selected)[0]
       }
@@ -109,6 +106,21 @@ export default {
         this.message = 'Error...'
         console.log('err--', err)
       })
+    },
+    loadData (editDataQuestion, editMaster) {
+      if (editDataQuestion) {
+        this.findCategoryQuestions({ query: {removed: false, $limit: null, $skip: 0} }).then(response => {
+          this.categoryQuestions = response.data
+          this.currentCategory = this.categoryQuestions.filter(data => data._id === editDataQuestion._id)[0]
+        })
+      }
+      if (editMaster) {
+        this.findMasterQuestions({ query: {removed: false, $limit: null, $skip: 0, category: editDataQuestion._id} }).then(response => {
+          this.masterQuestions = []
+          this.masterQuestions = response.data
+          this.currentMaster = this.masterQuestions.filter(data => data._id === editMaster._id)[0]
+        })
+      }
     },
     cancel () {
       this.$emit('close')
@@ -141,8 +153,7 @@ export default {
       if (this.dataResponse.categoryQuestion && this.dataResponse.questionMaster) {
         this.selectedCategoryQuestion = this.dataResponse.categoryQuestion
         this.selectedMasterQuestion = this.dataResponse.questionMaster
-        this.currentCategory = this.dataResponse.categoryQuestion
-        this.currentMaster = this.dataResponse.questionMaster
+        this.loadData(this.selectedCategoryQuestion, this.selectedMasterQuestion)
       }
     })
   }
