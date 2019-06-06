@@ -20,6 +20,7 @@
           item-value="_id"
           label="Pregunta:"
         ></v-autocomplete>
+        <label v-if="showMessage">{{message}}</label>
         <v-btn @click="format">Relacionar</v-btn>
         <v-btn @click="cancel">Cancelar</v-btn>
       </form>
@@ -43,7 +44,9 @@ export default {
       currentMaster: null,
       currentCategory: null,
       masterQuestions: [],
+      message: 'Espere por favor...',
       categoryQuestions: [],
+      showMessage: false,
       dataResponse: {
         label: ''
       }
@@ -59,6 +62,7 @@ export default {
     ...mapActions('config-polls', {getPoll: 'get'}),
     format () {
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
+      console.log('id--', this.currentMaster)
       let questionMaster = {
         _id: this.currentMaster._id,
         text: this.currentMaster.text
@@ -92,11 +96,18 @@ export default {
     save (values, close, message) {
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(values)
+      this.showMessage = true
+      this.message = 'Espere por favor...'
       config.save().then(result => {
         this.setSnackMessage(message)
         this.setShowSnack(true)
+        this.showMessage = false
         this.$emit('refresh')
-      }).catch(err => console.log('este es el error', err))
+      }).catch(err => {
+        console.log('este es el error', err)
+        this.showMessage = false
+        this.message = 'Error...'
+      })
     },
     cancel () {
       this.$emit('close')
