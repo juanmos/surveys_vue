@@ -24,14 +24,14 @@
                 <span style="font-weight: bold;">LISTADO DE ACTORES</span>
               </div>
               <form>
-                <v-autocomplete v-if="dataResponse.category !=='INTENCION'"
+              <!--  <v-autocomplete v-if="dataResponse.category !=='INTENCION'"
                   :items="getActors"
                   v-model="selectedActor"
                   item-text="name"
                   item-value="_id"
                   label="Actores"
-                ></v-autocomplete>
-                <div v-else class="overflow">
+                ></v-autocomplete> -->
+                <div class="overflow">
                   <v-autocomplete
                     :items="getActors"
                     v-model="selectedActorsList"
@@ -41,8 +41,8 @@
                     multiple
                   ></v-autocomplete>
                 </div>
-                <v-btn @click="format" v-if="dataResponse.category !=='INTENCION'">Relacionar</v-btn>
-                <v-btn @click="formatActors" v-else>Relacionar actores</v-btn>
+                <!-- <v-btn @click="format" v-if="dataResponse.category !=='INTENCION'">Relacionar</v-btn> -->
+                <v-btn @click="formatActors">Relacionar actores</v-btn>
                 <v-btn @click="cancel">Cancelar</v-btn>
               </form>
             </v-card-text>
