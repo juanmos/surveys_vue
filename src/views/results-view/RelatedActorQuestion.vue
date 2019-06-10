@@ -195,6 +195,13 @@ export default {
           this.dataResponse.actors = [resultActor.code]
         })
       }
+    },
+    selectedActorsList (value) {
+      let empty = value.filter(data => data._id === 0)
+      if (empty.length > 0) {
+        this.selectedActorsList = []
+        this.dataResponse.actors = []
+      }
     }
   }
 }
