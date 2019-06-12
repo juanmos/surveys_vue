@@ -144,6 +144,33 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogProcess" max-width="290">
+            <v-card>
+            <v-card-title class="headline">Información</v-card-title>
+            <v-card-text>
+                La encuesta ya fue procesada, Quiere volver a procesar la encuesta?
+            </v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+            color="red darken-4"
+            flat="flat"
+            @click="dialogProcess = false"
+            >
+            Cancelar
+            </v-btn>
+
+            <v-btn
+            color="teal darken-3"
+            flat="flat"
+            @click="dialogProcess = false, initialProcessConsolidate()"
+            >
+            Aceptar
+            </v-btn>
+            </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-dialog
           v-model="loading"
           hide-overlay
@@ -183,6 +210,7 @@ export default {
       resultPoll: null,
       segmentationDialog: false,
       viewData: [],
+      dialogProcess: false,
       dialogProcessdata: false
     }
   },
@@ -255,20 +283,18 @@ export default {
     ]),
     processData () {
       this.checkExistData()
-      // this.initialProcessConsolidate()
     },
     checkExistData () {
       this.findConsolidate({query: {_config_poll_id: this.id}}).then(response => {
         if (response.data.length > 0) {
-          this.setShowSnack(true)
-          this.setSnackMessage('La encuesta ya fue procesada.')
+          this.dialogProcess = true
         } else {
-          this.dialogProcessdata = true
           this.initialProcessConsolidate()
         }
       })
     },
     initialProcessConsolidate () {
+      this.dialogProcessdata = true
       let axiosIntance = axios.create({
         baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
       })
