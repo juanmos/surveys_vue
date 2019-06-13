@@ -51,7 +51,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; Propraxis 2018</span>
+      <span>&copy; Propraxis {{currentYear}}</span>
     </v-footer>
   </v-app>
 </template>
@@ -68,6 +68,7 @@ export default {
       clipped: true,
       drawer: true,
       fixed: false,
+      currentYear: new Date().getFullYear(),
       miniVariant: false,
       right: true,
       rightDrawer: false
