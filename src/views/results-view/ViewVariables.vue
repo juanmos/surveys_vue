@@ -29,13 +29,19 @@
                         <label class="labelQuestion">Categoría:</label>
                         <v-chip color="grey-darken-4" class="font-weight-bold complete">
                               {{props.item.category}}
-                      </v-chip>
-                      <br />
-                      <label class="labelQuestion">Valores:</label>
-                      <span class="infoQuestion">{{props.item.values}}</span>
-                      <br />
-                      <br />
-                      <br />
+                        </v-chip>
+                        <br />
+                        <br />
+                        <label class="labelQuestion">Sub-Categoría:</label>
+                        <v-chip color="grey-darken-4" class="font-weight-bold subCategory">
+                              {{props.item.subcategory}}
+                        </v-chip>
+                        <br />
+                        <label class="labelQuestion">Valores:</label>
+                        <span class="infoQuestion">{{props.item.values}}</span>
+                        <br />
+                        <br />
+                        <br />
                     </div>
                 </td>
                 <td class="text-xs-center">
@@ -107,7 +113,7 @@
           <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
         </v-dialog>
 
-        <v-dialog v-model="dialogMasterQuestions" max-width="900">
+        <v-dialog v-model="dialogMasterQuestions" min-width="900">
             <v-card v-if="dialogMasterQuestions">
               <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
                 <h4>Seleccionar Master</h4>
@@ -191,6 +197,11 @@ export default {
 .complete {
     background-color: #407a42 !important;
     border-color: #407a42 !important;
+    color: #eaedea !important;
+}
+.subCategory {
+    background-color: #1e6ca3 !important;
+    border-color: #1e6ca3 !important;
     color: #eaedea !important;
 }
 

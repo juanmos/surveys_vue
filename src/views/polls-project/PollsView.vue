@@ -223,6 +223,9 @@
                     <v-list-tile @click="goToViewData(props.item._id)">
                       <v-list-tile-title>Vista de datos</v-list-tile-title>
                     </v-list-tile>
+                    <v-list-tile @click="goToViewCreatorReport(props.item._id)">
+                      <v-list-tile-title>Reportes de segmentos</v-list-tile-title>
+                    </v-list-tile>
                     <v-list-tile @click="goToViewConfigPolls(props.item._id)">
                       <v-list-tile-title>Ver encuesta</v-list-tile-title>
                     </v-list-tile>
@@ -533,6 +536,9 @@ export default {
     },
     goToViewData (id) {
       this.$router.push({ path: `/view-data-poll/${id}` })
+    },
+    goToViewCreatorReport (id) {
+      this.$router.push({ path: `/view-creator-report/${id}` })
     },
     getDataCategorySegmentationPolls () {
       this.findCategorySegmentationPolls({query: {removed: false, _project_poll_id: this.$route.params.id}}).then(response => {

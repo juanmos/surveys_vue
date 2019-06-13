@@ -238,6 +238,7 @@ export default new Vuex.Store({
       instanceDefaults: {
         text: '',
         category: '',
+        subcategory_questions: {},
         type: '',
         options: '',
         removed: false

@@ -59,6 +59,7 @@ export default {
     ]),
     ...mapActions('master-questions', { findMasterQuestions: 'find' }),
     ...mapActions('category-questions', { findCategoryQuestions: 'find' }),
+    ...mapActions('master-questions', { getMasterQuestion: 'get' }),
     ...mapActions('config-polls', {getPoll: 'get'}),
     format () {
       this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
@@ -70,10 +71,13 @@ export default {
         _id: this.currentCategory._id,
         name: this.currentCategory.name
       }
+      let subCategoryQuestion = this.currentMaster.subcategory_questions
+      console.log('subCategoryQuestion--', subCategoryQuestion)
       this.dataResponse.questionMaster = questionMaster
       this.dataResponse.categoryQuestion = categoryQuestion
+      this.dataResponse.subCategoryQuestion = subCategoryQuestion
       this.dataResponse.graphicType = this.selectedMasterQuestion.graphic_type
-      this.save(this.currentPoll, true, 'Actor realacionado a la pregunta.')
+      this.save(this.currentPoll, true, 'Realacionado al master de preguntas.')
     },
     changeMasterQuestion (selected) {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
