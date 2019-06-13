@@ -218,6 +218,8 @@ export default {
     line-height: 55px;
     border-radius: 50%;
     text-align: center;
+    background-color: #1e1d1d;
+    font-weight: bold;
     font-size: 16px;
     margin: 5px;
     border: 2px solid #dd6b6b;
