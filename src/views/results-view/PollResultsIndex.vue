@@ -22,7 +22,8 @@
       <v-toolbar color="transparent">
           <span class="headline">{{currentPoll ? currentPoll.name : ''}}</span>
           <v-spacer></v-spacer>
-          <v-chip><span>Encuestas:</span> <b class="subheader"> {{getTableDataValues.length}} </b></v-chip>
+          <!-- <v-chip><span>Encuestas:</span> <b class="subheader"> {{getTableDataValues.length}} </b></v-chip> -->
+          Opciones
           <v-menu bottom left>
             <v-btn
               slot="activator"
