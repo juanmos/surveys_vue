@@ -191,6 +191,7 @@ export default {
 .complete {
     background-color: #407a42 !important;
     border-color: #407a42 !important;
+    color: #eaedea !important;
 }
 
 .actorsChip {
