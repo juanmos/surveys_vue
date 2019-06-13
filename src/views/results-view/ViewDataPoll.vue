@@ -1,49 +1,5 @@
 <template>
     <v-flex class="view-container">
-      <v-dialog v-model="dialogProcessdata" max-width="900">
-          <v-card v-if="dialogProcessdata">
-            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-              <h4>PROCESANDO ENCUESTA</h4>
-            </v-flex>
-            <v-card-text>
-                <center>
-                    <v-img
-                      src="/images/loader.gif"
-                      img-alt="Image"
-                      height="70"
-                      width="70"
-                      aspect-ratio="2.75"
-                    ></v-img>
-                  <h5>PROCESANDO DATOS DE LA ENCUESTA CARGADA AL SISTEMA. ESPERE POR FAVOR...</h5>
-                </center>
-            </v-card-text>
-          </v-card>
-      </v-dialog>
-      <v-toolbar color="transparent">
-          <span class="headline">{{currentPoll ? currentPoll.name : ''}}</span>
-          <v-spacer></v-spacer>
-          <v-chip><span>Encuestas:</span> <b class="subheader"> {{getTableDataValues.length}} </b></v-chip>
-          <v-menu bottom left>
-            <v-btn
-              slot="activator"
-              dark
-              icon
-            >
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-
-            <v-list>
-              <v-list-tile
-              >
-                <v-list-tile-title @click="segmentationDialog = true" class="pointer">Definir Datos de Segmentacion</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile
-              >
-                <v-list-tile-title @click="processData" class="pointer">Procesar Datos</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
         <v-tabs
         v-model="active"
         color="secondary"
@@ -55,42 +11,14 @@
             <v-tab
                 ripple
             >
-                Vista de Variables
-                <v-icon>ballot</v-icon>
+                Vista de Datos
+                <v-icon>list</v-icon>
 
             </v-tab>
             <v-tab-item
             >
                 <v-card flat>
-                    <!-- <poll-results-table @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>  -->
-                    <view-variables @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></view-variables>
-                </v-card>
-            </v-tab-item>
-            <v-tab
-                ripple
-            >
-                Creador de Reportes
-                <v-icon>ballot</v-icon>
-            </v-tab>
-            <v-tab-item
-            >
-                <v-card flat>
-                    <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
-                </v-card>
-            </v-tab-item>
-            <v-tab
-              ripple
-              v-if="resultPoll && !resultPoll.imported"
-            >
-                Codificar Preguntas
-                <v-icon>grain</v-icon>
-
-            </v-tab>
-            <v-tab-item
-              v-if="resultPoll && !resultPoll.imported"
-            >
-                <v-card flat>
-                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
+                    <poll-results-table :headers="getDataHeaders" :responses="viewData"></poll-results-table>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -189,8 +117,6 @@ import ViewVariables from './ViewVariables'
 import ReportCreator from './../reports-creator/ReportCreator'
 import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
 import SegmentationFields from './../../components/SegmentationFields'
-import axios from 'axios'
-const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['id'],
   data () {
@@ -271,39 +197,6 @@ export default {
     ...mapActions([
       'setCurrentPoll'
     ]),
-    processData () {
-      this.checkExistData()
-    },
-    checkExistData () {
-      this.findConsolidate({query: {_config_poll_id: this.id}}).then(response => {
-        if (response.data.length > 0) {
-          this.dialogProcess = true
-        } else {
-          this.initialProcessConsolidate()
-        }
-      })
-    },
-    initialProcessConsolidate () {
-      this.dialogProcessdata = true
-      let axiosIntance = axios.create({
-        baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
-      })
-      axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
-      axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
-      let params = new URLSearchParams()
-      params.append('bigdata', true)
-      params.append('_id', this.id)
-      axiosIntance.get('/config-polls', { params }).then((result) => {
-        this.setShowSnack(true)
-        this.dialogProcessdata = false
-        this.setSnackMessage('Data procesada correctamente.')
-      }).catch(err => {
-        this.setShowSnack(true)
-        this.dialogProcessdata = false
-        this.setSnackMessage('Error al Guardar. Revise que la encuestra este asignado con el master de preguntas.')
-        console.log(err)
-      })
-    },
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
