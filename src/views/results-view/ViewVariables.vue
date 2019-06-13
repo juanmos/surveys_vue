@@ -197,11 +197,15 @@ export default {
 .complete {
     background-color: #407a42 !important;
     border-color: #407a42 !important;
+    height: 20px !important;
+    font-size: 11px !important;
     color: #eaedea !important;
 }
 .subCategory {
     background-color: #1e6ca3 !important;
     border-color: #1e6ca3 !important;
+    height: 20px !important;
+    font-size: 11px !important;
     color: #eaedea !important;
 }
 
