@@ -194,8 +194,9 @@ export default {
 }
 
 .actorsChip {
-    background-color: #868986 !important;
-    border-color: #868986 !important;
+    background-color: #eaedea !important;
+    border-color: #eaedea !important;
+    color: #333 !important;
 }
 
 .infoQuestion{
