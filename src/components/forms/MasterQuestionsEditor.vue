@@ -77,7 +77,7 @@ export default {
       this.dataResponse.categoryQuestion = categoryQuestion
       this.dataResponse.subCategoryQuestion = subCategoryQuestion
       this.dataResponse.graphicType = this.selectedMasterQuestion.graphic_type
-      this.save(this.currentPoll, true, 'Realacionado al master de preguntas.')
+      this.save(this.currentPoll, true, 'Relacionado al master de preguntas.')
     },
     changeMasterQuestion (selected) {
       this.currentMaster = this.masterQuestions.filter(data => data._id === selected)[0]
