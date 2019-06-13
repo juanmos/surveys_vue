@@ -247,11 +247,10 @@ export default {
         label: question.label,
         values: question.options,
         code: question.code,
-        questionMaster: question.questionMaster.text,
-        // lost: -1,
+        questionMaster: (question.questionMaster) ? question.questionMaster.text : '<< No asignado >>',
         // subcategory: (question.subcategory_question) ? question.subcategory_question.name.toUpperCase() : '',
         actors: (question.actors) ? question.actors : [],
-        category: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '' : ''
+        category: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>'
       })) : []
     },
     getPossibleValues () {
