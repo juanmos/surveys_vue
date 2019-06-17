@@ -5,7 +5,7 @@
         <v-flex xs12>
             <v-card :flat="true">
                 <v-subheader>Editar Acta</v-subheader>
-                <electoral-records-form @dataSubmited="create" :currentRecord="currentRecord"></electoral-records-form>
+                <electoral-records-form @dataSubmited="create" :currentRecord="currentRecord" :edit="editForm"></electoral-records-form>
                 <v-btn
                 absolute
                 dark
@@ -31,7 +31,8 @@ import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   data () {
     return {
-      currentRecord: null
+      currentRecord: null,
+      editForm: true
     }
   },
   methods: {
@@ -52,7 +53,8 @@ export default {
   },
   created () {
     this.getRecord(this.$route.params.id).then(result => {
-      this.currentRecord = Object.assign({}, result)
+      // this.currentRecord = Object.assign({}, result)
+      this.currentRecord = result
     }).catch(err => console.log('este es el error', err))
   },
   computed: {
