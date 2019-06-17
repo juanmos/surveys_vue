@@ -5,7 +5,7 @@
         <v-flex xs12>
             <v-card :flat="true">
                 <v-subheader>NUEVA ACTA</v-subheader>
-                <electoral-records-form @dataSubmited="create" :project="currentProject"></electoral-records-form>
+                <electoral-records-form @dataSubmited="create" :project="currentProject" :edit="editForm"></electoral-records-form>
                 <v-btn
                 absolute
                 dark
@@ -31,7 +31,8 @@ import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {
   data () {
     return {
-      currentProject: null
+      currentProject: null,
+      editForm: false
     }
   },
   methods: {

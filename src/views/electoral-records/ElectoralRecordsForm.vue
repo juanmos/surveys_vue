@@ -314,7 +314,7 @@ Vue.use(VueMoment, {
   moment
 })
 export default {
-  props: ['project', 'currentRecord'],
+  props: ['project', 'currentRecord', 'edit'],
   data: (vm) => ({
     record: {
       number: '',
@@ -512,6 +512,7 @@ export default {
       this.loadCantones()
     },
     loadCantones () {
+      console.log('t record--', this.record)
       this.findProvinces({query: {name: this.record.province, $skip: 0, $limit: null}}).then(response => {
         this.cantones = response.data[0].canton
         this.orderCantones()
@@ -592,11 +593,13 @@ export default {
     loadProvinces () {
       this.findProvinces({ query: {$sort: { name: '1' }, removed: false, $skip: 0, $limit: null} }).then(resp => {
         this.provinces = resp.data
-        if (this.project.canton !== '') {
-          this.selectedCanton()
-        }
-        if (this.project.district !== '') {
-          this.selectedDistrict()
+        if (this.project) {
+          if (this.project.canton) {
+            this.selectedCanton()
+          }
+          if (this.project.district) {
+            this.selectedDistrict()
+          }
         }
         this.selectedParroquia()
         this.cleanData()
@@ -650,7 +653,9 @@ export default {
   },
   created () {
     this.buildtables()
-    this.loadProvinces()
+    if (!this.edit) {
+      this.loadProvinces()
+    }
   },
   components: {LoadingComponent, PictureUpload}
 }
