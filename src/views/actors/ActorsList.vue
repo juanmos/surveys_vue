@@ -68,6 +68,11 @@ export default {
           value: 'tags',
           sortable: false
         },
+        {
+          text: 'Nivel al mostrar',
+          value: 'level',
+          sortable: true
+        },
         { text: 'Acciones',
 
           sortable: false

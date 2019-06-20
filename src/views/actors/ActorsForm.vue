@@ -36,6 +36,13 @@
                         multiple
                         box
                     ></v-combobox>
+                    <v-select
+                       v-model="actorData.level"
+                      :items="[1,2,3]"
+                      label="Seleccione nivel (orden al mostrar en panel)"
+                      box
+                      color="blue-grey lighten-2"
+                    ></v-select>
                     <v-text-field
                         v-model="categoryInput"
                         @keyup.enter="addTag"

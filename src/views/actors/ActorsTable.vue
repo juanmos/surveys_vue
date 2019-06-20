@@ -80,6 +80,24 @@
                         {{props.item.tags}}
                       </td>
                       <td>
+                        <v-edit-dialog
+                            :return-value.sync="props.item.level"
+                            lazy
+                            @save="edit(props.item.level, props.item, 'level')"
+                            @cancel="cancel"
+                            @open="open"
+                            @close="close"
+                          > <div >{{ props.item.level }}</div>
+                            <v-select
+                              slot="input"
+                              v-model="props.item.level"
+                              :items="[1,2,3]"
+                              label="Editar nivel al mostrar"
+                              single-line
+                            />
+                          </v-edit-dialog>
+                      </td>
+                      <td>
                         <v-menu
                           bottom
                           transition="slide-y-transition"
@@ -146,6 +164,7 @@ export default {
       this.$router.push('/actors-edit/' + actor._id)
     },
     edit (val, elem, field) {
+      console.log('esto', val, elem, field)
       const {Actor} = this.$FeathersVuex
       const actor = new Actor(elem)
       actor[field] = val
