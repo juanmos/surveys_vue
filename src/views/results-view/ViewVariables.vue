@@ -41,6 +41,8 @@
                         <span class="infoQuestion">{{props.item.values}}</span>
                         <br />
                         <br />
+                        <label class="labelQuestion" v-if="props.item.intention">Relacionado con:</label>
+                        <span class="infoQuestion" v-if="props.item.intention">{{props.item.intention.label}}</span>
                         <br />
                     </div>
                 </td>
@@ -70,6 +72,9 @@
                       </v-list-tile>
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
+                      </v-list-tile>
+                      <v-list-tile @click="dialogMigration = true;arrIndex = props.index">
+                          <v-list-tile-title>Migración de voto</v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
                           <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
@@ -109,6 +114,17 @@
           </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialogMigration" max-width="900">
+          <v-card v-if="dialogMigration">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Relacionar con la pregunta de intención de voto de la encuesta actual.</h4>
+            </v-flex>
+            <v-card-text>
+              <related-migration-question :arrIndex="arrIndex" @close="dialogMigration = false" @refresh="refresh"></related-migration-question>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
         <v-dialog v-model="dialogCategories" max-width="900">
           <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
         </v-dialog>
@@ -133,6 +149,7 @@ import CategoriesEditor from './../../components/forms/CategoriesEditor'
 import MasterQuestionsEditor from './../../components/forms/MasterQuestionsEditor'
 import RelatedQuestion from './RelatedQuestion'
 import RelatedActorQuestion from './RelatedActorQuestion'
+import RelatedMigrationQuestion from './RelatedMigrationQuestion'
 import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'variablesMode', 'currentPoll'],
@@ -161,6 +178,7 @@ export default {
       ],
       editLabelDialog: false,
       dialogRelated: false,
+      dialogMigration: false,
       dialogCategories: false,
       dialogActors: false,
       dialogMasterQuestions: false,
@@ -186,10 +204,11 @@ export default {
     refresh () {
       this.dialogActors = false
       this.dialogMasterQuestions = false
+      this.dialogMigration = false
       this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar }
 }
 </script>
 
