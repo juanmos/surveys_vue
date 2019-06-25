@@ -54,6 +54,32 @@
                       <v-layout row>
                         <v-chip dark v-for="(tag, index) in actorData.tags" :key="tag"><span class="font-weight-bold" @click="deleteTag(index)">#{{tag}}</span></v-chip>
                       </v-layout>
+                      <v-divider></v-divider>
+                      <v-text-field
+                        class="mt-2"
+                        v-model="chargeInput"
+                        @keyup.enter="addCharge"
+                        @keyup.space="addCharge"
+                        label="Cargos que ha ocupado"
+                        box
+                        color="blue-grey lighten-2"
+                      ></v-text-field>
+                      <v-layout row>
+                        <v-chip dark color="primary" v-for="(charge, index) in actorData.charges" :key="charge "><span class="charge-chip font-weight-bold" @click="deleteCharge(index)">{{charge}}</span></v-chip>
+                      </v-layout>
+                      <v-divider></v-divider>
+                      <v-text-field
+                        class="mt-2"
+                        v-model="politicalPartiesInput"
+                        @keyup.enter="addPoliticalParties"
+                        @keyup.space="addPoliticalParties"
+                        label="Partidos en los que pertenece"
+                        box
+                        color="blue-grey lighten-2"
+                      ></v-text-field>
+                      <v-layout row>
+                        <v-chip dark color="primary" v-for="(party, index) in actorData.politicalParties" :key="party "><span class="charge-chip font-weight-bold" @click="deletePoliticalParties(index)">{{party}}</span></v-chip>
+                      </v-layout>
                       <v-layout row>
                         <v-switch
                           color="primary"
@@ -94,9 +120,13 @@ export default {
       tags: [],
       local: false,
       international: false,
-      national: false
+      national: false,
+      charges: [],
+      politicalParties: []
     },
     categoryInput: '',
+    chargeInput: '',
+    politicalPartiesInput: '',
     actorTypes: [
       'PERSONA',
       'SUCESO',
@@ -121,8 +151,22 @@ export default {
       this.actorData.tags.push(this.categoryInput)
       this.categoryInput = ''
     },
+    addCharge () {
+      this.actorData.charges.push(this.chargeInput)
+      this.chargeInput = ''
+    },
+    addPoliticalParties () {
+      this.actorData.politicalParties.push(this.politicalPartiesInput)
+      this.politicalPartiesInput = ''
+    },
     deleteTag (index) {
       this.actorData.tags.splice(index, 1)
+    },
+    deleteCharge (index) {
+      this.actorData.charges.splice(index, 1)
+    },
+    deletePoliticalParties (index) {
+      this.actorData.politicalParties.splice(index, 1)
     }
   },
   computed: {
@@ -130,7 +174,7 @@ export default {
       'currentEnv'
     ]),
     incomplete () {
-      let {national, international, local, ...rest} = this.actorData
+      let {national, international, local, politicalParties, charges, actorCategories, image, ...rest} = this.actorData
       return Object.values(rest).includes(null)
     }
   },
@@ -151,6 +195,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .charge-chip {
+    text-transform: capitalize;
+  }
 </style>

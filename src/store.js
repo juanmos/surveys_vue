@@ -218,7 +218,9 @@ export default new Vuex.Store({
         description: '',
         code: '',
         tags: [],
-        removed: false
+        removed: false,
+        charges: [],
+        politicalParties: []
       }
     }),
     service('actor-categories', {
