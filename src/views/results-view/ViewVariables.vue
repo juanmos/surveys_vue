@@ -74,7 +74,7 @@
                           <v-list-tile-title>Agregar relacionados</v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogMigration = true;arrIndex = props.index">
-                          <v-list-tile-title>Migración de voto</v-list-tile-title>
+                          <v-list-tile-title>Migración de Voto</v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
                           <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
