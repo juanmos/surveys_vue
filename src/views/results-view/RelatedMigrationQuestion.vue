@@ -99,7 +99,7 @@ export default {
     this.getPoll(this.$route.params.id).then(result => {
       this.currentPoll = Object.assign({}, result)
       this.dataResponse = Object.assign({}, this.currentPoll.formatedConfiguration[this.arrIndex])
-      this.questions = this.currentPoll.formatedConfiguration.map(data => ({
+      this.questions = this.currentPoll.formatedConfiguration.filter(data => data.subCategoryQuestion).filter(data => data.subCategoryQuestion._id === '5cc85b6815cd62575fb03082').map(data => ({
         code: data.code,
         label: data.questionMaster.text,
         masterQuestion: data.questionMaster._id
