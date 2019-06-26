@@ -392,7 +392,7 @@ export default {
       let newArray = this.provinces.filter(province => this.project.province === province.name).map(province => {
         if (this.project.province === province.name) {
           province.canton.map(canton => {
-            if (this.project.canton === canton.name) {
+            if (this.record.canton === canton.name) {
               let distric = {name: this.newDistrict.toUpperCase(), _canton_id: canton.name, number_voter: 0}
               if (canton.district) {
                 let arrayDistrict = [...canton.district, distric]
@@ -412,17 +412,29 @@ export default {
         if (this.record.province === province.name) {
           province.canton.map(canton => {
             if (this.record.canton === canton.name) {
-              canton.district.map(district => {
-                if (this.record.district === district.name) {
-                  let parish = {name: this.newParish.toUpperCase(), _district_id: district.name, number_voter: 0}
-                  if (district.parish) {
-                    let arrayDistrict = [...district.parish, parish]
-                    district.parish = arrayDistrict
-                  } else {
-                    district.parish = [parish]
-                  }
+              if (canton.district) {
+                if (canton.district.length > 0) {
+                  canton.district.map(district => {
+                    if (this.record.district === district.name) {
+                      let parish = {name: this.newParish.toUpperCase(), _district_id: district.name, number_voter: 0}
+                      if (district.parish) {
+                        let arrayDistrict = [...district.parish, parish]
+                        district.parish = arrayDistrict
+                      } else {
+                        district.parish = [parish]
+                      }
+                    }
+                  })
+                } else {
+                  let parish = {name: this.newParish.toUpperCase(), type: 'Urbana', number_voter: 0, _canton_id: canton.name, zone: []}
+                  let arrayParish = [...canton.parish, parish]
+                  canton.parish = arrayParish
                 }
-              })
+              } else {
+                let parish = {name: this.newParish.toUpperCase(), type: 'Urbana', number_voter: 0, _canton_id: canton.name, zone: []}
+                let arrayParish = [...canton.parish, parish]
+                canton.parish = arrayParish
+              }
             }
           })
           return province
@@ -512,7 +524,6 @@ export default {
       this.loadCantones()
     },
     loadCantones () {
-      console.log('t record--', this.record)
       this.findProvinces({query: {name: this.record.province, $skip: 0, $limit: null}}).then(response => {
         this.cantones = response.data[0].canton
         this.orderCantones()
@@ -554,7 +565,9 @@ export default {
           this.disabledDistrict = true
           this.parroquias = currentCanton.parish
           let currentParsih = currentCanton.parish.filter(parish => parish.name === this.record.parroquia)[0]
-          this.zones = currentParsih.zone
+          if (currentParsih) {
+            this.zones = currentParsih.zone
+          }
         }
       }
     },
@@ -600,6 +613,7 @@ export default {
           if (this.project.district) {
             this.selectedDistrict()
           }
+          this.loadCantones()
         }
         this.selectedParroquia()
         this.cleanData()
