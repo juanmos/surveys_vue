@@ -12,6 +12,16 @@
                         <v-icon>add</v-icon>
                         </v-btn>
                     </v-card-title>
+                    <v-card-title>
+                      <v-text-field
+                              v-on:keyup="searchMasterQuestion"
+                              v-model="search"
+                              append-icon="search"
+                              label="Buscar pregunta..."
+                              single-line
+                              hide-details
+                            ></v-text-field>
+                    </v-card-title>
                     <v-data-table
                           :headers="headers"
                           :items="masterQuestions"
@@ -118,6 +128,7 @@ export default {
       }
     ],
     total: 100,
+    search: '',
     loaded: false,
     masterQuestions: []
   }),
@@ -153,6 +164,12 @@ export default {
     edit (master) {
       this.setPage(this.page)
       this.$router.push('/master-questions-edit/' + master._id)
+    },
+    searchMasterQuestion () {
+      this.findMasterQuestions({query: {$or: [{text: {$search: this.search}}], $sort: { text: '1' }, $skip: 0, $limit: null}}).then((result) => {
+        this.loaded = true
+        this.masterQuestions = result.data
+      })
     },
     saveEdit (question) {
       const {MasterQuestion} = this.$FeathersVuex
