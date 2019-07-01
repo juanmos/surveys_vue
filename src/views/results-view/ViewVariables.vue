@@ -79,6 +79,9 @@
                       <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
                           <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
                       </v-list-tile>
+                      <v-list-tile @click="dialogOrderValues = true;arrIndex = props.index;">
+                          <v-list-tile-title>Ordenar valores</v-list-tile-title>
+                      </v-list-tile>
                     </v-list>
                   </v-menu>
                 </td>
@@ -139,6 +142,16 @@
               </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogOrderValues" min-width="350">
+            <v-card v-if="dialogOrderValues">
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h4>Seleccione el orden de los valores</h4>
+              </v-flex>
+              <v-card-text>
+                  <order-values :arrIndex="arrIndex" @close="dialogOrderValues = false" @refresh="refresh"></order-values>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -150,6 +163,7 @@ import MasterQuestionsEditor from './../../components/forms/MasterQuestionsEdito
 import RelatedQuestion from './RelatedQuestion'
 import RelatedActorQuestion from './RelatedActorQuestion'
 import RelatedMigrationQuestion from './RelatedMigrationQuestion'
+import OrderValues from './OrderValues'
 import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'variablesMode', 'currentPoll'],
@@ -178,6 +192,7 @@ export default {
       ],
       editLabelDialog: false,
       dialogRelated: false,
+      dialogOrderValues: false,
       dialogMigration: false,
       dialogCategories: false,
       dialogActors: false,
@@ -200,15 +215,17 @@ export default {
       this.editLabelDialog = false
       this.dialogCategories = false
       this.dialogMasterQuestions = false
+      this.dialogOrderValues = false
     },
     refresh () {
       this.dialogActors = false
       this.dialogMasterQuestions = false
       this.dialogMigration = false
+      this.dialogOrderValues = false
       this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar, OrderValues }
 }
 </script>
 
