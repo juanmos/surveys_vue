@@ -5,6 +5,52 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-subheader>Actas Registradas</v-subheader>
+              <v-flex xs12>
+                  <v-autocomplete
+                  :items="provinces"
+                  item-text="name"
+                  item-value="name"
+                  v-model="filter.province"
+                  disabled
+                  cache-items
+                  hide-no-data
+                  hide-details
+                  label="Buscar provincia..."
+                  solo-inverted
+                ></v-autocomplete>
+              </v-flex>
+              <v-layout
+                  row
+                  wrap>
+                  <v-flex xs6>
+
+                        <v-autocomplete
+                                :items="cantones"
+                                item-text="name"
+                                item-value="name"
+                                v-model="filter.canton"
+                                hide-no-data
+                                hide-details
+                                label="Buscar cantón..."
+                                solo-inverted
+                                @change="selectedCanton"
+                              ></v-autocomplete>
+                      </v-flex>
+                      <v-flex xs6>
+                          <v-autocomplete class="background: #333;"
+                            :items="parroquias"
+                            item-text="name"
+                            item-value="name"
+                            v-model="filter.parroquia"
+                            hide-no-data
+                            hide-details
+                            label="Buscar parroquias..."
+                            solo-inverted
+                            @change="selectedParroquia"
+                          ></v-autocomplete>
+                      </v-flex>
+
+              </v-layout>
             <v-data-table
                   :headers="headers"
                   :items="recordsList"
@@ -173,6 +219,15 @@ export default {
       showMsg: false,
       msgType: 'error',
       page: 1,
+      provinces: [],
+      cantones: [],
+      parroquias: [],
+      filter: {
+        province: '',
+        canton: '',
+        parroquia: '',
+        table: ''
+      },
       limit: 20,
       total: 1,
       itemSelected: null,
@@ -185,6 +240,7 @@ export default {
   },
   methods: {
     ...mapActions('electoral-records', { findRecords: 'find' }),
+    ...mapActions('provinces', { findProvinces: 'find' }),
     goToNew () {
       this.$router.push('/electoral-records-new/' + this.project_id)
     },
@@ -206,14 +262,71 @@ export default {
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
     },
-    del () {
-      const {ElectoralRecord} = this.$FeathersVuex
-      const electoralRecord = new ElectoralRecord(this.itemSelected)
-      electoralRecord.removed = true
-      electoralRecord.patch().then((result) => {
-        this.findRecords({ query: {removed: false} }).then(response => {
-          return response.data || response
+    orderCantones () {
+      let orderCantones = this.cantones.sort(function (a, b) {
+        var x = a.name
+        var y = b.name
+        if (x < y) { return -1 }
+        if (x > y) { return 1 }
+        return 0
+      })
+      this.cantones = [{name: 'TODOS'}, ...orderCantones]
+    },
+    orderParroquias () {
+      if (this.parroquias) {
+        let orderParroquias = this.parroquias.sort(function (a, b) {
+          var x = a.name
+          var y = b.name
+          if (x < y) { return -1 }
+          if (x > y) { return 1 }
+          return 0
         })
+        this.parroquias = [{name: 'TODOS'}, ...orderParroquias]
+      }
+    },
+    loadCantones () {
+      this.findProvinces({query: {name: this.filter.province, $skip: 0, $limit: null}}).then(response => {
+        this.cantones = response.data[0].canton
+        this.orderCantones()
+      })
+    },
+    selectedCanton () {
+      this.parroquias = []
+      let currentCanton = this.cantones.filter(canton => canton.name === this.filter.canton)[0]
+      if (currentCanton) {
+        this.parroquias = currentCanton.parish
+        this.orderParroquias()
+        this.filter.parroquia = ''
+      }
+      this.filterByCanton()
+    },
+    selectedParroquia () {
+      this.query.parroquia = this.filter.parroquia
+      if (this.query.parroquia === '') {
+        delete this.query.parroquia
+      }
+      this.filterByParroquia()
+    },
+    filterByCanton () {
+      this.query.canton = this.filter.canton
+      if (this.query.canton === '' || this.query.canton === 'TODOS') {
+        delete this.query.canton
+      }
+      this.getData()
+    },
+    filterByParroquia () {
+      this.query.parroquia = this.filter.parroquia
+      if (this.query.parroquia === '' || this.query.parroquia === 'TODOS') {
+        delete this.query.parroquia
+      }
+      this.getData()
+    },
+    getData () {
+      this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.recordsList = response.data
       })
     }
   },
@@ -247,6 +360,11 @@ export default {
       this.total = response.total
       this.loaded = true
       this.recordsList = response.data
+      if (this.recordsList.length > 0) {
+        this.provinces = [{name: this.recordsList[0].province}]
+        this.filter.province = this.recordsList[0].province
+        this.loadCantones()
+      }
     })
   },
   components: {LoadingComponent, EditableField}
@@ -256,5 +374,9 @@ export default {
 <style>
 .justify-left {
     text-align: left;
+}
+.v-input--is-disabled:not(.v-input--is-readonly) {
+    pointer-events: none;
+    background: #b25050;
 }
 </style>

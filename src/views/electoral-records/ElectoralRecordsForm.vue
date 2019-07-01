@@ -657,6 +657,7 @@ export default {
     },
     currentRecord: function (val) {
       this.record = val
+      this.provinces = [{name: val.province}]
       this.loadCantones()
       this.currentImage = val.image
       this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image

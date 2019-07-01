@@ -6,25 +6,19 @@
             <v-card :flat="true">
               <v-subheader>Proyectos de control electoral</v-subheader>
               <v-card-title>
-              <span class="title text-sm-left">
-                <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
-              </span>
-              <v-spacer></v-spacer>
-              <span class="title text-sm-left">
-                <v-autocomplete
-                    label="Filtro por cargo"
-                    v-model="selectedPosition"
-                    :items="positions"
-                    item-text="name"
-                    item-value="id"
-                ></v-autocomplete>
-              </span>
-
+                <v-text-field
+                    v-on:keyup="searchProject"
+                    v-model="search"
+                    append-icon="search"
+                    label="Buscar proyecto..."
+                    single-line
+                    hide-details
+                  ></v-text-field>
               <v-spacer></v-spacer>
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getProjects"
+                  :items="projects"
                   hide-actions
                   item-key="name"
                 >
@@ -213,6 +207,14 @@ export default {
     close (val) {
       // console.log('Dialog closed', val)
     },
+    searchProject () {
+      this.findElectoralProjects({query: {$or: [{name: {$search: this.search}}], $sort: { name: '1' }, removed: false}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.projects = response.data
+      })
+    },
     del () {
       const {ElectoralProject} = this.$FeathersVuex
       const electoralproject = new ElectoralProject(this.itemSelected)
@@ -246,19 +248,17 @@ export default {
     page () {
       this.findElectoralProjects({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
+        this.projects = response.data
         this.total = response.total
       })
-    },
-    search: function (val) {
-      console.log('watchh---', val)
     }
   },
   created () {
-    this.findElectoralProjects({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findElectoralProjects({query: {$skip: this.getSkip, $limit: this.limit, removed: false, $sort: { name: '1' }}}).then(response => {
       this.limit = response.limit
       this.total = response.total
-      this.loaded = true
       this.projects = response.data
+      this.loaded = true
     })
     this.findPositionActors({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
       this.positions = response.data
