@@ -19,9 +19,10 @@
             <v-card-text>
               <div class="question">
                 <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
-                <br />
-                <br />
               </div>
+              <label><span style="font-weight: bold;">Por favor arrastrate con el mouse y suelte para ordenar los valores.</span></label>
+              <br />
+              <br />
               <form>
                 <draggable
                   :list="options"
