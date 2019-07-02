@@ -21,17 +21,28 @@
                 <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
                 <br />
                 <br />
-                <label>Orden:<span class="formatOrder">{{selectedValues}}</span></label>
               </div>
               <form>
-                <div class="overflow">
-                  <v-checkbox
-                    v-for="(option, index) in options"
-                    v-model="selectedValues"
-                    :key="index"
-                    :label="option"
-                    :value="option"/>
-                </div>
+                <draggable
+                  :list="options"
+                  :disabled="!enabled"
+                  class="list-group"
+                  ghost-class="ghost"
+                  :move="checkMove"
+                  @start="dragging = true"
+                  @end="dragging = false"
+                >
+                  <div
+                    class="list-group-item"
+                    v-for="element in options"
+                    :key="element"
+                  >
+                    {{ element }}
+                  </div>
+                </draggable>
+                <br />
+                <br />
+
                 <v-btn @click="formatOptions">Ordenar valores</v-btn>
                 <v-btn @click="cancel">Cancelar</v-btn>
               </form>
@@ -43,24 +54,23 @@
 
 <script>
 import {mapActions} from 'vuex'
+import draggable from 'vuedraggable'
 export default {
   props: ['arrIndex'],
   data () {
     return {
+      enabled: true,
+      dragging: false,
       active: null,
-      selectedActor: null,
-      selectedValues: [],
       currentPoll: {
         _polls_project_id: null,
         formatedConfiguration: []
       },
       selectedQuestion: null,
-      actors: [],
       options: [],
       dataResponse: {
         label: ''
-      },
-      questions: []
+      }
     }
   },
   methods: {
@@ -70,13 +80,12 @@ export default {
     ]),
     ...mapActions('config-polls', {getPoll: 'get'}),
     formatOptions () {
-      if (this.dataResponse.options.length === this.selectedValues.length) {
-        this.dataResponse.options = this.selectedValues
-        this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
-        this.save(this.currentPoll, true, 'Se actualizo el orden.')
-      } else {
-        this.setSnackMessage('Complete el orden, hay valores no seleccionados')
-      }
+      this.dataResponse.options = this.options
+      this.currentPoll.formatedConfiguration[this.arrIndex] = this.dataResponse
+      this.save(this.currentPoll, true, 'Se actualizo el orden.')
+    },
+    checkMove: function (e) {
+      window.console.log('Future index: ' + e.draggedContext.futureIndex)
     },
     save (values, close, message) {
       const {ConfigPoll} = this.$FeathersVuex
@@ -93,7 +102,11 @@ export default {
       this.$emit('close')
     }
   },
-  computed: {},
+  computed: {
+    draggingInfo () {
+      return this.dragging ? 'under drag' : ''
+    }
+  },
   created () {},
   mounted () {
     this.getPoll(this.$route.params.id).then(result => {
@@ -102,7 +115,7 @@ export default {
       this.options = this.dataResponse.options
     })
   },
-  watch: {}
+  components: { draggable }
 }
 </script>
 
@@ -116,5 +129,23 @@ export default {
 }
 .question {
   margin-bottom: 30px;
+}
+
+.buttons {
+  margin-top: 35px;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    color: black;
+    border: 1px solid rgba(0,0,0,.125);
 }
 </style>
