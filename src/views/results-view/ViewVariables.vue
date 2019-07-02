@@ -68,19 +68,34 @@
                     </v-btn>
                     <v-list>
                       <v-list-tile @click="dialogActors = true;arrIndex = props.index">
-                          <v-list-tile-title>Agregar Actores</v-list-tile-title>
+                          <v-list-tile-title>
+                              <v-icon class="icon">group_add</v-icon>
+                              Agregar Actores
+                          </v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
-                          <v-list-tile-title>Agregar relacionados</v-list-tile-title>
+                          <v-list-tile-title>
+                              <v-icon class="icon">360</v-icon>
+                              Agregar relacionados
+                          </v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogMigration = true;arrIndex = props.index">
-                          <v-list-tile-title>Migración de Voto</v-list-tile-title>
+                          <v-list-tile-title>
+                              <v-icon class="icon">ac_unit</v-icon>
+                              Migración de Voto
+                          </v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
-                          <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
+                          <v-list-tile-title>
+                              <v-icon class="icon">ballot</v-icon>
+                              Master de preguntas
+                          </v-list-tile-title>
                       </v-list-tile>
                       <v-list-tile @click="dialogOrderValues = true;arrIndex = props.index;">
-                          <v-list-tile-title>Ordenar valores</v-list-tile-title>
+                          <v-list-tile-title>
+                              <v-icon class="icon">unfold_more</v-icon>
+                              Ordenar valores
+                          </v-list-tile-title>
                       </v-list-tile>
                     </v-list>
                   </v-menu>
@@ -276,5 +291,8 @@ export default {
     font-size: 16px;
     margin: 5px;
     border: 2px solid #dd6b6b;
+}
+.icon {
+    color: red;
 }
 </style>
