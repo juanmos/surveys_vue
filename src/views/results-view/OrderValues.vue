@@ -12,7 +12,7 @@
               ripple
           >
               Ordenar Valores
-              <v-icon>add_circle</v-icon>
+              <v-icon>unfold_more</v-icon>
           </v-tab>
           <v-tab-item
           >

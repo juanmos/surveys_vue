@@ -160,7 +160,7 @@
         <v-dialog v-model="dialogOrderValues" min-width="350">
             <v-card v-if="dialogOrderValues">
               <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-                <h4>Seleccione el orden de los valores</h4>
+                <h4>Orden de los valores</h4>
               </v-flex>
               <v-card-text>
                   <order-values :arrIndex="arrIndex" @close="dialogOrderValues = false" @refresh="refresh"></order-values>
