@@ -97,6 +97,12 @@
                               Ordenar valores
                           </v-list-tile-title>
                       </v-list-tile>
+                      <v-list-tile @click="dialogRelationOption = true;arrIndex = props.index;">
+                          <v-list-tile-title>
+                              <v-icon class="icon">swap_horizontal_circle</v-icon>
+                              Relacionar valores
+                          </v-list-tile-title>
+                      </v-list-tile>
                     </v-list>
                   </v-menu>
                 </td>
@@ -167,10 +173,21 @@
               </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-if="dialogRelationOption" v-model="dialogRelationOption" min-width="350">
+            <v-card>
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h4>Relacionar opciones</h4>
+              </v-flex>
+              <v-card-text>
+                  <relation-options :arrIndex="arrIndex" :actors="actors" @close="dialogRelationOption = false" @refresh="refresh"></relation-options>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 import LabelsEditor from './../../components/forms/LabelsEditor'
 import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
 import CategoriesEditor from './../../components/forms/CategoriesEditor'
@@ -179,6 +196,7 @@ import RelatedQuestion from './RelatedQuestion'
 import RelatedActorQuestion from './RelatedActorQuestion'
 import RelatedMigrationQuestion from './RelatedMigrationQuestion'
 import OrderValues from './OrderValues'
+import RelationOptions from './RelationOptions'
 import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'variablesMode', 'currentPoll'],
@@ -207,7 +225,9 @@ export default {
       ],
       editLabelDialog: false,
       dialogRelated: false,
+      dialogRelationOption: false,
       dialogOrderValues: false,
+      actors: [],
       dialogMigration: false,
       dialogCategories: false,
       dialogActors: false,
@@ -218,6 +238,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('actors', { findActors: 'find' }),
     editVariables (value) {
       let copyResponses = this.responses.slice().map(response => ({
         original: response.name,
@@ -232,15 +253,29 @@ export default {
       this.dialogMasterQuestions = false
       this.dialogOrderValues = false
     },
+    getActors () {
+      this.findActors({query: {removed: false, $skip: 0, $limit: null}}).then(result => {
+        if (result.data.length > 0) {
+          this.actors = result.data.map(data => ({
+            name: data.name,
+            code: data.code
+          }))
+        }
+      })
+    },
     refresh () {
       this.dialogActors = false
       this.dialogMasterQuestions = false
+      this.dialogRelationOption = false
       this.dialogMigration = false
       this.dialogOrderValues = false
       this.$emit('refresh')
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar, OrderValues }
+  created () {
+    this.getActors()
+  },
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar, OrderValues, RelationOptions }
 }
 </script>
 
