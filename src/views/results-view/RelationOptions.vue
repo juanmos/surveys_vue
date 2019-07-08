@@ -20,7 +20,7 @@
               <div class="question">
                 <label>Pregunta actual:<span style="font-weight: bold;">{{dataResponse.label}}</span></label>
               </div>
-              <label><span style="font-weight: bold;">{{actorsRelations}}</span></label>
+              <span style="font-weight: bold;">LISTADO DE ACTORES:</span>
               <br />
               <br />
               <form>

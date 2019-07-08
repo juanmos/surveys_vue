@@ -44,6 +44,11 @@
                         <label class="labelQuestion" v-if="props.item.intention">Relacionado con:</label>
                         <span class="infoQuestion" v-if="props.item.intention">{{props.item.intention.label}}</span>
                         <br />
+                        <br />
+                        <label  v-if="props.item.subcategory === 'INTENCION'" class="labelQuestion">Valores Relacionados:</label>
+                        <v-chip v-if="props.item.subcategory === 'INTENCION'" color="grey-darken-4" class="font-weight-bold relatedOptions">
+                              {{props.item.relatedOptions}}
+                        </v-chip>
                     </div>
                 </td>
                 <td class="text-xs-center">
@@ -290,6 +295,13 @@ export default {
 .subCategory {
     background-color: #1e6ca3 !important;
     border-color: #1e6ca3 !important;
+    height: 20px !important;
+    font-size: 11px !important;
+    color: #eaedea !important;
+}
+.relatedOptions {
+    background-color: #8510cf !important;
+    border-color: #8510cf !important;
     height: 20px !important;
     font-size: 11px !important;
     color: #eaedea !important;

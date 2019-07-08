@@ -238,7 +238,8 @@ export default {
         subcategory: (question.questionMaster && question.subCategoryQuestion) ? (question.subCategoryQuestion.name) ? question.subCategoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>',
         actors: (question.actors) ? question.actors : [],
         intention: (question.intention) ? question.intention : null,
-        category: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>'
+        category: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>',
+        relatedOptions: (question.relatedOptions && question.relatedOptions.length > 0) ? 'LISTO' : '<< No asignado >>'
       })) : []
     },
     getPossibleValues () {
