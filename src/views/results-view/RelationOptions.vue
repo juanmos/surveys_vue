@@ -26,7 +26,7 @@
               <form>
                   <div
                   v-if="(element.option !== 'Ninguno' && element.option !== 'Nulo / Blanco' && element.option !== '-1')"
-                    class="list-group-item"
+                    class=""
                     v-for="(element, index) in options" :key="index"
                   >
                     {{ element.option }}
@@ -36,11 +36,10 @@
                     </v-chip>
                     <v-autocomplete v-else
                       :items="actors"
-                      background-color="#424242"
-                      item-text="name"
                       v-model="element.selected"
+                      item-text="name"
+                      label="Actores"
                       return-object
-                      label="Actor"
                     ></v-autocomplete>
                   </div>
                 <br />
@@ -137,6 +136,10 @@ export default {
         }
         return data
       })
+
+      if (this.dataResponse.relatedOptions) {
+        this.options = this.dataResponse.relatedOptions
+      }
     })
   },
   components: {}
