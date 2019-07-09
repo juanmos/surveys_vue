@@ -219,7 +219,6 @@ export default {
         })
     },
     saveImportedPoll (data) {
-      let id  = data._id
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
       data.spss[fileKey].map(data => {
@@ -239,9 +238,9 @@ export default {
         country: data.country,
         province: data.province,
         canton: data.canton,
-        _polls_project_id: this.$route.params.id
-      });
-      configPoll._id = id
+        _polls_project_id: data._polls_project_id,
+        _id: data._id
+      })
       configPoll.save().then(result => {
         this.setSnackMessage('Registro editado')
         this.setSnackColor('success')
