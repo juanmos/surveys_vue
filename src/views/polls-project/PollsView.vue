@@ -218,21 +218,31 @@
                   </v-btn>
                   <v-list>
                     <v-list-tile @click="goToResultConfigPolls(props.item._id)">
+                      <v-icon class="icon">assignment</v-icon>
                       <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile @click="goToViewData(props.item._id)">
+                      <v-icon class="icon">line_weight</v-icon>
                       <v-list-tile-title>Vista de datos</v-list-tile-title>
                     </v-list-tile>
+                    <v-list-tile @click="goToEditConfigPolls(props.item._id)">
+                      <v-icon class="icon">border_color</v-icon>
+                      <v-list-tile-title>Editar encuesta</v-list-tile-title>
+                    </v-list-tile>
                     <v-list-tile @click="goToViewCreatorReport(props.item._id)">
+                      <v-icon class="icon">view_quilt</v-icon>
                       <v-list-tile-title>Reportes de segmentos</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile @click="goToViewConfigPolls(props.item._id)">
+                      <v-icon class="icon">ballot</v-icon>
                       <v-list-tile-title>Ver encuesta</v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile @click="goToEditConfigPolls(props.item._id)">
-                      <v-list-tile-title>Editar encuesta</v-list-tile-title>
+                    <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
+                      <v-icon class="icon">edit</v-icon>
+                      <v-list-tile-title>Editar información</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
+                      <v-icon class="icon">cancel</v-icon>
                       <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
@@ -528,6 +538,9 @@ export default {
     goToEditConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderEdit', params: { id: id } })
     },
+    goToEditDataConfigPolls (id) {
+      this.$router.push({ path: `/QuestionBuilderIndexEdit/${id}` })
+    },
     goToViewConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
     },
@@ -601,5 +614,9 @@ export default {
 <style scoped>
   .view-container {
     margin: 30px;
+  }
+
+  .icon {
+      color: red;
   }
 </style>

@@ -1,4 +1,4 @@
-np<template>
+<template>
     <v-card class="m-5">
       <div class="p-5">
         <v-flex class="ml-5 mr-5">
@@ -86,6 +86,7 @@ np<template>
           <v-date-picker v-model="dateFinished" color="red lighten-1" locale="es-es" header-color="primary"></v-date-picker>
         </v-flex>
         <file-uploader @fileCreated="pollImported" label="Archivo Excel SPSS" inputType=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></file-uploader>
+        <v-btn v-if="edit" @click="saveDataEdit">Guardar</v-btn>
       </div>
 
       <v-dialog v-model="dialogNew" max-width="900">
@@ -111,12 +112,15 @@ np<template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import moment from 'moment-timezone'
 import FileUploader from './../../components/FileUploader'
 export default {
-  components: {FileUploader},
+  props: ['currentConfigPoll', 'edit'],
+  components: {FileUploader, moment},
   data: () => ({
     take: 1,
     name: null,
+    dataEdit: null,
     country: null,
     province: null,
     newTextAddItem: '',
@@ -146,6 +150,15 @@ export default {
         this.currentAdd = current
         this.dialogNew = true
       }
+    },
+    saveDataEdit () {
+      this.dataEdit.name = this.name
+      this.dataEdit.take = this.take
+      this.dataEdit.dateFinished = this.dateFinished
+      this.dataEdit.country = this.country
+      this.dataEdit.province = this.province
+      this.dataEdit.canton = this.canton
+      this.$emit('editConfigPoll', this.dataEdit)
     },
     cleanData () {
       this.newDistrict = ''
@@ -438,6 +451,21 @@ export default {
         }
       })
       this.updateProvince(newArray[0])
+    }
+  },
+  watch: {
+    currentConfigPoll: function (val) {
+      if (val) {
+        this.dataEdit = val
+        this.name = val.name
+        this.take = val.take
+        this.country = val.country
+        this.selectetedCountry()
+        this.province = val.province
+        this.selectetedProvince()
+        this.canton = val.canton
+        this.dateFinished = moment.utc(val.dateFinished).format('YYYY-MM-DD')
+      }
     }
   },
   created () {

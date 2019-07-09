@@ -142,6 +142,11 @@ const QuestionBuilder = resolve => {
     resolve(require('./views/question-builder/QuesBuildIndex.vue'))
   }, 'questionbuilder')
 }
+const QuestionBuilderIndexEdit = resolve => {
+  require.ensure(['./views/question-builder/QuesBuildIndexEdit.vue'], () => {
+    resolve(require('./views/question-builder/QuesBuildIndexEdit.vue'))
+  }, 'questionbuilder')
+}
 const MenuNew = resolve => {
   require.ensure(['./views/menus/MenuNew.vue'], () => {
     resolve(require('./views/menus/MenuNew.vue'))
@@ -479,6 +484,12 @@ export default new Router({
           path: 'QuesBuildIndex/:id',
           name: 'QuesBuildIndex',
           component: QuestionBuilder,
+          props: true
+        },
+        {
+          path: 'QuestionBuilderIndexEdit/:id',
+          name: 'QuestionBuilderIndexEdit',
+          component: QuestionBuilderIndexEdit,
           props: true
         },
         {
