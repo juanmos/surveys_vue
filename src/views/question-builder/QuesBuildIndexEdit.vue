@@ -17,7 +17,7 @@
         <v-icon>cloud_upload</v-icon>
       </v-tab>
     </v-tabs>
-    <polls-upload @editConfigPoll="saveConfigPoll" :currentConfigPoll="currentConfigPoll" :edit="edit" v-show="!newMode"></polls-upload>
+    <polls-upload @editConfigPoll="saveConfigPoll" :currentConfigPoll="currentConfigPoll" :edit="edit" v-show="!newMode" @pollImported="saveImportedPoll"></polls-upload>
 
     <v-btn
     absolute
@@ -217,6 +217,41 @@ export default {
           this.setSnackColor('error')
           console.log(err)
         })
+    },
+    saveImportedPoll (data) {
+      let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
+      const { ConfigPoll } = this.$FeathersVuex
+      data.spss[fileKey].map(data => {
+        Object.keys(data).forEach(function (key) {
+          let str = data[key].toString()
+          data[key]=str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        })
+      })
+      let configPoll = new ConfigPoll({
+        construct : 'test',
+        originalJson: data.spss[fileKey] ? data.spss[fileKey] : [],
+        imported: true,
+        take: data.take,
+        name: data.name,
+        dateFinished: data.dateFinished,
+        status: data.status,
+        country: data.country,
+        province: data.province,
+        canton: data.canton,
+        _polls_project_id: data._polls_project_id,
+        _id: data._id
+      })
+      configPoll.save().then(result => {
+        this.setSnackMessage('Registro editado')
+        this.setSnackColor('success')
+        this.setShowSnack(true)
+        this.$router.go(-1)
+      }).catch(err => {
+        this.setSnackMessage('Error al guardar')
+        this.setShowSnack(true)
+        this.setSnackColor('error')
+        console.log(err)
+      })
     },
     getDataConfig (id) {
       this.getConfigPolls(id).then(result => {

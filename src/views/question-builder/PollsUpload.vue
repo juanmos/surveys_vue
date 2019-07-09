@@ -85,7 +85,8 @@
         <v-flex xs12 sm6 class="ml-5 mr-5">
           <v-date-picker v-model="dateFinished" color="red lighten-1" locale="es-es" header-color="primary"></v-date-picker>
         </v-flex>
-        <file-uploader @fileCreated="pollImported" label="Archivo Excel SPSS" inputType=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></file-uploader>
+        <file-uploader v-if="!edit" @fileCreated="pollImported" label="Archivo Excel SPSS" inputType=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></file-uploader>
+        <file-uploader v-if="edit" @fileCreated="pollImportedEdit" label="Archivo Excel SPSS editar" inputType=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></file-uploader>
         <v-btn v-if="edit" @click="saveDataEdit">Guardar</v-btn>
       </div>
 
@@ -167,6 +168,18 @@ export default {
       this.dialogNewDistrict = false
       this.dialogNewParishDistrict = false
       this.dialogNewZone = false
+    },
+    pollImportedEdit (event) {
+      this.dataEdit.name = this.name
+      this.dataEdit.take = this.take
+      this.dataEdit.dateFinished = this.dateFinished
+      this.dataEdit.country = this.country
+      this.dataEdit.province = this.province
+      this.dataEdit.canton = this.canton
+      this.dataEdit.filename = event.filename
+      this.dataEdit.path = event.path
+      this.dataEdit.spss = event.spss
+      this.$emit('pollImported', this.dataEdit)
     },
     pollImported (event) {
       event.name = this.name
