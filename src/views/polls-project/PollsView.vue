@@ -237,10 +237,10 @@
                       <v-icon class="icon">ballot</v-icon>
                       <v-list-tile-title>Ver encuesta</v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
+                    <!-- <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
                       <v-icon class="icon">edit</v-icon>
                       <v-list-tile-title>Editar información</v-list-tile-title>
-                    </v-list-tile>
+                    </v-list-tile> -->
                     <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
                       <v-icon class="icon">cancel</v-icon>
                       <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
