@@ -188,16 +188,17 @@ export default {
       segmentationDialog: false,
       viewData: [],
       dialogProcess: false,
-      dialogProcessdata: false
+      dialogProcessdata: false,
+      currentPoll: null
     }
   },
   computed: {
     ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState('auth', { accessToken: 'accessToken' }),
-    ...mapState([
+    /* ...mapState([
       'currentPoll'
-    ]),
+    ]), */
     getDataHeaders () {
       return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
         text: q.label ? q.label : q.original,
@@ -308,7 +309,8 @@ export default {
         this.setShowSnack(true)
         this.getPoll(this.id).then(result => {
           this.resultPoll = Object.assign({}, result)
-          this.setCurrentPoll(Object.assign({}, this.resultPoll))
+          this.currentPoll = result
+          // this.setCurrentPoll(Object.assign({}, this.resultPoll))
         })
       }).catch(err => console.log('este es el error', err))
     }
@@ -317,7 +319,8 @@ export default {
     this.getPoll(this.id).then(result => {
       this.viewData = result.PollInstances.map(poll => poll.response_received)
       this.resultPoll = Object.assign({}, result)
-      this.setCurrentPoll(Object.assign({}, this.resultPoll))
+      this.currentPoll = result
+      // this.setCurrentPoll(Object.assign({}, this.resultPoll))
     }).catch(err => console.log('este es el error', err))
   },
   watch: {

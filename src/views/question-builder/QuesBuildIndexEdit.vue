@@ -206,6 +206,7 @@ export default {
     saveConfigPoll (data) {
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
+        console.log('data save--', config)
         config.save().then((result) => {
           this.setSnackMessage('Registro modificado')
           this.setSnackColor('success')
@@ -219,7 +220,7 @@ export default {
         })
     },
     saveImportedPoll (data) {
-      let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
+      /*let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
       data.spss[fileKey].map(data => {
         Object.keys(data).forEach(function (key) {
@@ -251,7 +252,7 @@ export default {
         this.setShowSnack(true)
         this.setSnackColor('error')
         console.log(err)
-      })
+      }) */
     },
     getDataConfig (id) {
       this.getConfigPolls(id).then(result => {
