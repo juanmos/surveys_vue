@@ -14,8 +14,9 @@
                     </v-card-title>
                     <v-card-title>
                       <v-text-field
-                              v-on:keyup="searchActorList"
                               v-model="search"
+                              @keyup.enter="searchActorList"
+                              @keyup.space="searchActorList"
                               append-icon="search"
                               label="Buscar actor..."
                               single-line
@@ -107,6 +108,9 @@ export default {
         this.total = response.total
         this.actors = response.data
       })
+    },
+    search: function (val) {
+      console.log('val--', val)
     }
   },
   methods: {
