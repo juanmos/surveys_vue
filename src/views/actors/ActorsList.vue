@@ -108,9 +108,6 @@ export default {
         this.total = response.total
         this.actors = response.data
       })
-    },
-    search: function (val) {
-      console.log('val--', val)
     }
   },
   methods: {
@@ -124,12 +121,14 @@ export default {
       })
     },
     searchActorList () {
-      this.findActors({query: {$or: [{name: {$search: this.search}}], removed: false, $sort: { name: '1' }, $skip: 0, $limit: null}}).then((result) => {
-        // this.limit = response.limit
-        // this.total = response.total
-        this.loaded = true
-        this.actors = result.data
-      })
+      if (this.search) {
+        this.findActors({query: {$or: [{name: {$search: this.search}}], removed: false, $sort: { name: '1' }, $skip: 0, $limit: null}}).then((result) => {
+          this.loaded = true
+          this.actors = result.data
+        })
+      } else {
+        this.refreshActors()
+      }
     }
   },
   mounted () {
