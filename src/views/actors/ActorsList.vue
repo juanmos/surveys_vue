@@ -12,6 +12,16 @@
                         <v-icon>add</v-icon>
                         </v-btn>
                     </v-card-title>
+                    <v-card-title>
+                      <v-text-field
+                              v-on:keyup="searchActorList"
+                              v-model="search"
+                              append-icon="search"
+                              label="Buscar actor..."
+                              single-line
+                              hide-details
+                            ></v-text-field>
+                    </v-card-title>
                     <actors-table @delActor="refreshActors" :headers="getHeaders" :elements="actors"></actors-table>
                     <v-layout justify-center>
                       <v-flex xs8>
@@ -40,6 +50,7 @@ export default {
     page: 1,
     limit: 20,
     total: 100,
+    search: '',
     loaded: false,
     actors: []
   }),
@@ -106,6 +117,14 @@ export default {
         this.total = response.total
         this.loaded = true
         this.actors = response.data
+      })
+    },
+    searchActorList () {
+      this.findActors({query: {$or: [{name: {$search: this.search}}], $sort: { name: '1' }, $skip: 0, $limit: null}}).then((result) => {
+        // this.limit = response.limit
+        // this.total = response.total
+        this.loaded = true
+        this.actors = result.data
       })
     }
   },
