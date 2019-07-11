@@ -131,7 +131,7 @@ export default {
       let config = new ConfigPoll(values)
       config.construct = 'test'
       config.imported = true
-      config.save().then(result => {
+      config.update().then(result => {
         this.setSnackMessage(message)
         this.setShowSnack(true)
         if (close === true) {

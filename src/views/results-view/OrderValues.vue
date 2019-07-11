@@ -91,7 +91,7 @@ export default {
     save (values, close, message) {
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(values)
-      config.save().then(result => {
+      config.update().then(result => {
         this.setSnackMessage(message)
         this.setShowSnack(true)
         if (close === true) {
