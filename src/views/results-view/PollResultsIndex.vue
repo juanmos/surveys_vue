@@ -64,7 +64,7 @@
             >
                 <v-card flat>
                     <!-- <poll-results-table @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></poll-results-table>  -->
-                    <view-variables @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="getTableVariableValues" :variablesMode="true"></view-variables>
+                    <view-variables @saveFormated="saveFormated" @refresh="refresh" :headers="getVariableHeaders" :responses="dataResponse" :variablesMode="true"></view-variables>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -79,7 +79,7 @@
               v-if="resultPoll && !resultPoll.imported"
             >
                 <v-card flat>
-                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
+                   <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -187,18 +187,19 @@ export default {
       resultPoll: null,
       segmentationDialog: false,
       viewData: [],
+      dataResponse: [],
       dialogProcess: false,
-      dialogProcessdata: false
-      // currentPoll: null
+      dialogProcessdata: false,
+      currentPoll: null
     }
   },
   computed: {
     ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState('config-polls', { loading: 'isGetPending' }),
     ...mapState('auth', { accessToken: 'accessToken' }),
-    ...mapState([
+    /* ...mapState([
       'currentPoll'
-    ]),
+    ]), */
     getDataHeaders () {
       return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
         text: q.label ? q.label : q.original,
@@ -230,7 +231,7 @@ export default {
       }))
     },
     getTableVariableValues () {
-      return this.resultPoll ? this.resultPoll.formatedConfiguration.map((question, key) => ({
+      return this.currentPoll ? this.currentPoll.formatedConfiguration.map((question, key) => ({
         name: question.original,
         label: question.label,
         values: question.options,
@@ -258,9 +259,9 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    ...mapActions([
+    /* ...mapActions([
       'setCurrentPoll'
-    ]),
+    ]), */
     processData () {
       this.checkExistData()
     },
@@ -295,10 +296,29 @@ export default {
       })
     },
     refresh () {
-      this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-        this.resultPoll = Object.assign({}, result)
-        this.setCurrentPoll(Object.assign({}, this.resultPoll))
-      })
+      this.getPoll(this.id).then(result => {
+        // this.viewData = result.PollInstances.map(poll => poll.response_received)
+        // this.resultPoll = Object.assign({}, result)
+        this.currentPoll = result
+        this.formatView()
+        // this.setCurrentPoll(Object.assign({}, this.resultPoll))
+      }).catch(err => console.log('este es el error', err))
+    },
+    formatView () {
+      if (this.currentPoll) {
+        this.dataResponse = this.currentPoll.formatedConfiguration.map((question, key) => ({
+          name: question.original,
+          label: question.label,
+          values: question.options,
+          code: question.code,
+          questionMaster: (question.questionMaster) ? question.questionMaster.text : '<< No asignado >>',
+          subcategory: (question.questionMaster && question.subCategoryQuestion) ? (question.subCategoryQuestion.name) ? question.subCategoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>',
+          actors: (question.actors) ? question.actors : [],
+          intention: (question.intention) ? question.intention : null,
+          category: (question.questionMaster && question.categoryQuestion) ? (question.categoryQuestion.name) ? question.categoryQuestion.name.toUpperCase() : '<< No asignado >>' : '<< No asignado >>',
+          relatedOptions: (question.relatedOptions && question.relatedOptions.length > 0) ? 'LISTO' : '<< No asignado >>'
+        }))
+      }
     },
     saveFormated (values) {
       const {ConfigPoll} = this.$FeathersVuex
@@ -308,24 +328,25 @@ export default {
         this.setSnackMessage('Pregunta Editada')
         this.setShowSnack(true)
         this.getPoll(this.id).then(result => {
-          this.resultPoll = Object.assign({}, result)
-          // this.currentPoll = result
-          this.setCurrentPoll(Object.assign({}, this.resultPoll))
+          // this.resultPoll = Object.assign({}, result)
+          this.currentPoll = result
+          // this.setCurrentPoll(Object.assign({}, this.resultPoll))
         })
       }).catch(err => console.log('este es el error', err))
     }
   },
   mounted () {
     this.getPoll(this.id).then(result => {
-      this.viewData = result.PollInstances.map(poll => poll.response_received)
-      this.resultPoll = Object.assign({}, result)
-      // this.currentPoll = result
-      this.setCurrentPoll(Object.assign({}, this.resultPoll))
+      // this.viewData = result.PollInstances.map(poll => poll.response_received)
+      // this.resultPoll = Object.assign({}, result)
+      this.currentPoll = result
+      this.formatView()
+      // this.setCurrentPoll(Object.assign({}, this.resultPoll))
     }).catch(err => console.log('este es el error', err))
   },
   watch: {
     resultPoll: function (value) {
-      this.viewData = value.PollInstances.map(poll => poll.response_received)
+      // this.viewData = value.PollInstances.map(poll => poll.response_received)
     }
   },
   components: { PollResultsTable, SegmentationFields, QuestionsCodificator, ViewVariables }

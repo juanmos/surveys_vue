@@ -78,12 +78,6 @@
                               Agregar Actores
                           </v-list-tile-title>
                       </v-list-tile>
-                      <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
-                          <v-list-tile-title>
-                              <v-icon class="icon">360</v-icon>
-                              Agregar relacionados
-                          </v-list-tile-title>
-                      </v-list-tile>
                       <v-list-tile @click="dialogMigration = true;arrIndex = props.index">
                           <v-list-tile-title>
                               <v-icon class="icon">ac_unit</v-icon>
