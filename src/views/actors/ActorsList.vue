@@ -124,7 +124,7 @@ export default {
       })
     },
     searchActorList () {
-      this.findActors({query: {$or: [{name: {$search: this.search}}], $sort: { name: '1' }, $skip: 0, $limit: null}}).then((result) => {
+      this.findActors({query: {$or: [{name: {$search: this.search}}], removed: false, $sort: { name: '1' }, $skip: 0, $limit: null}}).then((result) => {
         // this.limit = response.limit
         // this.total = response.total
         this.loaded = true
