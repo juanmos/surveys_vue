@@ -101,7 +101,7 @@ export default {
       let config = new ConfigPoll(values)
       this.showMessage = true
       this.message = 'Espere por favor...'
-      config.save().then(result => {
+      config.update().then(result => {
         this.setSnackMessage(message)
         this.setShowSnack(true)
         this.showMessage = false
