@@ -262,13 +262,13 @@ export default {
         }
       })
     },
-    refresh () {
+    refresh (currentPoll) {
       this.dialogActors = false
       this.dialogMasterQuestions = false
       this.dialogRelationOption = false
       this.dialogMigration = false
       this.dialogOrderValues = false
-      this.$emit('refresh')
+      this.$emit('refresh', currentPoll)
     }
   },
   created () {

@@ -95,7 +95,7 @@ export default {
         this.setSnackMessage(message)
         this.setShowSnack(true)
         if (close === true) {
-          this.$emit('refresh')
+          this.$emit('refresh', this.currentPoll)
         }
       }).catch(err => console.log('este es el error', err))
     },

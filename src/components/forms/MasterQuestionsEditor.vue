@@ -72,7 +72,6 @@ export default {
         name: this.currentCategory.name
       }
       let subCategoryQuestion = this.currentMaster.subcategory_questions
-      console.log('subCategoryQuestion--', subCategoryQuestion)
       this.dataResponse.questionMaster = questionMaster
       this.dataResponse.categoryQuestion = categoryQuestion
       this.dataResponse.subCategoryQuestion = subCategoryQuestion
@@ -105,7 +104,7 @@ export default {
         this.setSnackMessage(message)
         this.setShowSnack(true)
         this.showMessage = false
-        this.$emit('refresh')
+        this.$emit('refresh', this.currentPoll)
       }).catch(err => {
         this.message = 'Error...'
         console.log('err--', err)

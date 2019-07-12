@@ -295,14 +295,16 @@ export default {
         console.log(err)
       })
     },
-    refresh () {
-      this.getPoll(this.id).then(result => {
+    refresh (currentPollUpdate) {
+      this.currentPoll = currentPollUpdate
+      this.formatView()
+      /* this.getPoll(this.id).then(result => {
         // this.viewData = result.PollInstances.map(poll => poll.response_received)
         // this.resultPoll = Object.assign({}, result)
         this.currentPoll = result
         this.formatView()
         // this.setCurrentPoll(Object.assign({}, this.resultPoll))
-      }).catch(err => console.log('este es el error', err))
+    }).catch(err => console.log('este es el error', err)) */
     },
     formatView () {
       if (this.currentPoll) {
