@@ -154,6 +154,7 @@ export default {
         this.setShowSnack(true)
         if (close === true) {
           this.$emit('close')
+          this.$emit('refresh', this.currentPoll)
         }
       }).catch(err => console.log('este es el error', err))
     },
