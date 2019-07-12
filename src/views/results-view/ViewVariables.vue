@@ -102,6 +102,12 @@
                               Relacionar valores
                           </v-list-tile-title>
                       </v-list-tile>
+                      <v-list-tile @click="dialogCoding = true;arrIndex = props.index;">
+                          <v-list-tile-title>
+                              <v-icon class="icon">blur_on</v-icon>
+                              Codificar
+                          </v-list-tile-title>
+                      </v-list-tile>
                     </v-list>
                   </v-menu>
                 </td>
@@ -182,6 +188,16 @@
               </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-if="dialogCoding" v-model="dialogCoding" min-width="350">
+            <v-card>
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h4>Codificar</h4>
+              </v-flex>
+              <v-card-text>
+                  <coding-question :arrIndex="arrIndex" :actors="actors" @close="dialogCoding = false" @refresh="refresh"></coding-question>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -196,6 +212,7 @@ import RelatedActorQuestion from './RelatedActorQuestion'
 import RelatedMigrationQuestion from './RelatedMigrationQuestion'
 import OrderValues from './OrderValues'
 import RelationOptions from './RelationOptions'
+import CodingQuestion from './CodingQuestion'
 import Avatar from './../../components/Avatar'
 export default {
   props: ['responses', 'variablesMode', 'currentPoll'],
@@ -226,6 +243,7 @@ export default {
       dialogRelated: false,
       dialogRelationOption: false,
       dialogOrderValues: false,
+      dialogCoding: false,
       actors: [],
       dialogMigration: false,
       dialogCategories: false,
@@ -268,13 +286,14 @@ export default {
       this.dialogRelationOption = false
       this.dialogMigration = false
       this.dialogOrderValues = false
+      this.dialogCoding = false
       this.$emit('refresh', currentPoll)
     }
   },
   created () {
     this.getActors()
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar, OrderValues, RelationOptions }
+  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, RelatedMigrationQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar, OrderValues, RelationOptions, CodingQuestion }
 }
 </script>
 
