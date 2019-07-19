@@ -28,7 +28,7 @@
                     class=""
                     v-for="(element, index) in options" :key="index"
                   >
-                    <span class="bold">VALOR: </span>{{ element.option }}
+                    <span class="bold">Código: </span>{{ (element.option === undefined || element.option === null) ? 'Nulo' : element.option }}
 
                     <v-text-field
                         v-model="element.coding"
