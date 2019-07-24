@@ -29,14 +29,13 @@
                 <v-autocomplete
                 :items="provinces"
                 item-text="name"
-                item-value="name"
+                item-value="_id"
                 v-model="project.province"
                 cache-items
                 hide-no-data
                 hide-details
                 label="Buscar provincia..."
                 solo-inverted
-                @change="selectetedProvince"
               ></v-autocomplete>
               <br />
               <v-autocomplete v-if="project.position === 'ALCALDE'"
@@ -360,6 +359,7 @@ export default {
     },
     saveCheck () {
       if (this.valid && this.project.actors && this.project.actors.length > 0) {
+        this.project.country = '5ceda762c3f26577adc716fd'
         this.saveData(this.project)
       } else {
         this.setSnackMessage('Por favor agregue actores al proyecto')
