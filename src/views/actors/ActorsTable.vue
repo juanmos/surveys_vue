@@ -172,7 +172,6 @@ export default {
       })
     },
     del (element) {
-      console.log('este hay que borrar', element)
       const {Actor} = this.$FeathersVuex
       const actor = new Actor(element)
       actor.removed = true
