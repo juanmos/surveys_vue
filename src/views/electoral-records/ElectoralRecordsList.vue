@@ -6,18 +6,16 @@
             <v-card :flat="true">
               <v-subheader>Actas Registradas</v-subheader>
               <v-flex xs12>
-                  <v-autocomplete
-                  :items="provinces"
-                  item-text="name"
-                  item-value="name"
-                  v-model="filter.province"
+                <v-text-field
+                  v-model="filter.province.name"
                   disabled
-                  cache-items
                   hide-no-data
                   hide-details
-                  label="Buscar provincia..."
-                  solo-inverted
-                ></v-autocomplete>
+                  label="Provincia"
+                  box
+                  color="blue-grey lighten-2"
+                  required
+                ></v-text-field>
               </v-flex>
               <v-layout
                   row
@@ -223,7 +221,7 @@ export default {
       cantones: [],
       parroquias: [],
       filter: {
-        province: '',
+        province: {name: ''},
         canton: '',
         parroquia: '',
         table: ''
@@ -232,6 +230,7 @@ export default {
       total: 1,
       itemSelected: null,
       loaded: false,
+      project: null,
       projects: [],
       recordsList: [],
       query: {},
@@ -240,7 +239,8 @@ export default {
   },
   methods: {
     ...mapActions('electoral-records', { findRecords: 'find' }),
-    ...mapActions('provinces', { findProvinces: 'find' }),
+    ...mapActions('electoral-projects', { getProject: 'get' }),
+    ...mapActions('provinces', { getProvince: 'get' }),
     goToNew () {
       this.$router.push('/electoral-records-new/' + this.project_id)
     },
@@ -284,12 +284,6 @@ export default {
         this.parroquias = [{name: 'TODOS'}, ...orderParroquias]
       }
     },
-    loadCantones () {
-      this.findProvinces({query: {name: this.filter.province, $skip: 0, $limit: null}}).then(response => {
-        this.cantones = response.data[0].canton
-        this.orderCantones()
-      })
-    },
     selectedCanton () {
       this.parroquias = []
       let currentCanton = this.cantones.filter(canton => canton.name === this.filter.canton)[0]
@@ -328,6 +322,20 @@ export default {
         this.loaded = true
         this.recordsList = response.data
       })
+    },
+    loadData () {
+      let that = this
+      this.getProvince(this.project.province).then(result => {
+        that.filter.province = result
+        this.cantones = result.canton
+        this.orderCantones()
+      }).catch(err => console.log('este es el error', err))
+      this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.recordsList = response.data
+      })
     }
   },
   computed: {
@@ -355,17 +363,10 @@ export default {
   },
   created () {
     this.project_id = this.$route.params.id
-    this.findRecords({query: {removed: false, _electoral_project_id: this.project_id, $skip: this.getSkip, $limit: this.limit}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.recordsList = response.data
-      if (this.recordsList.length > 0) {
-        this.provinces = [{name: this.recordsList[0].province}]
-        this.filter.province = this.recordsList[0].province
-        this.loadCantones()
-      }
-    })
+    this.getProject(this.$route.params.id).then(result => {
+      this.project = result
+      this.loadData()
+    }).catch(err => console.log('este es el error', err))
   },
   components: {LoadingComponent, EditableField}
 }

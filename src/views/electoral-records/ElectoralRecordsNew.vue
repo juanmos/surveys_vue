@@ -37,6 +37,7 @@ export default {
   },
   methods: {
     ...mapActions('electoral-projects', { getProject: 'get' }),
+    ...mapActions('provinces', { getProvince: 'get' }),
     create (values) {
       // method with feathers vuex to create an category project
       const { ElectoralRecord } = this.$FeathersVuex

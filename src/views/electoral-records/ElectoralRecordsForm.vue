@@ -82,26 +82,31 @@
                     required
                   ></v-text-field>
               </v-flex>
-              <v-flex xs4>
+              <v-flex xs6>
+                Acta
                     <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
                     <a :href="currentImageDownload" download title="Descargar" target="_blank">
                          <v-icon>arrow_drop_down</v-icon>
                     </a>
               </v-flex>
+              <v-flex xs6>
+                  Imagen secundaria
+                    <picture-upload @fileCreated="setCurrentImgSecundary" :url="currentImageSecundary"></picture-upload>
+                    <a :href="currentImageSecundaryDownload" download title="Descargar" target="_blank">
+                         <v-icon>arrow_drop_down</v-icon>
+                    </a>
+              </v-flex>
               <v-flex xs12>
-                  <v-autocomplete
-                  :items="provinces"
-                  item-text="name"
-                  item-value="name"
+                <v-text-field
                   v-model="record.province"
                   disabled
-                  cache-items
                   hide-no-data
                   hide-details
-                  label="Buscar provincia..."
-                  solo-inverted
-                  @change="selectetedProvince"
-                ></v-autocomplete>
+                  label="Provincia"
+                  box
+                  color="blue-grey lighten-2"
+                  required
+                ></v-text-field>
               </v-flex>
               <v-flex xs12>
                   <v-autocomplete
@@ -323,6 +328,7 @@ export default {
       country: '',
       province: '',
       image: null,
+      image_secundary: null,
       canton: '',
       district: '',
       parroquia: '',
@@ -347,12 +353,15 @@ export default {
     dialogNewZone: false,
     dialogNewParishDistrict: false,
     provinces: [],
+    provinve: null,
     cantones: [],
     districts: [],
     parroquias: [],
     zones: [],
     currentImage: null,
+    currentImageSecundary: null,
     currentImageDownload: null,
+    currentImageSecundaryDownload: null,
     resultHeaders: [{
       text: 'Candidato',
       align: 'left',
@@ -371,12 +380,16 @@ export default {
   methods: {
     ...mapActions('position-actors', { findElectoralProject: 'find' }),
     ...mapActions('provinces', { findProvinces: 'find' }),
+    ...mapActions('provinces', { getProvince: 'get' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
     setCurrentImg (data) {
       this.record.image = data.path
+    },
+    setCurrentImgSecundary (data) {
+      this.record.image_secundary = data.path
     },
     save () {
       this.saveData(this.record)
@@ -503,12 +516,13 @@ export default {
       const {Province} = this.$FeathersVuex
       const province = new Province(values)
       province.save().then((result) => {
-        this.loadProvinces()
+        this.loadProvinces(result.province)
+        this.cleanDataDialog()
       }, (err) => {
         console.log(err)
       })
     },
-    cleanData () {
+    cleanDataDialog () {
       this.newDistrict = ''
       this.newParish = ''
       this.newZone = ''
@@ -524,13 +538,14 @@ export default {
       this.loadCantones()
     },
     loadCantones () {
-      this.findProvinces({query: {name: this.record.province, $skip: 0, $limit: null}}).then(response => {
-        this.cantones = response.data[0].canton
+      this.getProvince(this.province).then(response => {
+        this.record.province = response.name
+        this.cantones = response.canton
         this.orderCantones()
         if (this.record.canton !== '' && this.record.canton) {
           this.loadDataEdit()
         }
-      })
+      }).catch(err => console.log('este es el error', err))
     },
     selectedCanton () {
       this.districts = []
@@ -603,10 +618,19 @@ export default {
         return 0
       })
     },
-    loadProvinces () {
-      this.findProvinces({ query: {$sort: { name: '1' }, removed: false, $skip: 0, $limit: null} }).then(resp => {
+    loadProvinces (nameProvince) {
+      let filter = {$sort: { name: '1' }, removed: false, $skip: 0, $limit: null}
+      if (nameProvince) {
+        filter.name = nameProvince
+      }
+      this.findProvinces({ query: filter }).then(resp => {
         this.provinces = resp.data
-        if (this.project) {
+        if (this.provinces.length > 0) {
+          this.record.province = resp.data[0].name
+          this.province = resp.data[0]._id
+          this.loadCantones()
+        }
+        /* if (this.project) {
           if (this.project.canton) {
             this.selectedCanton()
           }
@@ -616,7 +640,7 @@ export default {
           this.loadCantones()
         }
         this.selectedParroquia()
-        this.cleanData()
+        this.cleanData() */
       })
     },
     saveData (values) {
@@ -636,7 +660,8 @@ export default {
   watch: {
     project: function (val) {
       this.record.country = val.country
-      this.record.province = val.province
+      this.province = val.province
+      this.loadProvinces(null)
       this.loadCantones()
       this.record.date = val.date
       this.record.country = val.country
@@ -657,10 +682,12 @@ export default {
     },
     currentRecord: function (val) {
       this.record = val
-      this.provinces = [{name: val.province}]
-      this.loadCantones()
+      this.loadProvinces(val.province)
+      // this.loadCantones()
       this.currentImage = val.image
+      this.currentImageSecundary = val.image_secundary
       this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image
+      this.currentImageSecundaryDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image_secundary
     }
   },
   computed: {
@@ -668,9 +695,6 @@ export default {
   },
   created () {
     this.buildtables()
-    if (!this.edit) {
-      this.loadProvinces()
-    }
   },
   components: {LoadingComponent, PictureUpload}
 }
