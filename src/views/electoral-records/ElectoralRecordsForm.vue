@@ -82,20 +82,32 @@
                     required
                   ></v-text-field>
               </v-flex>
-              <v-flex xs6>
-                Acta
-                    <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
-                    <a :href="currentImageDownload" download title="Descargar" target="_blank">
-                         <v-icon>arrow_drop_down</v-icon>
-                    </a>
-              </v-flex>
-              <v-flex xs6>
-                  Imagen secundaria
-                    <picture-upload @fileCreated="setCurrentImgSecundary" :url="currentImageSecundary"></picture-upload>
-                    <a :href="currentImageSecundaryDownload" download title="Descargar" target="_blank">
-                         <v-icon>arrow_drop_down</v-icon>
-                    </a>
-              </v-flex>
+              <v-container grid-list-md text-center>
+                <v-layout wrap>
+                    <v-flex xs4>
+                      Acta
+                          <picture-upload @fileCreated="setCurrentImg" :url="currentImage"></picture-upload>
+                          <a :href="currentImageDownload" download title="Descargar" target="_blank">
+                               <v-icon>arrow_drop_down</v-icon>
+                          </a>
+                    </v-flex>
+                    <v-flex xs4>
+                        Imagen secundaria
+                          <picture-upload @fileCreated="setCurrentImgSecundary" :url="currentImageSecundary"></picture-upload>
+                          <a :href="currentImageSecundaryDownload" download title="Descargar" target="_blank">
+                               <v-icon>arrow_drop_down</v-icon>
+                          </a>
+                    </v-flex>
+                    <v-flex xs4>
+                        Imagen alternativa
+                          <picture-upload @fileCreated="setCurrentImgAlternative" :url="currentImageAlternative"></picture-upload>
+                          <a :href="currentImageAlternativeDownload" download title="Descargar" target="_blank">
+                               <v-icon>arrow_drop_down</v-icon>
+                          </a>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+
               <v-flex xs12>
                 <v-text-field
                   v-model="record.province"
@@ -360,8 +372,10 @@ export default {
     zones: [],
     currentImage: null,
     currentImageSecundary: null,
+    currentImageAlternative: null,
     currentImageDownload: null,
     currentImageSecundaryDownload: null,
+    currentImageAlternativeDownload: null,
     resultHeaders: [{
       text: 'Candidato',
       align: 'left',
@@ -390,6 +404,9 @@ export default {
     },
     setCurrentImgSecundary (data) {
       this.record.image_secundary = data.path
+    },
+    setCurrentImgAlternative (data) {
+      this.record.image_alternative = data.path
     },
     save () {
       this.saveData(this.record)
@@ -686,8 +703,10 @@ export default {
       // this.loadCantones()
       this.currentImage = val.image
       this.currentImageSecundary = val.image_secundary
+      this.currentImageAlternative = val.image_alternative
       this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image
       this.currentImageSecundaryDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image_secundary
+      this.currentImageAlternativeDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image_alternative
     }
   },
   computed: {
