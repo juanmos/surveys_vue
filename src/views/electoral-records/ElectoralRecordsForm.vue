@@ -647,17 +647,6 @@ export default {
           this.province = resp.data[0]._id
           this.loadCantones()
         }
-        /* if (this.project) {
-          if (this.project.canton) {
-            this.selectedCanton()
-          }
-          if (this.project.district) {
-            this.selectedDistrict()
-          }
-          this.loadCantones()
-        }
-        this.selectedParroquia()
-        this.cleanData() */
       })
     },
     saveData (values) {
@@ -677,9 +666,19 @@ export default {
   watch: {
     project: function (val) {
       this.record.country = val.country
-      this.province = val.province
-      this.loadProvinces(null)
-      this.loadCantones()
+      if (this.edit) {
+        this.province = val.province
+        this.loadProvinces(null)
+        this.loadCantones()
+      } else {
+        this.getProvince(val.province).then(response => {
+          this.province = response.name
+          this.record.province = response.name
+          this.cantones = response.canton
+          this.orderCantones()
+          this.selectedCanton()
+        }).catch(err => console.log('este es el error', err))
+      }
       this.record.date = val.date
       this.record.country = val.country
       this.record.canton = val.canton
