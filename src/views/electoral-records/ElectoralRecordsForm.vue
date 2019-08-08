@@ -125,7 +125,6 @@
                           :items="cantones"
                           item-text="name"
                           item-value="name"
-                          :disabled="disabledCantones"
                           v-model="record.canton"
                           hide-no-data
                           hide-details
