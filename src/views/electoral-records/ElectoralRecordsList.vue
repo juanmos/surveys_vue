@@ -100,7 +100,7 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar categoría</v-card-title>
+                                <v-card-title class="headline">Eliminar el acta</v-card-title>
 
                                 <v-card-text>
                                   Esta seguro que desea eliminar el acta?
@@ -283,6 +283,14 @@ export default {
         })
         this.parroquias = [{name: 'TODOS'}, ...orderParroquias]
       }
+    },
+    del () {
+      const {ElectoralRecord} = this.$FeathersVuex
+      const electoralRecord = new ElectoralRecord(this.itemSelected)
+      electoralRecord.removed = true
+      electoralRecord.patch().then((result) => {
+        this.loadData()
+      })
     },
     selectedCanton () {
       this.parroquias = []
