@@ -14,7 +14,7 @@
             <h4>Cargar Imagen</h4>
           </v-flex>
           <v-card-text style="background: #333">
-              <file-uploader @fileCreated="setFile"></file-uploader>
+              <file-uploader @fileCreated="setFile" :loadImageRecord="loadImageRecord"></file-uploader>
           </v-card-text>
         </v-dialog>
     </div>
@@ -27,7 +27,8 @@ export default {
   props: ['url'],
   data: () => ({
     dialog: false,
-    currentImg: null
+    currentImg: null,
+    loadImageRecord: true
   }),
   computed: {
     ...mapState([
