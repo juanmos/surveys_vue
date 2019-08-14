@@ -93,7 +93,8 @@
                     </v-flex>
                     <v-flex xs4>
                         Imagen secundaria
-                          <picture-upload @fileCreated="setCurrentImgSecundary" :url="currentImageSecundary"></picture-upload>
+                          <picture-upload @fileCreated="setCurrentImgSecundary" :url="currentImageSecundary"
+                          ></picture-upload>
                           <a :href="currentImageSecundaryDownload" download title="Descargar" target="_blank">
                                <v-icon>arrow_drop_down</v-icon>
                           </a>
@@ -340,6 +341,7 @@ export default {
       province: '',
       image: null,
       image_secundary: null,
+      loadImageRecord: true,
       canton: '',
       district: '',
       parroquia: '',
@@ -654,7 +656,9 @@ export default {
       record.save().then((result) => {
         this.setSnackMessage('Acta almacenada correctamente.')
         this.setShowSnack(true)
-        this.$router.push('/electoral-projects/' + this.record._electoral_project_id)
+        let idProject = this.record._electoral_project_id
+        this.record = null
+        this.$router.push('/electoral-projects/' + idProject)
       }, (err) => {
         console.log(err)
         this.setSnackMessage('No se puedo almacenar el acta.')
@@ -682,7 +686,7 @@ export default {
       this.record.country = val.country
       this.record.canton = val.canton
       this.record.parroquia = val.parroquia
-      this.record.results = val.actors
+      this.record.results = val.actors.map(actor => ({...actor, number_votes: ''}))
       this.record.district = val.district
       this.record.zone = val.zone
       this.record.position = val.position
@@ -698,13 +702,12 @@ export default {
     currentRecord: function (val) {
       this.record = val
       this.loadProvinces(val.province)
-      // this.loadCantones()
       this.currentImage = val.image
       this.currentImageSecundary = val.image_secundary
       this.currentImageAlternative = val.image_alternative
-      this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image
-      this.currentImageSecundaryDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image_secundary
-      this.currentImageAlternativeDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + val.image_alternative
+      this.currentImageDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + 'public/' + val.image
+      this.currentImageSecundaryDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + 'public/' + val.image_secundary
+      this.currentImageAlternativeDownload = enviroment[enviroment.currentEnviroment].backend.urlBase + 'public/' + val.image_alternative
     }
   },
   computed: {

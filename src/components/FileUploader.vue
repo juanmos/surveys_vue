@@ -24,7 +24,7 @@ import {mapActions, mapState} from 'vuex'
 import axios from 'axios'
 const enviroment = require('./../../config/enviroment.json')
 export default {
-  props: ['label', 'inputType', 'folder'],
+  props: ['label', 'inputType', 'folder', 'loadImageRecord'],
   data () {
     return {
       imageName: '',
@@ -50,10 +50,11 @@ export default {
         }
         let fr = new FileReader()
         fr.readAsDataURL(file)
+        let folder = (this.loadImageRecord) ? 'actas' : 'construct'
         fr.addEventListener('load', () => {
           this.imageUrl = fr.result
           this.imageFile = file
-          form.append('type', 'construct')
+          form.append('type', folder)
           form.append('file', file)
           this.save(form)
         })
@@ -71,6 +72,7 @@ export default {
       axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
       let params = new URLSearchParams()
       if (this.inputType) params.append('spss', true)
+      if (this.loadImageRecord) params.append('loadImageRecord', true)
       axiosIntance.post('uploads', req, {
         headers: {
           'Content-Type': 'multipart/form-data'
