@@ -50,11 +50,11 @@ export default {
         }
         let fr = new FileReader()
         fr.readAsDataURL(file)
-        // let folder = (this.loadImageRecord) ? 'actas' : 'construct'
+        let folder = (this.loadImageRecord) ? 'actas' : 'construct'
         fr.addEventListener('load', () => {
           this.imageUrl = fr.result
           this.imageFile = file
-          form.append('type', 'construct')
+          form.append('type', folder)
           form.append('file', file)
           this.save(form)
         })
