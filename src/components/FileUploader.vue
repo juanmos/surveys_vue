@@ -74,7 +74,6 @@ export default {
       if (this.inputType) params.append('spss', true)
       console.log('loadImageRecord---', this.loadImageRecord)
       // if (this.loadImageRecord) params.append('loadImageRecord', 'true')
-      params.append('loadImageRecord', 'true')
       axiosIntance.post('uploads', req, {
         headers: {
           'Content-Type': 'multipart/form-data'
