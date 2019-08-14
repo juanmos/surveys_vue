@@ -72,7 +72,8 @@ export default {
       axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
       let params = new URLSearchParams()
       if (this.inputType) params.append('spss', true)
-      if (this.loadImageRecord) params.append('loadImageRecord', true)
+      console.log('loadImageRecord---', this.loadImageRecord)
+      if (this.loadImageRecord) params.append('loadImageRecord', 'true')
       axiosIntance.post('uploads', req, {
         headers: {
           'Content-Type': 'multipart/form-data'
