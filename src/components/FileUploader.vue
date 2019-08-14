@@ -50,11 +50,12 @@ export default {
         }
         let fr = new FileReader()
         fr.readAsDataURL(file)
-        let folder = (this.loadImageRecord) ? 'actas' : 'construct'
+        // let folder = (this.loadImageRecord) ? 'actas' : 'construct'
         fr.addEventListener('load', () => {
           this.imageUrl = fr.result
           this.imageFile = file
-          form.append('type', folder)
+          // form.append('type', folder)
+          form.append('type', 'construct')
           form.append('file', file)
           this.save(form)
         })
@@ -72,8 +73,7 @@ export default {
       axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
       let params = new URLSearchParams()
       if (this.inputType) params.append('spss', true)
-      console.log('loadImageRecord---', this.loadImageRecord)
-      // if (this.loadImageRecord) params.append('loadImageRecord', 'true')
+      // if (this.loadImageRecord) params.append('loadImageRecord', true)
       axiosIntance.post('uploads', req, {
         headers: {
           'Content-Type': 'multipart/form-data'
