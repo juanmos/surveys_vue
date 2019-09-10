@@ -26,6 +26,11 @@ export default {
       title: 'Configuración de menús'
     },
     {
+      icon: 'settings_voice',
+      url: '/audios',
+      title: 'Audios'
+    },
+    {
       icon: 'comment',
       url: '/polls-project',
       title: 'Proyectos de Encuestas'
