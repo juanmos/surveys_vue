@@ -18,7 +18,7 @@
                               @keyup.enter="searchActorList"
                               @keyup.space="searchActorList"
                               append-icon="search"
-                              label="Buscar actor..."
+                              label="Buscar audio..."
                               single-line
                               hide-details
                             ></v-text-field>

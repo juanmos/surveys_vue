@@ -77,22 +77,14 @@
                             </v-edit-dialog>
                       </td>
                       <td>
-                          <v-edit-dialog
-                            :return-value.sync="props.item.textReady"
-                            lazy
-                            @save="edit(props.item.textReady, props.item, 'textReady')"
-                            @cancel="cancel"
-                            @open="open"
-                            @close="close"
-                            > <div >{{ props.item.textReady }}</div>
-                            <v-text-field
-                                slot="input"
-                                v-model="props.item.textReady"
-                                label="Editar Descripcion"
-                                single-line
-                                counter
-                            ></v-text-field>
-                            </v-edit-dialog>
+                          <span v-if="props.item.textReady">
+
+                              <v-icon style="color: #6bef53;">check_circle</v-icon>
+                              listo
+                          </span>
+                          <span v-else>
+                              <v-icon style="color: #ed6a0d;">refresh</v-icon>
+                              Espere...</span>
                       </td>
                       <td>
                         <v-menu

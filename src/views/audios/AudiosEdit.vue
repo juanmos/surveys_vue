@@ -8,7 +8,7 @@
                         <span class="title">Audio
                         </span>
                         <v-spacer></v-spacer>
-                        <v-btn to="/actors" class="deep-orange darken-3" fab small dark>
+                        <v-btn to="/audios" class="deep-orange darken-3" fab small dark>
                         <v-icon>list
                         </v-icon>
                         </v-btn>
