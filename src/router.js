@@ -310,6 +310,18 @@ const QuestionCategoriesNew = resolve => {
   }, 'question-categories')
 }
 
+const Audios = resolve => {
+  require.ensure(['./views/audios/AudiosList.vue'], () => {
+    resolve(require('./views/audios/AudiosList.vue'))
+  }, 'audios')
+}
+
+const AudiosNew = resolve => {
+  require.ensure(['./views/audios/AudiosNew.vue'], () => {
+    resolve(require('./views/audios/AudiosNew.vue'))
+  }, 'audios')
+}
+
 const Actors = resolve => {
   require.ensure(['./views/actors/ActorsList.vue'], () => {
     resolve(require('./views/actors/ActorsList.vue'))
@@ -690,6 +702,18 @@ export default new Router({
           name: 'ReportCreator',
           props: true,
           component: ReportCreator
+        },
+        {
+          path: 'audios',
+          name: 'audios',
+          props: true,
+          component: Audios
+        },
+        {
+          path: 'audios-new',
+          name: 'audios-new',
+          props: true,
+          component: AudiosNew
         },
         {
           path: 'actors',
