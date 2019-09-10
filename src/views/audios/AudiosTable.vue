@@ -109,7 +109,7 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="goToEdit(props.item)">
-                              <v-list-tile-title>Editar</v-list-tile-title>
+                              <v-list-tile-title>Ver información</v-list-tile-title>
                             </v-list-tile>
                             <v-list-tile @click="del(props.item)">
                               <v-list-tile-title>Eliminar</v-list-tile-title>
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
@@ -153,12 +153,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('actors', { findActors: 'find' }),
     goToNew () {
-      this.$router.push('/new-actor')
+      this.$router.push('/audios-new')
     },
-    goToEdit (actor) {
-      this.$router.push('/actors-edit/' + actor._id)
+    goToEdit (audio) {
+      this.$router.push('/audios-edit/' + audio._id)
     },
     edit (val, elem, field) {
       console.log('esto', val, elem, field)
@@ -169,16 +168,15 @@ export default {
       })
     },
     del (element) {
-      const {Actor} = this.$FeathersVuex
-      const actor = new Actor(element)
-      actor.removed = true
-      actor.save().then((result) => {
+      const {Audio} = this.$FeathersVuex
+      const audio = new Audio(element)
+      audio.removed = true
+      audio.save().then((result) => {
         console.log('se cambio', result)
         this.$emit('delActor')
       })
     },
     save (val) {
-      console.log(val)
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'

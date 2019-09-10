@@ -322,6 +322,12 @@ const AudiosNew = resolve => {
   }, 'audios')
 }
 
+const AudiosEdit = resolve => {
+  require.ensure(['./views/audios/AudiosEdit.vue'], () => {
+    resolve(require('./views/audios/AudiosEdit.vue'))
+  }, 'audios')
+}
+
 const Actors = resolve => {
   require.ensure(['./views/actors/ActorsList.vue'], () => {
     resolve(require('./views/actors/ActorsList.vue'))
@@ -714,6 +720,12 @@ export default new Router({
           name: 'audios-new',
           props: true,
           component: AudiosNew
+        },
+        {
+          path: 'audios-edit/:id',
+          name: 'audios-edit',
+          props: true,
+          component: AudiosEdit
         },
         {
           path: 'actors',
