@@ -5,26 +5,36 @@
                <v-flex xs4>
                     <audio-upload v-if="!currentAudio" @fileCreated="setCurrentImg" :url="currentImage"></audio-upload>
                     <div v-if="currentAudio">
-                        <div class="ghettoplayer">
+                        <div class="ghettoplayer" style="margin-bottom:15px;">
                             <audio ref="player" controls>
                                 <source v-bind:src="currentAudio">
                                 Your browser does not support the audio element.
                             </audio>
                         </div>
+                        <v-text-field
+                            v-model="audioData.name"
+                            label="Nombre"
+                            box
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="audioData.description"
+                            label="Descripcion"
+                            box
+                        ></v-text-field>
                     </div>
                 </v-flex>
                 <v-flex xs7>
-                    <v-text-field
+                    <v-text-field v-if="!currentAudio"
                         v-model="audioData.name"
                         label="Nombre"
                         box
                     ></v-text-field>
-                    <v-text-field
+                    <v-text-field v-if="!currentAudio"
                         v-model="audioData.description"
                         label="Descripcion"
                         box
                     ></v-text-field>
-                    <v-textarea
+                    <v-textarea v-if="currentAudio"
                         height="400"
                         v-model="audioData.transcription"
                         label="Texto del audio"
