@@ -10,7 +10,6 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
-    "@algoz098/vue-player": "^0.3.2",
     "@feathersjs/authentication-client": "^1.0.2",
     "@feathersjs/feathers": "^3.1.7",
     "@feathersjs/socketio-client": "^1.1.0",
