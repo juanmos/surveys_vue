@@ -280,28 +280,26 @@ export default {
       return this.resultPoll.formatedConfiguration
     },
     getLayoutUniqueQuestion () {
+      console.log('uniqueee', this.uniqueQuestion[0])
       let questionValues = this.uniqueQuestion[0]
         ? this.uniqueQuestion[0].total
         : {}
       console.log('question values', questionValues)
-      let unique = this.uniqueQuestion.map(q => {
-        return {
+      let unique = this.uniqueQuestion.map((q, index) => {
+        let result = {
           ...q,
           dataset: q.options
-            ? q.options.map(response => ({
-              label: response,
-              backgroundColor: this.getRandomColor(),
-              data: [
-                questionValues[response]
-                  ? questionValues[response].percentage
-                  : 0,
-                questionValues[response]
-                  ? questionValues[response].percentage
-                  : 0
-              ]
-            }))
+            ? q.options.map(response => {
+              return {
+                label: response,
+                backgroundColor: this.getRandomColor(),
+                data: [q.total[response].percentage]
+              }
+            })
             : []
         }
+        console.log('result', result)
+        return result
       })
 
       return unique
