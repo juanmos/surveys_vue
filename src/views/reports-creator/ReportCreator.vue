@@ -196,6 +196,7 @@ export default {
     },
     delElement (el) {
       this.uniqueQuestion = this.uniqueQuestion.filter(q => q.code !== el.code)
+      this.questions.push(el)
     },
     processData () {
       const {ConfigPoll} = this.$FeathersVuex
@@ -245,16 +246,19 @@ export default {
     },
     getLayoutUniqueQuestion () {
       let questionValues = this.uniqueQuestion[0] ? this.uniqueQuestion[0].total : {}
-      return this.uniqueQuestion.map(q => {
+      console.log('question values', questionValues)
+      let unique = this.uniqueQuestion.map(q => {
         return {
           ...q,
           dataset: q.options ? q.options.map(response => ({
             label: response,
             backgroundColor: this.getRandomColor(),
-            data: [questionValues[response].total, questionValues[response].total]
+            data: [questionValues[response] ? questionValues[response].total : 0, questionValues[response] ? questionValues[response].total : 0]
           })) : []
         }
       })
+
+      return unique
     },
     getDataKeys () {
       return this.dataKeys.concat(this.currentPoll ? this.currentPoll.segmentationFields.map(field => field.original) : [])
