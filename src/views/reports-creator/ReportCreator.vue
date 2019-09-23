@@ -45,7 +45,9 @@
                                 <template v-for="item in questions">
                                     <v-flex :key="item.original">
                                         <v-card class="mr-2 ml-2 mb-2 mt-2" dark :color="`primary`">
-                                            <v-card-title>{{item.label}}</v-card-title>
+                                            <v-card-title>
+                                              {{item.label}}
+                                            </v-card-title>
                                         </v-card>
                                     </v-flex>
                                 </template>
