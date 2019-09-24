@@ -17,7 +17,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
+                  <report-creator :id="this.id" :responses="getTableDataValues" :variables="getTableVariableValues"></report-creator>
                 </v-card>
             </v-tab-item>
             <v-tab
@@ -32,7 +32,7 @@
               v-if="resultPoll && !resultPoll.imported"
             >
                 <v-card flat>
-                    <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
+                  <questions-codificator :headers="getDataHeaders" :responses="getTableDataValues" :variables="getTableVariableValues"></questions-codificator>
                 </v-card>
             </v-tab-item>
         </v-tabs>
