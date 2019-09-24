@@ -3,6 +3,11 @@
     <v-toolbar color="grey darken-3" class="elevation-1">
       <div class="title">{{question.label}}</div>
         <v-spacer></v-spacer>
+
+        <v-btn @click="move('back')" flat><v-icon>arrow_back</v-icon></v-btn>
+
+        <v-btn @click="move('foward')" flat><v-icon>arrow_forward</v-icon></v-btn>
+
         <v-btn @click="currentGraph = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
         <v-btn @click="currentGraph = 'PieGraph'"  flat><v-icon>pie_chart</v-icon></v-btn>
     </v-toolbar>
@@ -22,7 +27,7 @@ import PieGraph from './PieGraph'
 import Map from './Map'
 
 export default {
-  props: ['type', 'chart-data', 'question'],
+  props: ['type', 'chart-data', 'question', 'index'],
   data: () => ({
     currentGraph: 'BarGraph'
   }),
@@ -82,6 +87,11 @@ export default {
           enabled: true
         }
       }
+    }
+  },
+  methods: {
+    move (direction) {
+      this.$emit('move', {direction, index: this.index})
     }
   },
   components: { BarGraph, PieGraph, Map }
