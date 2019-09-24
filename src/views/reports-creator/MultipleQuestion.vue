@@ -189,19 +189,7 @@ export default {
       this.uniqueQuestion = this.uniqueQuestion.filter(q => q.code !== el.code)
     },
     saveGraphs () {
-      const { PanelElement } = this.$FeathersVuex
-      let panel = new PanelElement({
-        questions: [],
-        _poll_id: this.id
-      })
-      panel.save().then(result => {
-        this.setSnackMessage('Graficos Guardados en Panel')
-        this.setShowSnack(true)
-      }).catch(err => {
-        console.log(err)
-      })
-      console.log('Este servicio', panel)
-      console.log('questions', this.getLayoutUniqueQuestion)
+      console.log('saving everything', this.segme)
     }
   },
   computed: {

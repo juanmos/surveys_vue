@@ -186,7 +186,8 @@ export default new Vuex.Store({
         parsedJson: '',
         removed: false,
         _polls_project_id: 0,
-        dateCreated: ''
+        dateCreated: '',
+        dashboardSaved: ''
       }
     }),
     service('users-projects', {

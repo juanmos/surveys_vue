@@ -184,7 +184,8 @@ export default {
     icons,
     dataKeys: ['direccion', 'telefono', 'nombres'],
     personalDataKeys: [],
-    chip2: true
+    chip2: true,
+    savedDashboards: []
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
@@ -238,22 +239,29 @@ export default {
         .catch(err => console.log('este es el error', err))
     },
     saveGraphs () {
-      const { PanelElement } = this.$FeathersVuex
-      let panel = new PanelElement({
-        questions: [],
-        _poll_id: this.id
+      console.log('saving in graphs....', this.getLayoutUniqueQuestion)
+      const { ConfigPoll } = this.$FeathersVuex
+      let conf = new ConfigPoll({...this.resultPoll})
+      console.log(conf)
+      conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
+      conf.save().then(result => {
+        console.log('result', result)
+      }).catch(err => {
+        console.log('error', err)
       })
-      panel
-        .save()
-        .then(result => {
-          this.setSnackMessage('Graficos Guardados en Panel')
-          this.setShowSnack(true)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      console.log('Este servicio', panel)
-      console.log('questions', this.getLayoutUniqueQuestion)
+    },
+    // Fix for circular data
+    getCircularReplacer () {
+      const seen = new WeakSet()
+      return (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return
+          }
+          seen.add(value)
+        }
+        return value
+      }
     }
   },
   computed: {
@@ -386,6 +394,10 @@ export default {
       this.questions = this.resultPoll
         ? this.resultPoll.formatedConfiguration
         : []
+      this.uniqueQuestion = this.resultPoll
+        ? JSON.parse(this.resultPoll.dashboardSaved).data || []
+        : []
+      console.log('saved dashboards', this.uniqueQuestion)
     })
   }
 }
