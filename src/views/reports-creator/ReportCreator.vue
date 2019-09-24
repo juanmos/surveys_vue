@@ -129,6 +129,7 @@
                       v-if="graphComponent !== 'Map'"
                       :questions="getLayoutUniqueQuestion"
                       :layout="1"
+                      @move="move"
                     ></diagram-layout>
                     <component
                       v-else
@@ -239,15 +240,18 @@ export default {
         .catch(err => console.log('este es el error', err))
     },
     saveGraphs () {
-      console.log('saving in graphs....', this.getLayoutUniqueQuestion)
-      const { ConfigPoll } = this.$FeathersVuex
-      let conf = new ConfigPoll({...this.resultPoll})
-      console.log(conf)
-      conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
-      conf.save().then(result => {
-        console.log('result', result)
-      }).catch(err => {
-        console.log('error', err)
+      return new Promise((resolve, reject) => {
+        const { ConfigPoll } = this.$FeathersVuex
+        let conf = new ConfigPoll({...this.resultPoll})
+        console.log(conf)
+        conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
+        conf.save().then(result => {
+          console.log('result', result)
+          resolve()
+        }).catch(err => {
+          console.log('error', err)
+          reject(err)
+        })
       })
     },
     // Fix for circular data
@@ -262,6 +266,35 @@ export default {
         }
         return value
       }
+    },
+    // sorting diagram
+    async move (dir) {
+      // bubble sort
+      if (dir.direction === 'foward') {
+        let aux = {}
+        aux = {...this.uniqueQuestion[dir.index]}
+        console.log('aux', aux)
+        this.uniqueQuestion[dir.index] = {...this.uniqueQuestion[dir.index + 1]}
+        this.uniqueQuestion[dir.index + 1] = {...aux}
+      } else {
+        if (dir.index !== 0) {
+          let aux = {}
+          aux = {...this.uniqueQuestion[dir.index]}
+          this.uniqueQuestion[dir.index] = {...this.uniqueQuestion[dir.index - 1]}
+          this.uniqueQuestion[dir.index - 1] = {...aux}
+        }
+      }
+      await this.saveGraphs()
+      this.getPoll(this.id).then(result => {
+        this.resultPoll = Object.assign({}, result)
+        this.questions = this.resultPoll
+          ? this.resultPoll.formatedConfiguration
+          : []
+        this.uniqueQuestion = this.resultPoll
+          ? JSON.parse(this.resultPoll.dashboardSaved).data || []
+          : []
+        console.log('saved dashboards', this.uniqueQuestion)
+      })
     }
   },
   computed: {

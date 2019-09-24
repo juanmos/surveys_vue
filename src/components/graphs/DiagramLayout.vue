@@ -9,14 +9,14 @@
         <v-container v-bind="{ [`grid-list-${size}`]: true }" fluid>
           <v-layout row wrap>
             <v-flex
-              v-for="q in questions"
+              v-for="(q, index) in questions"
               :key="q.code"
               :xs4="getCols.x4"
               :xs6="getCols.x6"
               :xs12="getCols.x12"
             >
               <v-card flat tile>
-                <diagram-switcher :question="q">
+                <diagram-switcher :index="index" @move="move" :question="q">
                 </diagram-switcher>
               </v-card>
             </v-flex>
@@ -41,6 +41,9 @@ export default {
   methods: {
     getRandomInt () {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    },
+    move (dir) {
+      this.$emit('move', dir)
     }
   },
   computed: {
