@@ -5,7 +5,6 @@
         <v-spacer></v-spacer>
 
         <v-btn @click="move('back')" flat><v-icon>arrow_back</v-icon></v-btn>
-
         <v-btn @click="move('foward')" flat><v-icon>arrow_forward</v-icon></v-btn>
 
         <v-btn @click="currentGraph = 'BarGraph'" flat><v-icon>bar_chart</v-icon></v-btn>
