@@ -128,6 +128,7 @@
                     <diagram-layout
                       v-if="graphComponent !== 'Map'"
                       :questions="getLayoutUniqueQuestion"
+                      sort="sort"
                       :layout="1"
                       @move="move"
                     ></diagram-layout>
@@ -186,7 +187,8 @@ export default {
     dataKeys: ['direccion', 'telefono', 'nombres'],
     personalDataKeys: [],
     chip2: true,
-    savedDashboards: []
+    savedDashboards: [],
+    sort: false
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
@@ -284,17 +286,7 @@ export default {
           this.uniqueQuestion[dir.index - 1] = {...aux}
         }
       }
-      await this.saveGraphs()
-      this.getPoll(this.id).then(result => {
-        this.resultPoll = Object.assign({}, result)
-        this.questions = this.resultPoll
-          ? this.resultPoll.formatedConfiguration
-          : []
-        this.uniqueQuestion = this.resultPoll
-          ? JSON.parse(this.resultPoll.dashboardSaved).data || []
-          : []
-        console.log('saved dashboards', this.uniqueQuestion)
-      })
+      this.uniqueQuestion = [...this.uniqueQuestion]
     }
   },
   computed: {

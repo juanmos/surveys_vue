@@ -55,6 +55,11 @@ export default {
       }
     }
   },
+  watch: {
+    questions (newVals) {
+      console.log('new vals', newVals)
+    }
+  },
   components: {BarGraph, PieGraph, DiagramSwitcher}
 }
 </script>
