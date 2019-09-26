@@ -32,7 +32,7 @@ import BarGraph from './BarGraph'
 import PieGraph from './PieGraph'
 import DiagramSwitcher from './DiagramSwitcher'
 export default {
-  props: ['questions', 'layout'],
+  props: ['questions', 'layout', 'initialColumns'],
   data: () => ({
     columns: 1,
     size: 'md',
@@ -58,7 +58,19 @@ export default {
   watch: {
     questions (newVals) {
       console.log('new vals', newVals)
+    },
+    columns (newVal) {
+      console.log('this is the new value...', newVal)
+      this.$emit('columnsChanged', newVal)
+    },
+    initialColumns (newColumnsVal) {
+      this.columns = newColumnsVal
     }
+  },
+  mounted () {
+    console.log('initial columns!!', this.initialColumns)
+    this.columns = this.initialColumns
+    this.$emit('columnsChanged', this.columns)
   },
   components: {BarGraph, PieGraph, DiagramSwitcher}
 }

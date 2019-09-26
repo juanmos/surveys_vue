@@ -131,6 +131,8 @@
                       sort="sort"
                       :layout="1"
                       @move="move"
+                      @columnsChanged="columnsNum = $event"
+                      :initialColumns="columnsNum"
                     ></diagram-layout>
                     <component
                       v-else
@@ -188,7 +190,8 @@ export default {
     personalDataKeys: [],
     chip2: true,
     savedDashboards: [],
-    sort: false
+    sort: false,
+    columnsNum: null
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
@@ -242,11 +245,13 @@ export default {
         .catch(err => console.log('este es el error', err))
     },
     saveGraphs () {
+      console.log('columns', this.columnsNum)
       return new Promise((resolve, reject) => {
         const { ConfigPoll } = this.$FeathersVuex
         let conf = new ConfigPoll({...this.resultPoll})
         console.log(conf)
         conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
+        conf.dashboardRows = this.columnsNum
         conf.save().then(result => {
           console.log('result', result)
           resolve()
@@ -416,6 +421,7 @@ export default {
   mounted () {
     this.getPoll(this.id).then(result => {
       this.resultPoll = Object.assign({}, result)
+      this.columnsNum = this.resultPoll.dashboardRows || 1
       this.questions = this.resultPoll
         ? this.resultPoll.formatedConfiguration
         : []

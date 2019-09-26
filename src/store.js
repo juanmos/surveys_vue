@@ -187,7 +187,8 @@ export default new Vuex.Store({
         removed: false,
         _polls_project_id: 0,
         dateCreated: '',
-        dashboardSaved: ''
+        dashboardSaved: '',
+        dashboardRows: 1
       }
     }),
     service('users-projects', {
@@ -291,6 +292,13 @@ export default new Vuex.Store({
     service('countries', {
       instanceDefaults: {
         removed: false
+      }
+    }),
+    service('poll-dashboards', {
+      instanceDefaults: {
+        removed: false,
+        name: '',
+        dashboardData: []
       }
     }),
     auth({ userService: 'users' })
