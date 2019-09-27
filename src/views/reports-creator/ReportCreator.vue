@@ -125,6 +125,30 @@
                     :color="graphComponent === 'Map' ? '' : 'white'"
                   >
                     <v-card-text class="px-0"></v-card-text>
+                    <p class="text-sm-right">
+                      <v-tooltip bottom>
+                        <v-btn
+                          slot="activator"
+                          fab dark small
+                          @click="addTab"
+                          >
+                            <v-icon>
+                              add
+                            </v-icon>
+                          </v-btn>
+                          <span>Nuevo dashboard</span>
+                      </v-tooltip>
+                    </p>
+                    <v-tabs
+                      v-model="diagramTab"
+                    >
+                      <v-tab
+                        v-for="n in length"
+                        :key="n"
+                      >
+                        {{tabNames[n]}}
+                      </v-tab>
+                    </v-tabs>
                     <diagram-layout
                       v-if="graphComponent !== 'Map'"
                       :questions="getLayoutUniqueQuestion"
@@ -149,6 +173,30 @@
         </v-layout>
       </v-card>
     </v-flex>
+    <v-dialog
+      v-model="tabDialog"
+      max-width="400px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">Nuevo Dashboard</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  @click:append="addDashboard"
+                  @keyup.enter="addDashboard"
+                  append-icon="send"
+                  v-model="dashboardName"
+                  label="Nombre de Dashboard"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -191,7 +239,13 @@ export default {
     chip2: true,
     savedDashboards: [],
     sort: false,
-    columnsNum: null
+    columnsNum: null,
+    tabDialog: false,
+    dashboardName: '',
+    diagramTab: 0,
+    tabNames: {
+    },
+    length: 0
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
@@ -292,6 +346,15 @@ export default {
         }
       }
       this.uniqueQuestion = [...this.uniqueQuestion]
+    },
+    addTab () {
+      this.tabDialog = true
+    },
+    addDashboard () {
+      this.tabDialog = false
+      // const { PollDiagrams } = this.$FeathersVuex
+      this.tabNames[this.length] = this.dashboardName
+      this.length++
     }
   },
   computed: {
@@ -407,6 +470,9 @@ export default {
           }
         }
       }
+    },
+    length (newVal) {
+      this.diagramTab = newVal
     }
   },
   components: {
