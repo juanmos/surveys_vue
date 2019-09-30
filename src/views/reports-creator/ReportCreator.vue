@@ -140,31 +140,41 @@
                       </v-tooltip>
                     </p>
                     <v-tabs
-                      v-model="diagramTab"
-                    >
-                      <v-tab
-                        v-for="n in length"
-                        :key="n"
+                        color="secondary"
+                        dark
+                        slider-color="primary"
                       >
-                        {{tabNames[n]}}
-                      </v-tab>
-                    </v-tabs>
-                    <diagram-layout
-                      v-if="graphComponent !== 'Map'"
-                      :questions="getLayoutUniqueQuestion"
-                      sort="sort"
-                      :layout="1"
-                      @move="move"
-                      @columnsChanged="columnsNum = $event"
-                      :initialColumns="columnsNum"
-                    ></diagram-layout>
-                    <component
-                      v-else
-                      :is="graphComponent"
-                      :chart-data="getChartData"
-                      :markers="mapMarkers"
-                      :mapQuestions="mapQuestions"
-                    ></component>
+                        <v-tab
+                          v-for="n in pollDashboards.length"
+                          :key="n"
+                          ripple
+                        >
+                          {{pollDashboards[n] ? pollDashboards[n].name : ''}}
+                        </v-tab>
+                        <v-tab-item
+                          v-for="n in pollDashboards.length"
+                          :key="n"
+                        >
+                          <v-card flat>
+                            <diagram-layout
+                              v-if="graphComponent !== 'Map'"
+                              :questions="getLayoutUniqueQuestion"
+                              sort="sort"
+                              :layout="1"
+                              @move="move"
+                              @columnsChanged="columnsNum = $event"
+                              :initialColumns="columnsNum"
+                            ></diagram-layout>
+                            <component
+                              v-else
+                              :is="graphComponent"
+                              :chart-data="getChartData"
+                              :markers="mapMarkers"
+                              :mapQuestions="mapQuestions"
+                            ></component>
+                          </v-card>
+                        </v-tab-item>
+                      </v-tabs>
                   </v-card>
                 </draggable>
               </v-flex>
@@ -183,16 +193,16 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12">
+            <v-layout row>
+              <v-flex xs12>
                 <v-text-field
                   @click:append="addDashboard"
                   @keyup.enter="addDashboard"
                   append-icon="send"
                   v-model="dashboardName"
                   label="Nombre de Dashboard"></v-text-field>
-              </v-col>
-            </v-row>
+              </v-flex>
+            </v-layout>
           </v-container>
         </v-card-text>
       </v-card>
@@ -245,13 +255,14 @@ export default {
     diagramTab: 0,
     tabNames: {
     },
-    length: 0
+    length: 0,
+    pollDashboards: [],
+    tabs: 0
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
     ...mapActions(['setSnackMessage', 'setShowSnack']),
     getQuestionOptions (alias) {
-      console.log('obtengo el alis', alias)
     },
     getRandomInt () {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
@@ -274,7 +285,6 @@ export default {
       }`
     },
     getCrossValue (q1, q2) {
-      console.log(q1, q2)
       return 0
     },
     delElement (el) {
@@ -290,7 +300,6 @@ export default {
       config
         .save()
         .then(result => {
-          console.log('listo---', result.data)
           this.showTableResult = true
           this.answers = result.data
           // this.setSnackMessage('Pregunta Editada')
@@ -299,7 +308,6 @@ export default {
         .catch(err => console.log('este es el error', err))
     },
     saveGraphs () {
-      console.log('columns', this.columnsNum)
       return new Promise((resolve, reject) => {
         const { ConfigPoll } = this.$FeathersVuex
         let conf = new ConfigPoll({...this.resultPoll})
@@ -307,7 +315,6 @@ export default {
         conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
         conf.dashboardRows = this.columnsNum
         conf.save().then(result => {
-          console.log('result', result)
           resolve()
         }).catch(err => {
           console.log('error', err)
@@ -334,7 +341,6 @@ export default {
       if (dir.direction === 'foward') {
         let aux = {}
         aux = {...this.uniqueQuestion[dir.index]}
-        console.log('aux', aux)
         this.uniqueQuestion[dir.index] = {...this.uniqueQuestion[dir.index + 1]}
         this.uniqueQuestion[dir.index + 1] = {...aux}
       } else {
@@ -352,7 +358,21 @@ export default {
     },
     addDashboard () {
       this.tabDialog = false
-      // const { PollDiagrams } = this.$FeathersVuex
+      const { PollDashboard } = this.$FeathersVuex
+      let pollDashboards = new PollDashboard({
+        name: this.dashboardName,
+        _config_poll_id: this.resultPoll._id
+      })
+      this.pollDashboards.push({
+        name: this.dashboardName,
+        _config_poll_id: this.resultPoll._id
+      })
+      pollDashboards.save().then(result => {
+        this.pollDashboards[this.pollDashboards.length - 1]._id = result._id
+        this.length = this.resultPoll ? this.resultPoll.pollDashboards.length : 0
+      }).catch(err => {
+        console.log('err', err)
+      })
       this.tabNames[this.length] = this.dashboardName
       this.length++
     }
@@ -381,11 +401,9 @@ export default {
       return this.resultPoll.formatedConfiguration
     },
     getLayoutUniqueQuestion () {
-      console.log('uniqueee', this.uniqueQuestion[0])
       let questionValues = this.uniqueQuestion[0]
         ? this.uniqueQuestion[0].total
         : {}
-      console.log('question values', questionValues)
       let unique = this.uniqueQuestion.map((q, index) => {
         let result = {
           ...q,
@@ -399,10 +417,9 @@ export default {
             })
             : []
         }
-        console.log('result', result)
         return result
       })
-
+      console.log(questionValues)
       return unique
     },
     getDataKeys () {
@@ -415,11 +432,17 @@ export default {
     ...mapState(['currentPoll']),
     getPersonalDataKeys () {
       return []
+    },
+    getPollDashboards () {
+      return this.resultPoll ? this.resultPoll.pollDashboards : []
     }
   },
   watch: {
     yQuestions (val) {
       console.log('nuevo Valor', val)
+    },
+    pollDashboards (val) {
+      this.tabs = val.length - 1
     },
     uniqueQuestion (val) {
       let responses = val[0] ? val[0].options : []
@@ -453,7 +476,6 @@ export default {
           }))
         )
         .slice()[0]
-      console.log('map questions', this.mapQuestions)
     },
     currentPoll (val) {
       for (let key in val.originalJson[0]) {
@@ -491,11 +513,12 @@ export default {
       this.questions = this.resultPoll
         ? this.resultPoll.formatedConfiguration
         : []
+      this.pollDashboards = [...this.resultPoll.pollDashboards]
       this.uniqueQuestion = this.resultPoll
         ? JSON.parse(this.resultPoll.dashboardSaved).data || []
         : []
-      console.log('saved dashboards', this.uniqueQuestion)
     })
+    this.length = this.resultPoll ? this.resultPoll.pollDashboards.length : 0
   }
 }
 </script>

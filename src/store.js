@@ -298,7 +298,8 @@ export default new Vuex.Store({
       instanceDefaults: {
         removed: false,
         name: '',
-        dashboardData: []
+        dashboardData: [],
+        _config_poll_id: null
       }
     }),
     auth({ userService: 'users' })
