@@ -408,6 +408,12 @@ export default {
       let result = this.pollDashboards.filter((res, index) => {
         return index !== this.currentDashboard
       })
+      const { PollDashboard } = this.$FeathersVuex
+      let pollDashboard = new PollDashboard({...this.pollDashboards[this.currentDashboard]})
+      pollDashboard.removed = true
+      pollDashboard.save().then(result => {
+        console.log('result dashboard', result)
+      })
       this.pollDashboards = [...result]
       this.deleteDialog = false
     }
