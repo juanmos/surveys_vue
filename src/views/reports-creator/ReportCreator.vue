@@ -156,6 +156,16 @@
                           :key="n"
                         >
                           <v-card flat>
+                            <v-layout xs12 row>
+                              <v-flex xs12>
+                                <v-tooltip bottom>
+                                  <v-btn @click="deleteDialog = true; currentDashboard = n" slot="activator" class="right" flat icon>
+                                    <v-icon color="primary">delete</v-icon>
+                                  </v-btn>
+                                  <span>Borrar dashboard</span>
+                                </v-tooltip>
+                              </v-flex>
+                            </v-layout>
                             <diagram-layout
                               v-if="graphComponent !== 'Map'"
                               :questions="getLayoutUniqueQuestion"
@@ -183,6 +193,7 @@
         </v-layout>
       </v-card>
     </v-flex>
+    <!-- Crear dashboard modal -->
     <v-dialog
       v-model="tabDialog"
       max-width="400px"
@@ -207,6 +218,19 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- Borrar dialog -->
+    <v-dialog v-model="deleteDialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">Seguro de lo que haces?</v-card-title>
+        <v-card-text>Al borrar el dashboard no hay manera de restaurarlo.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="white darken-1" flat @click.native="deleteDialog = false">No</v-btn>
+          <v-btn color="red darken-1" flat @click.native="deleteDashboard">Si</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -251,6 +275,8 @@ export default {
     sort: false,
     columnsNum: null,
     tabDialog: false,
+    deleteDialog: false,
+    currentDashboard: null,
     dashboardName: '',
     diagramTab: 0,
     tabNames: {
@@ -375,6 +401,15 @@ export default {
       })
       this.tabNames[this.length] = this.dashboardName
       this.length++
+    },
+    deleteDashboard () {
+      console.log('borrar.....')
+      console.log('dashboard current', this.currentDashboard)
+      let result = this.pollDashboards.filter((res, index) => {
+        return index !== this.currentDashboard
+      })
+      this.pollDashboards = [...result]
+      this.deleteDialog = false
     }
   },
   computed: {
