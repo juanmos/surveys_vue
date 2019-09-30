@@ -30,7 +30,7 @@
             </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getpools"
+                  :items="listPollsProjects"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -259,6 +259,7 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      listPollsProjects: [],
       state_polls_filter: '',
       itemSelected: null,
       rules: validations,
@@ -356,7 +357,7 @@ export default {
           this.limit = response.limit
           this.total = response.total
           this.loaded = true
-          this.usersProjects = response.data
+          this.listPollsProjects = response.data
         })
       } else {
         this.query._user_id = this.user._id
@@ -364,7 +365,7 @@ export default {
           this.limit = response.limit
           this.total = response.total
           this.loaded = true
-          this.usersProjects = response.data.map(data => (data.project))
+          this.listPollsProjects = response.data.map(data => (data.project))
         })
       }
     },
@@ -386,7 +387,6 @@ export default {
       this.getSelectedPoll(id).then(result => {
         this.selectedPoll = Object.assign({}, result)
         this.membersDialog = true
-        console.log('selected poll', this.selectedPoll)
       }).catch(err => console.log('este es el error', err))
     },
     deleteMember (id) {
@@ -420,9 +420,6 @@ export default {
     ...mapState('users-projects', {loading: 'isFindPending'}),
     ...mapState('users-projects', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
-    getpools () {
-      return this.findPollsInStore().data
-    },
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getLength () {
