@@ -1,301 +1,336 @@
 <template>
     <v-flex class="view-container">
       <v-card>
-        <v-card-title>
-            <v-list-tile-action class="title text-sm-left">
-                  <v-icon color="success">poll</v-icon>
-            </v-list-tile-action>
-            <span class="title text-sm-left">{{poolsseg.name}}</span>
-            <v-spacer></v-spacer>
-            <v-tooltip bottom>
-              <v-btn :to="`/map/full/${this.$route.params.id}`" slot="activator" icon><v-icon large color="primary">map</v-icon></v-btn>
-              <span>Ver Mapa General</span>
-            </v-tooltip>
-          </v-card-title>
-        <v-divider inset></v-divider>
-        <v-list two-line>
-          <v-layout row wrap >
-            <v-flex md4 xs12>
-              <v-list-tile>
-                <v-list-tile-action>
-                      <v-icon color="indigo">perm_contact_calendar</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{poolsseg.nomcliente}}</v-list-tile-title>
-                  <v-list-tile-sub-title>Nombre del Cliente</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-action>
-                  <v-icon color="indigo">calendar_today</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{poolsseg.date_start}}</v-list-tile-title>
-                  <v-list-tile-sub-title>Fecha de Inicio</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-flex>
-            <v-flex md4 xs12>
-               <v-list-tile >
-                <v-list-tile-action>
-                  <v-icon ></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title text-color="black">{{poolsseg.number_polls}}</v-list-tile-title>
-                  <v-list-tile-sub-title>N° de Encuetas</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile >
-                <v-list-tile-action>
-                  <v-icon></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{poolsseg.date_end}}</v-list-tile-title>
-                  <v-list-tile-sub-title>Fecha de Fin</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-flex>
-            <v-flex md4 xs12>
-              <v-list-tile>
-                <v-list-tile-action>
-                  <v-icon ></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title class="text-xs-left"><v-chip label small :color="getColorByStatus(poolsseg.state_polls)" text-color="white" >{{poolsseg.state_polls_name}}</v-chip></v-list-tile-title>
-                  <v-list-tile-sub-title>Estado</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile >
-                <v-list-tile-action>
-                  <v-icon></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{poolsseg.date_deliver}}</v-list-tile-title>
-                  <v-list-tile-sub-title>Fecha de Entrega</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>            </v-flex>
-            <v-divider inset></v-divider>
-          </v-layout>
-        </v-list>
-          <v-flex >
-             <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
-             <!--<v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>-->
-            <v-dialog  v-model="dialog"  max-width="400" >
-                <v-card>
-                  <v-card-title class="headline">Agregar categoria</v-card-title>
-                  <v-container fluid grid-list-md>
-                    <v-layout row wrap>
-                      <v-flex xs12 md12>
-                        <v-autocomplete
-                            :filter="customFilter"
-                            label="Categoria"
-                            v-model="selectcategory"
-                            :items="itemsegmento"
-                            item-text="name"
-                            item-value="_id"
-                        ></v-autocomplete>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn  color="red darken-4" flat="flat" @click="dialog = false">
-                      Cancelar
-                    </v-btn>
-                    <v-btn color="teal darken-3" flat="flat" @click="dialog = false, savecategory()">
-                      Aceptar
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-              <v-divider class="mx-3" inset vertical></v-divider>
-            <v-card  >
-            <v-card-title><strong>CATEGORÍAS</strong></v-card-title>
-            <v-layout >
-      <v-flex xs2 sm2>
-       <v-spacer></v-spacer>
-      </v-flex>
-      <v-flex xs4 sm8>
-            <v-data-table
-                :headers="headers"
-                :items="getCategorySegmentationPolls"
-                hide-actions
-                class="elevation-1"
-                ref="table"
-              >
-                <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.name }}</td>
-                  <td class="text-xs-left">{{props.item.description}}</td>
-                </template>
-              </v-data-table>
-      </v-flex>
-            </v-layout>
-            </v-card>
-               <v-divider class="mx-3" inset vertical></v-divider>
-            <v-card  >
-      <v-card-title><strong>ENCUESTAS</strong></v-card-title>
-    <v-layout >
-      <v-flex xs2 sm2>
-       <v-spacer></v-spacer>
-      </v-flex>
-      <v-flex xs4 sm8>
-        <v-data-table
-          :headers="headersConfigPolls"
-          :items="getConfigPolls"
-          hide-actions
-          item-key="_id"
-          striped hover
-          outlined
+        <v-tabs
+        v-model="active"
+        color="secondary"
+        centered
+        dark
+        slider-color="primary"
+        icons-and-text
         >
-        <template slot="items" slot-scope="props">
-          <tr>
-            <td class="text-xs-left">
-              <v-edit-dialog
-                :return-value.sync="props.item.take"
-                lazy
-                @save="edit(props.item.take, props.item, 'take')"
-                @cancel="cancel"
-                @open="open"
-                @close="close"
-              > {{ props.item.take }}
-                <v-text-field
-                  slot="input"
-                  v-model="props.item.take"
-                  label="Editar Toma"
-                  single-line
-                  counter
-                ></v-text-field>
-              </v-edit-dialog>
-            </td>
-            <td class="text-xs-left">
-              <v-edit-dialog
-                :return-value.sync="props.item.name"
-                lazy
-                @save="edit(props.item.name, props.item, 'name')"
-                @cancel="cancel"
-                @open="open"
-                @close="close"
-              > {{ props.item.name }}
-                <v-text-field
-                  slot="input"
-                  v-model="props.item.name"
-                  label="Editar Nombre"
-                  single-line
-                  counter
-                ></v-text-field>
-              </v-edit-dialog>
-            </td>
-            <td class="text-xs-left">
-              <v-edit-dialog
-                :return-value.sync="props.item.status"
-                lazy
-                @save="edit(props.item.status, props.item, 'status')"
-                @cancel="cancel"
-                @open="open"
-                @close="close"
-              > {{ props.item.status }}
-                <v-text-field
-                  slot="input"
-                  v-model="props.item.status"
-                  label="Editar Status"
-                  single-line
-                  counter
-                ></v-text-field>
-              </v-edit-dialog>
-            </td>
-              <td>
-                  <v-menu
-                  bottom
-                  transition="slide-y-transition"
-                >
-                  <v-btn
-                    slot="activator"
-                    color="primary"
-                    flat
-                    icon
-                  >
-                  <v-icon>more_vert</v-icon>
-                  </v-btn>
-                  <v-list>
-                    <v-list-tile @click="goToResultConfigPolls(props.item._id)">
-                      <v-icon class="icon">assignment</v-icon>
-                      <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="goToViewData(props.item._id)">
-                      <v-icon class="icon">line_weight</v-icon>
-                      <v-list-tile-title>Vista de datos</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="goToEditConfigPolls(props.item._id)">
-                      <v-icon class="icon">border_color</v-icon>
-                      <v-list-tile-title>Editar encuesta</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="goToViewCreatorReport(props.item._id)">
-                      <v-icon class="icon">view_quilt</v-icon>
-                      <v-list-tile-title>Reportes de segmentos</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="goToViewConfigPolls(props.item._id)">
-                      <v-icon class="icon">ballot</v-icon>
-                      <v-list-tile-title>Ver encuesta</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
-                      <v-icon class="icon">edit</v-icon>
-                      <v-list-tile-title>Editar información</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
-                      <v-icon class="icon">cancel</v-icon>
-                      <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                  <v-dialog
-                  v-model="dialogDeleteConfigPolls"
-                  max-width="380"
-                  max-heigth="500"
-                >
-                  <v-card>
-                    <v-card-title class="headline">Está seguro que desea eliminar la encuesta</v-card-title>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-
-                      <v-btn
-                        color="red darken-1"
-                        flat="flat"
-                        @click="dialogDeleteConfigPolls = false"
+            <v-tab
+                ripple>
+                INFORMACIÓN DEL PROYECTO
+                <v-icon>description</v-icon>
+            </v-tab>
+            <v-tab
+                ripple>
+                CATEGORIAS
+                <v-icon>ballot</v-icon>
+            </v-tab>
+            <v-tab
+                ripple>
+                ENCUESTAS
+                <v-icon>library_books</v-icon>
+            </v-tab>
+            <v-tab-item
+            >
+                <v-card flat>
+                    <v-card-title>
+                        <v-list-tile-action class="title text-sm-left">
+                              <v-icon color="success">poll</v-icon>
+                        </v-list-tile-action>
+                        <span class="title text-sm-left">{{poolsseg.name}}</span>
+                        <v-spacer></v-spacer>
+                        <v-tooltip bottom>
+                          <v-btn :to="`/map/full/${this.$route.params.id}`" slot="activator" icon><v-icon large color="primary">map</v-icon></v-btn>
+                          <span>Ver Mapa General</span>
+                        </v-tooltip>
+                      </v-card-title>
+                    <v-divider inset></v-divider>
+                    <v-list two-line>
+                      <v-layout row wrap >
+                        <v-flex md4 xs12>
+                          <v-list-tile>
+                            <v-list-tile-action>
+                                  <v-icon color="indigo">perm_contact_calendar</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title>{{poolsseg.nomcliente}}</v-list-tile-title>
+                              <v-list-tile-sub-title>Nombre del Cliente</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile>
+                            <v-list-tile-action>
+                              <v-icon color="indigo">calendar_today</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title>{{poolsseg.date_start}}</v-list-tile-title>
+                              <v-list-tile-sub-title>Fecha de Inicio</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                        </v-flex>
+                        <v-flex md4 xs12>
+                           <v-list-tile >
+                            <v-list-tile-action>
+                              <v-icon ></v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title text-color="black">{{poolsseg.number_polls}}</v-list-tile-title>
+                              <v-list-tile-sub-title>N° de Encuetas</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile >
+                            <v-list-tile-action>
+                              <v-icon></v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title>{{poolsseg.date_end}}</v-list-tile-title>
+                              <v-list-tile-sub-title>Fecha de Fin</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                        </v-flex>
+                        <v-flex md4 xs12>
+                          <v-list-tile>
+                            <v-list-tile-action>
+                              <v-icon ></v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title class="text-xs-left"><v-chip label small :color="getColorByStatus(poolsseg.state_polls)" text-color="white" >{{poolsseg.state_polls_name}}</v-chip></v-list-tile-title>
+                              <v-list-tile-sub-title>Estado</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                          <v-list-tile >
+                            <v-list-tile-action>
+                              <v-icon></v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                              <v-list-tile-title>{{poolsseg.date_deliver}}</v-list-tile-title>
+                              <v-list-tile-sub-title>Fecha de Entrega</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                          </v-list-tile>            </v-flex>
+                        <v-divider inset></v-divider>
+                      </v-layout>
+                    </v-list>
+                </v-card>
+            </v-tab-item>
+            <v-tab-item
+            >
+                <v-card flat>
+                    <v-flex >
+                       <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
+                       <!--<v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>-->
+                      <v-dialog  v-model="dialog"  max-width="400" >
+                          <v-card>
+                            <v-card-title class="headline">Agregar categoria</v-card-title>
+                            <v-container fluid grid-list-md>
+                              <v-layout row wrap>
+                                <v-flex xs12 md12>
+                                  <v-autocomplete
+                                      :filter="customFilter"
+                                      label="Categoria"
+                                      v-model="selectcategory"
+                                      :items="itemsegmento"
+                                      item-text="name"
+                                      item-value="_id"
+                                  ></v-autocomplete>
+                                </v-flex>
+                              </v-layout>
+                            </v-container>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn  color="red darken-4" flat="flat" @click="dialog = false">
+                                Cancelar
+                              </v-btn>
+                              <v-btn color="teal darken-3" flat="flat" @click="dialog = false, savecategory()">
+                                Aceptar
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                        <v-divider class="mx-3" inset vertical></v-divider>
+                      <v-card>
+                          <v-card-title><strong>CATEGORIAS</strong></v-card-title>
+                          <v-layout >
+                            <v-flex xs2 sm2>
+                             <v-spacer></v-spacer>
+                            </v-flex>
+                            <v-flex xs4 sm8>
+                                  <v-data-table
+                                      :headers="headers"
+                                      :items="getCategorySegmentationPolls"
+                                      hide-actions
+                                      class="elevation-1"
+                                      ref="table"
+                                    >
+                                      <template slot="items" slot-scope="props">
+                                        <td class="text-xs-left">{{ props.item.name }}</td>
+                                        <td class="text-xs-left">{{props.item.description}}</td>
+                                      </template>
+                                    </v-data-table>
+                            </v-flex>
+                          </v-layout>
+                      </v-card>
+                    </v-flex>
+                </v-card>
+            </v-tab-item>
+            <v-tab-item>
+                <v-card flat>
+                    <v-card-title><strong>ENCUESTAS</strong></v-card-title>
+                  <v-layout >
+                    <v-flex xs2 sm2>
+                     <v-spacer></v-spacer>
+                    </v-flex>
+                    <v-flex xs4 sm8>
+                      <v-data-table
+                        :headers="headersConfigPolls"
+                        :items="getConfigPolls"
+                        hide-actions
+                        item-key="_id"
+                        striped hover
+                        outlined
                       >
-                        NO
-                      </v-btn>
+                      <template slot="items" slot-scope="props">
+                        <tr>
+                          <td class="text-xs-left">
+                            <v-edit-dialog
+                              :return-value.sync="props.item.take"
+                              lazy
+                              @save="edit(props.item.take, props.item, 'take')"
+                              @cancel="cancel"
+                              @open="open"
+                              @close="close"
+                            > {{ props.item.take }}
+                              <v-text-field
+                                slot="input"
+                                v-model="props.item.take"
+                                label="Editar Toma"
+                                single-line
+                                counter
+                              ></v-text-field>
+                            </v-edit-dialog>
+                          </td>
+                          <td class="text-xs-left">
+                            <v-edit-dialog
+                              :return-value.sync="props.item.name"
+                              lazy
+                              @save="edit(props.item.name, props.item, 'name')"
+                              @cancel="cancel"
+                              @open="open"
+                              @close="close"
+                            > {{ props.item.name }}
+                              <v-text-field
+                                slot="input"
+                                v-model="props.item.name"
+                                label="Editar Nombre"
+                                single-line
+                                counter
+                              ></v-text-field>
+                            </v-edit-dialog>
+                          </td>
+                          <td class="text-xs-left">
+                            <v-edit-dialog
+                              :return-value.sync="props.item.status"
+                              lazy
+                              @save="edit(props.item.status, props.item, 'status')"
+                              @cancel="cancel"
+                              @open="open"
+                              @close="close"
+                            > {{ props.item.status }}
+                              <v-text-field
+                                slot="input"
+                                v-model="props.item.status"
+                                label="Editar Status"
+                                single-line
+                                counter
+                              ></v-text-field>
+                            </v-edit-dialog>
+                          </td>
+                            <td>
+                                <v-menu
+                                bottom
+                                transition="slide-y-transition"
+                              >
+                                <v-btn
+                                  slot="activator"
+                                  color="primary"
+                                  flat
+                                  icon
+                                >
+                                <v-icon>more_vert</v-icon>
+                                </v-btn>
+                                <v-list>
+                                  <v-list-tile @click="goToResultConfigPolls(props.item._id)">
+                                    <v-icon class="icon">assignment</v-icon>
+                                    <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToViewData(props.item._id)">
+                                    <v-icon class="icon">line_weight</v-icon>
+                                    <v-list-tile-title>Vista de datos</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToEditConfigPolls(props.item._id)">
+                                    <v-icon class="icon">border_color</v-icon>
+                                    <v-list-tile-title>Editar encuesta</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToViewCreatorReport(props.item._id)">
+                                    <v-icon class="icon">view_quilt</v-icon>
+                                    <v-list-tile-title>Reportes de segmentos</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToViewConfigPolls(props.item._id)">
+                                    <v-icon class="icon">ballot</v-icon>
+                                    <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
+                                    <v-icon class="icon">edit</v-icon>
+                                    <v-list-tile-title>Editar información</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="dialogDeleteConfigPolls = true, ItemPollsConfigSelect = props.item">
+                                    <v-icon class="icon">cancel</v-icon>
+                                    <v-list-tile-title>Eliminar encuesta</v-list-tile-title>
+                                  </v-list-tile>
+                                </v-list>
+                                <v-dialog
+                                v-model="dialogDeleteConfigPolls"
+                                max-width="380"
+                                max-heigth="500"
+                              >
+                                <v-card>
+                                  <v-card-title class="headline">Está seguro que desea eliminar la encuesta</v-card-title>
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
 
-                      <v-btn
-                        color="green darken-1"
-                        flat="flat"
-                        @click="dialogDeleteConfigPolls = false, deleteConfigPolls()"
-                      >
-                        SI
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                  </v-menu>
-              </td>
-                </tr>
-                </template>
-        </v-data-table>
-      </v-flex>
-      <v-flex xs4 sm2>
-       <v-btn
-                dark
-                fab
-                small
-                top
-                right
-                color="red"
-                @click="goToCreateConfigPolls"
-                >
-                <v-icon>add</v-icon>
-                </v-btn>
-      </v-flex>
-    </v-layout>
-  </v-card>
-          </v-flex>
+                                    <v-btn
+                                      color="red darken-1"
+                                      flat="flat"
+                                      @click="dialogDeleteConfigPolls = false"
+                                    >
+                                      NO
+                                    </v-btn>
+
+                                    <v-btn
+                                      color="green darken-1"
+                                      flat="flat"
+                                      @click="dialogDeleteConfigPolls = false, deleteConfigPolls()"
+                                    >
+                                      SI
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                                </v-menu>
+                            </td>
+                              </tr>
+                              </template>
+                      </v-data-table>
+                    </v-flex>
+                    <v-flex xs4 sm2>
+                     <v-btn
+                              dark
+                              fab
+                              small
+                              top
+                              right
+                              color="red"
+                              @click="goToCreateConfigPolls"
+                              >
+                              <v-icon>add</v-icon>
+                              </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-card>
+            </v-tab-item>
+        </v-tabs>
       </v-card>
         </v-flex>
 </template>
