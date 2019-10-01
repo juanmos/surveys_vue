@@ -299,6 +299,7 @@ export default new Vuex.Store({
         removed: false,
         name: '',
         dashboardData: [],
+        dashboardRows: 0,
         _config_poll_id: null
       }
     }),
