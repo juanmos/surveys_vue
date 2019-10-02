@@ -118,7 +118,6 @@
               </v-card-title>
 
               <v-flex xs12>
-                <draggable v-model="uniqueQuestion" :options="{group:'questions'}">
                   <v-card
                     class="draggable draggable-unique"
                     dark
@@ -143,11 +142,14 @@
                         color="secondary"
                         dark
                         slider-color="primary"
+                        centered
+                        v-model="tabs"
                       >
                         <v-tab
                           v-for="n in pollDashboards.length"
                           :key="n"
                           ripple
+                          @click="currentDashboard = n"
                         >
                           {{pollDashboards[n] ? pollDashboards[n].name : ''}}
                         </v-tab>
@@ -156,33 +158,45 @@
                           :key="n"
                         >
                           <v-card flat>
-                            <diagram-layout
-                              v-if="graphComponent !== 'Map'"
-                              :questions="getLayoutUniqueQuestion"
-                              sort="sort"
-                              :layout="1"
-                              @move="move"
-                              @columnsChanged="columnsNum = $event"
-                              :initialColumns="columnsNum"
-                            ></diagram-layout>
-                            <component
-                              v-else
-                              :is="graphComponent"
-                              :chart-data="getChartData"
-                              :markers="mapMarkers"
-                              :mapQuestions="mapQuestions"
-                            ></component>
+                            <v-layout xs12 row>
+                              <v-flex xs12>
+                                <v-tooltip bottom>
+                                  <v-btn @click="deleteDialog = true; currentDashboard = n" slot="activator" class="right" flat icon>
+                                    <v-icon color="primary">delete</v-icon>
+                                  </v-btn>
+                                  <span>Borrar dashboard</span>
+                                </v-tooltip>
+                              </v-flex>
+                            </v-layout>
+                            <draggable v-model="layouts[n]" :options="{group:'questions'}">
+                              <diagram-layout
+                                v-if="graphComponent !== 'Map'"
+                                :questions="getLayoutUniqueQuestion"
+                                sort="sort"
+                                :layout="1"
+                                @move="move"
+                                @columnsChanged="columnsNum = $event"
+                                :initialColumns="columnsNum"
+                              ></diagram-layout>
+                              <component
+                                v-else
+                                :is="graphComponent"
+                                :chart-data="getChartData"
+                                :markers="mapMarkers"
+                                :mapQuestions="mapQuestions"
+                              ></component>
+                            </draggable>
                           </v-card>
                         </v-tab-item>
                       </v-tabs>
                   </v-card>
-                </draggable>
               </v-flex>
             </v-card>
           </v-flex>
         </v-layout>
       </v-card>
     </v-flex>
+    <!-- Crear dashboard modal -->
     <v-dialog
       v-model="tabDialog"
       max-width="400px"
@@ -207,6 +221,19 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- Borrar dialog -->
+    <v-dialog v-model="deleteDialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">Seguro de lo que haces?</v-card-title>
+        <v-card-text>Al borrar el dashboard no hay manera de restaurarlo.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="white darken-1" flat @click.native="deleteDialog = false">No</v-btn>
+          <v-btn color="red darken-1" flat @click.native="deleteDashboard">Si</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -251,13 +278,16 @@ export default {
     sort: false,
     columnsNum: null,
     tabDialog: false,
+    deleteDialog: false,
+    currentDashboard: null,
     dashboardName: '',
     diagramTab: 0,
     tabNames: {
     },
     length: 0,
     pollDashboards: [],
-    tabs: 0
+    tabs: null,
+    layouts: {}
   }),
   methods: {
     ...mapActions('config-polls', { getPoll: 'get' }),
@@ -309,15 +339,15 @@ export default {
     },
     saveGraphs () {
       return new Promise((resolve, reject) => {
-        const { ConfigPoll } = this.$FeathersVuex
-        let conf = new ConfigPoll({...this.resultPoll})
-        console.log(conf)
-        conf.dashboardSaved = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
-        conf.dashboardRows = this.columnsNum
-        conf.save().then(result => {
+        // Saving in poll dashboards
+        const { PollDashboard } = this.$FeathersVuex
+        let pollDashboard = new PollDashboard(this.pollDashboards[this.currentDashboard])
+        pollDashboard.dashboardData = JSON.stringify({data: this.uniqueQuestion}, this.getCircularReplacer())
+        pollDashboard.dashboardRows = this.columnsNum
+        pollDashboard['_config_poll_id'] = this.resultPoll._id
+        pollDashboard.save().then(result => {
           resolve()
         }).catch(err => {
-          console.log('error', err)
           reject(err)
         })
       })
@@ -361,7 +391,8 @@ export default {
       const { PollDashboard } = this.$FeathersVuex
       let pollDashboards = new PollDashboard({
         name: this.dashboardName,
-        _config_poll_id: this.resultPoll._id
+        _config_poll_id: this.resultPoll._id,
+        dashboardData: ''
       })
       this.pollDashboards.push({
         name: this.dashboardName,
@@ -375,6 +406,21 @@ export default {
       })
       this.tabNames[this.length] = this.dashboardName
       this.length++
+    },
+    deleteDashboard () {
+      console.log('borrar.....')
+      console.log('dashboard current', this.currentDashboard)
+      let result = this.pollDashboards.filter((res, index) => {
+        return index !== this.currentDashboard
+      })
+      const { PollDashboard } = this.$FeathersVuex
+      let pollDashboard = new PollDashboard({...this.pollDashboards[this.currentDashboard]})
+      pollDashboard.removed = true
+      pollDashboard.save().then(result => {
+        console.log('result dashboard', result)
+      })
+      this.pollDashboards = [...result]
+      this.deleteDialog = false
     }
   },
   computed: {
@@ -441,8 +487,8 @@ export default {
     yQuestions (val) {
       console.log('nuevo Valor', val)
     },
-    pollDashboards (val) {
-      this.tabs = val.length - 1
+    tabs (newTab) {
+      console.log('newTab', newTab)
     },
     uniqueQuestion (val) {
       let responses = val[0] ? val[0].options : []
