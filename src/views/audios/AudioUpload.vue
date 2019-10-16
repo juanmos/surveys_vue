@@ -10,7 +10,7 @@
             <v-img v-else :src="`${currentEnv}/${currentImg}`"></v-img>
         </v-avatar>
         <v-dialog v-model="dialog" persistent max-width="600">
-            <audio-uploader @fileCreated="setFile"></audio-uploader>
+            <audio-uploader style="background: #000000" @fileCreated="setFile"></audio-uploader>
         </v-dialog>
     </div>
 </template>

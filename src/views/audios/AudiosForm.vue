@@ -3,7 +3,7 @@
        <v-container>
            <v-layout xs10 offset-xs1>
                <v-flex xs4>
-                    <audio-upload v-if="!currentAudio" @fileCreated="setCurrentImg" :url="currentImage"></audio-upload>
+                    <audio-upload dark v-if="!currentAudio" @fileCreated="setCurrentImg" :url="currentImage"></audio-upload>
                     <div v-if="currentAudio">
                         <div class="ghettoplayer" style="margin-bottom:15px;">
                             <audio ref="player" controls>
