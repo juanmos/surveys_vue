@@ -195,22 +195,22 @@ const CategorysegmentEdit = resolve => {
 const PollsList = resolve => {
   require.ensure(['./views/polls-project/PollsList.vue'], () => {
     resolve(require('./views/polls-project/PollsList.vue'))
-  }, 'polls-project')
+  }, 'polls-project-list')
 }
 const PollsListNew = resolve => {
   require.ensure(['./views/polls-project/PollsNew.vue'], () => {
     resolve(require('./views/polls-project/PollsNew.vue'))
-  }, 'polls-project')
+  }, 'polls-project-list')
 }
 const PollsListEdit = resolve => {
   require.ensure(['./views/polls-project/PollsForm.vue'], () => {
     resolve(require('./views/polls-project/PollsForm.vue'))
-  }, 'polls-project')
+  }, 'polls-project-list')
 }
 const PollsListView = resolve => {
   require.ensure(['./views/polls-project/PollsView.vue'], () => {
     resolve(require('./views/polls-project/PollsView.vue'))
-  }, 'polls-project')
+  }, 'polls-project-list')
 }
 const UsersPollsList = resolve => {
   require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
