@@ -2,7 +2,6 @@
     <v-flex class="view-container">
       <v-card>
         <v-tabs
-        v-model="active"
         color="secondary"
         centered
         dark
@@ -270,6 +269,10 @@
                                   <v-list-tile @click="goToViewConfigPolls(props.item._id)">
                                     <v-icon class="icon">ballot</v-icon>
                                     <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="processPollsApp(props.item._id)">
+                                    <v-icon class="icon">phone_iphone</v-icon>
+                                    <v-list-tile-title>Procesar encuestas APP</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
                                     <v-icon class="icon">edit</v-icon>
@@ -578,6 +581,11 @@ export default {
     },
     goToViewConfigPolls (id) {
       this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
+    },
+    processPollsApp (id) {
+      this.findConfigPolls({ query: {surveyApp: true, _id: id} }).then(response => {
+        // this.alertConfig('Registro Modificado', 'success')
+      })
     },
     goToResultConfigPolls (id) {
       this.$router.push({ path: `/poll-results/${id}` })
