@@ -583,9 +583,7 @@ export default {
       this.$router.push({ name: 'QuestionBuilderView', params: { id: id } })
     },
     processPollsApp (id) {
-      this.findConfigPolls({ query: {surveyApp: true, _id: id} }).then(response => {
-        // this.alertConfig('Registro Modificado', 'success')
-      })
+      this.findConfigPolls({ query: {surveyApp: true, _id: id} })
     },
     goToResultConfigPolls (id) {
       this.$router.push({ path: `/poll-results/${id}` })
