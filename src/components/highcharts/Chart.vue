@@ -19,6 +19,9 @@ Highcharts.setOptions({
   subtitle: {
     text: ''
   },
+  xAxis: {
+    type: 'category'
+  },
   yAxis: {
     title: {
       text: ''
@@ -27,12 +30,25 @@ Highcharts.setOptions({
   legend: {
     enabled: false,
     itemStyle: {
-      color: '#FFF',
-      fontWeight: 'bold'
+      color: '#FFF'
     }
   },
   credits: {
     enabled: false
+  },
+  plotOptions: {
+    column: {
+      dataLabels: {
+        enabled: true
+      }
+    },
+    series: {
+      borderWidth: 0,
+      dataLabels: {
+        enabled: true,
+        format: '{point.y:.1f}%'
+      }
+    }
   },
   tooltip: {
   //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -80,20 +96,20 @@ export default {
             },
             title: {
               style: {
-                color: '#FFF'
+                color: '#fff'
               }
             }
           },
           yAxis: {
             min: 0,
             style: {
-              color: '#FFF'
+              color: '#fff'
             },
             title: {
-              text: 'Porcentaje de votos',
+              text: '',
               align: 'high',
               style: {
-                color: '#FFF'
+                color: '#fff'
               }
             },
             labels: {
@@ -109,7 +125,13 @@ export default {
               colorByPoint: true,
               data: val.columnChart
             }
-          ]
+          ],
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#FFF'
+            }
+          }
         })
       }
     }
