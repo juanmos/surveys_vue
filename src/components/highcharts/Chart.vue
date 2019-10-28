@@ -19,42 +19,16 @@ Highcharts.setOptions({
   subtitle: {
     text: ''
   },
-  xAxis: {
-    type: 'category'
-  },
   yAxis: {
     title: {
       text: ''
     }
   },
   legend: {
+    enabled: false,
     itemStyle: {
       color: '#FFF',
       fontWeight: 'bold'
-    }
-  },
-  labels: {
-    style: {
-      color: '#F5F5F5',
-      cursor: 'pointer',
-      fontSize: '14px',
-      fontWeight: 'bold',
-      textOverflow: 'ellipsis',
-      'text-shadow': '2px 2px #000'
-    }
-  },
-  plotOptions: {
-    column: {
-      dataLabels: {
-        enabled: true
-      }
-    },
-    series: {
-      borderWidth: 0,
-      dataLabels: {
-        enabled: true,
-        format: '{point.y:.1f}%'
-      }
     }
   },
   credits: {
