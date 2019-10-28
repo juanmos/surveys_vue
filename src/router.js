@@ -405,6 +405,11 @@ const ElectoralRecordsEdit = resolve => {
     resolve(require('./views/electoral-records/ElectoralRecordsEdit.vue'))
   }, 'electoral-records')
 }
+const SimpleReport = resolve => {
+  require.ensure(['./views/reports-creator/SimpleReport.vue'], () => {
+    resolve(require('./views/reports-creator/SimpleReport.vue'))
+  }, 'simple-report-view')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -822,6 +827,12 @@ export default new Router({
           name: 'electoral-records-edit',
           props: true,
           component: ElectoralRecordsEdit
+        },
+        {
+          path: 'simple-report/:id',
+          name: 'simple-report',
+          props: true,
+          component: SimpleReport
         }
       ]
     },
