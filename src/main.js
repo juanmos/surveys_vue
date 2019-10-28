@@ -7,8 +7,10 @@ import './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import HighchartsVue from 'highcharts-vue'
 // import { createProvider } from './vue-apollo'
 Vue.use(VueParticles)
+Vue.use(HighchartsVue)
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDy_B9Hr_yJ2hgWKsuTA1WBd2owjTa2cbA',

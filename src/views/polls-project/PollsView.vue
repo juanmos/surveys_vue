@@ -274,6 +274,10 @@
                                     <v-icon class="icon">phone_iphone</v-icon>
                                     <v-list-tile-title>Procesar encuestas APP</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="reportResult(props.item._id)">
+                                    <v-icon class="icon">assessment</v-icon>
+                                    <v-list-tile-title>Reporte de resultados</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
                                     <v-icon class="icon">edit</v-icon>
                                     <v-list-tile-title>Editar información</v-list-tile-title>
@@ -584,6 +588,9 @@ export default {
     },
     processPollsApp (id) {
       this.findConfigPolls({ query: {surveyApp: true, _id: id} })
+    },
+    reportResult (id) {
+      this.$router.push({ path: `/simple-report/${id}` })
     },
     goToResultConfigPolls (id) {
       this.$router.push({ path: `/poll-results/${id}` })
