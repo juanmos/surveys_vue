@@ -5,6 +5,7 @@
              <v-flex xs12>
                <h1 style="color:white">Resultados de la encuesta: {{configPoll.name}}</h1>
              </v-flex>
+             <v-flex x12>
                <v-autocomplete
                  :items="questions"
                  v-model="currenteQuestion"
@@ -13,7 +14,10 @@
                  return-object
                  label="Pregunta"
                ></v-autocomplete>
+             </v-flex>
+             <v-flex xs12>
                <chart :question="currenteQuestion"></chart>
+             </v-flex>
            </v-layout>
        </v-container>
 </template>

@@ -1,9 +1,7 @@
 <template>
-       <v-container>
-           <v-layout xs12>
-             <div id="highCharts" ></div>
-           </v-layout>
-       </v-container>
+       <v-flex x12>
+         <div id="highCharts"></div>
+       </v-flex>
 </template>
 
 <script>
