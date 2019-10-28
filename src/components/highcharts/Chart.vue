@@ -13,7 +13,8 @@ import HighchartsMore from 'highcharts/highcharts-more'
 HighchartsMore(Highcharts)
 Highcharts.setOptions({
   chart: {
-    type: 'column'
+    type: 'column',
+    backgroundColor: '#616161'
   },
   subtitle: {
     text: ''
@@ -25,12 +26,16 @@ Highcharts.setOptions({
     title: {
       text: ''
     }
-
   },
   legend: {
     enabled: false
   },
   plotOptions: {
+    column: {
+      dataLabels: {
+        enabled: true
+      }
+    },
     series: {
       borderWidth: 0,
       dataLabels: {
@@ -71,7 +76,47 @@ export default {
         this.dataChart = val.columnChart
         this.highcharts = new Highcharts.Chart('highCharts', {
           title: {
-            text: val.label
+            text: val.label,
+            style: {
+              'color': '#fff'
+            }
+          },
+          legend: {
+            itemStyle: {
+              color: '#FFF'
+            }
+          },
+          xAxis: {
+            labels: {
+              overflow: 'justify',
+              style: {
+                color: '#FFF'
+              }
+            },
+            title: {
+              style: {
+                color: '#000'
+              }
+            }
+          },
+          yAxis: {
+            min: 0,
+            style: {
+              color: '#000'
+            },
+            title: {
+              text: 'Porcentaje de votos',
+              align: 'high',
+              style: {
+                color: '#000'
+              }
+            },
+            labels: {
+              overflow: 'justify',
+              style: {
+                color: '#FFF'
+              }
+            }
           },
           series: [
             {
@@ -80,6 +125,12 @@ export default {
               data: val.columnChart
             }
           ],
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#FFF'
+            }
+          },
           credits: {
             enabled: false
           }
