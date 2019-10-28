@@ -14,7 +14,7 @@ HighchartsMore(Highcharts)
 Highcharts.setOptions({
   chart: {
     type: 'column',
-    backgroundColor: '#616161'
+    backgroundColor: 'rgba(255, 255, 255, 0.0)'
   },
   subtitle: {
     text: ''
@@ -28,7 +28,20 @@ Highcharts.setOptions({
     }
   },
   legend: {
-    enabled: false
+    itemStyle: {
+      color: '#FFF',
+      fontWeight: 'bold'
+    }
+  },
+  labels: {
+    style: {
+      color: '#F5F5F5',
+      cursor: 'pointer',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      textOverflow: 'ellipsis',
+      'text-shadow': '2px 2px #000'
+    }
   },
   plotOptions: {
     column: {
@@ -43,6 +56,9 @@ Highcharts.setOptions({
         format: '{point.y:.1f}%'
       }
     }
+  },
+  credits: {
+    enabled: false
   },
   tooltip: {
   //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -81,11 +97,6 @@ export default {
               'color': '#fff'
             }
           },
-          legend: {
-            itemStyle: {
-              color: '#FFF'
-            }
-          },
           xAxis: {
             labels: {
               overflow: 'justify',
@@ -95,20 +106,20 @@ export default {
             },
             title: {
               style: {
-                color: '#000'
+                color: '#FFF'
               }
             }
           },
           yAxis: {
             min: 0,
             style: {
-              color: '#000'
+              color: '#FFF'
             },
             title: {
               text: 'Porcentaje de votos',
               align: 'high',
               style: {
-                color: '#000'
+                color: '#FFF'
               }
             },
             labels: {
@@ -124,16 +135,7 @@ export default {
               colorByPoint: true,
               data: val.columnChart
             }
-          ],
-          labels: {
-            overflow: 'justify',
-            style: {
-              color: '#FFF'
-            }
-          },
-          credits: {
-            enabled: false
-          }
+          ]
         })
       }
     }
