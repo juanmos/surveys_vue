@@ -19,6 +19,19 @@
       <v-btn icon>
         <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
       </v-btn>
+      <v-btn icon @click="showNotification = !showNotification">
+        <v-badge color="error" overlap>
+          <template slot="badge">2</template>
+          <v-icon title="Notificaciones">notification_important</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-card v-if="showNotification" class="listNotification">
+        <v-list dense>
+          <v-list-tile v-for="notification in notifications" :key="notification" @click="onClick">
+            <v-list-tile-title v-text="notification"/>
+          </v-list-tile>
+        </v-list>
+      </v-card>
       <v-btn icon>
         <v-icon @click="goUser" title="Perfil">perm_identity</v-icon>
       </v-btn>
@@ -66,6 +79,14 @@ export default {
     return {
       title: 'ENCUESTAS',
       clipped: true,
+      notifications: [
+        'Mike, Thanos is coming',
+        '5 new avengers joined the team',
+        "You're now friends with Capt",
+        'Another Notification',
+        'Another One - Dj Khalid voice'
+      ],
+      showNotification: false,
       drawer: true,
       fixed: false,
       currentYear: new Date().getFullYear(),
@@ -90,3 +111,13 @@ export default {
   components: {SideMenu, SnackMessage}
 }
 </script>
+<style>
+.listNotification {
+  outline: none;
+  z-index: 2202;
+  position: fixed;
+  left: 82%;
+  float: left;
+  top: 50px;
+}
+</style>
