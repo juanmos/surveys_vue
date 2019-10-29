@@ -12,11 +12,21 @@
                  item-text="label"
                  item-value="label"
                  return-object
-                 label="Pregunta"
+                 label="Pregunta:"
                ></v-autocomplete>
              </v-flex>
              <v-flex xs12>
-               <chart :question="currenteQuestion"></chart>
+               <v-autocomplete
+                 :items="types"
+                 v-model="graphicType"
+                 item-text="name"
+                 item-value="value"
+                 return-object
+                 label="Tipo gráfico:"
+               ></v-autocomplete>
+             </v-flex>
+             <v-flex xs12>
+               <chart :question="currenteQuestion" :graphicType="graphicType"></chart>
              </v-flex>
            </v-layout>
        </v-container>
@@ -29,9 +39,11 @@ export default {
   props: [''],
   data: (state) => ({
     currenteQuestion: null,
+    graphicType: 'column',
     configPoll: {
       name: ''
     },
+    types: [{name: 'Columna', value: 'column'}, {name: 'Pastel', value: 'pie'}],
     questions: []
   }),
   methods: {

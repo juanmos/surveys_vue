@@ -10,10 +10,6 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsMore from 'highcharts/highcharts-more'
 HighchartsMore(Highcharts)
 Highcharts.setOptions({
-  chart: {
-    type: 'column',
-    backgroundColor: 'rgba(255, 255, 255, 0.0)'
-  },
   subtitle: {
     text: ''
   },
@@ -54,33 +50,23 @@ Highcharts.setOptions({
   }
 })
 export default {
-  props: ['question'],
+  props: ['question', 'graphicType'],
   data: (state) => ({
-    dataChart: []
+    dataChart: [],
+    type: 'column',
+    currentQuestion: {}
   }),
   methods: {
     draw () {
-
-    }
-  },
-  mounted () {
-    this.draw()
-  },
-  computed: {
-    ...mapState([
-      'currentEnv'
-    ]),
-    getChart () {
-      return this.dataChart
-    }
-  },
-  watch: {
-    question: function (val) {
-      if (val.columnChart) {
-        this.dataChart = val.columnChart
+      if (this.currentQuestion.columnChart) {
+        this.dataChart = this.currentQuestion.columnChart
         this.highcharts = new Highcharts.Chart('highCharts', {
+          chart: {
+            type: this.type,
+            backgroundColor: 'rgba(255, 255, 255, 0.0)'
+          },
           title: {
-            text: val.label,
+            text: this.currentQuestion.label,
             style: {
               'color': '#fff'
             }
@@ -119,9 +105,9 @@ export default {
           },
           series: [
             {
-              name: val.label,
+              name: this.currentQuestion.label,
               colorByPoint: true,
-              data: val.columnChart
+              data: this.currentQuestion.columnChart
             }
           ],
           labels: {
@@ -132,6 +118,27 @@ export default {
           }
         })
       }
+    }
+  },
+  computed: {
+    ...mapState([
+      'currentEnv'
+    ]),
+    getChart () {
+      return this.dataChart
+    },
+    getType () {
+      return this.dataChart
+    }
+  },
+  watch: {
+    question: function (val) {
+      this.currentQuestion = val
+      this.draw()
+    },
+    graphicType: function (val) {
+      this.type = val.value
+      this.draw()
     }
   },
   components: {}
