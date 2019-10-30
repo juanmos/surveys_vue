@@ -5,6 +5,40 @@
              <v-flex xs12>
                <h1 style="color:white">Resultados de la encuesta: {{configPoll.name}}</h1>
              </v-flex>
+
+             <v-flex xs4>
+               <material-stats-card
+                 color="green"
+                 icon="account_circle"
+                 title="CREADO POR:"
+                 value="Christian Borja"
+                 smallValue=""
+                 sub-icon="mdi-calendar"
+                 sub-text="Encuesta creado por:"
+               />
+             </v-flex>
+             <v-flex xs4>
+               <material-stats-card
+                 color="info"
+                 icon="room"
+                 title="LUGAR DE ENCUESTA:"
+                 value="República Dominicana"
+                 smallValue=""
+                 sub-icon="mdi-calendar"
+                 sub-text="Encuesta creado por:"
+               />
+             </v-flex>
+             <v-flex xs4>
+               <material-stats-card
+                 color="orange"
+                 icon="info"
+                 title="TOTAL:"
+                 value="10 encuestas"
+                 smallValue=""
+                 sub-icon="mdi-calendar"
+                 sub-text="Encuesta creado por:"
+               />
+             </v-flex>
              <v-flex x12>
                <v-autocomplete
                  :items="questions"
@@ -35,6 +69,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import Chart from './../../components/highcharts/Chart'
+import MaterialStatsCard from './../../components/material/StatsCard'
 export default {
   props: [''],
   data: (state) => ({
@@ -69,7 +104,7 @@ export default {
       this.currenteQuestion = val
     }
   },
-  components: {Chart}
+  components: {Chart, MaterialStatsCard}
 }
 </script>
 
