@@ -5,7 +5,6 @@
              <v-flex xs12>
                <h1 style="color:white">Resultados de la encuesta: {{configPoll.name}}</h1>
              </v-flex>
-
              <v-flex xs4>
                <material-stats-card
                  color="green"
@@ -14,7 +13,7 @@
                  value="Christian Borja"
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Encuesta creado por:"
+                 sub-text="Empresa Propraxis"
                />
              </v-flex>
              <v-flex xs4>
@@ -25,7 +24,7 @@
                  value="República Dominicana"
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Encuesta creado por:"
+                 sub-text="Empresa Propraxis"
                />
              </v-flex>
              <v-flex xs4>
@@ -33,10 +32,22 @@
                  color="orange"
                  icon="info"
                  title="TOTAL:"
-                 value="10 encuestas"
+                 :value="totalPolls"
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Encuesta creado por:"
+                 sub-text="Empresa Propraxis"
+               />
+             </v-flex>
+             <v-flex xs12>
+               {{pages}}
+               <result-page
+                 color="orange"
+                 icon="info"
+                 title="TOTAL:"
+                 :value="totalPolls"
+                 smallValue=""
+                 sub-icon="mdi-calendar"
+                 sub-text="Empresa Propraxis"
                />
              </v-flex>
              <v-flex x12>
@@ -70,6 +81,7 @@
 import { mapState, mapActions } from 'vuex'
 import Chart from './../../components/highcharts/Chart'
 import MaterialStatsCard from './../../components/material/StatsCard'
+import ResultPage from './../../components/material/ResultPage'
 export default {
   props: [''],
   data: (state) => ({
@@ -78,6 +90,8 @@ export default {
     configPoll: {
       name: ''
     },
+    pages: [],
+    totalPolls: '',
     types: [{name: 'Columna', value: 'column'}, {name: 'Pastel', value: 'pie'}],
     questions: []
   }),
@@ -96,6 +110,8 @@ export default {
   created () {
     this.getConfigPoll(this.$route.params.id).then(result => {
       this.configPoll = Object.assign({}, result)
+      this.totalPolls = (this.configPoll.originalJson) ? `${this.configPoll.originalJson.length - 1} encuestas` : '0 encuentas'
+      this.pages = this.configPoll.pages
       this.questions = this.configPoll.formatedConfiguration
     }).catch(err => console.log('error', err))
   },
@@ -104,7 +120,7 @@ export default {
       this.currenteQuestion = val
     }
   },
-  components: {Chart, MaterialStatsCard}
+  components: {Chart, MaterialStatsCard, ResultPage}
 }
 </script>
 

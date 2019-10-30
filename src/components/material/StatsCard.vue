@@ -38,7 +38,7 @@
       </v-icon>
       <span
         :class="subTextColor"
-        class="caption font-weight-light"
+        class="caption colorTitle"
         v-text="subText"
       />
     </template>
@@ -46,12 +46,12 @@
 </template>
 
 <script>
-import Card from './Card'
+import MaterialCard from './Card'
 
 export default {
   inheritAttrs: false,
   props: {
-    ...Card.props,
+    ...MaterialCard.props,
     icon: {
       type: String,
       required: true
@@ -84,7 +84,8 @@ export default {
       type: String,
       default: undefined
     }
-  }
+  },
+  components: {MaterialCard}
 }
 </script>
 
