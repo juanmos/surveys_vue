@@ -1,8 +1,10 @@
 <template>
   <v-card
   >
-    <label for="">Pregunta: <span>{{currentQuestion.label}}</span></label>
-    <chart :question="currentQuestion" :graphicType="graphicType"></chart>
+  <div style="margin-bottom: 20px;">
+    <label>Pregunta: <span>{{currentQuestion.label}}</span></label>
+  </div>
+  <chart :question="currentQuestion" :graphicType="graphicType"></chart>
   </v-card>
 </template>
 

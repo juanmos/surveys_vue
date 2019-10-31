@@ -1,7 +1,5 @@
 <template>
-       <v-flex x12>
-        <highcharts :options="getChartOptions"></highcharts>
-       </v-flex>
+  <highcharts :options="getChartOptions"></highcharts>
 </template>
 
 <script>
@@ -27,7 +25,7 @@ export default {
       return {
         chart: {
           type: this.type,
-          backgroundColor: 'rgba(255, 255, 255, 0.0)'
+          backgroundColor: 'rgb(48, 48, 48)'
         },
         title: {
           text: '',
