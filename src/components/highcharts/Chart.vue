@@ -1,135 +1,117 @@
 <template>
        <v-flex x12>
-         <div id="highCharts"></div>
+        <highcharts :options="getChartOptions"></highcharts>
        </v-flex>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Highcharts from 'highcharts/highstock'
-import HighchartsMore from 'highcharts/highcharts-more'
-HighchartsMore(Highcharts)
-Highcharts.setOptions({
-  subtitle: {
-    text: ''
-  },
-  xAxis: {
-    type: 'category'
-  },
-  yAxis: {
-    title: {
-      text: ''
-    }
-  },
-  legend: {
-    enabled: false,
-    itemStyle: {
-      color: '#FFF'
-    }
-  },
-  credits: {
-    enabled: false
-  },
-  plotOptions: {
-    column: {
-      dataLabels: {
-        enabled: true
-      }
-    },
-    series: {
-      borderWidth: 0,
-      dataLabels: {
-        enabled: true,
-        format: '{point.y:.1f}%'
-      }
-    }
-  },
-  tooltip: {
-  //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <span style="color:{point.color}"> Total:</span><b>{point.total}</b><br/>'
-  }
-})
 export default {
   props: ['question', 'graphicType'],
   data: (state) => ({
     dataChart: [],
     type: 'column',
+    chartOptions: {
+      series: [{
+        data: [1, 2, 3] // sample data
+      }]
+    },
     currentQuestion: {}
   }),
-  methods: {
-    draw () {
-      if (this.currentQuestion.columnChart) {
-        this.dataChart = this.currentQuestion.columnChart
-        this.highcharts = new Highcharts.Chart('highCharts', {
-          chart: {
-            type: this.type,
-            backgroundColor: 'rgba(255, 255, 255, 0.0)'
+  methods: {},
+  computed: {
+    ...mapState([
+      'currentEnv'
+    ]),
+    getChartOptions () {
+      return {
+        chart: {
+          type: this.type,
+          backgroundColor: 'rgba(255, 255, 255, 0.0)'
+        },
+        title: {
+          text: '',
+          style: {
+            'color': '#fff'
+          }
+        },
+        xAxis: {
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#FFF'
+            }
           },
           title: {
-            text: this.currentQuestion.label,
-            style: {
-              'color': '#fff'
-            }
-          },
-          xAxis: {
-            labels: {
-              overflow: 'justify',
-              style: {
-                color: '#FFF'
-              }
-            },
-            title: {
-              style: {
-                color: '#fff'
-              }
-            }
-          },
-          yAxis: {
-            min: 0,
             style: {
               color: '#fff'
-            },
-            title: {
-              text: '',
-              align: 'high',
-              style: {
-                color: '#fff'
-              }
-            },
-            labels: {
-              overflow: 'justify',
-              style: {
-                color: '#FFF'
-              }
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          style: {
+            color: '#fff'
+          },
+          title: {
+            text: '',
+            align: 'high',
+            style: {
+              color: '#fff'
             }
           },
-          series: [
-            {
-              name: this.currentQuestion.label,
-              colorByPoint: true,
-              data: this.currentQuestion.columnChart
-            }
-          ],
           labels: {
             overflow: 'justify',
             style: {
               color: '#FFF'
             }
           }
-        })
+        },
+        legend: {
+          enabled: false,
+          itemStyle: {
+            color: '#FFF'
+          }
+        },
+        credits: {
+          enabled: false
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: true
+            }
+          },
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y:.1f}%'
+            }
+          }
+        },
+        series: [
+          {
+            name: this.currentQuestion.label,
+            colorByPoint: true,
+            data: this.currentQuestion.columnChart
+          }
+        ],
+        labels: {
+          overflow: 'justify',
+          style: {
+            color: '#FFF'
+          }
+        }
       }
-    }
-  },
-  computed: {
-    ...mapState([
-      'currentEnv'
-    ]),
-    getChart () {
-      return this.dataChart
     },
     getType () {
       return this.dataChart
     }
+  },
+  created () {
+    // console.log('questions--', this.questions);
+    this.currentQuestion = this.question
   },
   watch: {
     question: function (val) {

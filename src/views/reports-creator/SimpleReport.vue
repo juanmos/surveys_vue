@@ -38,19 +38,20 @@
                  sub-text="Empresa Propraxis"
                />
              </v-flex>
-             <v-flex xs12>
-               {{pages}}
+             <v-flex xs6 v-for="(page, i) in pages"
+             :key="i">
                <result-page
-                 color="orange"
+                 color="red"
                  icon="info"
-                 title="TOTAL:"
+                 :questions="questions"
+                 :title="page"
                  :value="totalPolls"
                  smallValue=""
                  sub-icon="mdi-calendar"
                  sub-text="Empresa Propraxis"
                />
              </v-flex>
-             <v-flex x12>
+            <!--  <v-flex x12>
                <v-autocomplete
                  :items="questions"
                  v-model="currenteQuestion"
@@ -72,7 +73,7 @@
              </v-flex>
              <v-flex xs12>
                <chart :question="currenteQuestion" :graphicType="graphicType"></chart>
-             </v-flex>
+             </v-flex> -->
            </v-layout>
        </v-container>
 </template>
