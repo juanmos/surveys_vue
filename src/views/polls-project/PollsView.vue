@@ -250,9 +250,13 @@
                                 <v-icon>more_vert</v-icon>
                                 </v-btn>
                                 <v-list>
-                                  <v-list-tile @click="goToResultConfigPolls(props.item._id)">
+                                  <!-- <v-list-tile @click="goToResultConfigPolls(props.item._id)">
                                     <v-icon class="icon">assignment</v-icon>
                                     <v-list-tile-title>Resultados de Encuesta</v-list-tile-title>
+                                  </v-list-tile> -->
+                                  <v-list-tile @click="reportResult(props.item._id)">
+                                    <v-icon class="icon">view_quilt</v-icon>
+                                    <v-list-tile-title>Dashboard</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToViewData(props.item._id)">
                                     <v-icon class="icon">line_weight</v-icon>
@@ -262,10 +266,10 @@
                                     <v-icon class="icon">border_color</v-icon>
                                     <v-list-tile-title>Editar encuesta</v-list-tile-title>
                                   </v-list-tile>
-                                  <v-list-tile @click="goToViewCreatorReport(props.item._id)">
+                                  <!-- <v-list-tile @click="goToViewCreatorReport(props.item._id)">
                                     <v-icon class="icon">view_quilt</v-icon>
                                     <v-list-tile-title>Reportes de segmentos</v-list-tile-title>
-                                  </v-list-tile>
+                                </v-list-tile> -->
                                   <v-list-tile @click="goToViewConfigPolls(props.item._id)">
                                     <v-icon class="icon">ballot</v-icon>
                                     <v-list-tile-title>Ver encuesta</v-list-tile-title>
@@ -273,10 +277,6 @@
                                   <v-list-tile @click="processPollsApp(props.item._id)">
                                     <v-icon class="icon">phone_iphone</v-icon>
                                     <v-list-tile-title>Procesar encuestas APP</v-list-tile-title>
-                                  </v-list-tile>
-                                  <v-list-tile @click="reportResult(props.item._id)">
-                                    <v-icon class="icon">assessment</v-icon>
-                                    <v-list-tile-title>Reporte de resultados</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
                                     <v-icon class="icon">edit</v-icon>
