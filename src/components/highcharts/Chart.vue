@@ -34,12 +34,20 @@ export default {
           }
         },
         xAxis: {
-          type: 'category'
+          type: 'category',
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#FFF',
+              'font-weight': 'bold'
+            }
+          }
         },
         yAxis: {
           min: 0,
           style: {
-            color: '#fff'
+            color: '#fff',
+            'font-weight': 'bold'
           },
           title: {
             text: '',
@@ -102,17 +110,16 @@ export default {
     }
   },
   created () {
-    // console.log('questions--', this.questions);
     this.currentQuestion = this.question
   },
   watch: {
     question: function (val) {
-      this.currentQuestion = val
-      this.draw()
+      // this.currentQuestion = val
+      // this.draw()
     },
     graphicType: function (val) {
-      this.type = val.value
-      this.draw()
+      // this.type = val.value
+      // this.draw()
     }
   },
   components: {}
