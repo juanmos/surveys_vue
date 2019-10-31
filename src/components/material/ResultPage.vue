@@ -10,8 +10,8 @@
         class="v-card--material__header"
         dark
       >
-      <span>
-        <h4 style="font-weight: bold; margin-left: 10px"
+      <span style="">
+        <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px;"
           class="title mb-2"
           v-text="title"
         >
