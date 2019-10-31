@@ -34,17 +34,7 @@ export default {
           }
         },
         xAxis: {
-          labels: {
-            overflow: 'justify',
-            style: {
-              color: '#FFF'
-            }
-          },
-          title: {
-            style: {
-              color: '#fff'
-            }
-          }
+          type: 'category'
         },
         yAxis: {
           min: 0,
@@ -100,6 +90,10 @@ export default {
           style: {
             color: '#FFF'
           }
+        },
+        tooltip: {
+          //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <span style="color:{point.color}"> Total:</span><b>{point.total}</b><br/>'
         }
       }
     },
