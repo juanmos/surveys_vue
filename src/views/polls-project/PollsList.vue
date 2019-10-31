@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-container grid-list-md text-xs-center>
+    <v-container fluid grid-list-lg>
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
@@ -73,15 +73,15 @@
                             <v-list-tile @click="ver(props.item)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Ver</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToListConfigPolls(props.item._id)">
+                            <!--<v-list-tile @click="goToListConfigPolls(props.item._id)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
-                            </v-list-tile>
+                            </v-list-tile> -->
                             <v-list-tile @click="openMembers(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
+                            <!-- <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
                               <v-icon>receipt</v-icon> <v-list-tile-title>Segmentación</v-list-tile-title>
-                            </v-list-tile>
+                            </v-list-tile> -->
                             <v-list-tile @click="editar(props.item)">
                              <v-icon>edit</v-icon> <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
@@ -431,7 +431,7 @@ export default {
   },
   watch: {
     page () {
-      this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, noPollTakes: true, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.getData()

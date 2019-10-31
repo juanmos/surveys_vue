@@ -17,11 +17,11 @@
         />
         <span v-else>
           <h4
-            class="title font-weight-light mb-2"
+            class="title"
             v-text="title"
           />
           <p
-            class="category font-weight-thin"
+            class=""
             v-text="text"
           />
         </span>
@@ -37,7 +37,7 @@
 
     <v-divider
       v-if="$slots.actions"
-      class="mx-3"
+      class=""
     />
 
     <v-card-actions v-if="$slots.actions">
