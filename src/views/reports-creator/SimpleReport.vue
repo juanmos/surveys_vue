@@ -3,7 +3,7 @@
        grid-list-lg>
            <v-layout row wrap>
              <v-flex xs12>
-               <h1 style="color:white">Resultados de la encuesta: {{configPoll.name}}</h1>
+               <h1 style="color:white">Encuesta: {{configPoll.name}}</h1>
              </v-flex>
              <v-flex xs4>
                <material-stats-card
