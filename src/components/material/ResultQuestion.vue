@@ -2,7 +2,17 @@
   <v-card
   >
   <div style="margin-bottom: 20px;">
-    <label>Pregunta: <span>{{currentQuestion.label}}</span></label>
+    <label style="margin-left: 20px;font-weight:bold;">
+      <span style="margin-right: 10px;">
+        <v-icon
+          style="padding-top: 15px;"
+          size="20"
+          color="blue"
+        >
+        adjust
+        </v-icon>
+      </span>Pregunta: <span>{{currentQuestion.label}}</span>
+    </label>
   </div>
   <chart :question="currentQuestion" :graphicType="graphicType"></chart>
   </v-card>

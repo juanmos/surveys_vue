@@ -11,10 +11,18 @@
         dark
       >
       <span>
-        <h4
+        <h4 style="font-weight: bold; margin-left: 10px"
           class="title mb-2"
           v-text="title"
-        />
+        >
+      </h4>
+      </span>
+      <span>
+        <v-icon
+          size="40"
+        >
+        equalizer
+        </v-icon>
       </span>
       </v-card>
 

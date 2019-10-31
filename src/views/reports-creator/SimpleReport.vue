@@ -8,9 +8,9 @@
              <v-flex xs4>
                <material-stats-card
                  color="green"
-                 icon="account_circle"
-                 title="CREADO POR:"
-                 value="Christian Borja"
+                 icon="assignment"
+                 title="PROYECTO:"
+                 :value="projectname"
                  smallValue=""
                  sub-icon="mdi-calendar"
                  sub-text="Empresa Propraxis"
@@ -51,29 +51,6 @@
                  sub-text="Empresa Propraxis"
                />
              </v-flex>
-            <!--  <v-flex x12>
-               <v-autocomplete
-                 :items="questions"
-                 v-model="currenteQuestion"
-                 item-text="label"
-                 item-value="label"
-                 return-object
-                 label="Pregunta:"
-               ></v-autocomplete>
-             </v-flex>
-             <v-flex xs12>
-               <v-autocomplete
-                 :items="types"
-                 v-model="graphicType"
-                 item-text="name"
-                 item-value="value"
-                 return-object
-                 label="Tipo gráfico:"
-               ></v-autocomplete>
-             </v-flex>
-             <v-flex xs12>
-               <chart :question="currenteQuestion" :graphicType="graphicType"></chart>
-             </v-flex> -->
            </v-layout>
        </v-container>
 </template>
@@ -91,6 +68,7 @@ export default {
     configPoll: {
       name: ''
     },
+    projectname: '',
     pages: [],
     totalPolls: '',
     types: [{name: 'Columna', value: 'column'}, {name: 'Pastel', value: 'pie'}],
@@ -113,6 +91,7 @@ export default {
       this.configPoll = Object.assign({}, result)
       this.totalPolls = (this.configPoll.originalJson) ? `${this.configPoll.originalJson.length - 1} encuestas` : '0 encuentas'
       this.pages = this.configPoll.pages
+      this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
     }).catch(err => console.log('error', err))
   },
