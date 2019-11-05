@@ -29,7 +29,7 @@
       <v-container fluid
       grid-list-lg>
           <v-layout row wrap>
-            <v-flex xs12 v-for="(question, i) in questionsPage"
+            <v-flex xs12 v-for="(question, i) in getQuestionsPage"
             :key="i">
             <v-card >
               <result-question :question="question"></result-question>
@@ -66,15 +66,19 @@ export default {
       default: undefined
     }
   },
-  data: (state) => ({
-    questionsPage: []
+  data: () => ({
+    questionsPage: [],
+    listQuestions: []
   }),
-  methods: {
-    getQuestionsPage (questions) {
-      this.questionsPage = questions.filter(question => question.page === this.title)
-    }
-  },
+  methods: {},
   computed: {
+    getQuestionsPage () {
+      return this.listQuestions.filter(filterQuestion => {
+        if (filterQuestion.page === this.title && filterQuestion.columnChart) {
+          return filterQuestion
+        }
+      })
+    },
     hasOffset () {
       return this.$slots.header ||
         this.$slots.offset ||
@@ -91,13 +95,7 @@ export default {
     }
   },
   created () {
-    // console.log('questions--', this.questions);
-    this.getQuestionsPage(this.questions)
-  },
-  watch: {
-    questions: function (val) {
-      // this.getQuestionsPage(val)
-    }
+    this.listQuestions = this.questions
   },
   components: {ResultQuestion}
 }

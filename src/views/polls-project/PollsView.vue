@@ -522,7 +522,6 @@ export default {
         let pages = jsonSend.pages.length
         jsonSend.pages[(pages)] = addJson
         let data = {_id: idConfigPolls, name: name, construct: JSON.stringify(jsonSend)}
-        console.log('la data a enviar', data)
         const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config['_polls_project_id'] = this.$route.params.id
