@@ -1,8 +1,5 @@
 <template>
   <v-card
-    v-bind="$attrs"
-    :style="styles"
-    v-on="$listeners"
   >
       <v-card
         v-if="!$slots.offset"

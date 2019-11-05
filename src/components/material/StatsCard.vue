@@ -1,8 +1,6 @@
 <template>
   <material-card
-    v-bind="$attrs"
     class="v-card--material-stats"
-    v-on="$listeners"
   >
     <v-card
       slot="offset"
@@ -19,13 +17,13 @@
     </v-card>
     <div class="text-xs-right">
       <p
-        class="category colorTitle"
+        class="colorTitle text-xs-right"
         v-text="title"
       />
-      <h3
-        class="title display-1 colorTitle" style="margin-left: 10px;">
+      <h4
+        class="colorTitle text-xs-right" style="margin-left: 10px;">
         {{ value }} <small>{{ smallValue }}</small>
-      </h3>
+      </h4>
     </div>
 
     <template slot="actions">

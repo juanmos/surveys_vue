@@ -15,21 +15,11 @@ export default {
       url: '/category-project',
       title: 'Categorías de encuesta'
     },
-    {
-      icon: 'menu',
-      url: '/menu-item',
-      title: 'Menú Items'
-    },
-    {
-      icon: 'view_list',
-      url: '/menu',
-      title: 'Configuración de menús'
-    },
-    {
+    /* {
       icon: 'settings_voice',
       url: '/audios',
       title: 'Audios'
-    },
+    }, */
     {
       icon: 'comment',
       url: '/polls-project',
