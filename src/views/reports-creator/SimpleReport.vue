@@ -6,7 +6,7 @@
                <h1 style="color:white">Encuesta: {{configPoll.name}}</h1>
              </v-flex>
              <v-flex xs4>
-               <material-stats-card
+               <stats-card
                  color="green"
                  icon="assignment"
                  title="PROYECTO:"
@@ -17,7 +17,7 @@
                />
              </v-flex>
              <v-flex xs4>
-               <material-stats-card
+               <stats-card
                  color="info"
                  icon="room"
                  title="LUGAR DE ENCUESTA:"
@@ -28,7 +28,7 @@
                />
              </v-flex>
              <v-flex xs4>
-               <material-stats-card
+               <stats-card
                  color="orange"
                  icon="info"
                  title="TOTAL:"
@@ -57,8 +57,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Chart from './../../components/highcharts/Chart'
-import MaterialStatsCard from './../../components/material/StatsCard'
+import StatsCard from './../../components/material/StatsCard'
 import ResultPage from './../../components/material/ResultPage'
 export default {
   props: [''],
@@ -100,7 +99,7 @@ export default {
       this.currenteQuestion = val
     }
   },
-  components: {Chart, MaterialStatsCard, ResultPage}
+  components: {StatsCard, ResultPage}
 }
 </script>
 
