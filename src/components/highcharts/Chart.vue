@@ -121,6 +121,8 @@ export default {
         },
         series: [
           {
+            name: this.question.label,
+            colorByPoint: true,
             data: this.question.columnChart
           }
         ],
