@@ -8,9 +8,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import HighchartsVue from 'highcharts-vue'
+import Highcharts from 'highcharts'
+import boost from 'highcharts/modules/boost'
 // import { createProvider } from './vue-apollo'
 Vue.use(VueParticles)
 Vue.use(HighchartsVue)
+boost(Highcharts)
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDy_B9Hr_yJ2hgWKsuTA1WBd2owjTa2cbA',

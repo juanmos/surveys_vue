@@ -61,7 +61,7 @@ import StatsCard from './../../components/material/StatsCard'
 import ResultPage from './../../components/material/ResultPage'
 export default {
   props: [''],
-  data: (state) => ({
+  data: () => ({
     currenteQuestion: null,
     graphicType: 'column',
     configPoll: {
