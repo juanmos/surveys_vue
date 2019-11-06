@@ -56,7 +56,7 @@
            <v-dialog v-model="dialogMap">
              <v-card>
                <v-card-title>titulo</v-card-title>
-               <map-component :markers="mapMarkers"></map-component>
+               <map-component :markers="mapMarkers" :gmapCenter="dataGmapCenter"></map-component>
                <v-card-actions>
                  <v-spacer></v-spacer>
                  <v-btn color="dark darken-1"
@@ -87,12 +87,11 @@ export default {
     dialogMap: false,
     projectname: '',
     pages: [],
-    mapMarkers: [{
-      position: {lat: 18.473521, lng: -69.926882},
-      title: 'Test',
-      answer: 'pregunta',
-      personalData: 'personda'
-    }],
+    mapMarkers: [],
+    dataGmapCenter: {
+      lat: 0,
+      lng: 0
+    },
     totalPolls: '',
     types: [{name: 'Columna', value: 'column'}, {name: 'Pastel', value: 'pie'}],
     questions: []
@@ -116,6 +115,8 @@ export default {
       this.pages = this.configPoll.pages
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
+      this.dataGmapCenter = this.configPoll.gmapCenter
+      this.mapMarkers = this.configPoll.markers
     }).catch(err => console.log('error', err))
   },
   watch: {

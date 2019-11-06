@@ -3,7 +3,7 @@
     <GmapMap
     v-if="markers"
     ref="gmap"
-    :center="{lat:18.473521, lng:-69.926882}"
+    :center="gmapCenter"
     :zoom="13"
     map-type-id="roadmap"
     style="width: 100%; height: 800px;"
@@ -14,7 +14,7 @@
       :position="m.position"
       :clickable="true"
       :draggable="false"
-      @click="openInfoWindowTemplate(m.position, m.answer, m.personalData)"
+      @click="openInfoWindowTemplate(m.position, m.dateStart, m.dateEnd)"
     />
   <gmap-info-window
       :options="{maxWidth: 1200}"
@@ -31,7 +31,7 @@
 import { mapState } from 'vuex'
 const enviroment = require('./../../../config/enviroment.json')
 export default {
-  props: ['markers', 'mapQuestions'],
+  props: ['markers', 'gmapCenter', 'mapQuestions'],
   data: () => ({
     infoWindow: {
       position: {lat: 0, lng: 0},
@@ -46,7 +46,7 @@ export default {
     generateBounds () {
       return []
     },
-    openInfoWindowTemplate (position, answer, data) {
+    openInfoWindowTemplate (position, dateStart, dateEnd) {
       this.infoWindow.position = {
         lat: position.lat,
         lng: position.lng
@@ -55,9 +55,10 @@ export default {
       this.infoWindow.template = `
       <v-list class=" pl-4 pt-4 blue-grey darken-4" font-weight-bold">
       <v-list-tile>
-        <b class="title">${answer}</b>
+        <b class="title">Encuesta realizada:</b>
         <p style="color:black;">
-         Mas informacion deprueba ${data}
+         Fecha de inicio: ${dateStart} <br />
+         Fecha de fin: ${dateEnd} <br />
         </p>
       </v-list-title>
       </v-list`
