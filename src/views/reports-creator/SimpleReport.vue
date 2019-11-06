@@ -20,6 +20,7 @@
                <stats-card
                  color="info"
                  icon="room"
+                 @showMap="dialogMap = !dialogMap"
                  title="LUGAR DE ENCUESTA:"
                  value="República Dominicana"
                  smallValue=""
@@ -52,6 +53,21 @@
                />
              </v-flex>
            </v-layout>
+           <v-dialog v-model="dialogMap">
+             <v-card>
+               <v-card-title>titulo</v-card-title>
+               <map-component :markers="mapMarkers"></map-component>
+               <v-card-actions>
+                 <v-spacer></v-spacer>
+                 <v-btn color="dark darken-1"
+                        flat="flat"
+                        @click="dialogMap = false"
+                          >
+                          CERRAR
+                 </v-btn>
+               </v-card-actions>
+             </v-card>
+           </v-dialog>
        </v-container>
 </template>
 
@@ -59,6 +75,7 @@
 import { mapState, mapActions } from 'vuex'
 import StatsCard from './../../components/material/StatsCard'
 import ResultPage from './../../components/material/ResultPage'
+import MapComponent from './../../components/graphs/Map'
 export default {
   props: [''],
   data: () => ({
@@ -67,8 +84,15 @@ export default {
     configPoll: {
       name: ''
     },
+    dialogMap: false,
     projectname: '',
     pages: [],
+    mapMarkers: [{
+      position: {lat: 18.473521, lng: -69.926882},
+      title: 'Test',
+      answer: 'pregunta',
+      personalData: 'personda'
+    }],
     totalPolls: '',
     types: [{name: 'Columna', value: 'column'}, {name: 'Pastel', value: 'pie'}],
     questions: []
@@ -99,7 +123,7 @@ export default {
       this.currenteQuestion = val
     }
   },
-  components: {StatsCard, ResultPage}
+  components: {StatsCard, ResultPage, MapComponent}
 }
 </script>
 
