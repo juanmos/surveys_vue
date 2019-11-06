@@ -26,6 +26,12 @@
       </h4>
     </div>
 
+    <div class="text-xs-right" v-if="icon === 'room'" style="margin-left: 65%;">
+      <v-card-actions class="text-xs-right">
+          <v-btn small text @click="showMap()">Ver</v-btn>
+      </v-card-actions>
+    </div>
+
     <template slot="actions">
       <v-icon
         :color="subIconColor"
@@ -81,6 +87,11 @@ export default {
     smallValue: {
       type: String,
       default: undefined
+    }
+  },
+  methods: {
+    showMap () {
+      this.$emit('showMap')
     }
   },
   components: {MaterialCard}
