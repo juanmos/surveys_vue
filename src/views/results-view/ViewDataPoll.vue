@@ -223,7 +223,7 @@ export default {
   },
   watch: {
     resultPoll: function (value) {
-      this.viewData = value.PollInstances.map(poll => poll.response_received)
+      // this.viewData = value.PollInstances.map(poll => poll.response_received)
     }
   },
   components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator, ViewVariables }
