@@ -174,7 +174,7 @@
                     <v-flex xs4 sm8>
                       <v-data-table
                         :headers="headersConfigPolls"
-                        :items="getConfigPolls"
+                        :items="listConfigPolls"
                         hide-actions
                         item-key="_id"
                         striped hover
@@ -400,6 +400,7 @@ export default {
       state_polls: [],
       removed: false
     },
+    listConfigPolls: [],
     selectcategory: '',
     dialog: false,
     fechainicio: false,
@@ -587,6 +588,7 @@ export default {
     },
     processPollsApp (id) {
       this.findConfigPolls({ query: {surveyApp: true, _id: id} })
+      this.getConfigPolls()
     },
     reportResult (id) {
       this.$router.push({ path: `/simple-report/${id}` })
@@ -616,6 +618,11 @@ export default {
         this.setShowSnack(true)
       })
     },
+    getConfigPolls () {
+      this.findConfigPolls({query: {$sort: { dateFinished: '-1' }, _polls_project_id: this.$route.params.id}}).then(response => {
+        this.listConfigPolls = response.data
+      })
+    },
     cancel () {
       this.snack = true
       this.snackColor = 'error'
@@ -638,10 +645,6 @@ export default {
     },
     getCategorySegmentationPolls () {
       return this.findCategorySegmentationPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, _project_poll_id: this.$route.params.id, ...this.query}}).data
-    },
-    getConfigPolls () {
-      // console.log('deeeee ', this.findConfigPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data)
-      return this.findConfigPollsInStore({query: {$sort: { dateFinished: '-1' }, _polls_project_id: this.$route.params.id}}).data
     }
   },
   mounted () {
@@ -653,8 +656,9 @@ export default {
   created () {
     this.findcustomers({ query: {removed: false} }).then(response => {
     })
-    this.findConfigPolls({ query: {removed: false, _polls_project_id: this.$route.params.id, $skip: 0, $limit: null} })
+    // this.findConfigPolls({ query: {removed: false, _polls_project_id: this.$route.params.id, $skip: 0, $limit: null} })
     this.getDataCategorySegmentationPolls()
+    this.getConfigPolls()
   }
 }
 </script>

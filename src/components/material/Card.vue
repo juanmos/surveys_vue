@@ -2,17 +2,12 @@
   <v-card
   >
       <v-card
-        v-if="!$slots.offset"
         :color="color"
         :class="`elevation-${elevation}`"
         class="v-card--material__header"
         dark
       >
-        <slot
-          v-if="!title && !text"
-          name="header"
-        />
-        <span v-else>
+        <span >
           <h4
             class="title"
             v-text="title"
@@ -24,7 +19,7 @@
         </span>
       </v-card>
       <slot
-        v-else
+
         name="offset"
       />
 
@@ -32,12 +27,7 @@
       <slot />
     </v-card-text>
 
-    <v-divider
-      v-if="$slots.actions"
-      class=""
-    />
-
-    <v-card-actions v-if="$slots.actions">
+    <v-card-actions>
       <slot name="actions" />
     </v-card-actions>
   </v-card>

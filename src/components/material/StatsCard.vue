@@ -9,19 +9,20 @@
       class="pa-4"
       dark
     >
-      <v-icon
-        size="40"
-      >
-        {{ icon }}
-      </v-icon>
+        <v-icon
+          size="40"
+        >
+          {{ icon }}
+        </v-icon>
+
     </v-card>
     <div class="text-xs-right">
       <p
-        class="colorTitle text-xs-right"
+        class="colorTitle text-xs-right font"
         v-text="title"
       />
       <h4
-        class="colorTitle text-xs-right" style="margin-left: 10px;">
+        class="colorTitle text-xs-right font" style="margin-left: 10px;">
         {{ value }} <small>{{ smallValue }}</small>
       </h4>
     </div>
@@ -42,6 +43,7 @@
       </v-icon>
       <span
         :class="subTextColor"
+        style="font-family: Roboto;font-size:12px;"
         class="caption colorTitle"
         v-text="subText"
       />
@@ -102,6 +104,11 @@ export default {
 
 .colorTitle {
   color: white !important;
+}
+
+.font {
+  font-family: Roboto !important;
+  font-size: 14px !important;
 }
 
 .v-card--material-stats {
