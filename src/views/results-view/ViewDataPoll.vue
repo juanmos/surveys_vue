@@ -215,7 +215,7 @@ export default {
       }).catch(err => console.log('este es el error', err))
     }
   },
-  mounted () {
+  created () {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.viewData = result.PollInstances.map(poll => poll.response_received)
       this.resultPoll = Object.assign({}, result)
