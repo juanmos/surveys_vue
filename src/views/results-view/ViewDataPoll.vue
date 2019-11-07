@@ -200,7 +200,6 @@ export default {
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
-        this.setCurrentPoll(Object.assign({}, this.resultPoll))
       })
     },
     saveFormated (values) {
@@ -210,18 +209,16 @@ export default {
       config.update().then(result => {
         this.setSnackMessage('Pregunta Editada')
         this.setShowSnack(true)
-        this.getPoll(this.id).then(result => {
+        this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
           this.resultPoll = Object.assign({}, result)
-          this.setCurrentPoll(Object.assign({}, this.resultPoll))
         })
       }).catch(err => console.log('este es el error', err))
     }
   },
   mounted () {
-    this.getPoll(this.id).then(result => {
+    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.viewData = result.PollInstances.map(poll => poll.response_received)
       this.resultPoll = Object.assign({}, result)
-      this.setCurrentPoll(Object.assign({}, this.resultPoll))
     }).catch(err => console.log('este es el error', err))
   },
   watch: {

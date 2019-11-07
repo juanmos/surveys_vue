@@ -191,6 +191,13 @@ export default new Vuex.Store({
         dashboardRows: 1
       }
     }),
+    service('poll-instances', {
+      instanceDefaults: {
+        response_received: [],
+        removed: false,
+        _config_poll_id: 0
+      }
+    }),
     service('users-projects', {
       instanceDefaults: {
         _user_id: null,
