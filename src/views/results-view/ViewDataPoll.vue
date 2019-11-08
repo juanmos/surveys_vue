@@ -18,7 +18,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getDataHeaders" :responses="viewData"></poll-results-table>
+                    <poll-results-table :headers="getDataHeaders" :responses="getViewData"></poll-results-table>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -136,6 +136,12 @@ export default {
     ...mapState([
       'currentPoll'
     ]),
+    getViewData () {
+      return (this.resultPoll) ? this.resultPoll.PollInstances.map(poll => {
+        delete poll.response_received.page
+        return poll.response_received
+      }) : []
+    },
     getDataHeaders () {
       return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
         text: q.label ? q.label : q.original,
@@ -194,9 +200,6 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    ...mapActions([
-      'setCurrentPoll'
-    ]),
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
@@ -210,16 +213,16 @@ export default {
         this.setSnackMessage('Pregunta Editada')
         this.setShowSnack(true)
         this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-          this.resultPoll = Object.assign({}, result)
+          // this.resultPoll = Object.assign({}, result)
         })
       }).catch(err => console.log('este es el error', err))
     }
   },
-  mounted () {
+  created () {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-      this.viewData = result.PollInstances.map(poll => poll.response_received)
       this.resultPoll = Object.assign({}, result)
     }).catch(err => console.log('este es el error', err))
+    this.refresh()
   },
   watch: {
     resultPoll: function (value) {
