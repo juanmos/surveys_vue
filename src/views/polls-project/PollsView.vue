@@ -177,7 +177,6 @@
                         :items="listConfigPolls"
                         hide-actions
                         item-key="_id"
-                        striped hover
                         outlined
                       >
                       <template slot="items" slot-scope="props">
