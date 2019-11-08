@@ -224,11 +224,6 @@ export default {
     }).catch(err => console.log('este es el error', err))
     this.refresh()
   },
-  watch: {
-    resultPoll: function (value) {
-      this.viewData = value.PollInstances.map(poll => poll.response_received)
-    }
-  },
   components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator, ViewVariables }
 }
 </script>
