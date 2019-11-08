@@ -198,6 +198,15 @@ export default new Vuex.Store({
         _config_poll_id: 0
       }
     }),
+    service('web-survey-results', {
+      instanceDefaults: {
+        fecha_inicio: '',
+        fecha_fin: '',
+        answers: {},
+        _user_id: '',
+        _config_poll_id: ''
+      }
+    }),
     service('users-projects', {
       instanceDefaults: {
         _user_id: null,
