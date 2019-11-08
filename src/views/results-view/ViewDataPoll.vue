@@ -147,6 +147,7 @@ export default {
         text: q.label ? q.label : q.original,
         align: 'left',
         sortable: false,
+        code: q.code,
         value: key,
         open: q.open
       })) : []
