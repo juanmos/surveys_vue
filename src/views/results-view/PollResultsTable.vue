@@ -7,7 +7,7 @@
             class="elevation-1 resultsTable"
         >
             <template slot="items" slot-scope="props">
-                <td class="text-xs-center" v-for="(value, key) in props.item" :key="String(value) + Math.random()">
+                <td class="text-xs-center" v-for="(value, key, index) in props.item" :key="String(value) + Math.random()">
                     <span v-if="variablesMode && (key === 'values' || key === 'label')" @click="editLabelDialog = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
                         {{ props.item[key] }}
                     </span>
@@ -24,7 +24,7 @@
                       </v-chip>
                       <span v-else>
                           <span v-if="key !=='actors' && key !=='state'">
-                              {{ props.item[key] }}
+                            {{props.item[headers[index].code]}}
                           </span>
                       </span>
                     </span>
