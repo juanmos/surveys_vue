@@ -98,7 +98,8 @@
                               <v-list-tile-title>{{poolsseg.date_deliver}}</v-list-tile-title>
                               <v-list-tile-sub-title>Fecha de Entrega</v-list-tile-sub-title>
                             </v-list-tile-content>
-                          </v-list-tile>            </v-flex>
+                          </v-list-tile>
+                      </v-flex>
                         <v-divider inset></v-divider>
                       </v-layout>
                     </v-list>

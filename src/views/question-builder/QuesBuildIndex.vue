@@ -1,8 +1,5 @@
 <template>
 <div id="app">
-    <!-- If you want to show survey, uncomment the line below -->
-    <!-- survey :survey="survey"></survey-->
-    <!-- If you want to show survey editor, uncomment the line below -->
     <v-tabs
       color="black"
       show-arrows

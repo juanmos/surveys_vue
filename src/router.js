@@ -165,17 +165,17 @@ const PollsList = resolve => {
 const PollsListNew = resolve => {
   require.ensure(['./views/polls-project/PollsNew.vue'], () => {
     resolve(require('./views/polls-project/PollsNew.vue'))
-  }, 'polls-project-list')
+  }, 'pollsProjectNew')
 }
 const PollsListEdit = resolve => {
   require.ensure(['./views/polls-project/PollsForm.vue'], () => {
     resolve(require('./views/polls-project/PollsForm.vue'))
-  }, 'polls-project-list')
+  }, 'polls-project-edit')
 }
 const PollsListView = resolve => {
   require.ensure(['./views/polls-project/PollsView.vue'], () => {
     resolve(require('./views/polls-project/PollsView.vue'))
-  }, 'polls-project-list')
+  }, 'polls-project-view')
 }
 const UsersPollsList = resolve => {
   require.ensure(['./views/users-polls/UsersPollsList.vue'], () => {
