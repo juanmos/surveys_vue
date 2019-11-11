@@ -271,11 +271,11 @@
                                 </v-list-tile> -->
                                   <v-list-tile @click="goToViewConfigPolls(props.item._id)">
                                     <v-icon class="icon">ballot</v-icon>
-                                    <v-list-tile-title>Ver encuesta</v-list-tile-title>
+                                    <v-list-tile-title>Llenar encuesta</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="processPollsApp(props.item._id)">
-                                    <v-icon class="icon">phone_iphone</v-icon>
-                                    <v-list-tile-title>Procesar encuestas APP</v-list-tile-title>
+                                    <v-icon class="icon">sync</v-icon>
+                                    <v-list-tile-title>Procesar encuestas</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditDataConfigPolls(props.item._id)">
                                     <v-icon class="icon">edit</v-icon>

@@ -1,6 +1,5 @@
 <template>
 <div id="app" class="white" >
-  {{webResponse}}
     <div id="surveyElement">
             <survey :survey='survey'/>
     </div>
@@ -78,14 +77,14 @@ export default {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     saveResultPoll (data) {
-      console.log('save--', data);
       this.webResponse.fecha_fin = new Date()
       this.webResponse.answers = data
       this.webResponse._config_poll_id = this.$route.params.id
       const {WebSurveyResult} = this.$FeathersVuex
       const webResultAnswers = new WebSurveyResult(this.webResponse)
+      let that = this
       webResultAnswers.save().then((result) => {
-        this.goToList()
+        that.goToViewPolls()
       }, (err) => {
         console.log(err)
       })
@@ -100,6 +99,9 @@ export default {
          name = 'question-builder'
        }
        this.$router.push('/' + name +'/' + direccion)
+    },
+    goToViewPolls () {
+      this.$router.go(-1)
     }
   },
   mounted () {
