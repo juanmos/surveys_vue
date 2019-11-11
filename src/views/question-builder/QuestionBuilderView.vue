@@ -1,20 +1,9 @@
 <template>
 <div id="app" class="white" >
-    <!-- If you want to show survey, uncomment the line below -->
-    <survey :survey="survey"></survey>
-    <!-- If you want to show survey editor, uncomment the line below -->
-    <!--<v-card color="white">
-      <v-text-field
-      v-model="nameConfigPolls"
-      label="Nombre de la encuesta"
-      single-line
-      box
-      hide-details
-      :rules= "MyRules"
-      readonly
-    ></v-text-field>
-    </v-card>
-    <survey-editor :jsonData = "PollId" @dataSubmited = "getData"></survey-editor>-->
+    <div id="surveyElement">
+            <survey :survey='survey'/>
+    </div>
+    <div id="surveyResult"></div>
     <v-btn
     absolute
     dark
@@ -63,10 +52,18 @@ export default {
     SurveyEditor
   },
   data () {
+    var model = new SurveyVue.Model();
     return {
-      survey: '',
+      survey: model,
       PollId: '',
       _id: '',
+      webResponse: {
+        fecha_inicio: new Date(),
+        fecha_fin: new Date(),
+        answers: {},
+        _user_id: (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')._id) : this.$store.state.auth.user._id,
+        _config_poll_id: null
+      },
       _polls_id: '',
       nameConfigPolls: '',
       MyRules: [
@@ -79,36 +76,19 @@ export default {
   methods: {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
-    savePolls (value) {
-      let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim()}
-      // console.log('esta es mi data ', data)
-      const {ConfigPoll} = this.$FeathersVuex
-        let config = new ConfigPoll(data)
-        config.patch().then((result) => {
-          this.findConfigPolls({ query: {removed: false, _id: this._id} }).then(response => {
-            const config = response.data || response
-            console.log('edit ', config)
-            // this.alertConfig('Registro Modificado', 'success')
-            this.setSnackMessage('Registro modificado')
-            this.setSnackColor('success')
-            this.setShowSnack(true)
-            this.gotoList(response.data[0]._polls_project_id)
-          })
-        }, (err) => {
-          this.setSnackMessage('Error al guardar')
-          this.setShowSnack(true)
-          this.setSnackColor('error')
-          console.log(err)
-        })
+    saveResultPoll (data) {
+      this.webResponse.fecha_fin = new Date()
+      this.webResponse.answers = data
+      this.webResponse._config_poll_id = this.$route.params.id
+      const {WebSurveyResult} = this.$FeathersVuex
+      const webResultAnswers = new WebSurveyResult(this.webResponse)
+      let that = this
+      webResultAnswers.save().then((result) => {
+        that.goToViewPolls()
+      }, (err) => {
+        console.log(err)
+      })
     },
-     getData (value) {
-       // console.log('value ', value)
-       if (value) {
-        // console.log('mi data recibida ', JSON.parse(value))
-        this.namePoll = JSON.parse(value).pages[0].name
-        this.savePolls(value)
-       }
-     },
      gotoList (id) {
       let name = ''
       let direccion = this.$route.params.id
@@ -119,19 +99,28 @@ export default {
          name = 'question-builder'
        }
        this.$router.push('/' + name +'/' + direccion)
+    },
+    goToViewPolls () {
+      this.$router.go(-1)
     }
   },
-  created () {
+  mounted () {
     this.findConfigPolls({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
       this.PollId = response.data[0].construct
       this.survey = new SurveyVue.Model(this.PollId)
-      // ========================================
       this._polls_id = response.data[0]._polls_project_id
       this._id = response.data[0]._id
       this.nameConfigPolls = response.data[0].name
-      // console.log('dats ', this.PollId)
+      let that = this
+      this.survey.onComplete.add(function(result) {
+        that.saveResultPoll(result.data)
+      })
+      this.survey.onValueChanged.add(function (sender, options) {
+          var mySurvey = sender;
+          var questionName = options.title;
+          var newValue = options.value;
+      });
     })
-    // console.log('adessssss ', this.survey)
   }
 }
 </script>
