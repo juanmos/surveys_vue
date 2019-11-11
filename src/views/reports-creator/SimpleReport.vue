@@ -22,7 +22,7 @@
                  icon="room"
                  @showMap="dialogMap = !dialogMap"
                  title="LUGAR DE ENCUESTA:"
-                 value="República Dominicana"
+                 value=""
                  smallValue=""
                  sub-icon="mdi-calendar"
                  sub-text="Empresa Propraxis"
