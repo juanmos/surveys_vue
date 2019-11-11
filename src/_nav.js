@@ -1,11 +1,6 @@
 export default {
   items: [
     {
-      icon: 'table_chart',
-      url: '/dashboard',
-      title: 'Panel'
-    },
-    {
       icon: 'group',
       url: '/customers',
       title: 'Clientes'
@@ -15,11 +10,6 @@ export default {
       url: '/category-project',
       title: 'Categorías de encuesta'
     },
-    /* {
-      icon: 'settings_voice',
-      url: '/audios',
-      title: 'Audios'
-    }, */
     {
       icon: 'comment',
       url: '/polls-project',
