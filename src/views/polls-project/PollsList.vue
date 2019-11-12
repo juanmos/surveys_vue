@@ -365,6 +365,7 @@ export default {
           this.limit = response.limit
           this.total = response.total
           this.loaded = true
+          console.log('response---', response)
           this.listPollsProjects = response.data.map(data => (data.project))
         })
       }
