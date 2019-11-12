@@ -16,9 +16,9 @@
       </v-avatar>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <!-- <v-btn icon>
         <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-btn icon @click="showNotification = !showNotification">
         <v-badge color="error" overlap>
           <template slot="badge">2</template>
