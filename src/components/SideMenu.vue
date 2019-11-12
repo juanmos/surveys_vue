@@ -24,8 +24,8 @@
           </v-list-tile-content>
         </router-link>
         <v-divider inset></v-divider>
-        <v-subheader>Configuracion</v-subheader>
-        <v-list-group>
+        <v-subheader>Opciones del Sistema</v-subheader>
+        <!-- <v-list-group>
           <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title> <v-icon v-html="'category'"></v-icon> Categorías & Códigos</v-list-tile-title>
@@ -119,7 +119,7 @@
           <v-list-tile-content>
             <v-list-tile-title v-text="'Master de preguntas'"></v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+      </v-list-tile>  -->
 
         <v-divider inset></v-divider>
 

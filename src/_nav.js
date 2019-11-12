@@ -14,11 +14,11 @@ export default {
       icon: 'comment',
       url: '/polls-project',
       title: 'Proyectos de Encuestas'
-    },
+    }/*,
     {
       icon: 'assignment',
       url: '/electoral-projects',
       title: 'Proyectos de Control Electoral'
-    }
+    } */
   ]
 }
