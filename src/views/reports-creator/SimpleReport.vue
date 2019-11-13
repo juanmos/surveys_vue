@@ -13,7 +13,7 @@
                  :value="projectname"
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Empresa Propraxis"
+                 :sub-text="company"
                />
              </v-flex>
              <v-flex xs4>
@@ -25,7 +25,7 @@
                  value=""
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Empresa Propraxis"
+                 :sub-text="company"
                />
              </v-flex>
              <v-flex xs4>
@@ -36,7 +36,7 @@
                  :value="totalPolls"
                  smallValue=""
                  sub-icon="mdi-calendar"
-                 sub-text="Empresa Propraxis"
+                 :sub-text="company"
                />
              </v-flex>
              <v-flex xs6 v-for="(page, i) in pages"
@@ -106,7 +106,11 @@ export default {
   computed: {
     ...mapState([
       'currentEnv'
-    ])
+    ]),
+    company () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return `Empresa ${user.company.name}`
+    }
   },
   created () {
     this.getConfigPoll(this.$route.params.id).then(result => {

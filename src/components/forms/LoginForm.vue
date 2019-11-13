@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card dark>
       <div class="logo">
          <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
          <div class="title grey--text text--lighten-1 text-capitalize">ENCUESTAS</div>
@@ -38,7 +38,7 @@
         <v-spacer></v-spacer>
         <v-btn :disabled="!valid" @click="sendData" flat small color="blue">Entrar</v-btn>
         <v-spacer></v-spacer>
-        <a v-bind:href="getUrl">Single Sign-On</a>
+        <!-- <a v-bind:href="getUrl">Single Sign-On</a> -->
       </v-card-actions>
     </v-card>
 </template>
