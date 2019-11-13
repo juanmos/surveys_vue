@@ -1,6 +1,6 @@
 <template>
 
-    <v-app id="inspire">
+    <v-app id="inspire" dark>
       <loading-component v-if="loading"></loading-component>
           <particles-background class="particles"></particles-background>
           <v-layout align-center justify-center>
