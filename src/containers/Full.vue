@@ -14,7 +14,7 @@
         >
           <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
       </v-avatar>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title v-text="company"></v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- <v-btn icon>
         <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
@@ -77,7 +77,7 @@ export default {
   name: 'App',
   data () {
     return {
-      title: 'ENCUESTAS',
+      title: 'ENCUESTAS -PRT',
       clipped: true,
       notifications: [
         'Mike, Thanos is coming',
@@ -98,6 +98,10 @@ export default {
   computed: {
     user () {
       return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    },
+    company () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return user.company.name
     }
   },
   methods: {
