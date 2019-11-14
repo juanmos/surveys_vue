@@ -64,7 +64,15 @@
                       item-value="id"
                   ></v-autocomplete>
                 </v-flex>
-                <v-flex md4 xs12>
+                <v-flex md4 xs12 v-if="getRol === '5a8f05d594f896e07ca5053d'">
+                       <v-autocomplete
+                       :filter="customFilter"
+                       label="Empresa"
+                       v-model="poolsseg._company_id"
+                       :items="getCompanies"
+                       item-text="name"
+                       item-value="_id"
+                   ></v-autocomplete>
                 </v-flex>
                 <v-flex md4 xs12>
                 </v-flex>
@@ -97,6 +105,7 @@ export default {
       date_end: '',
       date_deliver: '',
       _customer_id: '',
+      _company_id: null,
       number_polls: '',
       state_polls: [],
       removed: false
@@ -129,6 +138,7 @@ export default {
     ]),
     ...mapActions('polls-project', { findcatItems: 'find' }),
     ...mapActions('customers', {findcustomers: 'find'}),
+    ...mapActions('companies', {findCompanies: 'find'}),
     sendData (values) {
       const {PollsProject} = this.$FeathersVuex
       let savePolls = new PollsProject(values)
@@ -154,6 +164,7 @@ export default {
         this.poolsseg._customer_id = this.Listcat[0]._customer_id
         this.poolsseg.number_polls = this.Listcat[0].number_polls
         this.poolsseg.state_polls = this.Listcat[0].state_polls[0]
+        this.poolsseg._company_id = this.Listcat[0]._company_id
       })
     },
     customFilter (item, queryText, itemText) {
@@ -164,8 +175,16 @@ export default {
   },
   computed: {
     ...mapGetters('customers', {findcustomerslist: 'find'}),
+    ...mapGetters('companies', {findCompaniesInStore: 'find'}),
     getcustomer () {
       return this.findcustomerslist({query: {removed: false}}).data
+    },
+    getCompanies () {
+      return this.findCompaniesInStore({query: {removed: false}}).data
+    },
+    getRol () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return (user) ? user._rol_id : ''
     }
   },
   mounted () {
@@ -181,8 +200,8 @@ export default {
     }
   },
   created () {
-    this.findcustomers({ query: {removed: false} }).then(response => {
-    })
+    this.findcustomers({ query: {removed: false} })
+    this.findCompanies({ query: {removed: false} })
   }
 }
 </script>

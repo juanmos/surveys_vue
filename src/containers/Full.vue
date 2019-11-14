@@ -77,7 +77,7 @@ export default {
   name: 'App',
   data () {
     return {
-      title: 'ENCUESTAS -PRT',
+      title: 'ENCUESTAS',
       clipped: true,
       notifications: [
         'Mike, Thanos is coming',
@@ -101,7 +101,7 @@ export default {
     },
     company () {
       let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
-      return user.company.name
+      return (user.company.name) ? user.company.name : 'ENCUESTAS'
     }
   },
   methods: {
