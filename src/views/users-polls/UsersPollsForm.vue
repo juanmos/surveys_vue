@@ -40,11 +40,12 @@
                   color="blue-grey lighten-2"
                   required
                 ></v-text-field>
-                <v-autocomplete v-if="newData" v-bind:items="getRoles"
+                <v-autocomplete v-bind:items="getRoles"
                 item-text="name"
                 item-value="_id"
                 v-model="userPolls._rol_id" label="Seleccione rol:"
                 ></v-autocomplete>
+
               <v-text-field
                   :append-icon="showPass ? 'visibility_off' : 'visibility'"
                   v-model="userPolls.password"

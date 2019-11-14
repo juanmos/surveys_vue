@@ -9,20 +9,10 @@
                   <v-tab>
                     Usuario
                   </v-tab>
-                  <v-tab>
-                    Asignar rol
-                  </v-tab>
                   <v-tab-item>
                     <v-card flat>
                       <v-card-text>
-                        <users-polls-form :values="dataUser" @dataSubmited="create"></users-polls-form>
-                      </v-card-text>
-                    </v-card>
-                  </v-tab-item>
-                  <v-tab-item>
-                    <v-card flat>
-                      <v-card-text>
-                        <users-polls-rol :values="dataUser" @dataSubmited="createUsersRol"></users-polls-rol>
+                        <users-polls-form :values="dataUser" @dataSubmited="edit"></users-polls-form>
                       </v-card-text>
                     </v-card>
                   </v-tab-item>
@@ -48,9 +38,12 @@ export default {
   methods: {
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     ...mapActions('users', { findUserPolls: 'find' }),
-    create (values) {
+    edit (values) {
       const {User} = this.$FeathersVuex
       const usersPolls = new User(values)
+      if (!usersPolls.password) {
+        delete usersPolls.password
+      }
       usersPolls.patch().then((result) => {
         this.findUserPolls({ query: {removed: false} }).then(response => {
           this.setShowSnack(true)
