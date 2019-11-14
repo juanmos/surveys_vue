@@ -60,15 +60,6 @@
               </v-list-tile-content>
             </v-list-tile>
 
-            <v-list-tile  :to="'/users-polls'">
-              <v-list-tile-action>
-                <v-icon v-html="'supervised_user_circle'"></v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title v-text="'Usuarios encuestadores'"></v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-
             <v-list-tile  :to="'/roles'">
               <v-list-tile-action>
                 <v-icon v-html="'group_add'"></v-icon>
@@ -121,6 +112,15 @@
           </v-list-tile-content>
       </v-list-tile>  -->
 
+      <v-list-tile  :to="'/users-polls'" v-if="getRol === '5a8f05d594f896e07ca5053d'">
+        <v-list-tile-action>
+          <v-icon v-html="'supervised_user_circle'"></v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title v-text="'Usuarios'"></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+
         <v-divider inset></v-divider>
 
         <v-list-tile @click="exit">
@@ -165,6 +165,12 @@ export default {
         window.localStorage.clear()
         window.location.replace(this.urlEnviroment + '?application=' + this.application)
       })
+    }
+  },
+  computed: {
+    getRol () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return (user) ? user._rol_id : ''
     }
   },
   watch: {

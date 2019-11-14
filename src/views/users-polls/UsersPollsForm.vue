@@ -40,11 +40,18 @@
                   color="blue-grey lighten-2"
                   required
                 ></v-text-field>
-                <v-autocomplete v-if="newData" v-bind:items="getRoles"
+                <v-autocomplete v-bind:items="getRoles"
                 item-text="name"
                 item-value="_id"
                 v-model="userPolls._rol_id" label="Seleccione rol:"
                 ></v-autocomplete>
+
+                <v-autocomplete v-bind:items="getCompanies"
+                item-text="name"
+                item-value="_id"
+                v-model="userPolls._company_id" label="Empresa:"
+                ></v-autocomplete>
+
               <v-text-field
                   :append-icon="showPass ? 'visibility_off' : 'visibility'"
                   v-model="userPolls.password"
@@ -82,6 +89,7 @@ export default {
       email: '',
       cedula: '',
       password: null,
+      _companay_id: null,
       confirmPassword: null,
       phones: '',
       _rol_id: null,
@@ -97,6 +105,7 @@ export default {
   }),
   methods: {
     ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('companies', { findCompanies: 'find' }),
     sendData () {
       if (this.valid) {
         this.$emit('dataSubmited', this.userPolls)
@@ -112,8 +121,12 @@ export default {
   computed: {
     ...mapState('roles', {loading: 'isFindPending'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
+    ...mapGetters('companies', {findCompaniesInStore: 'find'}),
     getRoles () {
-      return this.findRolesInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      return this.findRolesInStore({query: {removed: false, ...this.query}}).data
+    },
+    getCompanies () {
+      return this.findCompaniesInStore({query: {removed: false, ...this.query}}).data
     }
   },
   watch: {
@@ -125,12 +138,8 @@ export default {
     }
   },
   created () {
-    this.findRoles({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.roles = response.data
-    })
+    this.findRoles({query: {removed: false, $skip: 0, $limit: null, ...this.query}})
+    this.findCompanies({query: {removed: false, $skip: 0, $limit: null, ...this.query}})
   }
 }
 </script>
