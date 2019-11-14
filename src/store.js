@@ -322,7 +322,10 @@ export default new Vuex.Store({
     service('companies', {
       instanceDefaults: {
         removed: false,
-        name: ''
+        name: '',
+        address: '',
+        ruc: '',
+        phone: ''
       }
     }),
     auth({ userService: 'users' })

@@ -4,7 +4,7 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Administración de Usuarios</v-subheader>
+              <v-subheader>Administración de Empresas</v-subheader>
               <v-card-title>
                 <v-flex xs6>
                     <v-text-field
@@ -14,18 +14,11 @@
                       single-line
                       hide-details
                     ></v-text-field>
-                    <v-select
-                      v-model="filterRol"
-                      v-bind:items="getRoles"
-                      item-text="name"
-                      item-value="_id"
-                      label="Rol"
-                    ></v-select>
                 </v-flex>
               </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getUsersPolls"
+                  :items="getCompanies"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -53,24 +46,42 @@
                       </td>
                       <td>
                         <v-edit-dialog
-                          :return-value.sync="props.item.email"
+                          :return-value.sync="props.item.ruc"
                           lazy
-                          @save="edit(props.item.email, props.item, 'email')"
+                          @save="edit(props.item.ruc, props.item, 'ruc')"
                           @cancel="cancel"
                           @open="open"
                           @close="close"
-                        > {{ props.item.email }}
+                        > {{ props.item.ruc }}
                           <v-text-field
                             slot="input"
-                            v-model="props.item.email"
-                            label="Editar email"
+                            v-model="props.item.ruc"
+                            label="Editar ruc"
                             single-line
                             counter
                             :rules="MyRules"
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
-                      <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
+                      <td>
+                        <v-edit-dialog
+                          :return-value.sync="props.item.address"
+                          lazy
+                          @save="edit(props.item.address, props.item, 'address')"
+                          @cancel="cancel"
+                          @open="open"
+                          @close="close"
+                        > {{ props.item.address }}
+                          <v-text-field
+                            slot="input"
+                            v-model="props.item.address"
+                            label="Editar address"
+                            single-line
+                            counter
+                            :rules="MyRules"
+                          ></v-text-field>
+                        </v-edit-dialog>
+                      </td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -177,12 +188,12 @@ export default {
           sortable: true,
           value: 'name'
         },
-        { text: 'Correo electrónico',
-          value: 'url',
+        { text: 'RUC',
+          value: 'ruc',
           sortable: false
         },
-        { text: 'Rol',
-          value: 'rol',
+        { text: 'Dirección',
+          value: 'address',
           sortable: false
         },
         { text: 'Acciones',
@@ -194,8 +205,6 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
-      filterRol: null,
-      roles: null,
       rules: validations,
       message: '',
       showMsg: false,
@@ -206,32 +215,22 @@ export default {
       total: 1,
       itemSelected: null,
       loaded: false,
-      categories: [],
       query: {},
       dialog: false
     }
   },
   methods: {
-    ...mapActions('users', { findUsersPolls: 'find' }),
-    ...mapActions('roles', { findRoles: 'find' }),
+    ...mapActions('companies', { findCompanies: 'find' }),
     goToNew (code) {
-      this.$router.push('/users-polls-new')
+      this.$router.push('/company-new')
     },
     goToEdit (code) {
-      this.$router.push('/users-polls-edit/' + code)
+      this.$router.push('/company-edit/' + code)
     },
     save (val) {
       this.snack = true
       this.snackColor = 'success'
       this.snackText = 'Data saved'
-    },
-    getNameRol (id) {
-      let data = this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      let name = ''
-      if (data.length > 0 && data[0].name) {
-        name = data[0].name
-      }
-      return name
     },
     cancel () {
       this.snack = true
@@ -248,75 +247,55 @@ export default {
     },
     edit (val, elem, field) {
       if (val !== '') {
-        const {UsersPoll} = this.$FeathersVuex
-        const usersPolls = new UsersPoll(elem)
-        usersPolls[field] = val
-        usersPolls.patch().then((result) => {
-          this.findUsersPolls({ query: {removed: false} }).then(response => {
+        const {Company} = this.$FeathersVuex
+        const company = new Company(elem)
+        company[field] = val
+        company.patch().then((result) => {
+          this.findCompanies({ query: {removed: false} }).then(response => {
             return response.data || response
           })
         })
       }
     },
     del () {
-      const {UsersPoll} = this.$FeathersVuex
-      const userPolls = new UsersPoll(this.itemSelected)
-      userPolls.removed = true
-      userPolls.patch().then((result) => {
-        this.findUsersPolls({ query: {removed: false} }).then(response => {
+      const {Company} = this.$FeathersVuex
+      const company = new Company(this.itemSelected)
+      company.removed = true
+      company.patch().then((result) => {
+        this.findCompanies({ query: {removed: false} }).then(response => {
           return response.data || response
         })
       })
     }
   },
   computed: {
-    ...mapState('users', {loading: 'isFindPending'}),
-    ...mapState('users', { paginationVal: 'pagination' }),
-    ...mapGetters('users', {findUsersPollsInStore: 'find'}),
-    ...mapGetters('roles', {findRolesInStore: 'find'}),
-    getUsersPolls () {
-      if (this.filterRol != null) {
-        return this.findUsersPollsInStore({query: {removed: false, _rol_id: this.filterRol, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      } else {
-        return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
-      }
+    ...mapState('companies', {loading: 'isFindPending'}),
+    ...mapState('companies', { paginationVal: 'pagination' }),
+    ...mapGetters('companies', {findCompaniesInStore: 'find'}),
+    getCompanies () {
+      return this.findCompaniesInStore({query: {removed: false, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
     getSkip () {
       return this.page === 1 ? 0 : Math.round(((this.page - 1) * this.limit))
-    },
-    getRoles () {
-      let listRoles = this.findRolesInStore({query: {removed: false, ...this.query}}).data
-      let option = {
-        'name': 'TODOS',
-        '_id': null
-      }
-      listRoles.push(option)
-      return listRoles
     }
   },
   watch: {
     page () {
-      this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findCompanies({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findUsersPolls({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findCompanies({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
       this.categories = response.data
-    })
-    this.findRoles({query: {removed: false, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.roles = response.data
     })
   },
   components: {LoadingComponent, EditableField}

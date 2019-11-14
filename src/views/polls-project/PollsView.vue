@@ -274,7 +274,7 @@
                                     <v-icon class="icon">ballot</v-icon>
                                     <v-list-tile-title>Llenar encuesta</v-list-tile-title>
                                   </v-list-tile>
-                                  <v-list-tile @click="processPollsApp(props.item._id)">
+                                  <v-list-tile @click="processPollsApp(props.item._id)" v-if="getRol === '5a8f05d594f896e07ca5053d'">
                                     <v-icon class="icon">sync</v-icon>
                                     <v-list-tile-title>Procesar encuestas</v-list-tile-title>
                                   </v-list-tile>
@@ -645,6 +645,10 @@ export default {
     },
     getCategorySegmentationPolls () {
       return this.findCategorySegmentationPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, _project_poll_id: this.$route.params.id, ...this.query}}).data
+    },
+    getRol () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return (user) ? user._rol_id : ''
     }
   },
   mounted () {

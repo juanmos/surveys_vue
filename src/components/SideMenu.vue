@@ -112,6 +112,15 @@
           </v-list-tile-content>
       </v-list-tile>  -->
 
+      <v-list-tile  :to="'/company-list'" v-if="getRol === '5a8f05d594f896e07ca5053d'">
+        <v-list-tile-action>
+          <v-icon v-html="'apartment'"></v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title v-text="'Empresas'"></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+
       <v-list-tile  :to="'/users-polls'" v-if="getRol === '5a8f05d594f896e07ca5053d'">
         <v-list-tile-action>
           <v-icon v-html="'supervised_user_circle'"></v-icon>

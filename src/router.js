@@ -375,6 +375,21 @@ const SimpleReport = resolve => {
     resolve(require('./views/reports-creator/SimpleReport.vue'))
   }, 'simple-report-view')
 }
+const CompanyList = resolve => {
+  require.ensure(['./views/companies/CompanyList.vue'], () => {
+    resolve(require('./views/companies/CompanyList.vue'))
+  }, 'company-list')
+}
+const CompanyNew = resolve => {
+  require.ensure(['./views/companies/CompanyNew.vue'], () => {
+    resolve(require('./views/companies/CompanyNew.vue'))
+  }, 'company-new')
+}
+const CompanyEdit = resolve => {
+  require.ensure(['./views/companies/CompanyEdit.vue'], () => {
+    resolve(require('./views/companies/CompanyEdit.vue'))
+  }, 'company-edit')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -763,6 +778,22 @@ export default new Router({
           name: 'simple-report',
           props: true,
           component: SimpleReport
+        },
+        {
+          path: 'company-list',
+          name: 'company-list',
+          props: true,
+          component: CompanyList
+        },
+        {
+          path: 'company-new',
+          name: 'CompanyNew',
+          component: CompanyNew
+        },
+        {
+          path: 'company-edit/:_id',
+          name: 'CompanyEdit',
+          component: CompanyEdit
         }
       ]
     },
