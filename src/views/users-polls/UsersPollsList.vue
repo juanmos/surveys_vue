@@ -71,6 +71,7 @@
                         </v-edit-dialog>
                       </td>
                       <td class="text-xs-left">{{getNameRol(props.item._rol_id)}}</td>
+                      <td class="text-xs-left">{{props.item.company.name}}</td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -183,6 +184,10 @@ export default {
         },
         { text: 'Rol',
           value: 'rol',
+          sortable: false
+        },
+        { text: 'Empresa',
+          value: 'company',
           sortable: false
         },
         { text: 'Acciones',
