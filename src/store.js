@@ -319,6 +319,12 @@ export default new Vuex.Store({
         _config_poll_id: null
       }
     }),
+    service('companies', {
+      instanceDefaults: {
+        removed: false,
+        name: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
