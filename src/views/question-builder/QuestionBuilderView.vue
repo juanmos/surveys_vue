@@ -61,7 +61,7 @@ export default {
         fecha_inicio: new Date(),
         fecha_fin: new Date(),
         answers: {},
-        _user_id: (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')._id) : this.$store.state.auth.user._id,
+        _user_id: JSON.parse(localStorage.getItem('user'))._id,
         _config_poll_id: null
       },
       _polls_id: '',
