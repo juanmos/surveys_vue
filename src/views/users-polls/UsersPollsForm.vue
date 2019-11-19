@@ -135,6 +135,10 @@ export default {
       if (dat) {
         this.newData = false
       }
+    },
+    'userPolls._rol_id': function (val) {
+      let currentRol = this.getRoles.find(rol => rol._id === val)
+      this.userPolls.permissions = [currentRol.code]
     }
   },
   created () {
