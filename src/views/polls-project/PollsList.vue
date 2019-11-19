@@ -5,19 +5,19 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-card-title>
-                <span class="title text-sm-left">Proyecto Encuestas
+                <!-- <span class="title text-sm-left">Proyecto Encuestas
                   <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
-                </span>
+              </span> -->
                 <v-spacer></v-spacer>
                 <span class="title text-sm-left">
-                  <v-autocomplete
+                 <!-- <v-autocomplete
                       :filter="customFilter"
                       label="Filtro por estado"
                       v-model="state_polls_filter"
                       :items="itemsestado"
                       item-text="name"
                       item-value="id"
-                  ></v-autocomplete>
+                  ></v-autocomplete> -->
                 </span>
 
                 <v-spacer></v-spacer>
@@ -42,7 +42,7 @@
                           {{props.item.name}}
                       </td>
                       <td class="text-sm-left">
-                          {{props.item.clientes.name}}
+                          {{(props.item.company) ? props.item.company.name : ''}}
                       </td>
                       <td class="text-sm-left">
                          {{props.item.date_start | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
@@ -220,10 +220,10 @@ export default {
           value: 'name'
         },
         {
-          text: 'Cliente',
+          text: 'Empresa',
           align: 'left',
           sortable: false,
-          value: '_customer_id'
+          value: '_company_id'
         },
         {
           text: 'Fecha Inicio',
@@ -351,24 +351,13 @@ export default {
       this.snackText = 'Dialog opened'
     },
     getData () {
-      if (this.user === null || !this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
-        this.query = {}
-        this.findPolls({query: {removed: false, ...this.query}}).then(response => {
-          this.limit = response.limit
-          this.total = response.total
-          this.loaded = true
-          this.listPollsProjects = response.data
-        })
-      } else {
-        this.query._user_id = this.user._id
-        this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
-          this.limit = response.limit
-          this.total = response.total
-          this.loaded = true
-          console.log('response---', response)
-          this.listPollsProjects = response.data.map(data => (data.project))
-        })
-      }
+      this.query = {}
+      this.findPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.loaded = true
+        this.listPollsProjects = response.data
+      })
     },
     customFilter (item, queryText, itemText) {
       const textOne = item.name.toLowerCase()
@@ -418,8 +407,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('users-projects', {loading: 'isFindPending'}),
-    ...mapState('users-projects', { paginationVal: 'pagination' }),
+    ...mapState('polls-project', {loading: 'isFindPending'}),
+    ...mapState('polls-project', { paginationVal: 'pagination' }),
     ...mapGetters('polls-project', {findPollsInStore: 'find'}),
     ...mapGetters('users-projects', {findUsersProjectsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
@@ -440,29 +429,7 @@ export default {
     }
   },
   created () {
-    this.findRoles({query: {removed: false, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-    })
     this.user = this.getUserCurrent()
-    if (this.user === null || !this.user.rol || this.user.rol.name === 'Administrador' || this.user.rol.name === 'Super Admin') {
-      this.query = {}
-    } else {
-      this.query._user_id = this.user._id
-    }
-    this.findPolls({query: {removed: false}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      // this.loaded = true
-      this.pools = response.data
-    })
-    this.findUsersProjects({query: {removed: false, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      // this.loaded = true
-      this.usersProjects = response.data.map(data => (data.project))
-    })
     this.getData()
   },
   components: {LoadingComponent, EditableField, SearchAutocomplete}
