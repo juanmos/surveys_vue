@@ -265,7 +265,6 @@ export default {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
-      this.clients = response.data
     })
   },
   components: {LoadingComponent, EditableField}
