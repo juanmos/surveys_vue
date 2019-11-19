@@ -5,9 +5,9 @@
         <v-flex xs12>
             <v-card :flat="true">
               <v-card-title>
-                <!-- <span class="title text-sm-left">Proyecto Encuestas
-                  <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field>
-              </span> -->
+                  <span class="title text-sm-left">Proyecto de Encuestas
+                  <!-- <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field> -->
+                </span>
                 <v-spacer></v-spacer>
                 <span class="title text-sm-left">
                  <!-- <v-autocomplete
