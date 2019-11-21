@@ -55,38 +55,8 @@ export default {
             'color': '#fff'
           }
         },
-        xAxis: {
-          type: 'category',
-          labels: {
-            overflow: 'justify',
-            style: {
-              color: '#FFF',
-              'font-weight': 'bold'
-            }
-          }
-        },
-        yAxis: {
-          min: 0,
-          style: {
-            color: '#fff',
-            'font-weight': 'bold'
-          },
-          title: {
-            text: '',
-            align: 'high',
-            style: {
-              color: '#fff'
-            }
-          },
-          labels: {
-            overflow: 'justify',
-            style: {
-              color: '#FFF'
-            }
-          }
-        },
         legend: {
-          enabled: false,
+          enabled: true,
           itemStyle: {
             color: '#FFF'
           }
@@ -102,7 +72,8 @@ export default {
               enabled: true,
               format: '<b>{point.name}</b>: {point.percentage:.1f} %',
               connectorColor: 'silver'
-            }
+            },
+            showInLegend: true
           }
         },
         labels: {
