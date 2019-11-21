@@ -15,6 +15,11 @@
             </v-tab>
             <v-tab
                 ripple>
+                INVOLUCRADOS
+                <v-icon>supervised_user_circle</v-icon>
+            </v-tab>
+            <v-tab
+                ripple>
                 CATEGORIAS
                 <v-icon>ballot</v-icon>
             </v-tab>
@@ -46,7 +51,7 @@
                                   <v-icon color="indigo">perm_contact_calendar</v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                              <v-list-tile-title>{{poolsseg.nomcliente}}</v-list-tile-title>
+                              <v-list-tile-title>{{poolsseg.clientes.name}}</v-list-tile-title>
                               <v-list-tile-sub-title>Nombre del Cliente</v-list-tile-sub-title>
                             </v-list-tile-content>
                           </v-list-tile>
@@ -105,6 +110,51 @@
                     </v-list>
                 </v-card>
             </v-tab-item>
+            <v-tab-item
+            >
+
+            <v-card>
+               <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users`" label="usuario"></search-autocomplete>
+                <v-card-text>
+                <v-list>
+                  <v-list-tile
+                    v-for="member in poolsseg.userPolls"
+                    :key="member._id"
+                    avatar
+                  >
+                    <v-list-tile-avatar>
+                      <img :src="`${urlEnviroment}/images/avatar.png`">
+                    </v-list-tile-avatar>
+
+                    <v-list-tile-content>
+                      <v-list-tile-title v-text="member.name"></v-list-tile-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-menu
+                            bottom
+                            transition="slide-y-transition"
+                          >
+                            <v-btn
+                              slot="activator"
+                              color="primary"
+                              flat
+                              icon
+                            >
+                            <v-icon>more_vert</v-icon>
+                            </v-btn>
+                            <v-list>
+                              <v-list-tile>
+                                <v-icon>delete</v-icon> <v-list-tile-title @click="deleteMember(member._id)">Quitar acceso a miembro</v-list-tile-title>
+                              </v-list-tile>
+                            </v-list>
+                          </v-menu>
+                    </v-list-tile-action>
+                  </v-list-tile>
+                  <v-divider></v-divider>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
             <v-tab-item
             >
                 <v-card flat>
@@ -350,6 +400,8 @@ import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
 import VWidget from './../../components/VWidget'
 import QuestionBuildIndex from '../question-builder/QuesBuildIndex'
+import SearchAutocomplete from './../../components/SearchAutocomplete'
+const enviroment = require('./../../../config/enviroment.json')
 Vue.use(VueMoment, {
   moment
 })
@@ -396,6 +448,9 @@ export default {
       date_end: '',
       date_deliver: '',
       _customer_id: '',
+      clientes: {
+        name: ''
+      },
       number_polls: '',
       state_polls: [],
       removed: false
@@ -431,6 +486,7 @@ export default {
       6: 'blue',
       7: 'red'
     },
+    urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
     dialogEditConfiPolls: false,
     addConfigPolls: false,
     dialogDeleteConfigPolls: false,
@@ -447,7 +503,8 @@ export default {
   }),
   components: {
     VWidget,
-    QuestionBuildIndex
+    QuestionBuildIndex,
+    SearchAutocomplete
   },
   methods: {
     ...mapActions([
@@ -455,7 +512,7 @@ export default {
       'setShowSnack'
     ]),
     ...mapActions('category-segmantation-polls', { findCategorySegmentationPolls: 'find' }),
-    ...mapActions('polls-project', { findcatItems: 'find' }),
+    ...mapActions('polls-project', { getPoll: 'get' }),
     ...mapActions('customers', {findcustomers: 'find'}),
     ...mapActions('poll-category', { findpollcateg: 'find' }),
     ...mapActions('category-segmentation', { findsegmentos: 'find' }),
@@ -467,18 +524,13 @@ export default {
       return this.colors[status]
     },
     cargaredicion (elementid) {
-      this.findcatItems({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
-        this.Listcat = response.data
-        this.poolsseg._id = this.$route.params.id
-        this.poolsseg.name = this.Listcat ? this.Listcat[0].name : ''
-        this.poolsseg.date_start = moment.tz(this.Listcat[0].date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
-        this.poolsseg.date_end = moment.tz(this.Listcat[0].date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
-        this.poolsseg.date_deliver = moment.tz(this.Listcat[0].date_deliver, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
-        this.poolsseg._customer_id = this.Listcat[0]._customer_id
-        this.poolsseg.nomcliente = this.Listcat[0].clientes.name
-        this.poolsseg.number_polls = this.Listcat[0].number_polls
-        this.poolsseg.state_polls = this.Listcat[0].state_polls[0]
-        this.poolsseg.state_polls_name = this.itemsestado[this.Listcat[0].state_polls[0] - 1].name
+      this.getPoll(this.$route.params.id).then(response => {
+        this.poolsseg = response
+        this.poolsseg.date_start = moment.tz(response.date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
+        this.poolsseg.date_end = moment.tz(response.date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
+        this.poolsseg.date_deliver = moment.tz(response.date_deliver, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
+        this.poolsseg.state_polls = response.state_polls[0]
+        // this.poolsseg.state_polls_name = this.itemsestado[response.state_polls[0] - 1].name
       })
       this.findpollcateg({query: {_polls_project_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
         this.items = response.data
@@ -544,8 +596,32 @@ export default {
 
       })
     },
+    deleteMember (id) {
+      const {PollsProject} = this.$FeathersVuex
+      let pollProject = new PollsProject(this.poolsseg)
+      this.poolsseg.userPolls = this.poolsseg.userPolls.filter(userPoll => userPoll._id !== id)
+      pollProject.members = pollProject.members.length === 1 ? [] : pollProject.members.filter(member => member !== id)
+      pollProject.save().then(result => {
+        this.setSnackMessage('Eliminado Involucrado')
+        this.setShowSnack(true)
+      })
+    },
+    saveMembers (event, userId) {
+      const {PollsProject} = this.$FeathersVuex
+      let pollsProject = new PollsProject(this.poolsseg)
+      pollsProject.members = [...new Set(this.poolsseg.members.concat(event))]
+      pollsProject.save()
+        .then(response => {
+          this.poolsseg.userPolls = response.userPolls
+          this.setSnackMessage('Agregados involucrados en proyecto')
+          this.setShowSnack(true)
+        }).catch(err => {
+          this.setSnackColor('danger')
+          this.setSnackMessage(`Agregados involucrados en proyecto ${err}`)
+          this.setShowSnack(true)
+        })
+    },
     savecategory () {
-      // console.log('el nombre ', this.itemsegmento)
       this.items2._project_poll_id = this.$route.params.id
       this.items2._categorySegmentation_id = this.selectcategory.toString()
       this.findsegmentos({query: {removed: false, _id: this.items2._categorySegmentation_id}}).then(responseData => {

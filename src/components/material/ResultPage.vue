@@ -29,7 +29,7 @@
       <v-container fluid
       grid-list-lg>
           <v-layout row wrap>
-            <v-flex xs12 v-for="(question, i) in getQuestionsPage"
+            <v-flex xs6 v-for="(question, i) in getQuestionsPage"
             :key="i">
             <v-card >
               <result-question :question="question"></result-question>

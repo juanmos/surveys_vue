@@ -6,7 +6,7 @@
             :items="searchedResults"
             box
             color="blue-grey lighten-2"
-            :label="fromStudy ? '' : `Listado de ${label}`"
+            :label="fromStudy ? '' : `Buscar ${label}...`"
             item-text="name"
             item-value="_id"
             hide-no-data
