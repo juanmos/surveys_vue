@@ -11,7 +11,7 @@
         dark
       >
       <span style="">
-        <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px;"
+        <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
           class="title mb-2"
           v-text="title"
         >
