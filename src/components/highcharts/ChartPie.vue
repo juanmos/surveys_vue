@@ -31,6 +31,9 @@ export default {
       return (this.question) ? {
         chart: {
           type: 'pie',
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
           backgroundColor: 'rgb(48, 48, 48)'
         },
         pane: {
@@ -92,16 +95,13 @@ export default {
           enabled: false
         },
         plotOptions: {
-          column: {
-            dataLabels: {
-              enabled: true
-            }
-          },
-          series: {
-            borderWidth: 0,
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
             dataLabels: {
               enabled: true,
-              format: '{point.y:.1f}%'
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+              connectorColor: 'silver'
             }
           }
         },
@@ -113,7 +113,7 @@ export default {
         },
         tooltip: {
           //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <span style="color:{point.color}"> Total:</span><b>{point.total}</b><br/>'
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <span style="color:{point.color}"><br/>'
         }
       } : {}
     },
