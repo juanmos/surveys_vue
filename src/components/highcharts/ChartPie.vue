@@ -30,7 +30,7 @@ export default {
     getChartOptions () {
       return (this.question) ? {
         chart: {
-          type: 'column',
+          type: 'pie',
           backgroundColor: 'rgb(48, 48, 48)'
         },
         pane: {
@@ -121,12 +121,7 @@ export default {
       return this.dataChart
     }
   },
-  watch: {
-    /* graphicType: function (val) {
-      console.log('val--', val)
-      this.type = val
-    } */
-  },
+  watch: {},
   components: {}
 }
 </script>

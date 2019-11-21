@@ -39,7 +39,7 @@
                  :sub-text="company"
                />
              </v-flex>
-             <v-flex xs6 v-for="(page, i) in pages"
+             <v-flex xs12 v-for="(page, i) in pages"
              :key="i">
                <result-page
                  color="red"

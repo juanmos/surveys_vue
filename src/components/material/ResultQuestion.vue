@@ -12,14 +12,21 @@
         adjust
         </v-icon>
       </span>Pregunta: <span>{{currentQuestion.label}}</span>
+      <v-radio-group v-model="graphicType" row label="Tipo de gráfico: " style="margin-left: 23px;">
+        <v-radio label="Columna" value="column"></v-radio>
+        <v-radio label="Pastel" value="pie"></v-radio>
+      </v-radio-group>
     </label>
   </div>
-  <chart :question="currentQuestion" :graphicType="graphicType"></chart>
+  <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
+  <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
+
   </v-card>
 </template>
 
 <script>
 import Chart from './../../components/highcharts/Chart'
+import ChartPie from './../../components/highcharts/ChartPie'
 export default {
   inheritAttrs: false,
   props: {
@@ -53,7 +60,7 @@ export default {
       // console.log('va---', val);
     }
   },
-  components: {Chart}
+  components: {Chart, ChartPie}
 }
 </script>
 

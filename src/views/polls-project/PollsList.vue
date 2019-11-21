@@ -76,9 +76,9 @@
                             <!--<v-list-tile @click="goToListConfigPolls(props.item._id)">
                               <v-icon>view_list</v-icon> <v-list-tile-title>Encuesta</v-list-tile-title>
                             </v-list-tile> -->
-                            <v-list-tile @click="openMembers(props.item._id)">
+                            <!-- <v-list-tile @click="openMembers(props.item._id)">
                               <v-icon>face</v-icon> <v-list-tile-title>Involucrados</v-list-tile-title>
-                            </v-list-tile>
+                          </v-list-tile> -->
                             <!-- <v-list-tile @click="goToCategoriesSegmentationPolls(props.item._id)">
                               <v-icon>receipt</v-icon> <v-list-tile-title>Segmentación</v-list-tile-title>
                             </v-list-tile> -->
