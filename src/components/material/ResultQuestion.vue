@@ -1,6 +1,26 @@
 <template>
   <v-card
   >
+  <v-card
+    :color="color"
+    class="v-card--material__header"
+    dark
+  >
+  <span style="">
+    <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px;"
+      class="title mb-2"
+      v-text="text"
+    >
+  </h4>
+  </span>
+  <span style="margin-left: 10px;padding-top:10px;">
+    <v-icon
+      size="20"
+    >
+    dehaze
+    </v-icon>
+  </span>
+  </v-card>
   <div style="margin-bottom: 20px;">
     <label style="margin-left: 20px;font-weight:bold;">
       <span style="margin-right: 10px;">
@@ -36,7 +56,9 @@ export default {
   },
   data: (state) => ({
     currentQuestion: {},
-    graphicType: 'column'
+    graphicType: 'column',
+    color: '#858d8e',
+    text: ''
   }),
   methods: {
     getQuestionsPage (questions) {
