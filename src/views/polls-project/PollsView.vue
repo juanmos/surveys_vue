@@ -324,7 +324,7 @@
                                     <v-icon class="icon">ballot</v-icon>
                                     <v-list-tile-title>Llenar encuesta</v-list-tile-title>
                                   </v-list-tile>
-                                  <v-list-tile @click="processPollsApp(props.item._id)" v-if="getRol === '5a8f05d594f896e07ca5053d'">
+                                  <v-list-tile @click="processPollsApp(props.item._id)" v-if="getRol === '5a8f05d594f896e07ca5053d' || getRol === '5bf5900377870c707b0bb2f7'">
                                     <v-icon class="icon">sync</v-icon>
                                     <v-list-tile-title>Procesar encuestas</v-list-tile-title>
                                   </v-list-tile>
