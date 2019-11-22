@@ -610,15 +610,16 @@ export default {
       const {PollsProject} = this.$FeathersVuex
       let pollsProject = new PollsProject(this.poolsseg)
       pollsProject.members = [...new Set(this.poolsseg.members.concat(event))]
+      let that = this
       pollsProject.save()
         .then(response => {
-          this.poolsseg.userPolls = response.userPolls
-          this.setSnackMessage('Agregados involucrados en proyecto')
-          this.setShowSnack(true)
+          that.cargaredicion(this.$route.params.id)
+          that.setSnackMessage('Agregados involucrados en proyecto')
+          that.setShowSnack(true)
         }).catch(err => {
-          this.setSnackColor('danger')
-          this.setSnackMessage(`Agregados involucrados en proyecto ${err}`)
-          this.setShowSnack(true)
+          that.setSnackColor('danger')
+          that.setSnackMessage(`Agregados involucrados en proyecto ${err}`)
+          that.setShowSnack(true)
         })
     },
     savecategory () {
