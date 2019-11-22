@@ -3,6 +3,25 @@
     <!-- If you want to show survey, uncomment the line below -->
     <!-- survey :survey="survey"></survey-->
     <!-- If you want to show survey editor, uncomment the line below -->
+    <v-dialog v-model="dialogWait" max-width="900">
+        <v-card v-if="dialogWait">
+          <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+            <h4>GUARDANDO ENCUESTA</h4>
+          </v-flex>
+          <v-card-text>
+              <center>
+                  <v-img
+                    src="/images/loader.gif"
+                    img-alt="Image"
+                    height="70"
+                    width="70"
+                    aspect-ratio="2.75"
+                  ></v-img>
+                <h5>LA ENCUESTA SE ESTA GUARDANDO. ESPERE POR FAVOR...</h5>
+              </center>
+          </v-card-text>
+        </v-card>
+    </v-dialog>
     <v-card color="white">
       <v-text-field
       v-model="nameConfigPolls"
@@ -173,6 +192,7 @@ export default {
     var model = new SurveyVue.Model(json)
     return {
       survey: model,
+      dialogWait: false,
       PollId: '',
       _id: '',
       nameConfigPolls: '',
@@ -188,6 +208,7 @@ export default {
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (value) {
+      this.dialogWait = true
       let data = { _id: this._id, name: this.nameConfigPolls, construct: value.trim() , _polls_project_id : this._polls_project_id}
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
@@ -198,6 +219,7 @@ export default {
             this.setSnackMessage('Registro modificado')
             this.setSnackColor('success')
             this.setShowSnack(true)
+            this.dialogWait = false
             // this.gotoList(response.data[0]._polls_project_id) regresar
           })
         }, (err) => {
@@ -214,7 +236,7 @@ export default {
        }
      },
      gotoList (id) {
-      this.$router.push({ name: 'ViewPollsprojects', params: { id: id} })
+       this.$router.go(-1)
     }
   },
   created () {

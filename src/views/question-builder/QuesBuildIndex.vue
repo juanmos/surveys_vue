@@ -1,5 +1,24 @@
 <template>
 <div id="app">
+  <v-dialog v-model="dialogWait" max-width="900">
+      <v-card v-if="dialogWait">
+        <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+          <h4>GURDANDO ENCUESTA</h4>
+        </v-flex>
+        <v-card-text>
+            <center>
+                <v-img
+                  src="/images/loader.gif"
+                  img-alt="Image"
+                  height="70"
+                  width="70"
+                  aspect-ratio="2.75"
+                ></v-img>
+              <h5>LA ENCUESTA SE ESTA GUARDANDO. ESPERE POR FAVOR...</h5>
+            </center>
+        </v-card-text>
+      </v-card>
+  </v-dialog>
     <v-tabs
       color="black"
       show-arrows
@@ -189,6 +208,7 @@ export default {
       survey: model,
       searchPollsProject: '',
       nameConfigPolls: '',
+      dialogWait: false,
       MyRules: [
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
@@ -208,6 +228,7 @@ export default {
     ...mapActions('category-segmantation-polls', { findCategorySegmantationPolls: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     savePolls (name, value) {
+      this.dialogWait = true
       let data = {
         name,
         status: 'CREADA',
@@ -224,6 +245,7 @@ export default {
             this.setSnackMessage('Registro guardado')
             this.setSnackColor('success')
             this.setShowSnack(true)
+            this.dialogWait = false
             // this.gotoList()
           })
         }, (err) => {
@@ -274,13 +296,7 @@ export default {
        }
      },
      gotoList () {
-       let name = ''
-       if (!this.$route.params.data) {
-         name = 'view-polls-project'
-       } else {
-         name = 'question-builder'
-       }
-       this.$router.push('/' + name +'/' + this.$route.params.id)
+       this.$router.go(-1)
     },
     NameChange () {
       if (this.nameConfigPolls !== '') {
