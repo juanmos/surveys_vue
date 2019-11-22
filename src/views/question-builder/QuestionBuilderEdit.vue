@@ -198,7 +198,7 @@ export default {
             this.setSnackMessage('Registro modificado')
             this.setSnackColor('success')
             this.setShowSnack(true)
-            this.gotoList(response.data[0]._polls_project_id)
+            // this.gotoList(response.data[0]._polls_project_id) regresar
           })
         }, (err) => {
           this.setSnackMessage('Error al guardar')

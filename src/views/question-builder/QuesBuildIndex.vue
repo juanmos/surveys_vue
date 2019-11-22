@@ -224,7 +224,7 @@ export default {
             this.setSnackMessage('Registro guardado')
             this.setSnackColor('success')
             this.setShowSnack(true)
-            this.gotoList()
+            // this.gotoList()
           })
         }, (err) => {
           this.setSnackMessage('Error al guardar')
