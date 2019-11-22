@@ -4,7 +4,7 @@
     v-if="markers"
     ref="gmap"
     :center="gmapCenter"
-    :zoom="13"
+    :zoom="14"
     map-type-id="roadmap"
     style="width: 100%; height: 800px;"
   >
