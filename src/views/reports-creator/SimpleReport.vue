@@ -4,6 +4,18 @@
            <v-layout row wrap>
              <v-flex xs12>
                <h1 style="color:white">Encuesta: {{configPoll.name}}</h1>
+               <v-btn style="margin-top: 50px;"
+               absolute
+               dark
+               fab
+               small
+               top
+               right
+               color="primary"
+               @click="gotoList"
+               >
+                   <v-icon>list</v-icon>
+               </v-btn>
              </v-flex>
              <v-flex xs4>
                <stats-card
@@ -101,6 +113,9 @@ export default {
     setCurrentImg (data) {
       this.audioData.audio = data.path
       this.audioData.filename = data.filename
+    },
+    gotoList (id) {
+      this.$router.go(-1)
     }
   },
   computed: {
