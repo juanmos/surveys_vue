@@ -11,6 +11,9 @@ import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
 import boost from 'highcharts/modules/boost'
 // import { createProvider } from './vue-apollo'
+import loadExporting from 'highcharts/modules/exporting'
+loadExporting(Highcharts)
+
 Highcharts.setOptions({
   colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
     return {
