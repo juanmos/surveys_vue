@@ -35,11 +35,15 @@
       <v-radio-group v-model="graphicType" row label="Tipo de gráfico: " style="margin-left: 23px;">
         <v-radio label="Columna" value="column"></v-radio>
         <v-radio label="Pastel" value="pie"></v-radio>
+        <v-radio label="Barras" value="bar"></v-radio>
+        <v-radio label="Lineal" value="line"></v-radio>
       </v-radio-group>
     </label>
   </div>
   <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
   <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
+  <chart-bar v-if="graphicType === 'bar'" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
+  <chart-line v-if="graphicType === 'line'" :question="currentQuestion" :graphicType="graphicType"></chart-line>
 
   </v-card>
 </template>
@@ -47,6 +51,8 @@
 <script>
 import Chart from './../../components/highcharts/Chart'
 import ChartPie from './../../components/highcharts/ChartPie'
+import ChartBar from './../../components/highcharts/ChartBar'
+import ChartLine from './../../components/highcharts/ChartLine'
 export default {
   inheritAttrs: false,
   props: {
@@ -82,7 +88,7 @@ export default {
       // console.log('va---', val);
     }
   },
-  components: {Chart, ChartPie}
+  components: {Chart, ChartPie, ChartBar, ChartLine}
 }
 </script>
 
