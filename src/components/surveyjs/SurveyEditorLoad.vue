@@ -82,6 +82,7 @@ export default {
   },
   created () {
     let editorOptions = { showEmbededSurveyTab: true }
+    SurveyEditor.editorLocalization.currentLocale = 'es'
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
     // console.log('mi data recibida ', this.jsonData)
     // this.editor.text = this.jsonData

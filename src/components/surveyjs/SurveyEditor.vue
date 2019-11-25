@@ -48,7 +48,7 @@ export default {
         choices: this.listQuestionCategories
       })
       SurveyEditor.editorLocalization.currentLocale = 'es'
-      SurveyEditor.StylesManager.applyTheme('winterstone')
+      // SurveyEditor.StylesManager.applyTheme('winterstone')
       let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
       this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
       this.dataValue = this.editor.saveSurveyFunc = function () {
