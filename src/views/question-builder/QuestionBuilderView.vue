@@ -27,7 +27,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import * as widgets from 'surveyjs-widgets'
 import 'inputmask/dist/inputmask/phone-codes/phone.js'
 import {mapState, mapGetters, mapActions} from 'vuex'
-var Survey = SurveyVue.Survey
+const Survey = SurveyVue.Survey
 Survey.cssType = 'bootstrap'
 Survey.locale = 'es'
 // SurveyEditor.locale = 'es'

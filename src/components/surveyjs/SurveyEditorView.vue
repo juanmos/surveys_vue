@@ -54,6 +54,7 @@ export default {
   },
   created () {
     // let editorOptions = { showEmbededSurveyTab: true }
+    // SurveyEditor.editorLocalization.currentLocale = 'es'
     this.editor = new SurveyVue.Model({'pages': [{'name': 'primerito'}]})
     // console.log('mi data recibida ', this.jsonData)
     // this.editor.text = this.jsonData
