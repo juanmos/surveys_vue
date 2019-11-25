@@ -32,13 +32,13 @@
         adjust
         </v-icon>
       </span>Pregunta: <span>{{currentQuestion.label}}</span>
+      </label>
       <v-radio-group v-model="graphicType" row label="Tipo de gráfico: " style="margin-left: 23px;">
         <v-radio label="Columna" value="column"></v-radio>
         <v-radio label="Pastel" value="pie"></v-radio>
         <v-radio label="Barras" value="bar"></v-radio>
         <v-radio label="Lineal" value="line"></v-radio>
       </v-radio-group>
-    </label>
   </div>
   <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
   <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
@@ -80,12 +80,12 @@ export default {
     }
   },
   created () {
-    // console.log('questions--', this.questions);
     this.currentQuestion = this.question
+    this.currentQuestion.type = 'column'
   },
   watch: {
-    question: function (val) {
-      // console.log('va---', val);
+    graphicType: function (val) {
+      // console.log('graphicType---', val);
     }
   },
   components: {Chart, ChartPie, ChartBar, ChartLine}
