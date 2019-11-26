@@ -31,6 +31,24 @@ export default {
       text: 'Seleccionar'
     }
   ],
+  listGraphics: [
+    {
+      value: 'column',
+      text: 'Columna'
+    },
+    {
+      value: 'pie',
+      text: 'Pastel'
+    },
+    {
+      value: 'bar',
+      text: 'Barra'
+    },
+    {
+      value: 'line',
+      text: 'Lineal'
+    }
+  ],
   data () {
     return {
       dataValue: ''
@@ -42,10 +60,44 @@ export default {
       this.$emit('dataSubmited', data)
     },
     configPoll () {
-      SurveyKo.JsonObject.metaData.addProperty('question', {
+      /* SurveyKo.JsonObject.metaData.addProperty('question', {
         name: 'category',
         default: 0,
         choices: this.listQuestionCategories
+      }) */
+      SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'grafico',
+        default: 0,
+        choices: [
+          {
+            value: '0',
+            text: 'Seleccionar'
+          },
+          {
+            value: 'column',
+            text: 'Columna'
+          },
+          {
+            value: 'pie',
+            text: 'Pastel'
+          },
+          {
+            value: 'bar',
+            text: 'Barra'
+          },
+          {
+            value: 'line',
+            text: 'Lineal'
+          }
+        ]
+      })
+      SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'audio:boolean',
+        default: false
+      })
+      SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'derivado:boolean',
+        default: false
       })
       SurveyEditor.editorLocalization.currentLocale = 'es'
       // SurveyEditor.StylesManager.applyTheme('winterstone')
