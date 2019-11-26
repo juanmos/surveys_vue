@@ -55,6 +55,40 @@ export default {
   created () {
     // let editorOptions = { showEmbededSurveyTab: true }
     // SurveyEditor.editorLocalization.currentLocale = 'es'
+    SurveyKo.JsonObject.metaData.addProperty('question', {
+      name: 'grafico',
+      default: 0,
+      choices: [
+        {
+          value: '0',
+          text: 'Seleccionar'
+        },
+        {
+          value: 'column',
+          text: 'Columna'
+        },
+        {
+          value: 'pie',
+          text: 'Pastel'
+        },
+        {
+          value: 'bar',
+          text: 'Barra'
+        },
+        {
+          value: 'line',
+          text: 'Lineal'
+        }
+      ]
+    })
+    SurveyKo.JsonObject.metaData.addProperty('question', {
+      name: 'audio:boolean',
+      default: false
+    })
+    SurveyKo.JsonObject.metaData.addProperty('question', {
+      name: 'derivado:boolean',
+      default: false
+    })
     this.editor = new SurveyVue.Model({'pages': [{'name': 'primerito'}]})
     // console.log('mi data recibida ', this.jsonData)
     // this.editor.text = this.jsonData
