@@ -97,10 +97,10 @@
                               max-width="290"
                             >
                               <v-card>
-                                <v-card-title class="headline">Eliminar categoría</v-card-title>
+                                <v-card-title class="headline">Eliminar usuario</v-card-title>
 
                                 <v-card-text>
-                                  Esta seguro que desea eliminar la categoría?
+                                  Esta seguro que desea eliminar la usuario?
                                 </v-card-text>
 
                                 <v-card-actions>

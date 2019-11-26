@@ -32,15 +32,11 @@
                   </v-menu>
                 </v-flex>
                 <v-flex md4 xs12>
-                  <v-select
-                    label="Clientes"
-                    v-model="poolsseg._customer_id"
-                    :items="getcustomer"
-                    item-text="name"
-                    item-value="_id"
-                    persistent-hint
-                    return-object
-                  ></v-select>
+                  <v-autocomplete v-bind:items="getcustomer"
+                  item-text="name"
+                  item-value="_id"
+                  v-model="poolsseg._customer_id" label="Cliente"
+                  ></v-autocomplete>
                 </v-flex>
                 <v-flex md4 xs12>
                   <v-menu lazy :close-on-content-click="false" v-model="fechaentrega" transition="v-scale-transition" offset-y full-width
@@ -200,7 +196,7 @@ export default {
     }
   },
   created () {
-    this.findcustomers({ query: {removed: false} })
+    this.findcustomers({ query: {removed: false, $skip: null, $limit: null} })
     this.findCompanies({ query: {removed: false} })
   }
 }

@@ -38,7 +38,13 @@ export default {
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     ...mapActions('customers', { findCustomers: 'find' }),
     create (values) {
-      // const {Customer} = this.$FeathersVuex
+      const { Customer } = this.$FeathersVuex
+      const customer = new Customer(values)
+      customer.save().then((result) => {
+        this.goToList()
+      }, (err) => {
+        console.log(err)
+      })
     },
     getDataCustomer () {
       this.findCustomers({query: {_id: this.customer_id, removed: false, ...this.query}}).then(response => {

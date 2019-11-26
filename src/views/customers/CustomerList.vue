@@ -61,6 +61,7 @@
                           ></v-text-field>
                         </v-edit-dialog>
                       </td>
+                      <td class="text-xs-left">{{props.item.company.name}}</td>
                       <td class="text-xs-left">
                         <v-edit-dialog
                           :return-value.sync="props.item.address"
@@ -94,10 +95,10 @@
                           </v-btn>
                           <v-list>
                             <v-list-tile @click="goToView(props.item._id)">
-                                <v-list-tile-title>Ver Info</v-list-tile-title>
+                                <v-list-tile-title>Editar</v-list-tile-title>
                             </v-list-tile>
-                            <v-list-tile @click="goToEdit(props.item)">
-                              <v-list-tile-title>Modificar</v-list-tile-title>
+                            <v-list-tile @click="dialog = true;itemSelected=props.item">
+                              <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
                           </v-list>
                         </v-menu>
@@ -134,6 +135,38 @@
             </v-card>
         </v-flex>
         </v-layout>
+        <v-dialog
+            v-model="dialog"
+            max-width="290"
+            >
+            <v-card>
+            <v-card-title class="headline">Eliminar cliente</v-card-title>
+
+            <v-card-text>
+            Esta seguro que desea eliminar cliente?
+            </v-card-text>
+
+            <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+            color="red darken-4"
+            flat="flat"
+            @click="dialog = false"
+            >
+            Cancelar
+            </v-btn>
+
+            <v-btn
+            color="teal darken-3"
+            flat="flat"
+            @click="dialog = false, del()"
+            >
+            Aceptar
+            </v-btn>
+            </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </div>
 </template>
@@ -157,6 +190,10 @@ export default {
           value: 'ruc',
           sortable: false
         },
+        { text: 'Empresa',
+          value: 'company',
+          sortable: false
+        },
         {
           text: 'Direccion',
           value: 'address',
@@ -171,10 +208,12 @@ export default {
       customers: [],
       message: '',
       search: '',
+      itemSelected: null,
       showMsg: false,
       msgType: 'error',
       page: 1,
       limit: 20,
+      dialog: false,
       total: 1,
       loaded: false,
       clients: [],
@@ -207,9 +246,9 @@ export default {
         })
       })
     },
-    del (element) {
+    del () {
       const {Customer} = this.$FeathersVuex
-      const customer = new Customer(element)
+      const customer = new Customer(this.itemSelected)
       customer.removed = true
       customer.patch().then((result) => {
         this.findCustomers({ query: {removed: false} }).then(response => {
