@@ -46,7 +46,7 @@
                                   <v-icon color="indigo">perm_contact_calendar</v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                              <v-list-tile-title>{{poolsseg.clientes.name}}</v-list-tile-title>
+                              <v-list-tile-title>{{(poolsseg.clientes) ? poolsseg.clientes.name : '** NO ASIGNADO **'}}</v-list-tile-title>
                               <v-list-tile-sub-title>Nombre del Cliente</v-list-tile-sub-title>
                             </v-list-tile-content>
                           </v-list-tile>
@@ -519,6 +519,7 @@ export default {
     },
     cargaredicion (elementid) {
       this.getPoll(this.$route.params.id).then(response => {
+        console.log('rresponse--', response)
         this.poolsseg = response
         this.poolsseg.date_start = moment.tz(response.date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
         this.poolsseg.date_end = moment.tz(response.date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
@@ -723,10 +724,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.id) {
-      this.cargaredicion(this.$route.params.id)
-    } else {
-    }
+    this.cargaredicion(this.$route.params.id)
   },
   created () {
     this.findcustomers({ query: {removed: false} }).then(response => {
