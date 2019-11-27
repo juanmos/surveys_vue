@@ -21,29 +21,21 @@
               <v-text-field
                 :append-icon="'ruc'"
                 v-model="customer.ruc"
-                :rules="rules.nameRules"
                 label="R.U.C"
-                required
               ></v-text-field>
               <v-text-field
                 :append-icon="'email'"
                 v-model="customer.email"
-                :rules="rules.nameRules"
                 label="Email"
-                required
               ></v-text-field>
               <v-text-field
                 v-model="customer.address"
-                :rules="rules.nameRules"
                 label="Dirección"
-                required
               ></v-text-field>
               <v-text-field
                 :append-icon="'phones'"
                 v-model="customer.phones"
-                :rules="rules.nameRules"
                 label="Teléfono"
-                required
               ></v-text-field>
               <v-autocomplete v-bind:items="getCompanies" v-if="getRol === '5a8f05d594f896e07ca5053d'"
               item-text="name"
