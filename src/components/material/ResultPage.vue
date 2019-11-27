@@ -29,9 +29,9 @@
       <v-container fluid
       grid-list-lg>
           <v-layout row wrap>
-            <v-flex xs6 v-for="(question, i) in getQuestionsPage"
+            <v-flex xs6 v-for="(question, i) in getQuestionsPage" v-if='question.columnChart.length > 0'
             :key="i">
-            <v-card >
+            <v-card>
               <result-question :question="question"></result-question>
             </v-card>
             </v-flex>
