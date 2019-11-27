@@ -519,7 +519,6 @@ export default {
     },
     cargaredicion (elementid) {
       this.getPoll(this.$route.params.id).then(response => {
-        console.log('rresponse--', response)
         this.poolsseg = response
         this.poolsseg.date_start = moment.tz(response.date_start, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
         this.poolsseg.date_end = moment.tz(response.date_end, 'America/Guayaquil').add(1, 'd').format('YYYY-MM-DD')
@@ -542,7 +541,6 @@ export default {
     EditCategoryJson (arrayData, value, idConfigPolls, names) {
       let addJson = []
       let name = names
-      // console.log('el nombre ', arrayData.name)
       let choices = []
       arrayData.map((value, key) => {
         choices.push(value.valor1)
@@ -558,7 +556,6 @@ export default {
             }
           ]
         }
-      // value.elements = addJson
       let flagRepeat = 0
       let jsonSend = value
       jsonSend.pages.map((value, key) => {
@@ -581,7 +578,6 @@ export default {
         }, (err) => {
           this.setSnackMessage('Error al guardar')
           this.setShowSnack(true)
-          // this.setSnackColor('error')
           console.log(err)
         })
       }
