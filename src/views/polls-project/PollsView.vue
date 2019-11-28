@@ -201,6 +201,10 @@
                                     <v-icon class="icon">line_weight</v-icon>
                                     <v-list-tile-title>Vista de datos</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="duplicate(props.item)">
+                                    <v-icon class="icon">file_copy</v-icon>
+                                    <v-list-tile-title>Duplicar</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                                     <v-icon class="icon">border_color</v-icon>
                                     <v-list-tile-title>Editar encuesta</v-list-tile-title>
@@ -666,6 +670,30 @@ export default {
     },
     goToViewData (id) {
       this.$router.push({ path: `/view-data-poll/${id}` })
+    },
+    duplicate (configPoll) {
+      let newConfigPoll = {
+        name: `${configPoll.name}-DUPLICADO***`,
+        _polls_project_id: configPoll._polls_project_id,
+        construct: configPoll.construct,
+        formatedConfiguration: [],
+        originalJson: [],
+        country: configPoll.country,
+        province: configPoll.province,
+        canton: configPoll.canton,
+        status: configPoll.status,
+        take: configPoll.take,
+        markers: configPoll.markers,
+        dateFinished: configPoll.dateFinished
+      }
+      console.log('conf00000---', newConfigPoll)
+      const {ConfigPoll} = this.$FeathersVuex
+      let config = new ConfigPoll(newConfigPoll)
+      config.save().then((result) => {
+        this.getConfigPolls()
+      }, (err) => {
+        console.log(err)
+      })
     },
     goToViewCreatorReport (id) {
       this.$router.push({ path: `/view-creator-report/${id}` })

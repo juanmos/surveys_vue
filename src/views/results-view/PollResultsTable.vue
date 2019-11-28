@@ -8,145 +8,69 @@
         >
             <template slot="items" slot-scope="props">
                 <td class="text-xs-center" v-for="(value, key, index) in props.item" :key="String(value) + Math.random()">
-                    <span v-if="variablesMode && (key === 'values' || key === 'label')" @click="editLabelDialog = true; currentEdit = props.item[key]; fieldSelected = key; arrIndex = props.index">
-                        {{ props.item[key] }}
-                    </span>
-                    <span v-else>
-                      <v-chip v-if="key === 'actors'" color="grey-darken-4" class="font-weight-bold" v-for="(actorQuestion, index) in props.item.actors" :key="index">
-                             <!-- <avatar :image="actorQuestion.image">
-                             </avatar> -->
-                              {{actorQuestion}}
-                      </v-chip>
-                      <v-chip :color="key === 'category' ? 'primary' : (key === 'state') ? 'complete': 'grey-darken-4'"  class="font-weight-bold" v-if="(key ==='category' || key === 'state') && props.item[key]">
-                        <avatar :image="props.item[key].image" v-if="key === 'actors'">
-                        </avatar>
-                        {{ key === 'actors' ? props.item[key].code : props.item[key] }}
-                      </v-chip>
-                      <span v-else>
-                          <span v-if="key !=='actors' && key !=='state'">
-                            {{props.item[headers[index].code]}}
-                          </span>
+                  <v-layout row wrap>
+                    <v-flex xs10>
+                      <span>
+                            {{props.item[headers[index].code]}} <!--{{headers[index].type}} colum: {{index}} position: {{props.index}} -->
                       </span>
-                    </span>
-                </td>
-                <td class="justify-center layout px-0">
-                  <v-menu v-if="variablesMode"
-                    bottom
-                    transition="slide-y-transition"
-                  >
-                    <v-btn
-                      slot="activator"
-                      color="primary"
-                      flat
-                      icon
-                    >
-                    <v-icon>more_vert</v-icon>
-                    </v-btn>
-                    <v-list>
-                      <v-list-tile @click="dialogActors = true;arrIndex = props.index">
-                          <v-list-tile-title>Agregar Actores</v-list-tile-title>
-                      </v-list-tile>
-                      <v-list-tile @click="dialogRelated = true;arrIndex = props.index">
-                          <v-list-tile-title>Agregar relacionados</v-list-tile-title>
-                      </v-list-tile>
-                      <v-list-tile @click="dialogMasterQuestions = true;arrIndex = props.index; fieldSelected = 'category'">
-                          <v-list-tile-title>Relacionar con el master de preguntas</v-list-tile-title>
-                      </v-list-tile>
-                    </v-list>
-                  </v-menu>
+                    </v-flex>
+                    <v-flex xs2 v-if="headers[index].type === 'text'">
+                     <v-btn @click="currentQuestion=headers[index];questionCoding(props.index, headers[index].code)" icon>
+                       <v-icon>send</v-icon>
+                     </v-btn>
+                    </v-flex>
+                  </v-layout>
                 </td>
             </template>
         </v-data-table>
-        <v-dialog
-          v-model="editLabelDialog"
-          max-width="600"
-          >
-          <labels-editor @close="editLabelDialog = false" v-if="fieldSelected === 'values'" :values="currentEdit"></labels-editor>
-          <labels-poll-editor @saveValue="editVariables" @close="editLabelDialog = false" :value="currentEdit" v-else></labels-poll-editor>
-        </v-dialog>
 
-        <v-dialog v-model="dialogRelated" max-width="900">
-          <v-card v-if="dialogRelated">
+        <v-dialog v-model="dialogAnswerEdit" max-width="900">
+          <v-card v-if="dialogAnswerEdit">
             <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-              <h4>Pregunta relacionada</h4>
+              <h4>Codificar respuesta</h4>
             </v-flex>
             <v-card-text>
-              <related-question :arrIndex="arrIndex" @close="dialogRelated = false"></related-question>
+              <label style="color: white;height: 45px;padding: 11px;">{{currentQuestion.text}}</label>
+              <edit-value-field :value="currentEdit" @dataChanged="saveConfig"></edit-value-field>
             </v-card-text>
           </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="dialogActors" max-width="900">
-          <v-card v-if="dialogActors">
-            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-              <h4>Relacionar actores</h4>
-            </v-flex>
-            <v-card-text>
-              <related-actor-question :arrIndex="arrIndex" @close="dialogActors = false" @refresh="refresh"></related-actor-question>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="dialogCategories" max-width="900">
-          <categories-editor @saveValue="editVariables" :arrIndex="arrIndex" @close="dialogCategories = false"></categories-editor>
-        </v-dialog>
-
-        <v-dialog v-model="dialogMasterQuestions" max-width="900">
-            <v-card v-if="dialogMasterQuestions">
-              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-                <h4>Seleccionar Master</h4>
-              </v-flex>
-              <v-card-text>
-                <master-questions-editor @refresh="refresh" :arrIndex="arrIndex" @close="dialogMasterQuestions = false"></master-questions-editor>
-              </v-card-text>
-            </v-card>
         </v-dialog>
     </div>
 </template>
 
 <script>
-import LabelsEditor from './../../components/forms/LabelsEditor'
-import LabelsPollEditor from './../../components/forms/LabelsPollEditor'
-import CategoriesEditor from './../../components/forms/CategoriesEditor'
-import MasterQuestionsEditor from './../../components/forms/MasterQuestionsEditor'
-import RelatedQuestion from './RelatedQuestion'
-import RelatedActorQuestion from './RelatedActorQuestion'
-import Avatar from './../../components/Avatar'
+import EditValueField from './../../components/forms/EditValueField'
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
   data () {
     return {
-      editLabelDialog: false,
-      dialogRelated: false,
-      dialogCategories: false,
-      dialogActors: false,
-      dialogMasterQuestions: false,
-      currentEdit: null,
-      fieldSelected: '',
+      dialogAnswerEdit: false,
+      currentQuestion: {
+        text: ''
+      },
+      currentEdit: {
+        value: '',
+        index: 0,
+        code: ''
+      },
       arrIndex: null
     }
   },
   methods: {
-    editVariables (value) {
-      let copyResponses = this.responses.slice().map(response => ({
-        original: response.name,
-        label: response.label,
-        options: response.values,
-        code: response.code
-      }))
-      copyResponses[this.arrIndex][this.fieldSelected] = value
-      this.$emit('saveFormated', copyResponses)
-      this.editLabelDialog = false
-      this.dialogCategories = false
-      this.dialogMasterQuestions = false
+    questionCoding (index, code) {
+      this.currentEdit = {
+        value: this.responses[index][code],
+        index: index,
+        code: code
+      }
+      this.dialogAnswerEdit = true
     },
-    refresh () {
-      this.dialogActors = false
-      this.dialogMasterQuestions = false
-      this.$emit('refresh')
+    saveConfig (data) {
+      this.responses[data.index][data.code] = data.value
+      this.dialogAnswerEdit = false
     }
   },
-  components: { LabelsEditor, LabelsPollEditor, RelatedQuestion, RelatedActorQuestion, CategoriesEditor, MasterQuestionsEditor, Avatar }
+  components: {EditValueField}
 }
 </script>
 
