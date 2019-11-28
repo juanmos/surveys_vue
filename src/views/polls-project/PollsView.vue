@@ -201,6 +201,10 @@
                                     <v-icon class="icon">line_weight</v-icon>
                                     <v-list-tile-title>Vista de datos</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="goToViewCoding(props.item._id)">
+                                    <v-icon class="icon">bookmark</v-icon>
+                                    <v-list-tile-title>Codificar</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="duplicate(props.item)">
                                     <v-icon class="icon">file_copy</v-icon>
                                     <v-list-tile-title>Duplicar</v-list-tile-title>
@@ -670,6 +674,9 @@ export default {
     },
     goToViewData (id) {
       this.$router.push({ path: `/view-data-poll/${id}` })
+    },
+    goToViewCoding (id) {
+      this.$router.push({ path: `/view-data-coding-poll/${id}` })
     },
     duplicate (configPoll) {
       let newConfigPoll = {

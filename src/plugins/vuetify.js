@@ -8,14 +8,17 @@ const messages = {
   es: {
     $vuetify: {
       dataIterator: {
-        rowsPerPageText: 'Elementos por página:',
-        pageText: '{0}-{1} av {2}',
+        rowsPerPageText: 'Items per page:',
+        pageText: '{0}-{1} de {2}',
         noResultsText: 'No se encontraron registros coincidentes',
         nextPage: 'Siguiente',
         prevPage: 'Anterior',
         rowsPerPageAll: 'All'
       },
-      noDataText: 'Información no disponible'
+      noDataText: 'Información no disponible',
+      dataTable: {
+        rowsPerPageText: 'Filas por página'
+      }
     }
   }
 }

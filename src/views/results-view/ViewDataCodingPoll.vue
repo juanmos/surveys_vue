@@ -24,14 +24,14 @@
             <v-tab
                 ripple
             >
-                Vista de Datos
+                Vista de Codificación Datos
                 <v-icon>list</v-icon>
 
             </v-tab>
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getDataHeaders" :responses="getViewData"></poll-results-table>
+                    <poll-coding-results :headers="getDataHeaders" :responses="getViewData" @saveOriginal="updateConfigPoll"></poll-coding-results>
                 </v-card>
             </v-tab-item>
         </v-tabs>
@@ -40,17 +40,15 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
-import PollResultsTable from './PollResultsTable'
-import ViewVariables from './ViewVariables'
-import ReportCreator from './../reports-creator/ReportCreator'
-import QuestionsCodificator from './../questions-codificator/QuestionsCodificator'
-import SegmentationFields from './../../components/SegmentationFields'
+import PollCodingResults from './PollCodingResults'
 export default {
   props: ['id'],
   data () {
     return {
       active: null,
       resultPoll: null,
+      originalHeaders: null,
+      originalCopy: [],
       segmentationDialog: false,
       viewData: [],
       dialogProcess: false,
@@ -77,7 +75,7 @@ export default {
         type: q.type,
         value: key,
         open: q.open
-      })) : []
+      })).filter(q => q.type === 'text') : []
     }
   },
   methods: {
@@ -86,34 +84,36 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
-    refresh () {
-      this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-        this.resultPoll = Object.assign({}, result)
-      })
-    },
-    saveFormated (values) {
+    updateConfigPoll (newOriginalJson) {
+      // console.log(newOriginalJson);
+      for (let [key, value] of newOriginalJson.entries()) {
+        this.originalCopy[key + 1] = {...this.originalCopy[key + 1], ...value}
+      }
       const {ConfigPoll} = this.$FeathersVuex
+      this.resultPoll.originalJson = this.originalCopy
       let config = new ConfigPoll(this.resultPoll)
-      config.formatedConfiguration = values
-      config.update().then(result => {
+      config.codingProcess = true
+      config.patch({process: true}).then(result => {
         this.setSnackMessage('Pregunta Editada')
         this.setShowSnack(true)
-        this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-          // this.resultPoll = Object.assign({}, result)
-        })
+        // this.refresh()
       }).catch(err => console.log('este es el error', err))
     },
     gotoList () {
       this.$router.go(-1)
+    },
+    refresh () {
+      this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
+        this.resultPoll = Object.assign({}, result)
+        this.originalHeaders = this.resultPoll.originalJson[0]
+        this.originalCopy = this.resultPoll.originalJson
+      }).catch(err => console.log('este es el error', err))
     }
   },
-  created () {
-    this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
-      this.resultPoll = Object.assign({}, result)
-    }).catch(err => console.log('este es el error', err))
+  mounted () {
     this.refresh()
   },
-  components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator, ViewVariables }
+  components: {PollCodingResults}
 }
 </script>
 
