@@ -245,6 +245,12 @@ const ViewDataPoll = resolve => {
   }, 'view-data-poll')
 }
 
+const ViewDataCodingPoll = resolve => {
+  require.ensure(['./views/results-view/ViewDataCodingPoll.vue'], () => {
+    resolve(require('./views/results-view/ViewDataCodingPoll.vue'))
+  }, 'view-data-conding-poll')
+}
+
 const ViewCreatorReport = resolve => {
   require.ensure(['./views/results-view/ViewCreatorReport.vue'], () => {
     resolve(require('./views/results-view/ViewCreatorReport.vue'))
@@ -646,6 +652,12 @@ export default new Router({
           name: 'ViewDataPoll',
           props: true,
           component: ViewDataPoll
+        },
+        {
+          path: 'view-data-coding-poll/:id',
+          name: 'ViewDataCodingPoll',
+          props: true,
+          component: ViewDataCodingPoll
         },
         {
           path: 'view-creator-report/:id',
