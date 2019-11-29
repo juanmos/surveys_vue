@@ -39,6 +39,7 @@
         <v-radio label="Barras" value="bar"></v-radio>
         <v-radio label="Lineal" value="line"></v-radio>
       </v-radio-group>
+      <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
   </div>
   <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
   <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
@@ -58,6 +59,12 @@ export default {
   props: {
     question: {
       type: Object
+    },
+    index: {
+      type: Number
+    },
+    isViewDetail: {
+      type: Boolean
     }
   },
   data: (state) => ({
@@ -67,8 +74,10 @@ export default {
     text: ''
   }),
   methods: {
-    getQuestionsPage (questions) {
-      // this.questionsPage = questions.filter(question => question.page === this.title)
+    goToDetail () {
+      // let routeData = this.$router.resolve({ path: `/detail-question/${id}&${index}`})
+      // window.open(routeData.href, '_blank');
+      this.$emit('openModalQuestionDetail', this.currentQuestion)
     }
   },
   computed: {
@@ -84,8 +93,9 @@ export default {
     this.currentQuestion.type = 'column'
   },
   watch: {
-    graphicType: function (val) {
-      // console.log('graphicType---', val);
+    question: function (val) {
+      this.currentQuestion = val
+      this.currentQuestion.type = 'column'
     }
   },
   components: {Chart, ChartPie, ChartBar, ChartLine}

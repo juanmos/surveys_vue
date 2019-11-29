@@ -3,7 +3,7 @@ import Vue from 'vue'
 import VueParticles from 'vue-particles'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import './plugins/vuetify'
-
+import ModalFullScreenVue from 'modal-fullscreen-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -27,8 +27,9 @@ Highcharts.setOptions({
         [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
       ]
     }
-  })
-})
+  })})
+
+Vue.use(ModalFullScreenVue)
 Vue.use(VueParticles)
 Vue.use(HighchartsVue)
 boost(Highcharts)

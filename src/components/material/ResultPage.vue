@@ -32,7 +32,7 @@
             <v-flex xs6 v-for="(question, i) in getQuestionsPage" v-if='question.columnChart.length > 0'
             :key="i">
             <v-card>
-              <result-question :question="question"></result-question>
+              <result-question :question="question" :index="i" @openModalQuestionDetail="openModal" :isViewDetail="isViewDetail" ></result-question>
             </v-card>
             </v-flex>
           </v-layout>
@@ -68,9 +68,14 @@ export default {
   },
   data: () => ({
     questionsPage: [],
+    isViewDetail: false,
     listQuestions: []
   }),
-  methods: {},
+  methods: {
+    openModal (question) {
+      this.$emit('openModalQuestionDetail', question)
+    }
+  },
   computed: {
     getQuestionsPage () {
       return this.listQuestions.filter(filterQuestion => {
