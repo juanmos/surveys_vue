@@ -578,7 +578,6 @@ export default {
         const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config['_polls_project_id'] = this.$route.params.id
-        // config['name'] = this.nameConfigPolls
         config.patch().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
             // this.alertConfig('Registro Modificado', 'success')
@@ -693,7 +692,6 @@ export default {
         markers: configPoll.markers,
         dateFinished: configPoll.dateFinished
       }
-      console.log('conf00000---', newConfigPoll)
       const {ConfigPoll} = this.$FeathersVuex
       let config = new ConfigPoll(newConfigPoll)
       config.save().then((result) => {

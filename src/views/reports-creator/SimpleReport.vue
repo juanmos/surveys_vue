@@ -56,6 +56,7 @@
                <result-page
                  color="red"
                  icon="info"
+                 @openModalQuestionDetail="openModal"
                  :questions="questions"
                  :title="page"
                  :value="totalPolls"
@@ -80,6 +81,38 @@
                </v-card-actions>
              </v-card>
            </v-dialog>
+           <v-dialog v-model="dialogQuestionDetail" fullscreen v-if="dialogQuestionDetail">
+                  <v-card v-bind="$attrs">
+                              <v-card
+                                color="red"
+                                class="v-card--material__header"
+                                dark
+                              >
+                              <span style="">
+                                <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
+                                  class="title mb-2"
+                                  v-text="currenteQuestion.label"
+                                >
+                              </h4>
+                              </span>
+                              <span>
+                                <v-icon
+                                  size="40"
+                                >
+                                equalizer
+                                </v-icon>
+                              </span>
+                              </v-card>
+                              <v-btn color="dark darken-1"
+                                     style="background: #000;"
+                                     flat="flat"
+                                     @click="dialogQuestionDetail = false"
+                                       >
+                                       CERRAR
+                              </v-btn>
+                     <result-detail-question :question="currenteQuestion"></result-detail-question>
+              </v-card>
+           </v-dialog>
        </v-container>
 </template>
 
@@ -88,15 +121,19 @@ import { mapState, mapActions } from 'vuex'
 import StatsCard from './../../components/material/StatsCard'
 import ResultPage from './../../components/material/ResultPage'
 import MapComponent from './../../components/graphs/Map'
+import ResultDetailQuestion from './ResultDetailQuestion'
 export default {
   props: [''],
   data: () => ({
-    currenteQuestion: null,
+    currenteQuestion: {
+      label: ''
+    },
     graphicType: 'column',
     configPoll: {
       name: ''
     },
     dialogMap: false,
+    dialogQuestionDetail: false,
     projectname: '',
     pages: [],
     mapMarkers: [],
@@ -116,6 +153,10 @@ export default {
     },
     gotoList (id) {
       this.$router.go(-1)
+    },
+    openModal (question) {
+      this.currenteQuestion = question
+      this.dialogQuestionDetail = true
     }
   },
   computed: {
@@ -138,12 +179,7 @@ export default {
       this.mapMarkers = this.configPoll.markers
     }).catch(err => console.log('error', err))
   },
-  watch: {
-    currenteQuestion: function (val) {
-      this.currenteQuestion = val
-    }
-  },
-  components: {StatsCard, ResultPage, MapComponent}
+  components: {StatsCard, ResultPage, MapComponent, ResultDetailQuestion}
 }
 </script>
 

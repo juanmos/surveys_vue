@@ -381,6 +381,11 @@ const SimpleReport = resolve => {
     resolve(require('./views/reports-creator/SimpleReport.vue'))
   }, 'simple-report-view')
 }
+const ResultDetailQuestion = resolve => {
+  require.ensure(['./views/reports-creator/ResultDetailQuestion.vue'], () => {
+    resolve(require('./views/reports-creator/ResultDetailQuestion.vue'))
+  }, 'result-detail-question')
+}
 const CompanyList = resolve => {
   require.ensure(['./views/companies/CompanyList.vue'], () => {
     resolve(require('./views/companies/CompanyList.vue'))
@@ -790,6 +795,12 @@ export default new Router({
           name: 'simple-report',
           props: true,
           component: SimpleReport
+        },
+        {
+          path: 'detail-question/:id&index',
+          name: 'detail-question',
+          props: true,
+          component: ResultDetailQuestion
         },
         {
           path: 'company-list',
