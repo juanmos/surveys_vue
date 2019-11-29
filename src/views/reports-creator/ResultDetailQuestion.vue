@@ -71,8 +71,10 @@ export default {
     getItems () {
       let list = []
       for (var [key, value] of Object.entries(this.currentQuestion.total)) {
-        let obj = {name: key, total: (value.total) ? value.total : 0, percentage: (value.percentage) ? parseFloat(value.percentage) : 0}
-        list.push(obj)
+        if (key !== '99') {
+          let obj = {name: key, total: (value.total) ? value.total : 0, percentage: (value.percentage) ? parseFloat(value.percentage) : 0}
+          list.push(obj)
+        }
       }
       return list
     }
