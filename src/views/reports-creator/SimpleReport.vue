@@ -82,36 +82,39 @@
              </v-card>
            </v-dialog>
            <v-dialog v-model="dialogQuestionDetail" fullscreen v-if="dialogQuestionDetail">
-                  <v-card v-bind="$attrs">
-                              <v-card
-                                color="red"
-                                class="v-card--material__header"
-                                dark
-                              >
-                              <span style="">
-                                <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
-                                  class="title mb-2"
-                                  v-text="currenteQuestion.label"
-                                >
-                              </h4>
-                              </span>
-                              <span>
-                                <v-icon
-                                  size="40"
-                                >
-                                equalizer
-                                </v-icon>
-                              </span>
-                              </v-card>
-                              <v-btn color="dark darken-1"
-                                     style="background: #000;"
-                                     flat="flat"
-                                     @click="dialogQuestionDetail = false"
-                                       >
-                                       CERRAR
-                              </v-btn>
-                     <result-detail-question :question="currenteQuestion"></result-detail-question>
-              </v-card>
+                  <v-card>
+                         <v-layout row wrap>
+
+                                <v-flex xs12 style="margin-bottom: 100px;">
+                                       <div class="header">
+                                       <span style="">
+                                         <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
+                                           class="title mb-2"
+                                           v-text="currenteQuestion.label"
+                                         >
+                                       </h4>
+                                       </span>
+                                       <span>
+                                         <v-icon
+                                           size="40"
+                                         >
+                                         equalizer
+                                         </v-icon>
+                                       </span>
+                                       <v-btn color="dark darken-1"
+                                              style="background: #000; float: right;"
+                                              flat="flat"
+                                              @click="dialogQuestionDetail = false"
+                                                >
+                                                CERRAR
+                                       </v-btn>
+                                </div>
+                                </v-flex>
+                                <v-flex xs12>
+                                       <result-detail-question :question="currenteQuestion"></result-detail-question>
+                                </v-flex>
+                         </v-layout>
+                  </v-card>
            </v-dialog>
        </v-container>
 </template>
@@ -187,4 +190,11 @@ export default {
   .charge-chip {
     text-transform: capitalize;
   }
+
+  .header {
+   z-index: 100!important;
+   width: 100%;
+   background: #228c7d;
+   position: fixed;
+ }
 </style>
