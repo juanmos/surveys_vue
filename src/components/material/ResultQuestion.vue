@@ -39,6 +39,15 @@
         <v-radio label="Barras" value="bar"></v-radio>
         <v-radio label="Lineal" value="line"></v-radio>
       </v-radio-group>
+      <!-- <v-btn
+        class="menuFloat"
+        dark
+        fab
+        small
+        title="IMAGEN SECUNDARIA"
+        @click="sortData()">
+        <v-icon>keyboard_arrow_down</v-icon>
+      </v-btn> -->
       <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
   </div>
   <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
@@ -68,7 +77,10 @@ export default {
     }
   },
   data: (state) => ({
-    currentQuestion: {},
+    currentQuestion: {
+      columnChart: []
+    },
+    sort: true,
     graphicType: 'column',
     color: '#858d8e',
     text: ''
@@ -78,6 +90,15 @@ export default {
       // let routeData = this.$router.resolve({ path: `/detail-question/${id}&${index}`})
       // window.open(routeData.href, '_blank');
       this.$emit('openModalQuestionDetail', this.currentQuestion)
+    },
+    sortData () {
+      /* this.sort = !this.sort
+      if (this.sort) {
+        this.currentQuestion.columnChart = this.currentQuestion.columnChart.sort((a, b) => (a.y > b.y) ? 1 : -1)
+      } else {
+        this.currentQuestion.columnChart = this.currentQuestion.columnChart.sort((a, b) => (a.y > b.y) ? -1 : 1)
+      } */
+      this.currentQuestion.columnChart = this.currentQuestion.columnChart.sort((a, b) => (a.y > b.y) ? 1 : -1)
     }
   },
   computed: {
@@ -91,6 +112,7 @@ export default {
   created () {
     this.currentQuestion = this.question
     this.currentQuestion.type = 'column'
+    this.currentQuestion.columnChart = this.currentQuestion.columnChart.sort((a, b) => (a.y > b.y) ? 1 : -1)
   },
   watch: {
     question: function (val) {

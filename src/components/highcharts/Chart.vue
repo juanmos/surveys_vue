@@ -25,7 +25,10 @@ export default {
   methods: {},
   computed: {
     updateArgs () {
-      return [true, true, { duration: 1000 }]
+      return [true, false, { duration: 200 }]
+    },
+    getColumnChart () {
+      return (this.question.columnChart) ? this.question.columnChart : []
     },
     getChartOptions () {
       return (this.question) ? {
@@ -43,7 +46,7 @@ export default {
           {
             name: this.question.label,
             colorByPoint: true,
-            data: this.question.columnChart
+            data: this.getColumnChart
           }
         ],
         title: {
@@ -120,12 +123,6 @@ export default {
     getType () {
       return this.dataChart
     }
-  },
-  watch: {
-    /* graphicType: function (val) {
-      console.log('val--', val)
-      this.type = val
-    } */
   },
   components: {}
 }
