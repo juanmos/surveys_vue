@@ -25,7 +25,7 @@ export default {
   methods: {},
   computed: {
     updateArgs () {
-      return [true, false, { duration: 200 }]
+      return [true, true, { duration: 1000 }]
     },
     getColumnChart () {
       return (this.question.columnChart) ? this.question.columnChart : []
@@ -46,7 +46,7 @@ export default {
           {
             name: this.question.label,
             colorByPoint: true,
-            data: this.getColumnChart
+            data: this.question.columnChart
           }
         ],
         title: {
