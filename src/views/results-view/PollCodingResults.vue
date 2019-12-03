@@ -8,6 +8,7 @@
           <v-flex xs1>
             <download-excel style="cursor: pointer;"
                 :data="responses"
+                :name="`${name}.xls`"
                 >
                 <img src="/images/export-excel.png" height="35" width="40">
             </download-excel>
@@ -15,7 +16,8 @@
           <v-flex xs1>
             <download-excel style="cursor: pointer;"
                 :data="responses"
-                type    = "csv">
+                :name="`${name}.csv`"
+                type="csv">
                 <img src="/images/export-csv.png" height="35" width="40">
             </download-excel>
           </v-flex>
@@ -53,7 +55,7 @@
 import EditValueField from './../../components/forms/EditValueField'
 import EditableField from './../../components/forms/EditableField'
 export default {
-  props: ['responses', 'headers'],
+  props: ['responses', 'headers', 'name'],
   data () {
     return {
       dialogAnswerEdit: false,
