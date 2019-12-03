@@ -8,14 +8,13 @@
           <v-flex xs1>
             <download-excel style="cursor: pointer;"
                 :data="responses"
-                :fields="headers">
+                >
                 <img src="/images/export-excel.png" height="35" width="40">
             </download-excel>
           </v-flex>
           <v-flex xs1>
             <download-excel style="cursor: pointer;"
                 :data="responses"
-                :fields="headers"
                 type    = "csv">
                 <img src="/images/export-csv.png" height="35" width="40">
             </download-excel>
@@ -70,6 +69,15 @@ export default {
         code: ''
       },
       arrIndex: null
+    }
+  },
+  computed: {
+    getFields () {
+      let obj = {}
+      this.headers.map(data => {
+        obj[data.text.replace(/ /g, '_')] = data.text
+      })
+      return obj
     }
   },
   methods: {
