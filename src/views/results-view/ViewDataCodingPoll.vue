@@ -31,7 +31,7 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-coding-results :headers="getDataHeaders" :responses="getViewData" @saveOriginal="updateConfigPoll"></poll-coding-results>
+                    <poll-coding-results :headers="getDataHeaders" :responses="getViewData" :name="resultPoll.name" @saveOriginal="updateConfigPoll"></poll-coding-results>
                 </v-card>
             </v-tab-item>
         </v-tabs>

@@ -39,6 +39,7 @@
                       <v-flex xs1>
                         <download-excel style="cursor: pointer;"
                             :data="getViewData"
+                            :name="`${resultPoll.name}.xls`"
                             >
                             <img src="/images/export-excel.png" height="35" width="40">
                         </download-excel>
@@ -46,7 +47,8 @@
                       <v-flex xs1>
                         <download-excel style="cursor: pointer;"
                             :data="getViewData"
-                            type    = "csv">
+                            :name="`${resultPoll.name}.csv`"
+                            type="csv">
                             <img src="/images/export-csv.png" height="35" width="40">
                         </download-excel>
                       </v-flex>
