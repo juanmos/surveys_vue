@@ -583,6 +583,7 @@ export default {
       const Config = new ConfigPoll(this.ItemPollsConfigSelect)
       Config.removed = true
       Config.patch().then((result) => {
+        this.getConfigPolls()
         this.setSnackMessage('Registro Eliminado')
         this.setShowSnack(true)
       }, (err) => {
