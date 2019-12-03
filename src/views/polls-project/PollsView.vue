@@ -329,66 +329,6 @@
               </v-card-text>
             </v-card>
           </v-tab-item>
-        <!--    <v-tab-item
-            >
-                <v-card flat>
-                    <v-flex >
-                       <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Agregar</v-btn>
-                       <v-btn class="text-xs-left" color="success" small @click="dialog = true; selectcategory ='';">Nuevo</v-btn>
-                      <v-dialog  v-model="dialog"  max-width="400" >
-                          <v-card>
-                            <v-card-title class="headline">Agregar categoria</v-card-title>
-                            <v-container fluid grid-list-md>
-                              <v-layout row wrap>
-                                <v-flex xs12 md12>
-                                  <v-autocomplete
-                                      :filter="customFilter"
-                                      label="Categoria"
-                                      v-model="selectcategory"
-                                      :items="itemsegmento"
-                                      item-text="name"
-                                      item-value="_id"
-                                  ></v-autocomplete>
-                                </v-flex>
-                              </v-layout>
-                            </v-container>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn  color="red darken-4" flat="flat" @click="dialog = false">
-                                Cancelar
-                              </v-btn>
-                              <v-btn color="teal darken-3" flat="flat" @click="dialog = false, savecategory()">
-                                Aceptar
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
-                        <v-divider class="mx-3" inset vertical></v-divider>
-                      <v-card>
-                          <v-card-title><strong>CATEGORIAS</strong></v-card-title>
-                          <v-layout >
-                            <v-flex xs2 sm2>
-                             <v-spacer></v-spacer>
-                            </v-flex>
-                            <v-flex xs4 sm8>
-                                  <v-data-table
-                                      :headers="headers"
-                                      :items="getCategorySegmentationPolls"
-                                      hide-actions
-                                      class="elevation-1"
-                                      ref="table"
-                                    >
-                                      <template slot="items" slot-scope="props">
-                                        <td class="text-xs-left">{{ props.item.name }}</td>
-                                        <td class="text-xs-left">{{props.item.description}}</td>
-                                      </template>
-                                    </v-data-table>
-                            </v-flex>
-                          </v-layout>
-                      </v-card>
-                    </v-flex>
-                </v-card>
-            </v-tab-item> -->
         </v-tabs>
       </v-card>
         </v-flex>
@@ -720,7 +660,7 @@ export default {
       })
     },
     getConfigPolls () {
-      this.findConfigPolls({query: {$sort: { dateFinished: '-1' }, _polls_project_id: this.$route.params.id}}).then(response => {
+      this.findConfigPolls({query: {$sort: { dateFinished: '-1' }, removed: false, _polls_project_id: this.$route.params.id}}).then(response => {
         this.listConfigPolls = response.data
       })
     },
