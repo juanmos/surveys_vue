@@ -10,6 +10,7 @@ import store from './store'
 import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
 import boost from 'highcharts/modules/boost'
+import JsonExcel from 'vue-json-excel'
 // import { createProvider } from './vue-apollo'
 import loadExporting from 'highcharts/modules/exporting'
 loadExporting(Highcharts)
@@ -32,6 +33,7 @@ Highcharts.setOptions({
 Vue.use(ModalFullScreenVue)
 Vue.use(VueParticles)
 Vue.use(HighchartsVue)
+Vue.component('downloadExcel', JsonExcel)
 boost(Highcharts)
 Vue.use(VueGoogleMaps, {
   load: {
