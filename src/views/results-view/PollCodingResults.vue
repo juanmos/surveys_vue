@@ -1,10 +1,27 @@
 <template>
     <div>
-      <download-excel
-          :data="responses"
-          :fields="headers">
-          <img src="/images/excel_icon.png" height="35" width="40">
-      </download-excel>
+      <v-container
+        fluid
+        grid-list-lg
+      >
+        <v-layout row wrap>
+          <v-flex xs1>
+            <download-excel style="cursor: pointer;"
+                :data="responses"
+                :fields="headers">
+                <img src="/images/export-excel.png" height="35" width="40">
+            </download-excel>
+          </v-flex>
+          <v-flex xs1>
+            <download-excel style="cursor: pointer;"
+                :data="responses"
+                :fields="headers"
+                type    = "csv">
+                <img src="/images/export-csv.png" height="35" width="40">
+            </download-excel>
+          </v-flex>
+        </v-layout>
+      </v-container>
         <v-data-table
             :headers="headers"
             :items="responses"
