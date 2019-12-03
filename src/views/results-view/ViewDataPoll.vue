@@ -1,5 +1,6 @@
 <template>
     <v-flex class="view-container">
+       <h4 style="color:white">{{resultPoll.name}}</h4>
        <h5 style="color:white">Número de encuestas: {{getViewData.length}}</h5>
        <v-btn style="margin-top: 50px;"
        absolute
