@@ -1,5 +1,10 @@
 <template>
     <div>
+      <download-excel
+          :data="responses"
+          :fields="headers">
+          <img src="/images/excel_icon.png" height="35" width="40">
+      </download-excel>
         <v-data-table
             :headers="headers"
             :items="responses"
