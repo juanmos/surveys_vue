@@ -31,6 +31,27 @@
             <v-tab-item
             >
                 <v-card flat>
+                  <v-container
+                    fluid
+                    grid-list-lg
+                  >
+                    <v-layout row wrap>
+                      <v-flex xs1>
+                        <download-excel style="cursor: pointer;"
+                            :data="getViewData"
+                            >
+                            <img src="/images/export-excel.png" height="35" width="40">
+                        </download-excel>
+                      </v-flex>
+                      <v-flex xs1>
+                        <download-excel style="cursor: pointer;"
+                            :data="getViewData"
+                            type    = "csv">
+                            <img src="/images/export-csv.png" height="35" width="40">
+                        </download-excel>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
                     <poll-results-table :headers="getDataHeaders" :responses="getViewData"></poll-results-table>
                 </v-card>
             </v-tab-item>
@@ -64,6 +85,13 @@ export default {
     ...mapState([
       'currentPoll'
     ]),
+    getFields () {
+      let obj = {}
+      this.getDataHeaders.map(data => {
+        obj[data.text.replace(/ /g, '_')] = data.text
+      })
+      return obj
+    },
     getViewData () {
       return (this.resultPoll) ? this.resultPoll.originalJson.slice(1, this.resultPoll.originalJson.length) : []
     },
