@@ -27,6 +27,9 @@ export default {
     updateArgs () {
       return [true, true, { duration: 1000 }]
     },
+    getColumnChart () {
+      return (this.question.columnChartMajorToMinor) ? this.question.columnChartMajorToMinor : []
+    },
     getChartOptions () {
       return (this.question) ? {
         chart: {
@@ -43,7 +46,7 @@ export default {
           {
             name: this.question.label,
             colorByPoint: true,
-            data: this.question.columnChartMajorToMinor
+            data: this.getColumnChart
           }
         ],
         title: {
