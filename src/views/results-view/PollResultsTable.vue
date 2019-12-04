@@ -1,5 +1,30 @@
 <template>
     <div>
+      <v-container
+        fluid
+        grid-list-lg
+      >
+        <v-layout row wrap>
+          <v-flex xs1>
+            <download-excel style="cursor: pointer;"
+                :data="responses"
+                :fields="getFields"
+                :name="`${name}.xls`"
+                >
+                <img src="/images/export-excel.png" height="35" width="40">
+            </download-excel>
+          </v-flex>
+          <v-flex xs1>
+            <download-excel style="cursor: pointer;"
+                :data="responses"
+                :fields="getFields"
+                :name="`${name}.csv`"
+                type="csv">
+                <img src="/images/export-csv.png" height="35" width="40">
+            </download-excel>
+          </v-flex>
+        </v-layout>
+      </v-container>
         <v-data-table
             :headers="headers"
             :items="responses"
@@ -19,7 +44,7 @@
 
 <script>
 export default {
-  props: ['responses', 'headers', 'variablesMode', 'currentPoll'],
+  props: ['responses', 'headers', 'variablesMode', 'currentPoll', 'name'],
   data () {
     return {
       dialogAnswerEdit: false,
@@ -32,6 +57,22 @@ export default {
         code: ''
       },
       arrIndex: null
+    }
+  },
+  computed: {
+    getFields () {
+      let objectHeaders = {}
+      if (this.responses.length > 0) {
+        let object = this.responses[0]
+        Object.entries(object).forEach(entry => {
+          let key = entry[0]
+          let title = this.headers.find(q => q.code === key)
+          if (title) {
+            objectHeaders[title.text] = key
+          }
+        })
+      }
+      return objectHeaders
     }
   },
   methods: {

@@ -47,7 +47,11 @@ export default {
   data () {
     return {
       active: null,
-      resultPoll: null,
+      resultPoll: {
+        name: '',
+        originalJson: [],
+        formatedConfiguration: []
+      },
       originalHeaders: null,
       originalCopy: [],
       segmentationDialog: false,
