@@ -68,7 +68,7 @@
            </v-layout>
            <v-dialog v-model="dialogMap">
              <v-card>
-               <v-card-title>titulo</v-card-title>
+               <v-card-title>UBICACIONES DE LAS ENCUESTAS REALIZADAS</v-card-title>
                <map-component :markers="mapMarkers" :gmapCenter="dataGmapCenter"></map-component>
                <v-card-actions>
                  <v-spacer></v-spacer>
