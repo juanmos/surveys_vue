@@ -59,10 +59,6 @@
     <chart-bar  v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
     <chart-bar-sort  v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort>
   </div>
-  <div v-if="graphicType === 'bar'">
-    <chart-bar  v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
-    <chart-bar-sort  v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort>
-  </div>
   <div v-if="graphicType === 'line'">
     <chart-line v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-line>
     <chart-line-sort v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort>
