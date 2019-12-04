@@ -39,30 +39,47 @@
         <v-radio label="Barras" value="bar"></v-radio>
         <v-radio label="Lineal" value="line"></v-radio>
       </v-radio-group>
-      <!-- <v-btn
+      <v-btn
         class="menuFloat"
         dark
         fab
         small
         title="IMAGEN SECUNDARIA"
-        @click="sortData()">
+        @click="sort = !sort">
         <v-icon>keyboard_arrow_down</v-icon>
-      </v-btn> -->
+      </v-btn>
       <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
   </div>
-  <chart v-if="graphicType === 'column'" :question="currentQuestion" :graphicType="graphicType"></chart>
-  <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
-  <chart-bar v-if="graphicType === 'bar'" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
-  <chart-line v-if="graphicType === 'line'" :question="currentQuestion" :graphicType="graphicType"></chart-line>
+  <div v-if="graphicType === 'column'">
+    <chart v-if="sort === true" :question="currentQuestion" :graphicType="graphicType" :sort="sort"></chart>
+    <chart-sort v-if="sort === false" :question="currentQuestion" :graphicType="graphicType" :sort="sort"></chart-sort>
+  </div>
 
+  <div v-if="graphicType === 'bar'">
+    <chart-bar  v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
+    <chart-bar-sort  v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort>
+  </div>
+  <div v-if="graphicType === 'bar'">
+    <chart-bar  v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
+    <chart-bar-sort  v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort>
+  </div>
+  <div v-if="graphicType === 'line'">
+    <chart-line v-if="sort === true" :question="currentQuestion" :graphicType="graphicType"></chart-line>
+    <chart-line-sort v-if="sort === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort>
+  </div>
+
+  <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
   </v-card>
 </template>
 
 <script>
 import Chart from './../../components/highcharts/Chart'
+import ChartSort from './../../components/highcharts/ChartSort'
 import ChartPie from './../../components/highcharts/ChartPie'
 import ChartBar from './../../components/highcharts/ChartBar'
+import ChartBarSort from './../../components/highcharts/ChartBarSort'
 import ChartLine from './../../components/highcharts/ChartLine'
+import ChartLineSort from './../../components/highcharts/ChartLineSort'
 export default {
   inheritAttrs: false,
   props: {
@@ -108,7 +125,7 @@ export default {
       this.currentQuestion.type = 'column'
     }
   },
-  components: {Chart, ChartPie, ChartBar, ChartLine}
+  components: {Chart, ChartPie, ChartBar, ChartLine, ChartSort, ChartBarSort, ChartLineSort}
 }
 </script>
 
