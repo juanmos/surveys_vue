@@ -12,6 +12,7 @@
       :key="index + Math.random()"
       v-for="(m, index) in markers"
       :position="m.position"
+      style="color:blue;"
       :clickable="true"
       :draggable="false"
       @click="openInfoWindowTemplate(m.position, m.dateStart, m.dateEnd)"
