@@ -16,10 +16,6 @@ export default {
     graphicType: {
       type: String,
       required: true
-    },
-    sort: {
-      type: Boolean,
-      required: true
     }
   },
   data: () => ({
@@ -29,15 +25,12 @@ export default {
   methods: {},
   computed: {
     updateArgs () {
-      return [true, true, { duration: 0 }]
-    },
-    getColumnChart () {
-      return (this.question.columnChart) ? this.question.columnChart : []
+      return [true, true, { duration: 1000 }]
     },
     getChartOptions () {
       return (this.question) ? {
         chart: {
-          type: 'column',
+          type: 'line',
           backgroundColor: 'rgb(48, 48, 48)'
         },
         pane: {
@@ -50,7 +43,7 @@ export default {
           {
             name: this.question.label,
             colorByPoint: true,
-            data: this.getColumnChart // this.question.columnChart
+            data: this.question.columnChartMajorToMinor
           }
         ],
         title: {
@@ -127,6 +120,12 @@ export default {
     getType () {
       return this.dataChart
     }
+  },
+  watch: {
+    /* graphicType: function (val) {
+      console.log('val--', val)
+      this.type = val
+    } */
   },
   components: {}
 }
