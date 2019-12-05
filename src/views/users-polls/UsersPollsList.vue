@@ -207,7 +207,7 @@ export default {
       search: '',
       msgType: 'error',
       page: 1,
-      limit: 20,
+      limit: 10,
       total: 1,
       itemSelected: null,
       loaded: false,
@@ -280,11 +280,7 @@ export default {
     ...mapGetters('users', {findUsersPollsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersPolls () {
-      if (this.filterRol != null) {
-        return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
-      } else {
-        return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
-      }
+      return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
     },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
