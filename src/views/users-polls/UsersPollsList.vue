@@ -8,12 +8,14 @@
               <v-card-title>
                 <v-flex xs6>
                     <v-text-field
-                      v-model="search"
-                      append-icon="search"
-                      label="Buscar por nombre"
-                      single-line
-                      hide-details
-                    ></v-text-field>
+                            v-model="search"
+                            @keyup.enter="searchUserName"
+                            @keyup.space="searchUserName"
+                            append-icon="search"
+                            label="Buscar por nombre..."
+                            single-line
+                            hide-details
+                          ></v-text-field>
                     <v-select
                       v-model="filterRol"
                       v-bind:items="getRoles"
@@ -25,7 +27,7 @@
               </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="getUsersPolls"
+                  :items="users"
                   hide-actions
                   item-key="name"
                   :search="search"
@@ -205,13 +207,13 @@ export default {
       message: '',
       showMsg: false,
       search: '',
+      users: [],
       msgType: 'error',
       page: 1,
-      limit: 10,
+      limit: 20,
       total: 1,
       itemSelected: null,
       loaded: false,
-      categories: [],
       query: {},
       dialog: false
     }
@@ -230,8 +232,16 @@ export default {
       this.snackColor = 'success'
       this.snackText = 'Data saved'
     },
+    getUsers () {
+      this.findUsersPolls({removed: false, ...this.query}).then(response => {
+        this.limit = response.limit
+        this.total = response.total
+        this.users = response.data
+        this.loaded = true
+      })
+    },
     getNameRol (id) {
-      let data = this.findRolesInStore({query: {removed: false, _id: id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+      let data = this.findRolesInStore({query: {removed: false, _id: id, ...this.query}}).data
       let name = ''
       if (data.length > 0 && data[0].name) {
         name = data[0].name
@@ -272,6 +282,12 @@ export default {
           return response.data || response
         })
       })
+    },
+    searchUserName () {
+      this.findUsersPolls({query: {$or: [{name: {$search: this.search}}], $sort: { name: '1' }, removed: false, $skip: 0, $limit: null}}).then((result) => {
+        this.loaded = true
+        this.users = result.data
+      })
     }
   },
   computed: {
@@ -279,9 +295,6 @@ export default {
     ...mapState('users', { paginationVal: 'pagination' }),
     ...mapGetters('users', {findUsersPollsInStore: 'find'}),
     ...mapGetters('roles', {findRolesInStore: 'find'}),
-    getUsersPolls () {
-      return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
-    },
     getLength () {
       return Math.round((this.total / this.limit)) === 0 ? 1 : Math.round((this.total / this.limit)) + 1
     },
@@ -300,22 +313,31 @@ export default {
   },
   watch: {
     page () {
-      this.findUsersPolls({query: {removed: false, ...this.query}}).then(response => {
+      this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
         this.limit = response.limit
+        this.loaded = true
+        this.users = response.data
         this.total = response.total
       })
+    },
+    filterRol: function (val) {
+      let searchRolId = {}
+      if (val) {
+        searchRolId._rol_id = val
+        this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...searchRolId}}).then(response => {
+          this.limit = response.limit
+          this.loaded = true
+          this.users = response.data
+          this.total = response.total
+        })
+      } else {
+        this.getUsers()
+      }
     }
   },
   created () {
-    this.findUsersPolls({removed: false, ...this.query}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
-      this.loaded = true
-      this.categories = response.data
-    })
+    this.getUsers()
     this.findRoles({query: {removed: false, ...this.query}}).then(response => {
-      this.limit = response.limit
-      this.total = response.total
       this.loaded = true
       this.roles = response.data
     })
