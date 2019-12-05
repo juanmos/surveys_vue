@@ -6,20 +6,18 @@
             <v-card :flat="true">
               <v-card-title>
                   <span class="title text-sm-left">Proyecto de Encuestas
-                  <!-- <v-text-field append-icon="search" label="Buscar ..." single-line hide-details  v-model="search"></v-text-field> -->
                 </span>
                 <v-spacer></v-spacer>
-                <span class="title text-sm-left">
-                 <!-- <v-autocomplete
-                      :filter="customFilter"
-                      label="Filtro por estado"
-                      v-model="state_polls_filter"
-                      :items="itemsestado"
-                      item-text="name"
-                      item-value="id"
-                  ></v-autocomplete> -->
-                </span>
 
+                <v-text-field
+                            v-model="search"
+                            @keyup.enter="searchProjectName"
+                            @keyup.space="searchProjectName"
+                            append-icon="search"
+                            label="Buscar por nombre..."
+                            single-line
+                            hide-details
+                              />
                 <v-spacer></v-spacer>
                 <v-btn class="deep-orange darken-3" fab small dark  @click="goToNew()">
                   <v-icon>add</v-icon>
@@ -33,7 +31,6 @@
                   :items="listPollsProjects"
                   hide-actions
                   item-key="name"
-                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
@@ -349,6 +346,12 @@ export default {
       this.snack = true
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
+    },
+    searchProjectName () {
+      this.findPolls({query: {$or: [{name: {$search: this.search}}], $sort: { name: '1' }, removed: false, $skip: 0, $limit: null}}).then((result) => {
+        this.loaded = true
+        this.listPollsProjects = result.data
+      })
     },
     getData () {
       this.query = {}
