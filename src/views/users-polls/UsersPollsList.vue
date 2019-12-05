@@ -281,9 +281,9 @@ export default {
     ...mapGetters('roles', {findRolesInStore: 'find'}),
     getUsersPolls () {
       if (this.filterRol != null) {
-        return this.findUsersPollsInStore({query: {removed: false, _rol_id: this.filterRol, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+        return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
       } else {
-        return this.findUsersPollsInStore({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).data
+        return this.findUsersPollsInStore({query: {removed: false, ...this.query}}).data
       }
     },
     getLength () {
@@ -304,14 +304,14 @@ export default {
   },
   watch: {
     page () {
-      this.findUsersPolls({query: {removed: false, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+      this.findUsersPolls({query: {removed: false, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
       })
     }
   },
   created () {
-    this.findUsersPolls({$skip: this.getSkip, $limit: this.limit, removed: false, ...this.query}).then(response => {
+    this.findUsersPolls({removed: false, ...this.query}).then(response => {
       this.limit = response.limit
       this.total = response.total
       this.loaded = true
