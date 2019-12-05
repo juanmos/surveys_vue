@@ -66,19 +66,28 @@
                />
              </v-flex>
            </v-layout>
-           <v-dialog v-model="dialogMap">
+           <v-dialog v-model="dialogMap" fullscreen v-if="dialogMap">
              <v-card>
-               <v-card-title>UBICACIONES DE LAS ENCUESTAS REALIZADAS</v-card-title>
-               <map-component :markers="mapMarkers" :gmapCenter="dataGmapCenter"></map-component>
-               <v-card-actions>
-                 <v-spacer></v-spacer>
-                 <v-btn color="dark darken-1"
-                        flat="flat"
-                        @click="dialogMap = false"
-                          >
-                          CERRAR
-                 </v-btn>
-               </v-card-actions>
+               <v-card-title>UBICACIONES DE LAS ENCUESTAS REALIZADAS </v-card-title>
+               <v-select
+                   v-model="selectedUser"
+                   v-bind:items="listUsers"
+                   item-text="name"
+                   item-value="_id"
+                   label="Encuestador"
+                   ></v-select>
+                   <label>TOTAL: {{filtersMarkers.length}}</label>
+                   <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="dark darken-1"
+                           flat="flat"
+                           style="background: #000;"
+                           @click="dialogMap = false"
+                             >
+                             CERRAR
+                    </v-btn>
+                  </v-card-actions>
+               <map-component :markers="filtersMarkers" :gmapCenter="dataGmapCenter"></map-component>
              </v-card>
            </v-dialog>
            <v-dialog v-model="dialogQuestionDetail" fullscreen v-if="dialogQuestionDetail">
@@ -133,12 +142,16 @@ export default {
     },
     graphicType: 'column',
     configPoll: {
-      name: ''
+      name: '',
+      users: []
     },
+    selectedUser: null,
+    listUsers: [],
     dialogMap: false,
     dialogQuestionDetail: false,
     projectname: '',
     pages: [],
+    filtersMarkers: [],
     mapMarkers: [],
     dataGmapCenter: {
       lat: 0,
@@ -162,6 +175,15 @@ export default {
       this.dialogQuestionDetail = true
     }
   },
+  watch: {
+    selectedUser: function (val) {
+      if (val) {
+        this.filtersMarkers = this.mapMarkers.filter(marker => marker._user_id === val)
+      } else {
+        this.filtersMarkers = [...this.mapMarkers]
+      }
+    }
+  },
   computed: {
     ...mapState([
       'currentEnv'
@@ -179,7 +201,9 @@ export default {
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
       this.dataGmapCenter = this.configPoll.gmapCenter
+      this.listUsers = [...this.configPoll.users, {_id: null, name: 'TODOS'}]
       this.mapMarkers = this.configPoll.markers
+      this.filtersMarkers = [...this.configPoll.markers]
     }).catch(err => console.log('error', err))
   },
   components: {StatsCard, ResultPage, MapComponent, ResultDetailQuestion}

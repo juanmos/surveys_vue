@@ -8,6 +8,7 @@
     map-type-id="roadmap"
     style="width: 100%; height: 800px;"
   >
+  <!-- <gmap-cluster> -->
   <GmapMarker
       :key="index + Math.random()"
       v-for="(m, index) in markers"
@@ -16,19 +17,22 @@
       :draggable="false"
       @click="openInfoWindowTemplate(m.position, m.dateStart, m.dateEnd)"
     />
-  <gmap-info-window
-      :options="{maxWidth: 1200}"
-      :position="infoWindow.position"
-      :opened="infoWindow.open"
-      @closeclick="infoWindow.open=false">
-      <div style="overflow: scroll-x" v-html="infoWindow.template"></div>
-  </gmap-info-window>
+    <gmap-info-window
+        :options="{maxWidth: 1200}"
+        :position="infoWindow.position"
+        :opened="infoWindow.open"
+        @closeclick="infoWindow.open=false">
+        <div style="overflow: scroll-x" v-html="infoWindow.template"></div>
+    </gmap-info-window>
+  <!-- </gmap-cluster> -->
+
   </GmapMap>
   </v-card>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import GmapCluster from 'vue2-google-maps/dist/components/cluster'
 const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['markers', 'gmapCenter', 'mapQuestions'],
@@ -73,10 +77,6 @@ export default {
     getMarkers (val) {
     }
   },
-  monted () {
-    // this.$refs.gmap.$mapCreated.then((map) => {
-    //   map.fitBounds(this.generateBounds())
-    // })
-  }
+  components: { GmapCluster }
 }
 </script>
