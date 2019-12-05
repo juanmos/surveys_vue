@@ -30,7 +30,6 @@
                   :items="users"
                   hide-actions
                   item-key="name"
-                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
