@@ -25,7 +25,7 @@
                           ></v-text-field> -->
                 </v-flex>
                 <v-flex xs6>
-                    <label for="">TOTAL: {{listMobileResults.length}}</label>
+                    <label for="">TOTAL: {{total}}</label>
                 </v-flex>
               </v-card-title>
             <v-data-table
