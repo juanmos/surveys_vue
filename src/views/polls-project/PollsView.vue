@@ -210,7 +210,7 @@
                                     <v-list-tile-title>Duplicar</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToMobileResults(props.item._id)">
-                                    <v-icon class="icon">file_copy</v-icon>
+                                    <v-icon class="icon">assignment_ind</v-icon>
                                     <v-list-tile-title>Encuestas de involucrados</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
