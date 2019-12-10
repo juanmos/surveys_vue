@@ -121,9 +121,9 @@
                 top
                 right
                 color="primary"
-                @click="goToNew()"
+                @click="goToList()"
                 >
-                    <v-icon>add</v-icon>
+                    <v-icon>list</v-icon>
                 </v-btn>
                 <loading-component v-if="loading
                 "></loading-component>
@@ -152,7 +152,7 @@ export default {
         { text: 'loki',
           align: 'center',
           value: '_loki',
-          sortable: false
+          sortable: true
         },
         { text: 'Encuestador',
           value: 'user.name',
@@ -196,16 +196,14 @@ export default {
         this.limit = response.limit
         this.total = response.total
         this.listMobileResults = response.data
-        this.cloneListMobileResults = [...response.data]
         this.loaded = true
       })
     },
     getFilterMobileSurvey (userId) {
-      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, _user_id: userId, $skip: 0, $limit: this.limit}}).then(response => {
+      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, _user_id: userId, $skip: this.getSkip, $limit: this.limit}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.listMobileResults = response.data
-        this.cloneListMobileResults = [...response.data]
         this.loaded = true
       })
     },
@@ -213,6 +211,9 @@ export default {
       this.snack = true
       this.snackColor = 'error'
       this.snackText = 'Canceled'
+    },
+    goToList () {
+      this.$router.go(-1)
     },
     open () {
       this.snack = true
@@ -253,14 +254,22 @@ export default {
   },
   watch: {
     page () {
-      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
-        this.limit = response.limit
-        this.total = response.total
-        this.listMobileResults = response.data
-      })
+      if (this.selectedUser) {
+        this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, _user_id: this.selectedUser, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+          this.limit = response.limit
+          this.total = response.total
+          this.listMobileResults = response.data
+        })
+      } else {
+        this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: this.getSkip, $limit: this.limit, ...this.query}}).then(response => {
+          this.limit = response.limit
+          this.total = response.total
+          this.listMobileResults = response.data
+        })
+      }
     },
     selectedUser: function (val) {
-      console.log('val', val)
+      this.page = 0
       if (val) {
         this.getFilterMobileSurvey(val)
       } else {
