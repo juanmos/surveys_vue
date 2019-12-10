@@ -401,6 +401,11 @@ const CompanyEdit = resolve => {
     resolve(require('./views/companies/CompanyEdit.vue'))
   }, 'company-edit')
 }
+const ListMobileSurvey = resolve => {
+  require.ensure(['./views/results-view/ListMobileSurvey.vue'], () => {
+    resolve(require('./views/results-view/ListMobileSurvey.vue'))
+  }, 'list-mobile-results')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -663,6 +668,12 @@ export default new Router({
           name: 'ViewDataCodingPoll',
           props: true,
           component: ViewDataCodingPoll
+        },
+        {
+          path: 'view-mobile-results/:id',
+          name: 'ListMobileSurvey',
+          props: true,
+          component: ListMobileSurvey
         },
         {
           path: 'view-creator-report/:id',

@@ -209,6 +209,10 @@
                                     <v-icon class="icon">file_copy</v-icon>
                                     <v-list-tile-title>Duplicar</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="goToMobileResults(props.item._id)">
+                                    <v-icon class="icon">file_copy</v-icon>
+                                    <v-list-tile-title>Encuestas de involucrados</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                                     <v-icon class="icon">border_color</v-icon>
                                     <v-list-tile-title>Editar encuesta</v-list-tile-title>
@@ -617,6 +621,9 @@ export default {
     },
     goToViewCoding (id) {
       this.$router.push({ path: `/view-data-coding-poll/${id}` })
+    },
+    goToMobileResults (id) {
+      this.$router.push({ path: `/view-mobile-results/${id}` })
     },
     duplicate (configPoll) {
       let newConfigPoll = {

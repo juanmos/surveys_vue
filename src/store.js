@@ -310,6 +310,13 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('mobile-survey-results', {
+      instanceDefaults: {
+        _user_id: '',
+        _config_poll_id: '',
+        removed: false
+      }
+    }),
     service('poll-dashboards', {
       instanceDefaults: {
         removed: false,
