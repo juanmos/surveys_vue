@@ -357,7 +357,7 @@ export default {
       {
         text: 'Nombre',
         align: 'left',
-        sortable: true,
+        sortable: false,
         value: 'name'
       },
       {text: 'Descripción', value: 'name'}
