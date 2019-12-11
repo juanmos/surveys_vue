@@ -37,10 +37,14 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        {{ props.item.filename }}
+                        <a :href="`${props.item.path}`" target="_blank">{{ props.item.filename }}
+                        </a>
                       </td>
                       <td>
                         {{ props.item._loki }}
+                      </td>
+                      <td>
+                        {{ props.item.createdAt }}
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -132,6 +136,11 @@ export default {
           value: 'name'
         },
         { text: 'Loki',
+          align: 'center',
+          value: '_loki',
+          sortable: true
+        },
+        { text: 'Fecha de Creación',
           align: 'center',
           value: '_loki',
           sortable: true
