@@ -37,14 +37,20 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        <a :href="`${props.item.path}`" target="_blank">{{ props.item.filename }}
-                        </a>
+                          <a :href="getUrlImage(props.item.path)"
+                          title="Ver archivo"
+                          target="_blank">
+                          {{ props.item.filename }}
+                      </a>
                       </td>
                       <td>
                         {{ props.item._loki }}
                       </td>
                       <td>
-                        {{ props.item.createdAt }}
+                        {{ props.item.fecha_inicio }}
+                      </td>
+                      <td>
+                        {{ props.item.fecha_fin }}
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -125,6 +131,7 @@ import {mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+const enviroment = require('./../../../config/enviroment.json')
 export default {
   data () {
     return {
@@ -140,7 +147,12 @@ export default {
           value: '_loki',
           sortable: true
         },
-        { text: 'Fecha de Creación',
+        { text: 'Fecha Inicio',
+          align: 'center',
+          value: '_loki',
+          sortable: true
+        },
+        { text: 'Fecha Fin',
           align: 'center',
           value: '_loki',
           sortable: true
@@ -188,6 +200,10 @@ export default {
     },
     goToList () {
       this.$router.go(-1)
+    },
+    getUrlImage (file) {
+      file = (file) || 'uploads/construct/data_not_found.png'
+      return enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + file
     },
     open () {
       this.snack = true
