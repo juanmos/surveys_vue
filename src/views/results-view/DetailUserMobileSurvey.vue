@@ -4,12 +4,9 @@
         <v-layout row wrap>
         <v-flex xs12>
             <v-card :flat="true">
-              <v-subheader>Encuestas para procesar</v-subheader>
+              <v-subheader>Encuestador: {{userCurrent.name}}</v-subheader>
               <v-card-title>
                 <v-flex xs6>
-                    <span class="title">
-                      <v-text-field append-icon="search" label="Buscar..." single-line hide-details  v-model="search"></v-text-field>
-                    </span>
                     <!-- <v-select
                      v-model="selectedUser"
                      v-bind:items="users"
@@ -33,18 +30,17 @@
               </v-card-title>
             <v-data-table
                   :headers="headers"
-                  :items="users"
+                  :items="listMobileResults"
                   hide-actions
                   item-key="_id"
-                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        {{ props.item.name }}
+                        {{ props.item.filename }}
                       </td>
                       <td>
-                        {{ (props.item.totalPolls) ? props.item.totalPolls : 0 }}
+                        {{ props.item._loki }}
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -60,41 +56,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToDetailUser(props.item._id)">
-                              <v-list-tile-title >Detalles</v-list-tile-title>
+                            <v-list-tile @click="dialog = true; itemSelected = props.item">
+                              <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
-                            <v-dialog
-                              v-model="dialog"
-                              max-width="290"
-                            >
-                              <v-card>
-                                <v-card-title class="headline">Eliminar usuario</v-card-title>
-
-                                <v-card-text>
-                                  Esta seguro que desea eliminar la encuesta?
-                                </v-card-text>
-
-                                <v-card-actions>
-                                  <v-spacer></v-spacer>
-
-                                  <v-btn
-                                    color="red darken-4"
-                                    flat="flat"
-                                    @click="dialog = false"
-                                  >
-                                    Cancelar
-                                  </v-btn>
-
-                                  <v-btn
-                                    color="teal darken-3"
-                                    flat="flat"
-                                    @click="dialog = false, del()"
-                                  >
-                                    Aceptar
-                                  </v-btn>
-                                </v-card-actions>
-                              </v-card>
-                            </v-dialog>
                           </v-list>
                         </v-menu>
                       </td>
@@ -116,6 +80,38 @@
             </v-card>
         </v-flex>
         </v-layout>
+        <v-dialog
+          v-model="dialog"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline">Eliminar archivo</v-card-title>
+
+            <v-card-text>
+              Esta seguro que desea eliminar la encuesta?
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="red darken-4"
+                flat="flat"
+                @click="dialog = false"
+              >
+                Cancelar
+              </v-btn>
+
+              <v-btn
+                color="teal darken-3"
+                flat="flat"
+                @click="dialog = false, del()"
+              >
+                Aceptar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     </v-container>
 </div>
 </template>
@@ -130,14 +126,14 @@ export default {
     return {
       headers: [
         {
-          text: 'ENCUESTADOR',
+          text: 'Nombre del Archivo',
           align: 'center',
-          sortable: true,
+          sortable: false,
           value: 'name'
         },
-        { text: 'Total de encuestas',
+        { text: 'Loki',
           align: 'center',
-          value: 'totalPolls',
+          value: '_loki',
           sortable: true
         },
         { text: 'Acciones',
@@ -148,19 +144,18 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
-      filterRol: null,
-      id: null,
-      roles: null,
+      configPoll: null,
+      user: null,
+      userCurrent: {
+        name: ''
+      },
       rules: validations,
       dialog: false,
-      selectedUser: null,
       total: 0,
       message: '',
       showMsg: false,
       search: '',
-      users: [],
       listMobileResults: [],
-      cloneListMobileResults: [],
       msgType: 'error',
       itemSelected: null,
       loaded: false,
@@ -170,25 +165,12 @@ export default {
   },
   methods: {
     ...mapActions('mobile-survey-results', { findMobileSurvey: 'find' }),
-    ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions('users', {getUser: 'get'}),
     getMobileSurvey () {
-      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: 0, $limit: null}}).then(response => {
+      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.configPoll, _user_id: this.user, $skip: 0, $limit: null}}).then(response => {
         this.listMobileResults = response.data
-        this.users = this.users.map(user => {
-          user.totalPolls = this.listMobileResults.filter(mobileResult => mobileResult._user_id === user._id).length
-          this.total += user.totalPolls
-          return user
-        })
+        this.total = response.total
       })
-    },
-    getFilterMobileSurvey (userId) {
-      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: 0, $limit: null, _user_id: userId}}).then(response => {
-        this.listMobileResults = response.data
-        this.loaded = true
-      })
-    },
-    goToDetailUser (userId) {
-      this.$router.push({ path: `/view-detail-mobile-results/${this.id}/${userId}` })
     },
     cancel () {
       this.snack = true
@@ -211,16 +193,12 @@ export default {
       const mobileResult = new MobileSurveyResult(this.itemSelected)
       mobileResult.removed = true
       mobileResult.patch().then((result) => {
-        if (this.selectedUser) {
-          this.getFilterMobileSurvey(this.selectedUser)
-        } else {
-          this.getMobileSurvey()
-        }
+        this.getMobileSurvey()
       })
     },
-    getDataConfig () {
-      this.getPoll([this.id, {query: {withInstances: false}}]).then(result => {
-        this.users = [...result.users]
+    getUserCurrent () {
+      this.getUser(this.user).then(result => {
+        this.userCurrent = result
       }).catch(err => console.log('este es el error', err))
     }
   },
@@ -230,9 +208,10 @@ export default {
   watch: {
   },
   created () {
-    this.id = this.$route.params.id
+    this.configPoll = this.$route.params.config
+    this.user = this.$route.params.user
     this.getMobileSurvey()
-    this.getDataConfig()
+    this.getUserCurrent()
   },
   components: {LoadingComponent, EditableField}
 }

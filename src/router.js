@@ -406,6 +406,11 @@ const ListMobileSurvey = resolve => {
     resolve(require('./views/results-view/ListMobileSurvey.vue'))
   }, 'list-mobile-results')
 }
+const DetailUserMobileSurvey = resolve => {
+  require.ensure(['./views/results-view/DetailUserMobileSurvey.vue'], () => {
+    resolve(require('./views/results-view/DetailUserMobileSurvey.vue'))
+  }, 'list-mobile-results')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -674,6 +679,12 @@ export default new Router({
           name: 'ListMobileSurvey',
           props: true,
           component: ListMobileSurvey
+        },
+        {
+          path: 'view-detail-mobile-results/:config/:user',
+          name: 'DetailUserMobileSurvey',
+          props: true,
+          component: DetailUserMobileSurvey
         },
         {
           path: 'view-creator-report/:id',
