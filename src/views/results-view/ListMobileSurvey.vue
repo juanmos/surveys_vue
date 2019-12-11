@@ -174,7 +174,7 @@ export default {
     getMobileSurvey () {
       this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: 0, $limit: null}}).then(response => {
         this.listMobileResults = [...response.data]
-        console.log('listt--', this.listMobileResults)
+        // console.log('listt--', this.listMobileResults)
         this.users = this.users.map(user => {
           user.totalPolls = this.listMobileResults.filter(mobileResult => mobileResult._user_id === user._id).length
           this.total += user.totalPolls
