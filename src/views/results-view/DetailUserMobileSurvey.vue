@@ -203,7 +203,8 @@ export default {
     },
     getUrlImage (file) {
       file = (file) || 'uploads/construct/data_not_found.png'
-      return enviroment[enviroment.currentEnviroment].backend.urlBase + '/' + file
+      file = file.replace(/public/g, '')
+      return enviroment[enviroment.currentEnviroment].backend.urlBase + file
     },
     open () {
       this.snack = true
