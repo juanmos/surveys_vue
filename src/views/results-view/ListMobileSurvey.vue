@@ -7,6 +7,9 @@
               <v-subheader>Encuestas para procesar</v-subheader>
               <v-card-title>
                 <v-flex xs6>
+                    <span class="title">
+                      <v-text-field append-icon="search" label="Buscar..." single-line hide-details  v-model="search"></v-text-field>
+                    </span>
                     <!-- <v-select
                      v-model="selectedUser"
                      v-bind:items="users"
@@ -33,6 +36,7 @@
                   :items="users"
                   hide-actions
                   item-key="_id"
+                  :search="search"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
