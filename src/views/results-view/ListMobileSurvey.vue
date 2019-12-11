@@ -113,6 +113,7 @@
                 >
                     <v-icon>list</v-icon>
                 </v-btn>
+                <loading-component v-if="loading"></loading-component>
             </v-card>
         </v-flex>
         </v-layout>
@@ -121,7 +122,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
@@ -160,7 +161,6 @@ export default {
       search: '',
       users: [],
       listMobileResults: [],
-      cloneListMobileResults: [],
       msgType: 'error',
       itemSelected: null,
       loaded: false,
@@ -177,14 +177,9 @@ export default {
         this.users = this.users.map(user => {
           user.totalPolls = this.listMobileResults.filter(mobileResult => mobileResult._user_id === user._id).length
           this.total += user.totalPolls
+          this.loaded = true
           return user
         })
-      })
-    },
-    getFilterMobileSurvey (userId) {
-      this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: 0, $limit: null, _user_id: userId}}).then(response => {
-        this.listMobileResults = response.data
-        this.loaded = true
       })
     },
     goToDetailUser (userId) {
@@ -198,40 +193,21 @@ export default {
     goToList () {
       this.$router.go(-1)
     },
-    open () {
-      this.snack = true
-      this.snackColor = 'info'
-      this.snackText = 'Dia opened'
-    },
-    close (val) {
-      // console.('Dia closed', val)
-    },
-    del () {
-      const {MobileSurveyResult} = this.$FeathersVuex
-      const mobileResult = new MobileSurveyResult(this.itemSelected)
-      mobileResult.removed = true
-      mobileResult.patch().then((result) => {
-        if (this.selectedUser) {
-          this.getFilterMobileSurvey(this.selectedUser)
-        } else {
-          this.getMobileSurvey()
-        }
-      })
-    },
     getDataConfig () {
       this.getPoll([this.id, {query: {withInstances: false}}]).then(result => {
         this.users = [...result.users]
+        this.getMobileSurvey()
       }).catch(err => console.log('este es el error', err))
     }
   },
   computed: {
-    ...mapGetters('mobile-survey-results', {findMobileSurveyInStore: 'find'})
+    ...mapGetters('mobile-survey-results', {findMobileSurveyInStore: 'find'}),
+    ...mapState('mobile-survey-results', {loading: 'isFindPending'})
   },
   watch: {
   },
-  created () {
+  mounted () {
     this.id = this.$route.params.id
-    this.getMobileSurvey()
     this.getDataConfig()
   },
   components: {LoadingComponent, EditableField}
