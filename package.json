@@ -23,6 +23,7 @@
     "modal-fullscreen-vue": "^0.1.4",
     "moment-timezone": "^0.5.26",
     "socket.io-client": "^2.1.1",
+    "survey-pdf": "^1.1.24",
     "survey-vue": "^1.0.52",
     "surveyjs-editor": "^1.0.52",
     "surveyjs-widgets": "^1.0.52",

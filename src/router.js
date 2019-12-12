@@ -411,6 +411,11 @@ const DetailUserMobileSurvey = resolve => {
     resolve(require('./views/results-view/DetailUserMobileSurvey.vue'))
   }, 'list-mobile-results')
 }
+const ViewDataResponsePoll = resolve => {
+  require.ensure(['./views/results-view/ViewDataResponsePoll.vue'], () => {
+    resolve(require('./views/results-view/ViewDataResponsePoll.vue'))
+  }, 'view-data-response-poll')
+}
 
 Vue.use(Router)
 // const enviroment = require('./../config/enviroment')
@@ -685,6 +690,12 @@ export default new Router({
           name: 'DetailUserMobileSurvey',
           props: true,
           component: DetailUserMobileSurvey
+        },
+        {
+          path: 'view-data-response/:id',
+          name: 'ViewDataResponsePoll',
+          props: true,
+          component: ViewDataResponsePoll
         },
         {
           path: 'view-creator-report/:id',
