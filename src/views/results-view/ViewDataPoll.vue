@@ -51,6 +51,7 @@ export default {
   data () {
     return {
       active: null,
+      viewTypeData: 'coding',
       resultPoll: {
         name: '',
         originalJson: [],

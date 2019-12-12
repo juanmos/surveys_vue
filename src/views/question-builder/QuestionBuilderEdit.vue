@@ -48,6 +48,8 @@
   </div>
 </template>
 <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
+<script src="https://unpkg.com/survey-core@latest/survey.core.min.js"></script>
+<script src="https://unpkg.com/survey-pdf@latest/survey.pdf.min.js"></script>
 <script>
 import SurveyEditor from './../../components/surveyjs/SurveyEditorLoad'
 import * as SurveyVue from 'survey-vue'
