@@ -3,7 +3,7 @@
     <v-card color="black">
       <label for="">PDF EXPORT</label>
     </v-card>
-    <survey-view-pdf :jsonData="configPollCurrent.construct"></survey-view-pdf>
+    <survey-view-pdf :jsonData="configPollCurrent.construct" :dataResponse="dataResponse"></survey-view-pdf>
   </v-card>
 </template>
 <script>
@@ -15,7 +15,8 @@ export default {
     return {
       configPollCurrent: {
         construct: {}
-      }
+      },
+      dataResponse: null
     }
   },
   methods: {
@@ -29,6 +30,8 @@ export default {
     this.getConfigPoll(this.$route.params.id).then(response => {
       this.configPollCurrent = response
       this.configPollCurrent.construct = JSON.parse(response.construct)
+      this.dataResponse = this.configPollCurrent.formatAnswersMobile[0]
+      console.log('config--', this.dataResponse)
     })
   }
 }

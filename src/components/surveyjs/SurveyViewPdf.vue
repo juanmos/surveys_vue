@@ -15,7 +15,7 @@ SurveyVue.StylesManager.applyTheme('default')
 var Survey = SurveyVue.Survey
 
 export default {
-  props: ['jsonData', 'answers'],
+  props: ['jsonData', 'dataResponse'],
   components: {
     Survey
   },
@@ -37,9 +37,15 @@ export default {
               top: 10,
               bot: 10
           },
-          // format: [440, 500]
-      };
+        //  format: [595, 792]
+      }
       var surveyPDF = new SurveyPDF.SurveyPDF(this.jsonData, options)
+    /*   surveyPDF.onRenderHeader.add(function (_, canvas) {
+        canvas.drawText({
+            // text: 'ENCUESTAS REALIZADO POR PROPRAXIS S.A.',
+            fontSize: 10
+        });
+    }) */
       surveyPDF.data = this.model.data;
       surveyPDF.save(this.jsonData.title)
       // saveSurveyToPdf('surveyResult.pdf', this.survey, 595 * 2, 792 * 2);
@@ -121,8 +127,8 @@ export default {
     jsonData (val) {
       // console.log('mi data recibida ', dat)
       this.model = new SurveyVue.Model({ pages: val.pages})
-      this.model.data =
-        {
+      this.model.data = this.dataResponse
+      /*  this.model.data = {
           "pregunta1" : "01",
           "pregunta2" : "No",
           "pregunta3" : "Si",
@@ -186,7 +192,7 @@ export default {
           "pregunta58" : "res 55",
           "pregunta59" : "res 56",
           "pregunta60" : "res 57"
-      }
+      } */
       this.survey = this.model
     }
   }
