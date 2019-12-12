@@ -1,7 +1,19 @@
 <template>
   <v-card>
-    <v-card color="black">
-      <label for="">PDF EXPORT</label>
+    <v-btn
+    absolute
+    dark
+    fab
+    small
+    top
+    right
+    color="primary"
+    @click="gotoList()"
+    >
+        <v-icon>list</v-icon>
+    </v-btn>
+    <v-card>
+      <label for="">ENCUESTA N: {{indexPoll}}</label>
     </v-card>
     <survey-view-pdf :jsonData="configPollCurrent.construct" :dataResponse="dataResponse"></survey-view-pdf>
   </v-card>
@@ -16,6 +28,7 @@ export default {
       configPollCurrent: {
         construct: {}
       },
+      indexPoll: 0,
       dataResponse: null
     }
   },
@@ -30,8 +43,8 @@ export default {
     this.getConfigPoll(this.$route.params.id).then(response => {
       this.configPollCurrent = response
       this.configPollCurrent.construct = JSON.parse(response.construct)
-      this.dataResponse = this.configPollCurrent.formatAnswersMobile[0]
-      console.log('config--', this.dataResponse)
+      this.indexPoll = Number(this.$route.params.index)
+      this.dataResponse = this.configPollCurrent.formatAnswersMobile[this.indexPoll]
     })
   }
 }

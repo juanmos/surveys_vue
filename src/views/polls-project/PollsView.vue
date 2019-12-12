@@ -213,6 +213,10 @@
                                     <v-icon class="icon">assignment_ind</v-icon>
                                     <v-list-tile-title>Encuestas de involucrados</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="goViewResultsMobile(props.item._id)">
+                                    <v-icon class="icon">find_in_page</v-icon>
+                                    <v-list-tile-title>Vista de encuestas realizadas</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                                     <v-icon class="icon">border_color</v-icon>
                                     <v-list-tile-title>Editar encuesta</v-list-tile-title>
@@ -624,6 +628,9 @@ export default {
     },
     goToMobileResults (id) {
       this.$router.push({ path: `/view-mobile-results/${id}` })
+    },
+    goViewResultsMobile (id) {
+      this.$router.push({ path: `/list-data-response-mobile/${id}` })
     },
     duplicate (configPoll) {
       let newConfigPoll = {
