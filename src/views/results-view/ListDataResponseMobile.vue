@@ -28,16 +28,14 @@
                     <label>TOTAL DE ENCUESTAS: {{total}}</label>
                 </v-flex>
               </v-card-title>
-            <v-data-table
+          <v-data-table
                   :headers="headers"
                   :items="listMobilePolls"
-                  hide-actions
-                  item-key="_id"
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
                       <td class="justify-left">
-                        ENCUESTA - {{ props.index + 1}}
+                        ENCUESTA - {{ props.item.index + 1}}
                       </td>
                       <td class="justify-center layout px-0">
                         <v-menu
@@ -53,7 +51,7 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="goToViewPoll(props.index)">
+                            <v-list-tile @click="goToViewPoll(props.item.index)">
                               <v-list-tile-title >Ver encuesta</v-list-tile-title>
                             </v-list-tile>
                           </v-list>
@@ -124,11 +122,16 @@ export default {
       this.$router.go(-1)
     },
     goToViewPoll (index) {
-      this.$router.push({ path: `/view-data-response/${this.id}/${index}` })
+      // this.$router.push({ path: `/view-data-response/${this.id}/${index}` })
+      let routeData = this.$router.resolve({path: `/view-data-response/${this.id}/${index}`})
+      window.open(routeData.href, '_blank')
     },
     getDataConfig () {
       this.getPoll(this.id).then(result => {
         this.listMobilePolls = [...result.formatAnswersMobile]
+        this.listMobilePolls = this.listMobilePolls.map(answer => {
+          return {index: this.listMobilePolls.indexOf(answer), name: 'Enuesta'}
+        })
       }).catch(err => console.log('este es el error', err))
     }
   },

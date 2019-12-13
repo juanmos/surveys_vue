@@ -1,13 +1,20 @@
 <template>
   <div id="pdfSurvey">
-    <v-btn
-    dark
-    small
-    color="primary"
-    @click="saveToPdf"
-    >
-        DESCARGAR
-    </v-btn>
+    <v-layout row wrap >
+                 <v-flex md2 xs12>
+                   <h2 style="color: white">ENCUESTA NUMERO: {{indexPoll + 1}}</h2>
+                 </v-flex>
+                 <v-flex md2 xs12>
+                   <v-btn
+                   dark
+                   small
+                   color="primary"
+                   @click="saveToPdf"
+                   >
+                       DESCARGAR
+                   </v-btn>
+                 </v-flex>
+    </v-layout>
     <survey :survey="survey"></survey>
   </div>
 </template>
@@ -22,7 +29,7 @@ SurveyVue.StylesManager.applyTheme('default')
 var Survey = SurveyVue.Survey
 
 export default {
-  props: ['jsonData', 'dataResponse'],
+  props: ['jsonData', 'dataResponse', 'indexPoll'],
   components: {
     Survey
   },
@@ -59,9 +66,9 @@ export default {
     }
   },
   created () {
-    /* this.model = new SurveyVue.Model({pages: this.jsonData.pages})
+    this.model = new SurveyVue.Model({pages: this.jsonData.pages})
     this.model.data = this.dataResponse
-    this.survey = this.model */
+    this.survey = this.model
   },
   watch: {
      jsonData (val) {
