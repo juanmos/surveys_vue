@@ -12,10 +12,7 @@
     >
         <v-icon>list</v-icon>
     </v-btn>
-    <v-card>
-      <label for="">ENCUESTA N: {{indexPoll}}</label>
-    </v-card>
-    <survey-view-pdf :jsonData="configPollCurrent.construct" :dataResponse="dataResponse"></survey-view-pdf>
+    <survey-view-pdf :jsonData="currentConstruct" :dataResponse="dataResponse" :indexPoll="indexPoll"></survey-view-pdf>
   </v-card>
 </template>
 <script>
@@ -25,11 +22,9 @@ export default {
   components: {SurveyViewPdf},
   data () {
     return {
-      configPollCurrent: {
-        construct: {}
-      },
+      currentConstruct: [],
       indexPoll: 0,
-      dataResponse: null
+      dataResponse: {}
     }
   },
   methods: {
@@ -39,12 +34,11 @@ export default {
       this.$router.go(-1)
     }
   },
-  created () {
+  mounted () {
     this.getConfigPoll(this.$route.params.id).then(response => {
-      this.configPollCurrent = response
-      this.configPollCurrent.construct = JSON.parse(response.construct)
+      this.currentConstruct = JSON.parse(response.construct)
       this.indexPoll = Number(this.$route.params.index)
-      this.dataResponse = this.configPollCurrent.formatAnswersMobile[this.indexPoll]
+      this.dataResponse = response.formatAnswersMobile[this.indexPoll]
     })
   }
 }
