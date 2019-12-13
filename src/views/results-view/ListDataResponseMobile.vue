@@ -72,9 +72,36 @@
                 >
                     <v-icon>list</v-icon>
                 </v-btn>
+                <v-btn
+                dark
+                small
+                color="primary"
+                @click="getExportPdfAll()"
+                >
+                    DESCARGAR TODAS
+                </v-btn>
                 <loading-component v-if="loading"></loading-component>
             </v-card>
         </v-flex>
+        <v-dialog v-model="dialogWait" persistent max-width="900">
+            <v-card v-if="dialogWait">
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h4>DESCARGANDO ENCUESTAS</h4>
+              </v-flex>
+              <v-card-text>
+                  <center>
+                      <v-img
+                        src="/images/loader.gif"
+                        img-alt="Image"
+                        height="70"
+                        width="70"
+                        aspect-ratio="2.75"
+                      ></v-img>
+                    <h5>ESPERE POR FAVOR Y HABILITE LA DESCARGA DE VARIOS ARCHIVOS</h5>
+                  </center>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
         </v-layout>
     </v-container>
 </div>
@@ -83,7 +110,9 @@
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
 import ViewDataResponsePoll from './ViewDataResponsePoll'
+import * as SurveyVue from 'survey-vue'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import * as SurveyPDF from 'survey-pdf'
 export default {
   data () {
     return {
@@ -101,11 +130,26 @@ export default {
       id: null,
       search: '',
       dialog: false,
+      dialogWait: false,
+      page: 1,
+      options: {
+        fontSize: 14,
+        margins: {
+          left: 10,
+          right: 10,
+          top: 18,
+          bot: 10
+        }
+      },
+      pageCount: 0,
+      itemsPerPage: 10,
+      construct: null,
       selectedPoll: null,
       total: 0,
       dialogViewPoll: false,
       message: '',
       showMsg: false,
+      listCloneOriginal: [],
       listMobilePolls: [],
       msgType: 'error',
       itemSelected: null,
@@ -129,10 +173,33 @@ export default {
     getDataConfig () {
       this.getPoll(this.id).then(result => {
         this.listMobilePolls = [...result.formatAnswersMobile]
+        this.construct = JSON.parse(result.construct)
+        this.listCloneOriginal = [...result.formatAnswersMobile]
         this.listMobilePolls = this.listMobilePolls.map(answer => {
           return {index: this.listMobilePolls.indexOf(answer), name: 'Enuesta'}
         })
       }).catch(err => console.log('este es el error', err))
+    },
+    saveSurvey (surveyAnswer) {
+      let model = new SurveyVue.Model({pages: this.construct.pages})
+      model.data = this.listCloneOriginal[surveyAnswer]
+      let surveyPDF = new SurveyPDF.SurveyPDF(this.construct, this.options)
+      surveyPDF.data = model.data
+      surveyPDF.save(`${surveyAnswer + 1}-${this.construct.title}`)
+      if (surveyAnswer === (this.listCloneOriginal.length - 1)) {
+        this.dialogWait = false
+      }
+    },
+    getExportPdfAll () {
+      this.dialogWait = true
+      let that = this
+      for (var i = 0; i < this.listCloneOriginal.length; i++) {
+        (function (i) {
+          setTimeout(function () {
+            that.saveSurvey(i)
+          }, 7000 * (i + 1))
+        })(i)
+      }
     }
   },
   computed: {
