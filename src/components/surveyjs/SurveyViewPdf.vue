@@ -23,7 +23,7 @@
 import * as SurveyVue from 'survey-vue'
 import 'survey-vue/survey.css'
 import * as widgets from 'surveyjs-widgets'
-import * as SurveyPDF from 'survey-pdf';
+import * as SurveyPDF from 'survey-pdf'
 widgets.signaturepad(SurveyVue)
 SurveyVue.StylesManager.applyTheme('default')
 var Survey = SurveyVue.Survey
