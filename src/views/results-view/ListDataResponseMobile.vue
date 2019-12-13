@@ -172,9 +172,9 @@ export default {
     },
     getDataConfig () {
       this.getPoll(this.id).then(result => {
-        this.listMobilePolls = [...result.formatAnswersMobile]
+        this.listMobilePolls = result.formatAnswersMobile
         this.construct = JSON.parse(result.construct)
-        this.listCloneOriginal = [...result.formatAnswersMobile]
+        this.listCloneOriginal = [...this.listMobilePolls]
         this.listMobilePolls = this.listMobilePolls.map(answer => {
           return {index: this.listMobilePolls.indexOf(answer), name: 'Enuesta'}
         })
