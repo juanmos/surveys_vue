@@ -197,7 +197,7 @@ export default {
         (function (i) {
           setTimeout(function () {
             that.saveSurvey(i)
-          }, 7000 * (i + 1))
+          }, 4000 * (i + 1))
         })(i)
       }
     }
