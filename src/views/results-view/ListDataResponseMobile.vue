@@ -193,7 +193,7 @@ export default {
     getExportPdfAll () {
       this.dialogWait = true
       let that = this
-      for (var i = 0; i < this.listCloneOriginal.length; i++) {
+      for (var i = 43; i < this.listCloneOriginal.length; i++) {
         (function (i) {
           setTimeout(function () {
             that.saveSurvey(i)
