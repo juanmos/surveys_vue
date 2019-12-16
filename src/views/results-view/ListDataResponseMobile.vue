@@ -181,25 +181,54 @@ export default {
       }).catch(err => console.log('este es el error', err))
     },
     saveSurvey (surveyAnswer) {
+      console.log('imprimir---')
       let model = new SurveyVue.Model({pages: this.construct.pages})
       model.data = this.listCloneOriginal[surveyAnswer]
       let surveyPDF = new SurveyPDF.SurveyPDF(this.construct, this.options)
       surveyPDF.data = model.data
-      surveyPDF.save(`${surveyAnswer + 1}-${this.construct.title}`)
+      Promise.all(surveyPDF.save(`${surveyAnswer + 1}-${this.construct.title}`))
       if (surveyAnswer === (this.listCloneOriginal.length - 1)) {
         this.dialogWait = false
       }
     },
+    start (counter) {
+      let that = this
+      if (counter < 430) {
+        setTimeout(function () {
+          counter++
+          let model = new SurveyVue.Model({pages: that.construct.pages})
+          model.data = that.listCloneOriginal[counter]
+          let surveyPDF = new SurveyPDF.SurveyPDF(that.construct, that.options)
+          surveyPDF.data = model.data
+          Promise.all(surveyPDF.save(`${counter + 1}-${that.construct.title}`))
+          if (counter === (that.listCloneOriginal.length - 1)) {
+            that.dialogWait = false
+          }
+          console.log(counter)
+          that.start(counter)
+        }, 3000)
+      }
+    },
     getExportPdfAll () {
       this.dialogWait = true
-      let that = this
-      for (var i = 0; i < this.listCloneOriginal.length; i++) {
+      console.log('listCloneOriginal--', this.listCloneOriginal.length)
+      // let that = this
+      let i = 400
+      this.start(i)
+      /* while (i < 400) {
+        (function(i) {
+          setTimeout(function() {
+            that.saveSurvey(i)
+        }, 1000 * i)
+        })(i++)
+      } */
+      /* for (var i = 360; i < 380; i++) {
         (function (i) {
           setTimeout(function () {
             that.saveSurvey(i)
           }, 4000 * (i + 1))
-        })(i)
-      }
+      })(i)
+     } */
     }
   },
   computed: {
@@ -207,7 +236,7 @@ export default {
     ...mapState('config-polls', {loading: 'isFindPending'})
   },
   watch: {},
-  mounted () {
+  created () {
     this.id = this.$route.params.id
     this.getDataConfig()
   },
