@@ -72,14 +72,34 @@
                 >
                     <v-icon>list</v-icon>
                 </v-btn>
-                <v-btn
-                dark
-                small
-                color="primary"
-                @click="getExportPdfAll()"
-                >
-                    DESCARGAR TODAS
-                </v-btn>
+                <v-layout row wrap>
+                    <v-flex xs3>
+                        <v-btn
+                        dark
+                        small
+                        color="primary"
+                        @click="getExportPdfAll()"
+                        >
+                            DESCARGAR TODAS
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs1>
+                        <v-text-field
+                                v-model="fromPoll"
+                                label="Desde"
+                                single-line
+                                hide-details
+                              ></v-text-field>
+                    </v-flex>
+                    <v-flex xs1>
+                        <v-text-field
+                                v-model="toPoll"
+                                label="Hasta"
+                                single-line
+                                hide-details
+                              ></v-text-field>
+                    </v-flex>
+                </v-layout>
                 <loading-component v-if="loading"></loading-component>
             </v-card>
         </v-flex>
@@ -129,6 +149,8 @@ export default {
       ],
       id: null,
       search: '',
+      fromPoll: null,
+      toPoll: null,
       dialog: false,
       dialogWait: false,
       page: 1,
@@ -192,15 +214,15 @@ export default {
     },
     start (counter) {
       let that = this
-      if (counter < that.listCloneOriginal.length) {
+      if (counter < (Number(that.toPoll) - 1)) {
         setTimeout(function () {
           counter++
           let model = new SurveyVue.Model({pages: that.construct.pages})
           model.data = that.listCloneOriginal[counter]
           let surveyPDF = new SurveyPDF.SurveyPDF(that.construct, that.options)
           surveyPDF.data = model.data
-          Promise.all(surveyPDF.save(`${counter + 1}-${that.construct.title}`))
-          if (counter === (that.listCloneOriginal.length - 1)) {
+          surveyPDF.save(`${counter + 1}-${that.construct.title}`)
+          if (counter === (that.toPoll - 1)) {
             that.dialogWait = false
           }
           that.start(counter)
@@ -209,7 +231,7 @@ export default {
     },
     getExportPdfAll () {
       this.dialogWait = true
-      this.start(-1)
+      this.start((Number(this.fromPoll) - 2))
     }
   },
   computed: {
