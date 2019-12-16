@@ -25,7 +25,7 @@
                           ></v-text-field> -->
                 </v-flex>
                 <v-flex xs6>
-                    <label>TOTAL DE ENCUESTAS: {{total}}</label>
+                    <label>TOTAL DE ENCUESTAS: {{listCloneOriginal.length}}</label>
                 </v-flex>
               </v-card-title>
           <v-data-table
@@ -181,7 +181,6 @@ export default {
       }).catch(err => console.log('este es el error', err))
     },
     saveSurvey (surveyAnswer) {
-      console.log('imprimir---')
       let model = new SurveyVue.Model({pages: this.construct.pages})
       model.data = this.listCloneOriginal[surveyAnswer]
       let surveyPDF = new SurveyPDF.SurveyPDF(this.construct, this.options)
@@ -193,7 +192,7 @@ export default {
     },
     start (counter) {
       let that = this
-      if (counter < 430) {
+      if (counter < that.listCloneOriginal.length) {
         setTimeout(function () {
           counter++
           let model = new SurveyVue.Model({pages: that.construct.pages})
@@ -204,31 +203,13 @@ export default {
           if (counter === (that.listCloneOriginal.length - 1)) {
             that.dialogWait = false
           }
-          console.log(counter)
           that.start(counter)
         }, 3000)
       }
     },
     getExportPdfAll () {
       this.dialogWait = true
-      console.log('listCloneOriginal--', this.listCloneOriginal.length)
-      // let that = this
-      let i = 400
-      this.start(i)
-      /* while (i < 400) {
-        (function(i) {
-          setTimeout(function() {
-            that.saveSurvey(i)
-        }, 1000 * i)
-        })(i++)
-      } */
-      /* for (var i = 360; i < 380; i++) {
-        (function (i) {
-          setTimeout(function () {
-            that.saveSurvey(i)
-          }, 4000 * (i + 1))
-      })(i)
-     } */
+      this.start(-1)
     }
   },
   computed: {
