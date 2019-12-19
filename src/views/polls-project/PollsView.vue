@@ -218,8 +218,8 @@
                                     <v-list-tile-title>Vista de encuestas realizadas</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToGenerateAll(props.item._id)">
-                                    <v-icon class="icon">find_in_page</v-icon>
-                                    <v-list-tile-title>Generar encuestas</v-list-tile-title>
+                                    <v-icon class="icon">save_alt</v-icon>
+                                    <v-list-tile-title>Generar archivo zip</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                                     <v-icon class="icon">border_color</v-icon>
