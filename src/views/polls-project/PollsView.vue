@@ -217,8 +217,17 @@
                                     <v-icon class="icon">find_in_page</v-icon>
                                     <v-list-tile-title>Vista de encuestas realizadas</v-list-tile-title>
                                   </v-list-tile>
-                                  <v-list-tile @click="goToGenerateAll(props.item._id)">
+                                  <v-list-tile @click="getPath(props.item)" v-if="props.item.pathFileZip">
                                     <v-icon class="icon">save_alt</v-icon>
+                                    <v-list-tile-title>
+                                        <a :href="getPath(props.item.pathFileZip)"
+                                          title="Descargar zip">
+                                        Descargar archivo zip
+                                        </a>
+                                    </v-list-tile-title>
+                                  </v-list-tile>
+                                  <v-list-tile @click="goToGenerateAll(props.item._id)">
+                                    <v-icon class="icon">timelapse</v-icon>
                                     <v-list-tile-title>Generar archivo zip</v-list-tile-title>
                                   </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
@@ -636,6 +645,11 @@ export default {
     },
     goViewResultsMobile (id) {
       this.$router.push({ path: `/list-data-response-mobile/${id}` })
+    },
+    getPath (path) {
+      path = (path) || 'uploads/construct/data_not_found.png'
+      path = path.replace(/public/g, '')
+      return enviroment[enviroment.currentEnviroment].backend.urlBase + path
     },
     goToGenerateAll (id) {
       this.getConfigPoll([id, {query: {generateAllPdf: true}}]).then(result => {
