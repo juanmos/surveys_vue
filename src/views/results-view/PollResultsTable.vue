@@ -48,6 +48,7 @@ export default {
   data () {
     return {
       dialogAnswerEdit: false,
+      fields: {},
       currentQuestion: {
         text: ''
       },
@@ -62,16 +63,9 @@ export default {
   computed: {
     getFields () {
       let objectHeaders = {}
-      if (this.responses.length > 0) {
-        let object = this.responses[0]
-        Object.entries(object).forEach(entry => {
-          let key = entry[0]
-          let title = this.headers.find(q => q.code === key)
-          if (title) {
-            objectHeaders[title.text] = key
-          }
-        })
-      }
+      this.headers.map(header => {
+        objectHeaders[header.text] = header.code
+      })
       return objectHeaders
     }
   },
