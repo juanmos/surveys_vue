@@ -217,7 +217,7 @@
                                     <v-icon class="icon">find_in_page</v-icon>
                                     <v-list-tile-title>Vista de encuestas realizadas</v-list-tile-title>
                                   </v-list-tile>
-                                  <v-list-tile @click="getPath(props.item)" v-if="props.item.pathFileZip">
+                                  <v-list-tile v-if="props.item.pathFileZip">
                                     <v-icon class="icon">save_alt</v-icon>
                                     <v-list-tile-title>
                                         <a :href="getPath(props.item.pathFileZip)"
