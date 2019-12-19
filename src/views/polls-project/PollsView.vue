@@ -217,6 +217,10 @@
                                     <v-icon class="icon">find_in_page</v-icon>
                                     <v-list-tile-title>Vista de encuestas realizadas</v-list-tile-title>
                                   </v-list-tile>
+                                  <v-list-tile @click="goToGenerateAll(props.item._id)">
+                                    <v-icon class="icon">find_in_page</v-icon>
+                                    <v-list-tile-title>Generar encuestas</v-list-tile-title>
+                                  </v-list-tile>
                                   <v-list-tile @click="goToEditConfigPolls(props.item._id)">
                                     <v-icon class="icon">border_color</v-icon>
                                     <v-list-tile-title>Editar encuesta</v-list-tile-title>
@@ -467,6 +471,7 @@ export default {
     ...mapActions('poll-category', { findpollcateg: 'find' }),
     ...mapActions('category-segmentation', { findsegmentos: 'find' }),
     ...mapActions('config-polls', { findConfigPolls: 'find' }),
+    ...mapActions('config-polls', { getConfigPoll: 'get' }),
     goToList () {
       this.$router.push('/polls-project')
     },
@@ -631,6 +636,12 @@ export default {
     },
     goViewResultsMobile (id) {
       this.$router.push({ path: `/list-data-response-mobile/${id}` })
+    },
+    goToGenerateAll (id) {
+      this.getConfigPoll([id, {query: {generateAllPdf: true}}]).then(result => {
+        console.log('listo', result)
+      }).catch(err => console.log('este es el error', err))
+      // this.$router.push({ path: `/list-data-response-mobile/${id}` })
     },
     duplicate (configPoll) {
       let newConfigPoll = {
