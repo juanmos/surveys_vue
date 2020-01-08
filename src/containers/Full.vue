@@ -101,7 +101,7 @@ export default {
     },
     company () {
       let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
-      return (user.company.name) ? user.company.name : 'ENCUESTAS'
+      return (user.company) ? user.company.name : 'ENCUESTAS'
     }
   },
   methods: {
