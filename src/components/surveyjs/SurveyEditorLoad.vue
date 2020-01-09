@@ -19,13 +19,13 @@ widgets.select2(SurveyKo)
 widgets.inputmask(SurveyKo)
 widgets.jquerybarrating(SurveyKo)
 widgets.jqueryuidatepicker(SurveyKo)
-widgets.nouislider(SurveyKo)
+// widgets.nouislider(SurveyKo)
 widgets.select2tagbox(SurveyKo)
 // widgets.signaturepad(SurveyKo)
 widgets.sortablejs(SurveyKo)
 widgets.ckeditor(SurveyKo)
 widgets.autocomplete(SurveyKo)
-widgets.bootstrapslider(SurveyKo)
+// widgets.bootstrapslider(SurveyKo)
 export default {
   props: ['jsonData'],
   name: 'survey-editor',
@@ -49,7 +49,7 @@ export default {
   mounted () {
     // console.log('tengo la siguiente data ', this.jsonData)
     if (this.flag === 0) {
-      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'file', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
       this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
       /* this.editor.survey = function () {
         this.surveyValue()['setJsonObject'](this.jsonData)
