@@ -35,22 +35,22 @@
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
 
-                      <td class="text-sm-left">
+                      <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                           {{props.item.name}}
                       </td>
-                      <td class="text-sm-left">
+                      <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                           {{(props.item.company) ? props.item.company.name : ''}}
                       </td>
-                      <td class="text-sm-left">
+                      <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                          {{props.item.date_start | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
-                      <td class="text-sm-left">
+                      <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                          {{ props.item.date_end | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
-                      <td class="text-sm-left">
+                      <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                          {{props.item.date_deliver | moment("add", "1 days", "subtract", "ddd",'YYYY-MM-DD') }}
                       </td>
-                         <td class="text-sm-left">
+                         <td class="text-sm-left" @click="ver(props.item)" style="cursor:pointer;">
                          <v-chip label small :color="getColorByStatus(props.item.state_polls[0])" text-color="white" >{{itemsestado[props.item.state_polls[0]].name}}</v-chip>
                       </td>
                        <td class="justify-center layout px-0">
