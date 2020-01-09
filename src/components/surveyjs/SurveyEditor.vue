@@ -15,13 +15,13 @@ widgets.select2(SurveyKo)
 widgets.inputmask(SurveyKo)
 widgets.jquerybarrating(SurveyKo)
 widgets.jqueryuidatepicker(SurveyKo)
-widgets.nouislider(SurveyKo)
+// widgets.nouislider(SurveyKo)
 widgets.select2tagbox(SurveyKo)
 // widgets.signaturepad(SurveyKo)
-widgets.sortablejs(SurveyKo)
+// widgets.sortablejs(SurveyKo)
 widgets.ckeditor(SurveyKo)
 widgets.autocomplete(SurveyKo)
-widgets.bootstrapslider(SurveyKo)
+// widgets.bootstrapslider(SurveyKo)
 
 export default {
   name: 'survey-editor',
@@ -101,7 +101,7 @@ export default {
       })
       SurveyEditor.editorLocalization.currentLocale = 'es'
       // SurveyEditor.StylesManager.applyTheme('winterstone')
-      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'dropdown', 'comment', 'rating', 'boolean', 'html', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'file', 'dropdown', 'comment', 'boolean', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
       this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
       this.dataValue = this.editor.saveSurveyFunc = function () {
         this.dataValue = JSON.parse(this.text)
