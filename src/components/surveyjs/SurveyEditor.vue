@@ -101,7 +101,7 @@ export default {
       })
       SurveyEditor.editorLocalization.currentLocale = 'es'
       // SurveyEditor.StylesManager.applyTheme('winterstone')
-      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'file', 'dropdown', 'comment', 'boolean', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
+      let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'file', 'dropdown', 'comment', 'boolean', 'multipletext', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
       this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions)
       this.dataValue = this.editor.saveSurveyFunc = function () {
         this.dataValue = JSON.parse(this.text)
