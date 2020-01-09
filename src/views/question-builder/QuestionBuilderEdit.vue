@@ -22,7 +22,7 @@
           </v-card-text>
         </v-card>
     </v-dialog>
-    <v-card color="white">
+    <v-card dark>
       <v-text-field
       v-model="nameConfigPolls"
       label="Nombre de la encuesta"
@@ -243,6 +243,7 @@ export default {
   },
   created () {
     this.findConfigPolls({query: {_id: this.$route.params.id, removed: false, ...this.query}}).then(response => {
+      console.log('response--', response);
       this.PollId = response.data[0].construct
       this._id = response.data[0]._id
       this.nameConfigPolls = response.data[0].name

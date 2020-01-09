@@ -39,9 +39,23 @@
         Importar desde spss
         <v-icon>cloud_upload</v-icon>
       </v-tab>
+      <v-tab-item>
+        <v-card dark>
+          <v-text-field
+          v-model="nameConfigPolls"
+          label="Nombre de la encuesta"
+          single-line
+          box
+          hide-details
+          :rules= "MyRules"
+        ></v-text-field>
+        </v-card>
+        <survey-editor v-show="newMode" @dataSubmited = "getData"></survey-editor>
+      </v-tab-item>
+      <v-tab-item>
+        <polls-upload @pollImported="saveImportedPoll" v-show="!newMode"></polls-upload>
+      </v-tab-item>
     </v-tabs>
-    <survey-editor v-show="newMode" @dataSubmited = "getData"></survey-editor>
-    <polls-upload @pollImported="saveImportedPoll" v-show="!newMode"></polls-upload>
     <v-btn
     absolute
     dark
@@ -230,7 +244,7 @@ export default {
     savePolls (name, value) {
       this.dialogWait = true
       let data = {
-        name,
+        name: this.nameConfigPolls,
         status: 'CREADA',
         construct: value,
         fromSurvey: true
@@ -238,10 +252,8 @@ export default {
       const {ConfigPoll} = this.$FeathersVuex
         let config = new ConfigPoll(data)
         config['_polls_project_id'] = this.$route.params.id
-        // config['name'] = this.nameConfigPolls
         config.save().then((result) => {
           this.findConfigPolls({ query: {removed: false} }).then(response => {
-            // this.alertConfig('Registro Modificado', 'success')
             this.setSnackMessage('Registro guardado')
             this.setSnackColor('success')
             this.setShowSnack(true)
@@ -256,7 +268,6 @@ export default {
         })
     },
     saveImportedPoll (data) {
-      // console.log('esta es la data que recibo', data)
       let fileKey = data.spss ? Object.keys(data.spss)[0] : ''
       const { ConfigPoll } = this.$FeathersVuex
       data.spss[fileKey].map(data => {
