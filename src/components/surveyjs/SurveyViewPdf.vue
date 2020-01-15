@@ -141,7 +141,7 @@ export default {
           "pregunta60" : "res 57"
       } */
       this.survey = this.model
-      this.survey.mode = 'display';
+      this.survey.mode = 'display'
     }
   }
 }
