@@ -25,20 +25,26 @@
           </v-flex>
         </v-layout>
       </v-container>
-        <v-data-table
-            :headers="headers"
-            :items="responses"
-            hide-actions
-            class="elevation-1 resultsTable"
-        >
-            <template slot="items" slot-scope="props">
-                <td class="text-xs-center" v-for="(value) in headers" :key="String(value) + Math.random()">
-                  <span>
-                        {{props.item[value.code]}} <!--{{value.type}}-->
-                  </span>
-                </td>
-            </template>
-        </v-data-table>
+      <v-card>
+        <v-flex md12>
+          <v-sheet>
+            <v-data-table light
+                :headers="headers"
+                :items="responses"
+                hide-actions
+                class="elevation-1 resultsTableView"
+            >
+                <template slot="items" slot-scope="props">
+                    <td class="text-xs-center" v-for="(value) in headers" :key="String(value) + Math.random()">
+                      <span>
+                            {{props.item[value.code]}} <!--{{value.type}}-->
+                      </span>
+                    </td>
+                </template>
+            </v-data-table>
+          </v-sheet>
+        </v-flex>
+      </v-card>
     </div>
 </template>
 
@@ -91,5 +97,18 @@ export default {
 .complete {
     background-color: #407a42 !important;
     border-color: #407a42 !important;
+}
+
+.headersStyle{
+  color: red;
+}
+
+.resultsTableView {
+  color: red !important;
+}
+
+ table.v-table thead th:first-child{
+    color: red !important;
+    max-width: 200px;
 }
 </style>
