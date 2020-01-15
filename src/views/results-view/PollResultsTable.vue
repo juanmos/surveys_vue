@@ -129,8 +129,6 @@ export default {
 }
 
 .TFtable td{
-  font-family: Avenir,Helvetica,Arial,sans-serif;
-  font-size: 13px;
   padding:7px;
   border:#dadde2 1px solid;
 }
@@ -144,6 +142,39 @@ export default {
   max-width: 350px;
   min-width: 50px;
 }
+
+/* encabezados estaticos*/
+.TFtable{
+    width: 400px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.TFtable tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 100px;
+}
+
+.TFtable thead tr {
+   display: block;
+}
+
+.TFtable thead {
+  background: black;
+  color:#fff;
+}
+
+.TFtable th, .TFtable td {
+  padding: 5px;
+  text-align: center;
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  width: 200px;
+}
+
+/* encabezados estaticos*/
 
 .TFtable tr{
   background: #dadde2;
@@ -173,6 +204,7 @@ table {
 .tableData {
   width: 100%;
   overflow-x: scroll;
+  height: 700px;
 }
 
 .center {
