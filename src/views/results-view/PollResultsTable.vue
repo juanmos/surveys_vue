@@ -178,7 +178,7 @@ export default {
 
 .TFtable tr{
   background: #dadde2;
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .TFtable tr:nth-child(odd){
