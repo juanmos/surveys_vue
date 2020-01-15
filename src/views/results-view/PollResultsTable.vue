@@ -35,9 +35,9 @@
                       {{header.text}}
                     </th>
                   </thead>
-                  <tr v-for="(dataRow, indexCol) in responses" :key="indexCol">
-                    <td class="center">
-                      <span>{{indexCol + 1}}</span>
+                  <tr v-for="(dataRow, indexRowData) in responses" :key="indexRowData" @click="goToViewPoll(indexRowData)">
+                    <td class="center" @click="goToViewPoll(indexRowData)">
+                      <span>{{indexRowData + 1}}</span>
                     </td>
                     <td class="center" v-for="(codeHeader, indexCode) in headers" :key="indexCode">
                       {{dataRow[codeHeader.code]}}
@@ -108,6 +108,10 @@ export default {
       }
       this.dialogAnswerEdit = true
     },
+    goToViewPoll (indexPoll) {
+      let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll}`})
+      window.open(routeData.href, '_blank')
+    },
     saveConfig (data) {
       this.responses[data.index][data.code] = data.value
       this.dialogAnswerEdit = false
@@ -143,6 +147,7 @@ export default {
 
 .TFtable tr{
   background: #dadde2;
+  cursor: pointer;
 }
 
 .TFtable tr:nth-child(odd){
