@@ -89,7 +89,7 @@ export default {
     },
     getDataHeaders () {
       return this.resultPoll ? this.resultPoll.formatedConfiguration.map((q, key) => ({
-        text: q.label ? q.label.substring(0, 35) : q.original,
+        text: q.label ? q.label : q.original,
         align: 'left',
         width: '50px',
         sortable: false,

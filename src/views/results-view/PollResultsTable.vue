@@ -23,28 +23,52 @@
                 <img src="/images/export-csv.png" height="35" width="40">
             </download-excel>
           </v-flex>
+          <v-flex xs12>
+            <v-card>
+              <div class="tableData">
+                <table class="TFtable">
+                  <thead >
+                    <th class="headersStyle">
+                      N. Encuesta
+                    </th>
+                    <th class="headersStyle" v-for="(header, index) in headers" :key="index">
+                      {{header.text}}
+                    </th>
+                  </thead>
+                  <tr v-for="(dataRow, indexCol) in responses" :key="indexCol">
+                    <td class="center">
+                      <span>{{indexCol + 1}}</span>
+                    </td>
+                    <td class="center" v-for="(codeHeader, indexCode) in headers" :key="indexCode">
+                      {{dataRow[codeHeader.code]}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </v-card>
+          </v-flex>
         </v-layout>
       </v-container>
-      <v-card>
+    <!--  <v-card>
         <v-flex md12>
           <v-sheet>
             <v-data-table light
                 :headers="headers"
                 :items="responses"
                 hide-actions
-                class="elevation-1 resultsTableView"
+                class="elevation-1 resultsTableView TFtable"
             >
                 <template slot="items" slot-scope="props">
                     <td class="text-xs-center" v-for="(value) in headers" :key="String(value) + Math.random()">
                       <span>
-                            {{props.item[value.code]}} <!--{{value.type}}-->
+                            {{props.item[value.code]}}
                       </span>
                     </td>
                 </template>
             </v-data-table>
           </v-sheet>
         </v-flex>
-      </v-card>
+      </v-card> -->
     </div>
 </template>
 
@@ -94,21 +118,63 @@ export default {
 </script>
 
 <style scoped>
-.complete {
-    background-color: #407a42 !important;
-    border-color: #407a42 !important;
+
+.TFtable{
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.headersStyle{
-  color: red;
+.TFtable td{
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  padding:7px;
+  border:#dadde2 1px solid;
 }
 
-.resultsTableView {
-  color: red !important;
+.TFtable th{
+  padding:7px; border:#dadde2 1px solid;
+  background: white;
+  color: rgba(0,0,0,.54);
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  max-width: 350px;
+  min-width: 50px;
 }
 
- table.v-table thead th:first-child{
-    color: red !important;
-    max-width: 200px;
+.TFtable tr{
+  background: #dadde2;
 }
+
+.TFtable tr:nth-child(odd){
+  background: #dfe3ea;
+  color: black;
+}
+
+.TFtable tr:nth-child(even){
+  background: white;
+  color: black;
+}
+
+.TFtable th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+table {
+  display: block;
+}
+
+.tableData {
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.center {
+  text-align: center;
+}
+.headersStyle {
+  text-align: center;
+}
+
 </style>
