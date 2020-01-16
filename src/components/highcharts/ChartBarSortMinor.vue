@@ -25,15 +25,15 @@ export default {
   methods: {},
   computed: {
     updateArgs () {
-      return [true, true, { duration: 0 }]
+      return [true, true, { duration: 1000 }]
     },
     getColumnChart () {
-      return (this.question.columnChart) ? this.question.columnChart : []
+      return (this.question.columnChartMinorToMajor) ? this.question.columnChartMinorToMajor : []
     },
     getChartOptions () {
       return (this.question) ? {
         chart: {
-          type: 'column',
+          type: 'bar',
           backgroundColor: 'rgb(48, 48, 48)'
         },
         pane: {
@@ -46,7 +46,7 @@ export default {
           {
             name: this.question.label,
             colorByPoint: true,
-            data: this.getColumnChart // this.question.columnChart
+            data: this.getColumnChart
           }
         ],
         title: {
@@ -123,6 +123,12 @@ export default {
     getType () {
       return this.dataChart
     }
+  },
+  watch: {
+    /* graphicType: function (val) {
+      console.log('val--', val)
+      this.type = val
+    } */
   },
   components: {}
 }
