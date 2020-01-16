@@ -28,7 +28,7 @@ export default {
       return [true, true, { duration: 0 }]
     },
     getColumnChart () {
-      return (this.question.columnChart) ? this.question.columnChart : []
+      return (this.question.columnChartMajorToMinor) ? this.question.columnChartMajorToMinor : []
     },
     getChartOptions () {
       return (this.question) ? {
