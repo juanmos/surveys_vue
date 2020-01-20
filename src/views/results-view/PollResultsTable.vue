@@ -139,8 +139,8 @@ export default {
   color: rgba(0,0,0,.54);
   font-family: Avenir,Helvetica,Arial,sans-serif;
   font-size: 12px;
-  max-width: 350px;
-  min-width: 50px;
+  max-width: 450px;
+  min-width: 350px;
 }
 
 /* encabezados estaticos*/
