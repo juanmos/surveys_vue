@@ -659,7 +659,7 @@ export default {
       this.getRouteSurveyors()
     },
     getRouteSurveyors () {
-      this.findRouteSurveyors({query: {_user_id: this.surveyor._id, date: this.dateCurrent, $limit: null, $skip: 0}}).then(response => {
+      this.findRouteSurveyors({query: {_user_id: this.surveyor._id, date: this.dateCurrent, $sort: { date: '1' }, $limit: null, $skip: 0}}).then(response => {
         this.points = response.data.map(point => {
           return {
             lat: point.latitude,
