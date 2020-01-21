@@ -15,7 +15,7 @@
             </v-tab>
             <v-tab
                 ripple>
-                INVOLUCRADOS
+                ENCUESTADORES
                 <v-icon>supervised_user_circle</v-icon>
             </v-tab>
             <!-- <v-tab
@@ -317,11 +317,11 @@
                     :key="member._id"
                     avatar
                   >
-                    <v-list-tile-avatar>
+                    <v-list-tile-avatar  @click="getDataRoute(props.item)">
                       <img :src="`${urlEnviroment}/images/avatar.png`">
                     </v-list-tile-avatar>
 
-                    <v-list-tile-content>
+                    <v-list-tile-content @click="getDataRoute(props.item)">
                       <v-list-tile-title v-text="member.name"></v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
@@ -339,6 +339,9 @@
                             </v-btn>
                             <v-list>
                               <v-list-tile>
+                                <v-icon>my_location</v-icon> <v-list-tile-title @click="getDataRoute(member)">Ver ruta</v-list-tile-title>
+                              </v-list-tile>
+                              <v-list-tile>
                                 <v-icon>delete</v-icon> <v-list-tile-title @click="deleteMember(member._id)">Quitar acceso a miembro</v-list-tile-title>
                               </v-list-tile>
                             </v-list>
@@ -351,8 +354,35 @@
             </v-card>
           </v-tab-item>
         </v-tabs>
+        <v-dialog v-model="dialogMap" fullscreen v-if="dialogMap">
+              <v-card>
+                <v-card-title>
+                    <span class="title">RUTA DE {{surveyor.name}}</span>
+                </v-card-title>
+                    <v-card-actions>
+                     <v-spacer></v-spacer>
+                     <v-btn color="dark darken-1"
+                            flat="flat"
+                            style="background: #000;"
+                            @click="dialogMap = false"
+                              >
+                              CERRAR
+                     </v-btn>
+                   </v-card-actions>
+                   <v-layout row wrap>
+                       <v-flex xs3 justify="center">
+                           <center>
+                               <v-date-picker v-model="dateCurrent" locale="es-es"></v-date-picker>
+                           </center>
+                       </v-flex>
+                       <v-flex xs9>
+                           <map-polylines-component :markers="points" :gmapCenter="dataGmapCenter"></map-polylines-component>
+                       </v-flex>
+                   </v-layout>
+              </v-card>
+            </v-dialog>
       </v-card>
-        </v-flex>
+    </v-flex>
 </template>
 
 <script>
@@ -364,6 +394,7 @@ import moment from 'moment-timezone'
 import VWidget from './../../components/VWidget'
 import QuestionBuildIndex from '../question-builder/QuesBuildIndex'
 import SearchAutocomplete from './../../components/SearchAutocomplete'
+import MapPolylinesComponent from './../../components/graphs/MapPolylines'
 const enviroment = require('./../../../config/enviroment.json')
 Vue.use(VueMoment, {
   moment
@@ -451,8 +482,16 @@ export default {
     },
     urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
     dialogEditConfiPolls: false,
+    dateCurrent: new Date().toISOString().substr(0, 10),
     addConfigPolls: false,
     dialogDeleteConfigPolls: false,
+    surveyor: null,
+    dialogMap: false,
+    points: [],
+    dataGmapCenter: {
+      lat: 0,
+      lng: 0
+    },
     items: [],
     items2: {
       name: '',
@@ -467,13 +506,15 @@ export default {
   components: {
     VWidget,
     QuestionBuildIndex,
-    SearchAutocomplete
+    SearchAutocomplete,
+    MapPolylinesComponent
   },
   methods: {
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
     ]),
+    ...mapActions('route-surveyors', { findRouteSurveyors: 'find' }),
     ...mapActions('category-segmantation-polls', { findCategorySegmentationPolls: 'find' }),
     ...mapActions('polls-project', { getPoll: 'get' }),
     ...mapActions('customers', {findcustomers: 'find'}),
@@ -612,6 +653,21 @@ export default {
         console.log(err)
       })
     },
+    getDataRoute (user) {
+      this.surveyor = user
+      this.dialogMap = true
+      this.getRouteSurveyors()
+    },
+    getRouteSurveyors () {
+      this.findRouteSurveyors({query: {_user_id: this.surveyor._id, date: this.dateCurrent, $limit: null, $skip: 0}}).then(response => {
+        this.points = response.data.map(point => {
+          return {
+            lat: point.latitude,
+            lng: point.longitude
+          }
+        })
+      })
+    },
     goToCreateConfigPolls () {
       this.$router.push({ path: `/QuesBuildIndex/${this.$route.params.id}` })
     },
@@ -741,6 +797,12 @@ export default {
     // this.findConfigPolls({ query: {removed: false, _polls_project_id: this.$route.params.id, $skip: 0, $limit: null} })
     this.getDataCategorySegmentationPolls()
     this.getConfigPolls()
+  },
+  watch: {
+    dateCurrent: function (val) {
+      this.dateCurrent = val
+      this.getRouteSurveyors()
+    }
   }
 }
 </script>
