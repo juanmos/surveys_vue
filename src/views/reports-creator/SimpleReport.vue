@@ -87,7 +87,7 @@
                              CERRAR
                     </v-btn>
                   </v-card-actions>
-               <map-component :markers="filtersMarkers" :gmapCenter="dataGmapCenter"></map-component>
+              <map-component :markers="filtersMarkers" :gmapCenter="dataGmapCenter"></map-component>
              </v-card>
            </v-dialog>
            <v-dialog v-model="dialogQuestionDetail" fullscreen v-if="dialogQuestionDetail">

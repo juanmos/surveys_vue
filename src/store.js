@@ -335,6 +335,14 @@ export default new Vuex.Store({
         phone: ''
       }
     }),
+    service('route-surveyors', {
+      instanceDefaults: {
+        latitude: '',
+        longitude: '',
+        _user_id: '',
+        date: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {

@@ -90,41 +90,12 @@
                             <v-list-tile @click="goToEdit(props.item._id)">
                                 <v-list-tile-title >Editar</v-list-tile-title>
                             </v-list-tile>
+                            <v-list-tile @click="getDataRoute(props.item)">
+                                <v-list-tile-title >Ver ruta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="dialog = true;itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
-                            <v-dialog
-                              v-model="dialog"
-                              max-width="290"
-                            >
-                              <v-card>
-                                <v-card-title class="headline">Eliminar usuario</v-card-title>
-
-                                <v-card-text>
-                                  Esta seguro que desea eliminar la usuario?
-                                </v-card-text>
-
-                                <v-card-actions>
-                                  <v-spacer></v-spacer>
-
-                                  <v-btn
-                                    color="red darken-4"
-                                    flat="flat"
-                                    @click="dialog = false"
-                                  >
-                                    Cancelar
-                                  </v-btn>
-
-                                  <v-btn
-                                    color="teal darken-3"
-                                    flat="flat"
-                                    @click="dialog = false, del()"
-                                  >
-                                    Aceptar
-                                  </v-btn>
-                                </v-card-actions>
-                              </v-card>
-                            </v-dialog>
                           </v-list>
                         </v-menu>
                       </td>
@@ -160,6 +131,66 @@
             </v-card>
         </v-flex>
         </v-layout>
+        <v-dialog
+          v-model="dialog"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline">Eliminar usuario</v-card-title>
+
+            <v-card-text>
+              Esta seguro que desea eliminar la usuario?
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="red darken-4"
+                flat="flat"
+                @click="dialog = false"
+              >
+                Cancelar
+              </v-btn>
+
+              <v-btn
+                color="teal darken-3"
+                flat="flat"
+                @click="dialog = false, del()"
+              >
+                Aceptar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogMap" fullscreen v-if="dialogMap">
+              <v-card>
+                <v-card-title>
+                    <span class="title">RUTA DE {{itemSelected.name}}</span>
+                </v-card-title>
+                    <v-card-actions>
+                     <v-spacer></v-spacer>
+                     <v-btn color="dark darken-1"
+                            flat="flat"
+                            style="background: #000;"
+                            @click="dialogMap = false"
+                              >
+                              CERRAR
+                     </v-btn>
+                   </v-card-actions>
+                   <v-layout row wrap>
+                       <v-flex xs3 justify="center">
+                           <center>
+                               <v-date-picker v-model="dateCurrent" locale="es-es"></v-date-picker>
+                           </center>
+                       </v-flex>
+                       <v-flex xs9>
+                           <map-polylines-component :markers="points" :gmapCenter="dataGmapCenter"></map-polylines-component>
+                       </v-flex>
+                   </v-layout>
+              </v-card>
+            </v-dialog>
     </v-container>
 </div>
 </template>
@@ -169,6 +200,7 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import MapPolylinesComponent from './../../components/graphs/MapPolylines'
 export default {
   data () {
     return {
@@ -200,10 +232,17 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      dateCurrent: new Date().toISOString().substr(0, 10),
       filterRol: null,
       roles: null,
+      dialogMap: false,
       rules: validations,
       message: '',
+      points: [],
+      dataGmapCenter: {
+        lat: 0,
+        lng: 0
+      },
       showMsg: false,
       search: '',
       users: [],
@@ -219,6 +258,7 @@ export default {
   },
   methods: {
     ...mapActions('users', { findUsersPolls: 'find' }),
+    ...mapActions('route-surveyors', { findRouteSurveyors: 'find' }),
     ...mapActions('roles', { findRoles: 'find' }),
     goToNew (code) {
       this.$router.push('/users-polls-new')
@@ -232,11 +272,21 @@ export default {
       this.snackText = 'Data saved'
     },
     getUsers () {
-      this.findUsersPolls({removed: false, ...this.query}).then(response => {
+      this.findUsersPolls({query: {removed: false, ...this.query}}).then(response => {
         this.limit = response.limit
         this.total = response.total
         this.users = response.data
         this.loaded = true
+      })
+    },
+    getRouteSurveyors () {
+      this.findRouteSurveyors({query: {_user_id: this.itemSelected._id, date: this.dateCurrent, $limit: null, $skip: 0}}).then(response => {
+        this.points = response.data.map(point => {
+          return {
+            lat: point.latitude,
+            lng: point.longitude
+          }
+        })
       })
     },
     getNameRol (id) {
@@ -287,6 +337,11 @@ export default {
         this.loaded = true
         this.users = result.data
       })
+    },
+    getDataRoute (user) {
+      this.itemSelected = user
+      this.dialogMap = true
+      this.getRouteSurveyors()
     }
   },
   computed: {
@@ -332,6 +387,10 @@ export default {
       } else {
         this.getUsers()
       }
+    },
+    dateCurrent: function (val) {
+      this.dateCurrent = val
+      this.getRouteSurveyors()
     }
   },
   created () {
@@ -341,10 +400,14 @@ export default {
       this.roles = response.data
     })
   },
-  components: {LoadingComponent, EditableField}
+  components: {LoadingComponent, MapPolylinesComponent, EditableField}
 }
 </script>
 
 <style>
-
+.title {
+    font-weight: bold;
+    font-size: 14px;
+     text-transform: uppercase;
+}
 </style>
