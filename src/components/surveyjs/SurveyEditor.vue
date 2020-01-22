@@ -100,7 +100,7 @@ export default {
         default: false
       })
       SurveyKo.JsonObject.metaData.addProperty('question', {
-        name: 'notoriedad_agrado:boolean',
+        name: 'notoriedad:boolean',
         default: false
       })
       SurveyEditor.editorLocalization.currentLocale = 'es'
