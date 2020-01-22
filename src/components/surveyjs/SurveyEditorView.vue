@@ -90,7 +90,7 @@ export default {
       default: false
     })
     SurveyKo.JsonObject.metaData.addProperty('question', {
-      name: 'notoriedad_agrado:boolean',
+      name: 'notoriedad:boolean',
       default: false
     })
     this.editor = new SurveyVue.Model({'pages': [{'name': 'primerito'}]})
