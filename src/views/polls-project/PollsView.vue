@@ -311,45 +311,50 @@
             <v-card>
                <search-autocomplete :multiple="true" @selected="saveMembers($event, '_user_id')" :service="`users`" label="usuario"></search-autocomplete>
                 <v-card-text>
-                <v-list>
-                  <v-list-tile
-                    v-for="member in poolsseg.userPolls"
-                    :key="member._id"
-                    avatar
-                  >
-                    <v-list-tile-avatar  @click="getDataRoute(props.item)">
-                      <img :src="`${urlEnviroment}/images/avatar.png`">
-                    </v-list-tile-avatar>
 
-                    <v-list-tile-content @click="getDataRoute(props.item)">
-                      <v-list-tile-title v-text="member.name"></v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-menu
-                            bottom
-                            transition="slide-y-transition"
-                          >
-                            <v-btn
-                              slot="activator"
-                              color="primary"
-                              flat
-                              icon
+                    <v-list>
+                            <v-list-item
+                            v-for="member in poolsseg.userPolls"
+                            :key="member._id"
+                            :name="member._id"
                             >
-                            <v-icon>more_vert</v-icon>
-                            </v-btn>
-                            <v-list>
-                              <v-list-tile>
-                                <v-icon>my_location</v-icon> <v-list-tile-title @click="getDataRoute(member)">Ver ruta</v-list-tile-title>
-                              </v-list-tile>
-                              <v-list-tile>
-                                <v-icon>delete</v-icon> <v-list-tile-title @click="deleteMember(member._id)">Quitar acceso a miembro</v-list-tile-title>
-                              </v-list-tile>
-                            </v-list>
-                          </v-menu>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                  <v-divider></v-divider>
-                </v-list>
+                            <div class="itemList">
+                                <v-list-tile>
+                                    <v-list-tile-avatar>
+                                      <img @click="getDataRoute(member)" :src="`${urlEnviroment}/images/avatar.png`">
+                                    </v-list-tile-avatar>
+
+                                    <v-list-tile-content @click="getDataRoute(member)">
+                                      <v-list-tile-title v-text="member.name"></v-list-tile-title>
+                                    </v-list-tile-content>
+                                    <v-list-tile-action>
+                                      <v-menu
+                                            bottom
+                                            transition="slide-y-transition"
+                                          >
+                                            <v-btn
+                                              slot="activator"
+                                              color="primary"
+                                              flat
+                                              icon
+                                            >
+                                            <v-icon>more_vert</v-icon>
+                                            </v-btn>
+                                            <v-list>
+                                              <v-list-tile class="actionItem">
+                                                <v-icon color="red">my_location</v-icon> <v-list-tile-title @click="getDataRoute(member)">Ver ruta</v-list-tile-title>
+                                              </v-list-tile>
+                                              <v-list-tile class="actionItem">
+                                                <v-icon color="red">delete</v-icon> <v-list-tile-title @click="deleteMember(member._id)">Quitar acceso a miembro</v-list-tile-title>
+                                              </v-list-tile>
+                                            </v-list>
+                                          </v-menu>
+                                    </v-list-tile-action>
+                                </v-list-tile>
+                            </div>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                    </v-list>
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -807,6 +812,22 @@ export default {
 }
 </script>
 <style scoped>
+  .itemList {
+      cursor: pointer;
+      color: white;
+  }
+  .itemList:hover{
+      background-color: #949393d9 !important;
+      color: white;
+  }
+  .actionItem{
+      cursor: pointer;
+      color: white;
+  }
+  .actionItem:hover{
+      background-color: #949393d9;
+      color: white;
+  }
   .view-container {
     margin: 30px;
   }

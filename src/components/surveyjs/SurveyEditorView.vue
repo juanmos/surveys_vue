@@ -89,6 +89,10 @@ export default {
       name: 'derivado:boolean',
       default: false
     })
+    SurveyKo.JsonObject.metaData.addProperty('question', {
+      name: 'notoriedad_agrado:boolean',
+      default: false
+    })
     this.editor = new SurveyVue.Model({'pages': [{'name': 'primerito'}]})
     // console.log('mi data recibida ', this.jsonData)
     // this.editor.text = this.jsonData

@@ -99,6 +99,10 @@ export default {
         name: 'derivado:boolean',
         default: false
       })
+      SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'notoriedad_agrado:boolean',
+        default: false
+      })
       SurveyEditor.editorLocalization.currentLocale = 'es'
       // SurveyEditor.StylesManager.applyTheme('winterstone')
       let editorOptions = { showEmbededSurveyTab: true, questionTypes: ['text', 'checkbox', 'radiogroup', 'file', 'dropdown', 'comment', 'boolean', 'multipletext', 'matrix', 'matrixdropdown', 'matrixdynamic'] }
