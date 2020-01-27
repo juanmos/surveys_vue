@@ -51,7 +51,7 @@
                  :sub-text="company"
                />
              </v-flex>
-             <v-flex xs12 v-for="(page, i) in pages"
+             <v-flex xs12 v-for="(page, i) in pagesPoll"
              :key="i">
                <result-page
                  color="red"
@@ -145,12 +145,14 @@ export default {
       name: '',
       users: []
     },
+    positionPage: 0,
     selectedUser: null,
     listUsers: [],
     dialogMap: false,
     dialogQuestionDetail: false,
     projectname: '',
     pages: [],
+    pagesPoll: [],
     filtersMarkers: [],
     mapMarkers: [],
     dataGmapCenter: {
@@ -173,6 +175,15 @@ export default {
     openModal (question) {
       this.currenteQuestion = question
       this.dialogQuestionDetail = true
+    },
+    scroll (person) {
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+        if (bottomOfWindow && this.positionPage < this.pages.length - 1) {
+          this.positionPage += 1
+          this.pagesPoll = [...this.pagesPoll, this.configPoll.pages[this.positionPage]]
+        }
+      }
     }
   },
   watch: {
@@ -198,6 +209,7 @@ export default {
       this.configPoll = Object.assign({}, result)
       this.totalPolls = (this.configPoll.originalJson) ? `${this.configPoll.originalJson.length - 1} encuestas` : '0 encuentas'
       this.pages = this.configPoll.pages
+      this.pagesPoll = [...this.pagesPoll, this.configPoll.pages[this.positionPage]]
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
       this.dataGmapCenter = this.configPoll.gmapCenter
@@ -205,6 +217,9 @@ export default {
       this.mapMarkers = this.configPoll.markers
       this.filtersMarkers = [...this.configPoll.markers]
     }).catch(err => console.log('error', err))
+  },
+  mounted () {
+    this.scroll()
   },
   components: {StatsCard, ResultPage, MapComponent, ResultDetailQuestion}
 }
