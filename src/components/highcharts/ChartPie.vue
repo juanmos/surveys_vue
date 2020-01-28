@@ -34,7 +34,7 @@ export default {
           plotBackgroundColor: null,
           plotBorderWidth: null,
           plotShadow: false,
-          backgroundColor: 'rgb(48, 48, 48)'
+          backgroundColor: 'white'
         },
         pane: {
           center: ['50%', '85%'],
@@ -52,13 +52,13 @@ export default {
         title: {
           text: '',
           style: {
-            'color': '#fff'
+            'color': '#000'
           }
         },
         legend: {
           enabled: true,
           itemStyle: {
-            color: '#FFF'
+            color: '#000'
           }
         },
         credits: {
@@ -79,7 +79,7 @@ export default {
         labels: {
           overflow: 'justify',
           style: {
-            color: '#FFF'
+            color: '#000'
           }
         },
         tooltip: {
