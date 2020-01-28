@@ -31,7 +31,7 @@ export default {
       return (this.question) ? {
         chart: {
           type: 'line',
-          backgroundColor: 'rgb(48, 48, 48)'
+          backgroundColor: 'white'
         },
         pane: {
           center: ['50%', '85%'],
@@ -49,7 +49,7 @@ export default {
         title: {
           text: '',
           style: {
-            'color': '#fff'
+            'color': '#000'
           }
         },
         xAxis: {
@@ -57,7 +57,7 @@ export default {
           labels: {
             overflow: 'justify',
             style: {
-              color: '#FFF',
+              color: '#000',
               'font-weight': 'bold'
             }
           }
@@ -65,27 +65,27 @@ export default {
         yAxis: {
           min: 0,
           style: {
-            color: '#fff',
+            color: '#000',
             'font-weight': 'bold'
           },
           title: {
             text: '',
             align: 'high',
             style: {
-              color: '#fff'
+              color: '#000'
             }
           },
           labels: {
             overflow: 'justify',
             style: {
-              color: '#FFF'
+              color: '#000'
             }
           }
         },
         legend: {
           enabled: false,
           itemStyle: {
-            color: '#FFF'
+            color: '#000'
           }
         },
         credits: {
@@ -108,7 +108,7 @@ export default {
         labels: {
           overflow: 'justify',
           style: {
-            color: '#FFF'
+            color: '#000'
           }
         },
         tooltip: {
