@@ -176,7 +176,7 @@ export default {
       this.currenteQuestion = question
       this.dialogQuestionDetail = true
     },
-    scroll (person) {
+    scroll () {
       window.onscroll = () => {
         let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
         if (bottomOfWindow && this.positionPage < this.pages.length - 1) {
@@ -210,6 +210,10 @@ export default {
       this.totalPolls = (this.configPoll.originalJson) ? `${this.configPoll.originalJson.length - 1} encuestas` : '0 encuentas'
       this.pages = this.configPoll.pages
       this.pagesPoll = [...this.pagesPoll, this.configPoll.pages[this.positionPage]]
+      if (this.pagesPoll.length <= 4) {
+        this.positionPage += 1
+        this.pagesPoll = [...this.pagesPoll, this.configPoll.pages[this.positionPage]]
+      }
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
       this.dataGmapCenter = this.configPoll.gmapCenter

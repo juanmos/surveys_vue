@@ -406,7 +406,6 @@ export default {
           this.setSnackMessage(`Agregados involucrados en proyecto ${err}`)
           this.setShowSnack(true)
         })
-      console.log('esto se va a guardar', pollsProject)
     }
   },
   computed: {

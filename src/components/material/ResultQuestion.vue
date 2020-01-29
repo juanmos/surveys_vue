@@ -21,7 +21,8 @@
     </v-icon>
   </span>
   </v-card>
-  <div style="margin-bottom: 20px;">
+
+  <div v-if="!currentQuestion.questionCombination" style="margin-bottom: 20px;">
     <label style="margin-left: 20px;font-weight:bold;">
       <span style="margin-right: 10px;">
         <v-icon
@@ -65,24 +66,29 @@
       </v-menu>
       <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
   </div>
-  <div v-if="graphicType === 'column'">
-    <chart v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart>
-    <chart-sort-minor v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-sort-minor>
-    <chart-sort-major v-if="sortMinor === false  && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-sort-major>
+  <div v-if="currentQuestion.questionCombination">
+    <chart-spline-column :graphicType="graphicType" :question="currentQuestion"></chart-spline-column>
   </div>
+  <div v-else>
+    <div v-if="graphicType === 'column'">
+      <chart v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart>
+      <chart-sort-minor v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-sort-minor>
+      <chart-sort-major v-if="sortMinor === false  && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-sort-major>
+    </div>
 
-  <div v-if="graphicType === 'bar'">
-    <chart-bar  v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
-    <chart-bar-sort-minor  v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort-minor>
-    <chart-bar-sort-major  v-if="sortMinor === false && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort-major>
-  </div>
-  <div v-if="graphicType === 'line'">
-    <chart-line v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart-line>
-    <chart-line-sort-minor v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort-minor>
-    <chart-line-sort-major v-if="sortMinor === false && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort-major>
-  </div>
+    <div v-if="graphicType === 'bar'">
+      <chart-bar  v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart-bar>
+      <chart-bar-sort-minor  v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort-minor>
+      <chart-bar-sort-major  v-if="sortMinor === false && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-bar-sort-major>
+    </div>
+    <div v-if="graphicType === 'line'">
+      <chart-line v-if="original === true" :question="currentQuestion" :graphicType="graphicType"></chart-line>
+      <chart-line-sort-minor v-if="sortMinor === true && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort-minor>
+      <chart-line-sort-major v-if="sortMinor === false && original === false" :question="currentQuestion" :graphicType="graphicType"></chart-line-sort-major>
+    </div>
 
-  <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
+    <chart-pie v-if="graphicType === 'pie'" :question="currentQuestion" :graphicType="graphicType"></chart-pie>
+  </div>
   </v-card>
 </template>
 
@@ -97,6 +103,7 @@ import ChartBarSortMinor from './../../components/highcharts/ChartBarSortMinor'
 import ChartLine from './../../components/highcharts/ChartLine'
 import ChartLineSortMinor from './../../components/highcharts/ChartLineSortMinor'
 import ChartLineSortMajor from './../../components/highcharts/ChartLineSortMajor'
+import ChartSplineColumn from './../../components/highcharts/ChartSplineColumn'
 export default {
   inheritAttrs: false,
   props: {
@@ -155,7 +162,7 @@ export default {
       this.currentQuestion.type = 'column'
     }
   },
-  components: {Chart, ChartPie, ChartBar, ChartLine, ChartSortMinor, ChartSortMajor, ChartBarSortMajor, ChartBarSortMinor, ChartLineSortMinor, ChartLineSortMajor}
+  components: {Chart, ChartPie, ChartBar, ChartLine, ChartSortMinor, ChartSortMajor, ChartBarSortMajor, ChartBarSortMinor, ChartLineSortMinor, ChartLineSortMajor, ChartSplineColumn}
 }
 </script>
 

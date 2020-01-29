@@ -84,6 +84,13 @@ export default {
         }
       })
     },
+    getQuestionsNewPage () {
+      return this.listQuestions.filter(filterQuestion => {
+        if (filterQuestion.page === this.title && filterQuestion.questionCombination === true) {
+          return filterQuestion
+        }
+      })
+    },
     hasOffset () {
       return this.$slots.header ||
         this.$slots.offset ||
