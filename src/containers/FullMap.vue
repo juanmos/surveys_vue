@@ -438,4 +438,13 @@ export default {
       cursor: pointer;
       margin: 2px;
     }
+
+    .styleCustom tbody tr:nth-of-type(odd) {
+      background-color: rgba(93, 97, 99, 0.87);
+      color: white;
+    }
+    .styleCustom tbody tr:hover {
+      background-color: #312f2f !important;
+      color: white;
+    }
 </style>
