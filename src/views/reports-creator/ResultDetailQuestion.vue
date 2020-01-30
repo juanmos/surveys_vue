@@ -7,6 +7,7 @@
              </v-flex>
              <v-flex xs12>
                <v-data-table v-if="currentQuestion.questionCombination"
+                     light
                      :headers="headersCombination"
                      :items="getItemsCombination"
                      hide-actions
@@ -37,6 +38,7 @@
                      </template>
                </v-data-table>
                <v-data-table v-else
+                     light
                      :headers="headers"
                      :items="getItems"
                      hide-actions
@@ -147,5 +149,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+tbody tr:nth-of-type(odd) {
+  background-color: rgba(140, 148, 152, 0.87);
+  color: white;
+}
+tbody tr:hover {
+  background-color: black !important;
+  color: white;
+}
 </style>
