@@ -33,6 +33,9 @@
         </v-icon>
       </span>Pregunta: <span>{{currentQuestion.label}}</span>
       </label>
+      <div class="">
+        <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
+      </div>
   </div>
   <div v-else style="margin-bottom: 20px;">
     <label style="margin-left: 20px;font-weight:bold;">

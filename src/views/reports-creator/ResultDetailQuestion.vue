@@ -6,7 +6,33 @@
                <result-question :question="currentQuestion" :isViewDetail="isViewDetail"></result-question>
              </v-flex>
              <v-flex xs12>
-               <v-data-table
+               <v-data-table v-if="currentQuestion.questionCombination"
+                     :headers="headersCombination"
+                     :items="getItemsCombination"
+                     hide-actions
+                     item-key="name"
+                   >
+                     <template slot="items" slot-scope="props">
+                       <tr @click="props.expanded = !props.expanded">
+                         <td class="justify-left">
+                             {{props.item.row}}
+                         </td>
+                         <td class="justify-left">
+                           <label>Total:<span>{{props.item.dataLiking.detractores.total}}</span></label> <br/>
+                           <label>Porcentaje:<span>{{props.item.dataLiking.detractores.percentage}} %</span></label>
+                         </td>
+                         <td class="justify-left">
+                           <label>Total:<span>{{props.item.dataLiking.pasivos.total}}</span></label> <br/>
+                           <label>Porcentaje:<span>{{props.item.dataLiking.pasivos.percentage}} %</span></label>
+                         </td>
+                         <td class="justify-left">
+                           <label>Total:<span>{{props.item.dataLiking.promotores.total}}</span></label> <br/>
+                           <label>Porcentaje:<span>{{props.item.dataLiking.promotores.percentage}} %</span></label>
+                         </td>
+                       </tr>
+                     </template>
+               </v-data-table>
+               <v-data-table v-else
                      :headers="headers"
                      :items="getItems"
                      hide-actions
@@ -61,6 +87,26 @@ export default {
         sortable: true
       }
     ],
+    headersCombination: [
+      {
+        text: 'Nombre',
+        align: 'left',
+        sortable: true,
+        value: 'name'
+      },
+      { text: 'Detractores',
+        value: 'detractores',
+        sortable: false
+      },
+      { text: 'Pasivos',
+        value: 'pasivos',
+        sortable: false
+      },
+      { text: 'Promotores',
+        value: 'promotores',
+        sortable: false
+      }
+    ],
     isViewDetail: true,
     text: ''
   }),
@@ -77,6 +123,9 @@ export default {
         }
       }
       return list
+    },
+    getItemsCombination () {
+      return this.currentQuestion.dataLikingKnowLiking
     }
   },
   created () {
