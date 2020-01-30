@@ -6,7 +6,7 @@
                <result-question :question="currentQuestion" :isViewDetail="isViewDetail"></result-question>
              </v-flex>
              <v-flex xs12>
-               <v-data-table v-if="currentQuestion.questionCombination"
+               <v-data-table v-if="currentQuestion.questionCombination" class="styleCustom"
                      light
                      :headers="headersCombination"
                      :items="getItemsCombination"
@@ -37,7 +37,7 @@
                        </tr>
                      </template>
                </v-data-table>
-               <v-data-table v-else
+               <v-data-table v-else class="styleCustom"
                      light
                      :headers="headers"
                      :items="getItems"
@@ -149,12 +149,12 @@ export default {
 </script>
 
 <style lang="scss">
-tbody tr:nth-of-type(odd) {
-  background-color: rgba(140, 148, 152, 0.87);
+.styleCustom tbody tr:nth-of-type(odd) {
+  background-color: rgba(93, 97, 99, 0.87);
   color: white;
 }
-tbody tr:hover {
-  background-color: black !important;
+.styleCustom tbody tr:hover {
+  background-color: #312f2f !important;
   color: white;
 }
 </style>
