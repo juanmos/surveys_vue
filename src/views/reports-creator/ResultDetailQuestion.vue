@@ -29,6 +29,10 @@
                            <label>Total:<span>{{props.item.dataLiking.promotores.total}}</span></label> <br/>
                            <label>Porcentaje:<span>{{props.item.dataLiking.promotores.percentage}} %</span></label>
                          </td>
+                         <td class="justify-left">
+                           <label>Total:<span>{{props.item.dataKnowledge.total}}</span></label> <br/>
+                           <label>Porcentaje:<span>{{props.item.dataKnowledge.percentage}} %</span></label>
+                         </td>
                        </tr>
                      </template>
                </v-data-table>
@@ -104,6 +108,10 @@ export default {
       },
       { text: 'Promotores',
         value: 'promotores',
+        sortable: false
+      },
+      { text: 'Conocimiento',
+        value: 'conocimiento',
         sortable: false
       }
     ],
