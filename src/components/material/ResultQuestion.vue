@@ -21,8 +21,20 @@
     </v-icon>
   </span>
   </v-card>
-
-  <div v-if="!currentQuestion.questionCombination" style="margin-bottom: 20px;">
+  <div v-if="currentQuestion.questionCombination" style="margin-bottom: 20px;">
+    <label style="margin-left: 20px;font-weight:bold;">
+      <span style="margin-right: 10px;">
+        <v-icon
+          style="padding-top: 15px;"
+          size="20"
+          color="blue"
+        >
+        adjust
+        </v-icon>
+      </span>Pregunta: <span>{{currentQuestion.label}}</span>
+      </label>
+  </div>
+  <div v-else style="margin-bottom: 20px;">
     <label style="margin-left: 20px;font-weight:bold;">
       <span style="margin-right: 10px;">
         <v-icon
