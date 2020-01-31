@@ -72,7 +72,7 @@
                 >
                     <v-icon>list</v-icon>
                 </v-btn>
-                <v-layout row wrap>
+                <!-- <v-layout row wrap>
                     <v-flex xs3>
                         <v-btn
                         dark
@@ -99,7 +99,7 @@
                                 hide-details
                               ></v-text-field>
                     </v-flex>
-                </v-layout>
+                </v-layout> -->
                 <loading-component v-if="loading"></loading-component>
             </v-card>
         </v-flex>
