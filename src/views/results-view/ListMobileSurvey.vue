@@ -40,10 +40,10 @@
                 >
                   <template slot="items" slot-scope="props">
                     <tr @click="props.expanded = !props.expanded">
-                      <td class="justify-left">
+                      <td class="justify-left"  @click="goToDetailUser(props.item._id)" style="cursor:pointer;">
                         {{ props.item.name }}
                       </td>
-                      <td>
+                      <td @click="goToDetailUser(props.item._id)" style="cursor:pointer;">
                         {{ (props.item.totalPolls) ? props.item.totalPolls : 0 }}
                       </td>
                       <td class="justify-center layout px-0">
@@ -160,6 +160,7 @@ export default {
       showMsg: false,
       search: '',
       users: [],
+      configPollCurrent: null,
       listMobileResults: [],
       msgType: 'error',
       itemSelected: null,
