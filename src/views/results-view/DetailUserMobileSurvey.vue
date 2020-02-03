@@ -7,36 +7,27 @@
               <v-subheader>Encuestador: {{userCurrent.name}}</v-subheader>
               <v-card-title>
                 <v-flex xs6>
-                    <!-- <v-select
-                     v-model="selectedUser"
-                     v-bind:items="users"
-                     item-text="name"
-                     item-value="_id"
-                     label="Encuestador"
-                     ></v-select> -->
-                    <!-- <v-text-field
-                            v-model="search"
-                            @keyup.enter="searchUserName"
-                            @keyup.space="searchUserName"
-                            append-icon="search"
-                            label="Buscar por nombre..."
-                            single-line
-                            hide-details
-                          ></v-text-field> -->
-                </v-flex>
-                <v-flex xs6>
                     <label>TOTAL DE ENCUESTAS: {{total}}</label>
                 </v-flex>
               </v-card-title>
             <v-data-table
+                  show-select
+                  v-model="selected"
                   :headers="headers"
                   :items="listMobileResults"
-                  hide-actions
                   item-key="_id"
+                  class="elevation-1"
                 >
                   <template slot="items" slot-scope="props">
-                    <tr @click="props.expanded = !props.expanded">
-                      <td class="justify-left">
+                    <tr :active="props.selected" @click="props.selected = !props.selected">
+                        <td>
+                    <v-checkbox
+                      :input-value="props.selected"
+                      primary
+                      hide-details
+                    ></v-checkbox>
+                  </td>
+                      <td>
                           <a :href="getUrlImage(props.item.path)"
                           title="Ver archivo"
                           target="_blank">
@@ -89,6 +80,16 @@
                 </v-btn>
             </v-card>
         </v-flex>
+        <v-flex xs3>
+            <v-btn
+            dark
+            small
+            color="primary"
+            @click="dialogDeleteAll = true"
+            >
+            ELIMINAR ENCUESTAS
+            </v-btn>
+        </v-flex>
         </v-layout>
         <v-dialog
           v-model="dialog"
@@ -122,6 +123,38 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog
+          v-model="dialogDeleteAll"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline">Eliminar archivos</v-card-title>
+
+            <v-card-text>
+              Esta seguro que desea eliminar todas las encuestas que fueron seleccionadas?
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="red darken-4"
+                flat="flat"
+                @click="dialogDeleteAll = false"
+              >
+                Cancelar
+              </v-btn>
+
+              <v-btn
+                color="teal darken-3"
+                flat="flat"
+                @click="dialogDeleteAll = false, deletePollsSelected()"
+              >
+                Aceptar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     </v-container>
 </div>
 </template>
@@ -136,6 +169,12 @@ export default {
   data () {
     return {
       headers: [
+        {
+          text: '',
+          align: 'center',
+          sortable: false,
+          value: 'select'
+        },
         {
           text: 'Nombre del Archivo',
           align: 'center',
@@ -165,6 +204,8 @@ export default {
         v => !!v || 'El campo es requerido'
         // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+      singleSelect: false,
+      selected: [],
       configPoll: null,
       user: null,
       userCurrent: {
@@ -172,6 +213,7 @@ export default {
       },
       rules: validations,
       dialog: false,
+      dialogDeleteAll: false,
       total: 0,
       message: '',
       showMsg: false,
@@ -213,6 +255,22 @@ export default {
     },
     close (val) {
       // console.('Dia closed', val)
+    },
+    deletePollsSelected () {
+      if (this.selected.length > 0) {
+        this.selected.map(poll => {
+          this.delAll(poll)
+        })
+        this.getMobileSurvey()
+      }
+    },
+    delAll (itemSelected) {
+      const {MobileSurveyResult} = this.$FeathersVuex
+      const mobileResult = new MobileSurveyResult(itemSelected)
+      mobileResult.removed = true
+      mobileResult.patch().then((result) => {
+        this.getMobileSurvey()
+      })
     },
     del () {
       const {MobileSurveyResult} = this.$FeathersVuex
