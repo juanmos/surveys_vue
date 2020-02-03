@@ -762,6 +762,7 @@ export default {
     },
     getConfigPolls () {
       this.findConfigPolls({query: {$sort: { dateFinished: '-1' }, removed: false, _polls_project_id: this.$route.params.id}}).then(response => {
+        console.log('res--', response)
         this.listConfigPolls = response.data
       })
     },
