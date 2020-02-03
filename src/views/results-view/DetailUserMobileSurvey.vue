@@ -43,6 +43,9 @@
                       <td>
                         {{ props.item.fecha_fin }}
                       </td>
+                      <td>
+                        {{ getTime(props.item) }}
+                      </td>
                       <td class="justify-center layout px-0">
                         <v-menu
                           bottom
@@ -57,6 +60,9 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
+                            <v-list-tile @click="goToViewPoll(props.item)">
+                              <v-list-tile-title >Ver encuesta</v-list-tile-title>
+                            </v-list-tile>
                             <v-list-tile @click="dialog = true; itemSelected = props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
@@ -164,6 +170,12 @@ import {mapGetters, mapActions} from 'vuex'
 import {validations} from './../../utils/validations'
 import EditableField from './../../components/forms/EditableField'
 import LoadingComponent from './../../components/docaration/LoadingComponent'
+import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+Vue.use(VueMoment, {
+  moment
+})
 const enviroment = require('./../../../config/enviroment.json')
 export default {
   data () {
@@ -196,6 +208,11 @@ export default {
           value: '_loki',
           sortable: true
         },
+        { text: 'Duración',
+          align: 'center',
+          value: '_loki',
+          sortable: true
+        },
         { text: 'Acciones',
           sortable: false
         }
@@ -206,6 +223,7 @@ export default {
       ],
       singleSelect: false,
       selected: [],
+      configPollCurrent: null,
       configPoll: null,
       user: null,
       userCurrent: {
@@ -240,8 +258,15 @@ export default {
       this.snackColor = 'error'
       this.snackText = 'Canceled'
     },
+    getTime (item) {
+      return moment.utc(moment(item.fecha_fin, 'YYYY/MM/DD HH:mm:ss').diff(moment(item.fecha_inicio, 'YYYY/MM/DD HH:mm:ss'))).format('HH:mm:ss')
+    },
     goToList () {
       this.$router.go(-1)
+    },
+    goToViewPoll (item) {
+      let routeData = this.$router.resolve({path: `/view-data-response/${item._config_poll_id}/${item._index_originalJson}`})
+      window.open(routeData.href, '_blank')
     },
     getUrlImage (file) {
       file = (file) || 'uploads/construct/data_not_found.png'
