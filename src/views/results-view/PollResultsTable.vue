@@ -94,7 +94,7 @@ export default {
     getFields () {
       let objectHeaders = {}
       this.headers.map(header => {
-        if (!header.text) {
+        if (header.text) {
           objectHeaders[header.text] = (header.code) ? header.code : ''
         }
       })
