@@ -74,7 +74,7 @@
                         <video controls="" autoplay="" name="media" v-if="currentPath">
                             <source :src="currentPath" type="audio/x-wav">
                         </video>
-                        <span v-else>NO EXISTE EL ARCHIVO AUDIO</span>
+                        <span v-else style="font-weight: bold;color: red;">*** NO EXISTE EL AUDIO ****</span>
                     </v-flex>
                     <v-flex xs12>
                         <v-btn @click="dialogAudio = false">Cerrar</v-btn>
