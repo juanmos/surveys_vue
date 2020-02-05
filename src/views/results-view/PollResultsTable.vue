@@ -60,26 +60,32 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-dialog v-model="dialogAudio" v-if="dialogAudio" max-width="900">
+        <v-dialog v-model="dialogAudio" v-if="dialogAudio" persistent max-width="900">
           <v-card v-if="dialogAudio">
             <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
               <h4>Audio</h4>
             </v-flex>
             <v-card-text>
-                <v-layout row>
+                <v-container fluid grid-list-md text-xs-center>
+                  <v-layout row wrap>
                     <v-flex xs12>
-                        <span>{{currentHeader.text}}</span>
+                        <center>
+                            <span style="font-weight: bold;">{{currentHeader.text}}</span>
+                        </center>
                     </v-flex>
                     <v-flex xs12>
-                        <video controls="" autoplay="" name="media" v-if="currentPath">
-                            <source :src="currentPath" type="audio/x-wav">
-                        </video>
-                        <span v-else style="font-weight: bold;color: red;">*** NO EXISTE EL AUDIO ****</span>
+                        <center>
+                            <video controls="" autoplay="" name="media" v-if="currentPath">
+                                <source :src="currentPath" type="audio/x-wav">
+                            </video>
+                            <span v-else style="font-weight: bold;color: red;">*** NO EXISTE EL AUDIO ****</span>
+                        </center>
                     </v-flex>
                     <v-flex xs12>
                         <v-btn @click="dialogAudio = false">Cerrar</v-btn>
                     </v-flex>
                 </v-layout>
+            </v-container>
             </v-card-text>
           </v-card>
        </v-dialog>
