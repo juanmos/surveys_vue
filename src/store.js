@@ -305,6 +305,11 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('question-audios', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
     service('countries', {
       instanceDefaults: {
         removed: false

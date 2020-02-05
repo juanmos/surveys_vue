@@ -31,16 +31,28 @@
                     <th class="headersStyle">
                       N. Encuesta
                     </th>
-                    <th class="headersStyle" v-for="(header, index) in headers" :key="index">
+                    <th class="headersStyle" v-for="(header, index) in headers" :key="index" style="z-index: 100;">
                       {{header.text}}
                     </th>
                   </thead>
-                  <tr v-for="(dataRow, indexRowData) in responses" :key="indexRowData" @click="goToViewPoll(indexRowData)">
+                  <tr v-for="(dataRow, indexRowData) in responses" :key="indexRowData">
                     <td class="center" @click="goToViewPoll(indexRowData)">
                       <span>{{indexRowData + 1}}</span>
                     </td>
                     <td class="center" v-for="(codeHeader, indexCode) in headers" :key="indexCode">
-                      {{dataRow[codeHeader.code]}}
+                      <span @click="goToViewPoll(indexRowData)">
+                        {{dataRow[codeHeader.code]}}
+                      </span>
+                      <div v-if="codeHeader.audio" style="z-index:0;">
+                        <v-btn
+                        dark
+                        fab
+                        small
+                        @click="listenAudio(codeHeader, indexRowData)"
+                        >
+                            <v-icon>volume_up</v-icon>
+                        </v-btn>
+                      </div>
                     </td>
                   </tr>
                 </table>
@@ -48,6 +60,29 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-dialog v-model="dialogAudio" v-if="dialogAudio" max-width="900">
+          <v-card v-if="dialogAudio">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Audio</h4>
+            </v-flex>
+            <v-card-text>
+                <v-layout row>
+                    <v-flex xs12>
+                        <span>{{currentHeader.text}}</span>
+                    </v-flex>
+                    <v-flex xs12>
+                        <video controls="" autoplay="" name="media" v-if="currentPath">
+                            <source :src="currentPath" type="audio/x-wav">
+                        </video>
+                        <span v-else>NO EXISTE EL ARCHIVO AUDIO</span>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-btn @click="dialogAudio = false">Cerrar</v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-card-text>
+          </v-card>
+       </v-dialog>
       </v-container>
     <!--  <v-card>
         <v-flex md12>
@@ -73,15 +108,22 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: ['responses', 'headers', 'variablesMode', 'currentPoll', 'name'],
   data () {
     return {
       dialogAnswerEdit: false,
       fields: {},
+      dialogAudio: false,
+      currentHeader: null,
+      currentIndex: null,
+      currentPath: null,
       currentQuestion: {
         text: ''
       },
+      urlEnviroment: enviroment[enviroment.currentEnviroment].backend.urlBase,
       currentEdit: {
         value: '',
         index: 0,
@@ -102,6 +144,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('question-audios', {findQuestionAudios: 'find'}),
     questionCoding (index, code) {
       this.currentEdit = {
         value: this.responses[index][code],
@@ -110,9 +153,25 @@ export default {
       }
       this.dialogAnswerEdit = true
     },
+    getAudio (file) {
+      file = (file) || 'uploads/construct/data_not_found.png'
+      file = file.replace(/public/g, '')
+      this.currentPath = enviroment[enviroment.currentEnviroment].backend.urlBase + file
+      console.log('currentPath-->', this.currentPath)
+    },
     goToViewPoll (indexPoll) {
       let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll}`})
       window.open(routeData.href, '_blank')
+    },
+    listenAudio (header, index) {
+      this.dialogAudio = true
+      this.currentHeader = header
+      this.currentIndex = index + 1
+      this.findQuestionAudios({query: {_config_poll_id: this.$route.params.id, question: this.currentHeader.name, _index_originalJson: this.currentIndex}}).then((result) => {
+        if (result.data.length > 0) {
+          this.getAudio(result.data[0].path)
+        }
+      })
     },
     saveConfig (data) {
       this.responses[data.index][data.code] = data.value
