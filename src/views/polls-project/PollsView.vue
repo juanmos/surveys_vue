@@ -3,7 +3,7 @@
         <v-dialog v-model="dialogWait" persistent max-width="900">
             <v-card v-if="dialogWait">
               <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-                <h5>PROYECTOS ENCUESTAS</h5>
+                <h5>ENCUESTAS</h5>
               </v-flex>
               <v-card-text>
                   <center>
