@@ -78,7 +78,7 @@
                             <video controls="" autoplay="" name="media" v-if="currentPath">
                                 <source :src="currentPath" type="audio/x-wav">
                             </video>
-                            <span v-else style="font-weight: bold;color: red;">*** NO EXISTE EL AUDIO ****</span>
+                            <span v-else style="font-weight: bold;color: red;">{{textModal}}</span>
                         </center>
                     </v-flex>
                     <v-flex xs12>
@@ -125,6 +125,7 @@ export default {
       dialogAudio: false,
       currentHeader: null,
       currentIndex: null,
+      textModal: '',
       currentPath: null,
       currentQuestion: {
         text: ''
@@ -170,12 +171,20 @@ export default {
       window.open(routeData.href, '_blank')
     },
     listenAudio (header, index) {
-      this.dialogAudio = true
       this.currentHeader = header
       this.currentIndex = index + 1
+      this.textModal = 'Cargando'
+      console.log('_config_poll_id', this.$route.params.id)
+      console.log('question', this.currentHeader.name)
+      console.log('_index_originalJson', this.currentIndex)
       this.findQuestionAudios({query: {_config_poll_id: this.$route.params.id, question: this.currentHeader.name, _index_originalJson: this.currentIndex}}).then((result) => {
+        this.dialogAudio = true
         if (result.data.length > 0) {
           this.getAudio(result.data[0].path)
+        } else {
+          console.log('no hay audio')
+          this.textModal = '*** NO EXISTE EL AUDIO ****'
+          this.currentPath = null
         }
       })
     },
