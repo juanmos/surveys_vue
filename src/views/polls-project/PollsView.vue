@@ -1,5 +1,24 @@
 <template>
     <v-flex class="view-container">
+        <v-dialog v-model="dialogWait" persistent max-width="900">
+            <v-card v-if="dialogWait">
+              <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+                <h5>PROYECTOS ENCUESTAS</h5>
+              </v-flex>
+              <v-card-text>
+                  <center>
+                      <v-img
+                        src="/images/loader.gif"
+                        img-alt="Image"
+                        height="70"
+                        width="70"
+                        aspect-ratio="2.75"
+                      ></v-img>
+                    <h5>Cargando encuestas... Espere por favor.</h5>
+                  </center>
+              </v-card-text>
+            </v-card>
+        </v-dialog>
       <v-card>
         <v-tabs
         color="secondary"
@@ -441,6 +460,7 @@ export default {
         sortable: false
       }
     ],
+    dialogWait: false,
     poolsseg: {
       name: '',
       date_start: '',
@@ -761,8 +781,10 @@ export default {
       })
     },
     getConfigPolls () {
+      this.dialogWait = true
       this.findConfigPolls({query: {$sort: { dateFinished: '-1' }, removed: false, _polls_project_id: this.$route.params.id}}).then(response => {
         this.listConfigPolls = response.data
+        this.dialogWait = false
       })
     },
     cancel () {
