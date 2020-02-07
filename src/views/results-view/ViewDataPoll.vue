@@ -32,10 +32,39 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table :headers="getDataHeaders" :responses="getViewData" :name="resultPoll.name"></poll-results-table>
+                    <poll-results-table @setAudio="getAudio" :headers="getDataHeaders" :responses="getViewData" :name="resultPoll.name" ></poll-results-table>
                 </v-card>
             </v-tab-item>
         </v-tabs>
+        <v-dialog v-model="dialogAudio" v-if="dialogAudio" persistent max-width="900">
+          <v-card v-if="dialogAudio">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h4>Audio</h4>
+            </v-flex>
+            <v-card-text>
+                <v-container fluid grid-list-md text-xs-center>
+                  <v-layout row wrap>
+                    <v-flex xs12>
+                        <center>
+                            <span style="font-weight: bold;">{{dataAudio.text}}</span>
+                        </center>
+                    </v-flex>
+                    <v-flex xs12>
+                        <center>
+                            <video controls="" autoplay="" name="media" v-if="dataAudio.currentPath">
+                                <source :src="dataAudio.currentPath" type="audio/x-wav">
+                            </video>
+                            <span v-else style="font-weight: bold;color: red;">{{dataAudio.textModal}}</span>
+                        </center>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-btn @click="dialogAudio = false">Cerrar</v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            </v-card-text>
+          </v-card>
+       </v-dialog>
     </v-flex>
 </template>
 
@@ -56,6 +85,12 @@ export default {
         name: '',
         originalJson: [],
         formatedConfiguration: []
+      },
+      dialogAudio: false,
+      dataAudio: {
+        text: '',
+        currentPath: null,
+        textModal: ''
       },
       segmentationDialog: false,
       viewData: [],
@@ -109,6 +144,11 @@ export default {
       'setSnackMessage',
       'setShowSnack'
     ]),
+    getAudio (data) {
+      this.dataAudio = data
+      this.dialogAudio = true
+      console.log('this.data--', this.dataAudio)
+    },
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
