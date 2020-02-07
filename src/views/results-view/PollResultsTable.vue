@@ -67,7 +67,7 @@
             </v-flex>
             <v-card-text>
                 <v-container fluid grid-list-md text-xs-center>
-                  <v-layout row wrap>
+                  <v-layout row wrap v-if="!waitLoad">
                     <v-flex xs12>
                         <center>
                             <span style="font-weight: bold;">{{currentHeader.text}}</span>
@@ -83,6 +83,13 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-btn @click="dialogAudio = false">Cerrar</v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap v-else>
+                    <v-flex xs12>
+                        <center>
+                            <span style="font-weight: bold;">Buscando... Espere por favor</span>
+                        </center>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -123,6 +130,7 @@ export default {
       dialogAnswerEdit: false,
       fields: {},
       dialogAudio: false,
+      waitLoad: true,
       currentHeader: null,
       currentIndex: null,
       textModal: '',
@@ -174,18 +182,19 @@ export default {
       this.currentHeader = header
       this.currentIndex = index + 1
       this.textModal = 'Cargando'
+      this.waitLoad = true
+      this.dialogAudio = true
       console.log('_config_poll_id', this.$route.params.id)
       console.log('question', this.currentHeader.name)
       console.log('_index_originalJson', this.currentIndex)
       this.findQuestionAudios({query: {_config_poll_id: this.$route.params.id, question: this.currentHeader.name, _index_originalJson: this.currentIndex}}).then((result) => {
-        this.dialogAudio = true
         if (result.data.length > 0) {
           this.getAudio(result.data[0].path)
         } else {
-          console.log('no hay audio')
           this.textModal = '*** NO EXISTE EL AUDIO ****'
           this.currentPath = null
         }
+        this.waitLoad = false
       })
     },
     saveConfig (data) {
