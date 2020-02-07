@@ -60,42 +60,6 @@
             </v-card>
           </v-flex>
         </v-layout>
-        <v-dialog v-model="dialogAudio" v-if="dialogAudio" persistent max-width="900">
-          <v-card v-if="dialogAudio">
-            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-              <h4>Audio</h4>
-            </v-flex>
-            <v-card-text>
-                <v-container fluid grid-list-md text-xs-center>
-                  <v-layout row wrap v-if="!waitLoad">
-                    <v-flex xs12>
-                        <center>
-                            <span style="font-weight: bold;">{{currentHeader.text}}</span>
-                        </center>
-                    </v-flex>
-                    <v-flex xs12>
-                        <center>
-                            <video controls="" autoplay="" name="media" v-if="currentPath">
-                                <source :src="currentPath" type="audio/x-wav">
-                            </video>
-                            <span v-else style="font-weight: bold;color: red;">{{textModal}}</span>
-                        </center>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-btn @click="dialogAudio = false">Cerrar</v-btn>
-                    </v-flex>
-                </v-layout>
-                <v-layout row wrap v-else>
-                    <v-flex xs12>
-                        <center>
-                            <span style="font-weight: bold;">Buscando... Espere por favor</span>
-                        </center>
-                    </v-flex>
-                </v-layout>
-            </v-container>
-            </v-card-text>
-          </v-card>
-       </v-dialog>
       </v-container>
     <!--  <v-card>
         <v-flex md12>
@@ -173,6 +137,12 @@ export default {
       file = file.replace(/public/g, '')
       this.currentPath = enviroment[enviroment.currentEnviroment].backend.urlBase + file
       console.log('currentPath-->', this.currentPath)
+      let data = {
+        text: this.currentHeader.text,
+        currentPath: this.currentPath,
+        textModal: this.textModal
+      }
+      this.$emit('setAudio', data)
     },
     goToViewPoll (indexPoll) {
       let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll}`})
@@ -183,7 +153,7 @@ export default {
       this.currentIndex = index + 1
       this.textModal = 'Cargando'
       this.waitLoad = true
-      this.dialogAudio = true
+      // this.dialogAudio = true
       console.log('_config_poll_id', this.$route.params.id)
       console.log('question', this.currentHeader.name)
       console.log('_index_originalJson', this.currentIndex)
@@ -191,8 +161,12 @@ export default {
         if (result.data.length > 0) {
           this.getAudio(result.data[0].path)
         } else {
-          this.textModal = '*** NO EXISTE EL AUDIO ****'
-          this.currentPath = null
+          let data = {
+            text: this.currentHeader.text,
+            currentPath: null,
+            textModal: '*** NO EXISTE EL AUDIO ****'
+          }
+          this.$emit('setAudio', data)
         }
         this.waitLoad = false
       })
