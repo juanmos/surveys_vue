@@ -1,5 +1,24 @@
 <template>
     <v-flex class="view-container">
+      <v-dialog v-model="dialogWait" persistent max-width="900">
+          <v-card v-if="dialogWait">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h5>ENCUESTAS</h5>
+            </v-flex>
+            <v-card-text>
+                <center>
+                    <v-img
+                      src="/images/loader.gif"
+                      img-alt="Image"
+                      height="70"
+                      width="70"
+                      aspect-ratio="2.75"
+                    ></v-img>
+                  <h5>Cargando encuestas... Espere por favor.</h5>
+                </center>
+            </v-card-text>
+          </v-card>
+      </v-dialog>
        <h4 style="color:white">{{resultPoll.name}}</h4>
        <h5 style="color:white">Número de encuestas: {{pollInstances.length}}</h5>
        <v-btn style="margin-top: 50px;"
@@ -80,6 +99,7 @@ export default {
   data () {
     return {
       active: null,
+      dialogWait: false,
       viewTypeData: 'coding',
       resultPoll: {
         name: '',
@@ -157,9 +177,11 @@ export default {
       })
     },
     getDataResponses () {
+      this.dialogWait = true
       this.findPollInstances({query: {_config_poll_id: this.$route.params.id, $sort: { row: '1' }, $limit: null, $skip: 0}}).then((result) => {
         if (result.length > 0) {
           this.pollInstances = result.map(data => data.answers)
+          this.dialogWait = false
         }
       })
     },

@@ -35,7 +35,7 @@
                       {{header.text}}
                     </th>
                   </thead>
-                  <tr v-for="(dataRow, indexRowData) in responses" :key="indexRowData">
+                  <tr v-for="(dataRow, indexRowData) in responsesSkip" :key="indexRowData">
                     <td class="center" @click="goToViewPoll(indexRowData)">
                       <span>{{indexRowData + 1}}</span>
                     </td>
@@ -93,8 +93,10 @@ export default {
     return {
       dialogAnswerEdit: false,
       fields: {},
+      responsesSkip: [],
       dialogAudio: false,
       waitLoad: true,
+      rowSkip: 50,
       currentHeader: null,
       currentIndex: null,
       textModal: '',
@@ -132,6 +134,14 @@ export default {
       }
       this.dialogAnswerEdit = true
     },
+    scroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight >= (document.documentElement.offsetHeight - 2600)
+        if (bottomOfWindow) {
+          this.addMoreRows()
+        }
+      }
+    },
     getAudio (file) {
       file = (file) || 'uploads/construct/data_not_found.png'
       file = file.replace(/public/g, '')
@@ -168,9 +178,25 @@ export default {
         this.waitLoad = false
       })
     },
+    addMoreRows () {
+      if (this.rowSkip !== this.responses.length) {
+        this.rowSkip += 100
+        this.rowSkip = (this.rowSkip > this.responses.length) ? this.responses.length : this.rowSkip
+        this.responsesSkip = this.responses.slice(0, this.rowSkip)
+      }
+    },
     saveConfig (data) {
       this.responses[data.index][data.code] = data.value
       this.dialogAnswerEdit = false
+    }
+  },
+  mounted () {
+    this.scroll()
+  },
+  watch: {
+    responses: function (val) {
+      this.responsesSkip = [...val]
+      this.responsesSkip = this.responsesSkip.slice(0, 150)
     }
   },
   components: {}
@@ -260,7 +286,7 @@ table {
 .tableData {
   width: 100%;
   overflow-x: scroll;
-  height: 700px;
+  /*height: 700px; */
 }
 
 .center {
