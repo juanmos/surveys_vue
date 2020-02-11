@@ -193,7 +193,6 @@ export default new Vuex.Store({
     }),
     service('poll-instances', {
       instanceDefaults: {
-        response_received: [],
         removed: false,
         _config_poll_id: 0
       }

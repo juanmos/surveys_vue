@@ -136,11 +136,11 @@ export default {
       file = (file) || 'uploads/construct/data_not_found.png'
       file = file.replace(/public/g, '')
       this.currentPath = enviroment[enviroment.currentEnviroment].backend.urlBase + file
-      console.log('currentPath-->', this.currentPath)
       let data = {
         text: this.currentHeader.text,
         currentPath: this.currentPath,
-        textModal: this.textModal
+        textModal: this.textModal,
+        row: this.currentIndex
       }
       this.$emit('setAudio', data)
     },
@@ -153,10 +153,6 @@ export default {
       this.currentIndex = index + 1
       this.textModal = 'Cargando'
       this.waitLoad = true
-      // this.dialogAudio = true
-      console.log('_config_poll_id', this.$route.params.id)
-      console.log('question', this.currentHeader.name)
-      console.log('_index_originalJson', this.currentIndex)
       this.findQuestionAudios({query: {_config_poll_id: this.$route.params.id, question: this.currentHeader.name, _index_originalJson: this.currentIndex}}).then((result) => {
         if (result.data.length > 0) {
           this.getAudio(result.data[0].path)
@@ -164,7 +160,8 @@ export default {
           let data = {
             text: this.currentHeader.text,
             currentPath: null,
-            textModal: '*** NO EXISTE EL AUDIO ****'
+            textModal: '*** NO EXISTE EL AUDIO ****',
+            row: this.currentIndex
           }
           this.$emit('setAudio', data)
         }

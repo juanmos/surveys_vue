@@ -617,11 +617,6 @@ export default {
         })
       }
     },
-    getDatasend () {
-      this.findsegmentos({query: {removed: false, _id: this.items2._categorySegmentation_id}}).then(response => {
-
-      })
-    },
     deleteMember (id) {
       const {PollsProject} = this.$FeathersVuex
       let pollProject = new PollsProject(this.poolsseg)
