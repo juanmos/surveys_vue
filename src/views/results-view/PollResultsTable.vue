@@ -35,7 +35,7 @@
                       {{header.text}}
                     </th>
                   </thead>
-                  <tr v-for="(dataRow, indexRowData) in responses" :key="indexRowData">
+                  <tr v-for="(dataRow, indexRowData) in responsesSkip" :key="indexRowData">
                     <td class="center" @click="goToViewPoll(indexRowData)">
                       <span>{{indexRowData + 1}}</span>
                     </td>
@@ -93,8 +93,10 @@ export default {
     return {
       dialogAnswerEdit: false,
       fields: {},
+      responsesSkip: [],
       dialogAudio: false,
       waitLoad: true,
+      rowSkip: 50,
       currentHeader: null,
       currentIndex: null,
       textModal: '',
@@ -132,20 +134,28 @@ export default {
       }
       this.dialogAnswerEdit = true
     },
+    scroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight >= (document.documentElement.offsetHeight - 2600)
+        if (bottomOfWindow) {
+          this.addMoreRows()
+        }
+      }
+    },
     getAudio (file) {
       file = (file) || 'uploads/construct/data_not_found.png'
       file = file.replace(/public/g, '')
       this.currentPath = enviroment[enviroment.currentEnviroment].backend.urlBase + file
-      console.log('currentPath-->', this.currentPath)
       let data = {
         text: this.currentHeader.text,
         currentPath: this.currentPath,
-        textModal: this.textModal
+        textModal: this.textModal,
+        row: this.currentIndex
       }
       this.$emit('setAudio', data)
     },
     goToViewPoll (indexPoll) {
-      let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll}`})
+      let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll + 1}`})
       window.open(routeData.href, '_blank')
     },
     listenAudio (header, index) {
@@ -153,10 +163,6 @@ export default {
       this.currentIndex = index + 1
       this.textModal = 'Cargando'
       this.waitLoad = true
-      // this.dialogAudio = true
-      console.log('_config_poll_id', this.$route.params.id)
-      console.log('question', this.currentHeader.name)
-      console.log('_index_originalJson', this.currentIndex)
       this.findQuestionAudios({query: {_config_poll_id: this.$route.params.id, question: this.currentHeader.name, _index_originalJson: this.currentIndex}}).then((result) => {
         if (result.data.length > 0) {
           this.getAudio(result.data[0].path)
@@ -164,16 +170,33 @@ export default {
           let data = {
             text: this.currentHeader.text,
             currentPath: null,
-            textModal: '*** NO EXISTE EL AUDIO ****'
+            textModal: '*** NO EXISTE EL AUDIO ****',
+            row: this.currentIndex
           }
           this.$emit('setAudio', data)
         }
         this.waitLoad = false
       })
     },
+    addMoreRows () {
+      if (this.rowSkip !== this.responses.length) {
+        this.rowSkip += 100
+        this.rowSkip = (this.rowSkip > this.responses.length) ? this.responses.length : this.rowSkip
+        this.responsesSkip = this.responses.slice(0, this.rowSkip)
+      }
+    },
     saveConfig (data) {
       this.responses[data.index][data.code] = data.value
       this.dialogAnswerEdit = false
+    }
+  },
+  mounted () {
+    this.scroll()
+  },
+  watch: {
+    responses: function (val) {
+      this.responsesSkip = [...val]
+      this.responsesSkip = this.responsesSkip.slice(0, 150)
     }
   },
   components: {}
@@ -263,7 +286,7 @@ table {
 .tableData {
   width: 100%;
   overflow-x: scroll;
-  height: 700px;
+  /*height: 700px; */
 }
 
 .center {

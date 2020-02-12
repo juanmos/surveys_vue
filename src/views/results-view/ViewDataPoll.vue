@@ -1,7 +1,26 @@
 <template>
     <v-flex class="view-container">
+      <v-dialog v-model="dialogWait" persistent max-width="900">
+          <v-card v-if="dialogWait">
+            <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
+              <h5>ENCUESTAS</h5>
+            </v-flex>
+            <v-card-text>
+                <center>
+                    <v-img
+                      src="/images/loader.gif"
+                      img-alt="Image"
+                      height="70"
+                      width="70"
+                      aspect-ratio="2.75"
+                    ></v-img>
+                  <h5>Cargando encuestas... Espere por favor.</h5>
+                </center>
+            </v-card-text>
+          </v-card>
+      </v-dialog>
        <h4 style="color:white">{{resultPoll.name}}</h4>
-       <h5 style="color:white">Número de encuestas: {{getViewData.length}}</h5>
+       <h5 style="color:white">Número de encuestas: {{pollInstances.length}}</h5>
        <v-btn style="margin-top: 50px;"
        absolute
        dark
@@ -32,14 +51,14 @@
             <v-tab-item
             >
                 <v-card flat>
-                    <poll-results-table @setAudio="getAudio" :headers="getDataHeaders" :responses="getViewData" :name="resultPoll.name" ></poll-results-table>
+                    <poll-results-table @setAudio="getAudio" :headers="getDataHeaders" :responses="pollInstances" :name="resultPoll.name" ></poll-results-table>
                 </v-card>
             </v-tab-item>
         </v-tabs>
         <v-dialog v-model="dialogAudio" v-if="dialogAudio" persistent max-width="900">
           <v-card v-if="dialogAudio">
             <v-flex xs12 style="background: #d9323a;color: white;height: 45px;padding: 12px;">
-              <h4>Audio</h4>
+              <h4 style="font-weight: bold;">Audio - Fila: {{dataAudio.row}}</h4>
             </v-flex>
             <v-card-text>
                 <v-container fluid grid-list-md text-xs-center>
@@ -80,6 +99,7 @@ export default {
   data () {
     return {
       active: null,
+      dialogWait: false,
       viewTypeData: 'coding',
       resultPoll: {
         name: '',
@@ -90,8 +110,10 @@ export default {
       dataAudio: {
         text: '',
         currentPath: null,
-        textModal: ''
+        textModal: '',
+        row: 0
       },
+      pollInstances: [],
       segmentationDialog: false,
       viewData: [],
       dialogProcess: false,
@@ -140,6 +162,7 @@ export default {
   },
   methods: {
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions('poll-instances', { findPollInstances: 'find' }),
     ...mapActions([
       'setSnackMessage',
       'setShowSnack'
@@ -147,11 +170,19 @@ export default {
     getAudio (data) {
       this.dataAudio = data
       this.dialogAudio = true
-      console.log('this.data--', this.dataAudio)
     },
     refresh () {
       this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
         this.resultPoll = Object.assign({}, result)
+      })
+    },
+    getDataResponses () {
+      this.dialogWait = true
+      this.findPollInstances({query: {$select: ['answers', '_config_poll_id', 'row'], _config_poll_id: this.$route.params.id, $sort: { row: '1' }, $limit: null, $skip: 0}}).then((result) => {
+        if (result.length > 0) {
+          this.pollInstances = result.map(data => data.answers)
+          this.dialogWait = false
+        }
       })
     },
     saveFormated (values) {
@@ -174,6 +205,7 @@ export default {
     this.getPoll([this.id, {query: {withInstances: true}}]).then(result => {
       this.resultPoll = Object.assign({}, result)
     }).catch(err => console.log('este es el error', err))
+    this.getDataResponses()
     this.refresh()
   },
   components: { PollResultsTable, ReportCreator, SegmentationFields, QuestionsCodificator, ViewVariables }
