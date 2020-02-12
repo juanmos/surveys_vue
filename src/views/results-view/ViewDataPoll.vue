@@ -178,7 +178,7 @@ export default {
     },
     getDataResponses () {
       this.dialogWait = true
-      this.findPollInstances({query: {$select: ['answers', '_config_poll_id', 'row'], _config_poll_id: this.$route.params.id, $sort: { row: '1' }, $limit: null, $skip: 0}}).then((result) => {
+      this.findPollInstances({query: {$select: ['answers', '_config_poll_id', 'row'], _config_poll_id: this.$route.params.id, $limit: null, $skip: 0}}).then((result) => {
         if (result.length > 0) {
           this.pollInstances = result.map(data => data.answers)
           this.dialogWait = false
