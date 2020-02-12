@@ -155,7 +155,7 @@ export default {
       this.$emit('setAudio', data)
     },
     goToViewPoll (indexPoll) {
-      let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll}`})
+      let routeData = this.$router.resolve({path: `/view-data-response/${this.$route.params.id}/${indexPoll + 1}`})
       window.open(routeData.href, '_blank')
     },
     listenAudio (header, index) {

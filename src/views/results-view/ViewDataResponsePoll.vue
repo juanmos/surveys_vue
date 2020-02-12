@@ -29,17 +29,28 @@ export default {
   },
   methods: {
     ...mapActions('config-polls', { getConfigPoll: 'get' }),
+    ...mapActions('poll-instances', { findPollInstances: 'find' }),
     ...mapActions(['setSnackMessage', 'setShowSnack', 'setSnackColor']),
     gotoList (id) {
       this.$router.go(-1)
+    },
+    getDataResponses () {
+      this.findPollInstances({query: {_config_poll_id: this.$route.params.id, row: this.$route.params.index, formatSurvey: true, $limit: null, $skip: 0}}).then((result) => {
+        console.log('result--', result)
+        if (result.length > 0) {
+          this.indexPoll = Number(this.$route.params.index)
+          this.dataResponse = result[0].formatSurvey
+        }
+      })
     }
   },
   mounted () {
-    this.getConfigPoll(this.$route.params.id).then(response => {
+    this.getDataResponses()
+    /* this.getConfigPoll(this.$route.params.id).then(response => {
       this.currentConstruct = JSON.parse(response.construct)
       this.indexPoll = Number(this.$route.params.index)
       this.dataResponse = response.formatAnswersMobile[this.indexPoll]
-    })
+    }) */
   }
 }
 </script>

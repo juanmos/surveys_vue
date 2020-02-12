@@ -38,6 +38,11 @@ export default {
         xAxis: [{
           categories: this.question.categories
         }],
+        yAxis: {
+          title: {
+            text: ''
+          }
+        },
         tooltip: {
           shared: true
         },
