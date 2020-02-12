@@ -207,7 +207,7 @@ export default {
   created () {
     this.getConfigPoll(this.$route.params.id).then(result => {
       this.configPoll = Object.assign({}, result)
-      this.totalPolls = (this.configPoll.originalJson) ? `${this.configPoll.originalJson.length - 1} encuestas` : '0 encuentas'
+      this.totalPolls = (this.configPoll.total) ? `${this.configPoll.total} encuestas` : '0 encuentas'
       this.pages = this.configPoll.pages
       this.pagesPoll = [...this.pagesPoll, this.configPoll.pages[this.positionPage]]
       this.projectname = this.configPoll.PollsProjectNames.name
