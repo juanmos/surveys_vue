@@ -32,7 +32,7 @@
                <stats-card
                  color="info"
                  icon="room"
-                 @showMap="dialogMap = !dialogMap"
+                 @showMap="showMarkers()"
                  title="LUGAR DE ENCUESTA:"
                  value=""
                  smallValue=""
@@ -87,7 +87,12 @@
                              CERRAR
                     </v-btn>
                   </v-card-actions>
-              <map-component :markers="filtersMarkers" :gmapCenter="dataGmapCenter"></map-component>
+              <div v-if="loadMarkers === true">
+                     <center>
+                            <h3>Cargando ubicaciones de las encuestas. Espere por favor</h3>
+                     </center>
+              </div>
+              <map-component v-else :markers="filtersMarkers" :gmapCenter="dataGmapCenter"></map-component>
              </v-card>
            </v-dialog>
            <v-dialog v-model="dialogQuestionDetail" fullscreen v-if="dialogQuestionDetail">
@@ -146,6 +151,7 @@ export default {
       users: []
     },
     positionPage: 0,
+    loadMarkers: true,
     selectedUser: null,
     listUsers: [],
     dialogMap: false,
@@ -165,6 +171,7 @@ export default {
   }),
   methods: {
     ...mapActions('config-polls', { getConfigPoll: 'get' }),
+    ...mapActions('marker-polls', { findMarkerPolls: 'find' }),
     setCurrentImg (data) {
       this.audioData.audio = data.path
       this.audioData.filename = data.filename
@@ -175,6 +182,21 @@ export default {
     openModal (question) {
       this.currenteQuestion = question
       this.dialogQuestionDetail = true
+    },
+    getMarkers () {
+      this.loadMarkers = true
+      this.findMarkerPolls({query: {_config_poll_id: this.$route.params.id, $limit: null, $skip: 0}}).then((result) => {
+        if (result.data.length > 0) {
+          this.listUsers = result.data.map(data => data.user)
+          this.mapMarkers = result.data
+          this.filtersMarkers = [...result.data]
+          this.loadMarkers = false
+        }
+      })
+    },
+    showMarkers () {
+      this.dialogMap = true
+      this.getMarkers()
     },
     scroll () {
       window.onscroll = () => {
@@ -213,9 +235,9 @@ export default {
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
       this.dataGmapCenter = this.configPoll.gmapCenter
-      this.listUsers = [...this.configPoll.users, {_id: null, name: 'TODOS'}]
-      this.mapMarkers = this.configPoll.markers
-      this.filtersMarkers = [...this.configPoll.markers]
+      // this.listUsers = [...this.configPoll.users, {_id: null, name: 'TODOS'}]
+      // this.mapMarkers = this.configPoll.markers
+      // this.filtersMarkers = [...this.configPoll.markers]
     }).catch(err => console.log('error', err))
   },
   mounted () {
