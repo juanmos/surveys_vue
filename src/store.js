@@ -175,6 +175,16 @@ export default new Vuex.Store({
         removed: false
       }
     }),
+    service('marker-polls', {
+      instanceDefaults: {
+        _user_id: null,
+        _config_poll_id: null,
+        position: null,
+        dateStart: null,
+        dateEnd: null,
+        removed: false
+      }
+    }),
     service('config-polls', {
       instanceDefaults: {
         name: '',
