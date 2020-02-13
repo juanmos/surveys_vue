@@ -188,6 +188,7 @@ export default {
       this.findMarkerPolls({query: {_config_poll_id: this.$route.params.id, $limit: null, $skip: 0}}).then((result) => {
         if (result.data.length > 0) {
           this.listUsers = result.data.map(data => data.user)
+          this.listUsers = [...this.listUsers, {_id: null, name: 'TODOS'}]
           this.mapMarkers = result.data
           this.filtersMarkers = [...result.data]
           this.loadMarkers = false
