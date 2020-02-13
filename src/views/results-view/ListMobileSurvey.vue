@@ -156,6 +156,7 @@ export default {
       dialog: false,
       selectedUser: null,
       total: 0,
+      pollProjectId: null,
       message: '',
       showMsg: false,
       search: '',
@@ -172,10 +173,10 @@ export default {
   methods: {
     ...mapActions('mobile-survey-results', { findMobileSurvey: 'find' }),
     ...mapActions('config-polls', {getPoll: 'get'}),
+    ...mapActions('polls-project', {getPollsProject: 'get'}),
     getMobileSurvey () {
       this.findMobileSurvey({query: {removed: false, _config_poll_id: this.id, $skip: 0, $limit: null}}).then(response => {
         this.listMobileResults = [...response.data]
-        // console.log('listt--', this.listMobileResults)
         this.users = this.users.map(user => {
           user.totalPolls = this.listMobileResults.filter(mobileResult => mobileResult._user_id === user._id).length
           this.total += user.totalPolls
@@ -197,7 +198,14 @@ export default {
     },
     getDataConfig () {
       this.getPoll([this.id, {query: {withInstances: false}}]).then(result => {
-        this.users = [...result.users]
+        // this.users = [...result.users]
+        this.pollProjectId = result._polls_project_id
+        this.getDataProject()
+      }).catch(err => console.log('este es el error', err))
+    },
+    getDataProject () {
+      this.getPollsProject(this.pollProjectId).then(result => {
+        this.users = [...result.userPolls]
         this.getMobileSurvey()
       }).catch(err => console.log('este es el error', err))
     }
