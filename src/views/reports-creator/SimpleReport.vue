@@ -236,9 +236,6 @@ export default {
       this.projectname = this.configPoll.PollsProjectNames.name
       this.questions = this.configPoll.formatedConfiguration
       this.dataGmapCenter = this.configPoll.gmapCenter
-      // this.listUsers = [...this.configPoll.users, {_id: null, name: 'TODOS'}]
-      // this.mapMarkers = this.configPoll.markers
-      // this.filtersMarkers = [...this.configPoll.markers]
     }).catch(err => console.log('error', err))
   },
   mounted () {
