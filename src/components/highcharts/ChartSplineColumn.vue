@@ -43,7 +43,8 @@ export default {
           }
         },
         tooltip: {
-          shared: true
+          shared: true,
+          valueSuffix: ' %'
         },
         credits: {
           enabled: false
