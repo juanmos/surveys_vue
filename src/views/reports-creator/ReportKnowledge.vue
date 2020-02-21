@@ -19,7 +19,7 @@
                   <tr>
                      <th></th>
                      <th></th>
-                     <th v-for="(col, index) in dataDerive.columnsQuestions" :key="index+ Math.random()">
+                     <th class="maxWidth" v-for="(col, index) in dataDerive.columnsQuestions" :key="index+ Math.random()">
                        {{col.choice}}
                      </th>
                   </tr>
@@ -27,20 +27,20 @@
                    <template  v-for="(row) in dataDerive.formatTable">
                      <tr :key="row.name + Math.random()">
                        <th rowspan="4">{{row.name}}</th>
-                       <th>CONOCIMIENTO</th>
+                       <th class="knowledge">CONOCIMIENTO</th>
                        <td v-for="(total, indexTotal) in row.results.knowledge" :key="indexTotal+ Math.random()"> {{total}} </td>
 
                      </tr>
                      <tr :key="row.name + Math.random()">
-                       <th>DETRACTORES</th>
+                       <th class="detractors">DETRACTORES</th>
                        <td v-for="(total, indexTotalDetractores) in row.results.detractors" :key="indexTotalDetractores+ Math.random()"> {{total}} </td>
                      </tr>
                      <tr :key="row.name + Math.random()">
-                       <th>PASIVOS</th>
+                       <th class="passives">PASIVOS</th>
                        <td v-for="(total, indexTotalPasivos) in row.results.passives" :key="indexTotalPasivos+ Math.random()"> {{total}} </td>
                      </tr>
                      <tr :key="row.name + Math.random()">
-                       <th>PROMOTORES</th>
+                       <th class="promoters">PROMOTORES</th>
                        <td v-for="(total, indexTotalPromotores) in row.results.promoters" :key="indexTotalPromotores+ Math.random()"> {{total}} </td>
                      </tr>
                    </template>
@@ -90,100 +90,51 @@ export default {
 </script>
 
 <style lang="scss">
-.styleCustom tbody tr:nth-of-type(odd) {
-  background-color: rgba(93, 97, 99, 0.87);
-  color: white;
-}
-.styleCustom tbody tr:hover {
-  background-color: #312f2f !important;
-  color: white;
-}
-.TFtable{
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.TFtable td{
-  padding:15px;
-  border:#dadde2 1px solid;
-}
-
-.TFtable th{
-  padding:15px; border:#dadde2 1px solid;
-  background: white;
-  color: rgba(0,0,0,.54);
-  font-family: Avenir,Helvetica,Arial,sans-serif;
-  font-size: 12px;
-  max-width: 450px;
-  min-width: 350px;
-}
-
-/* encabezados estaticos*/
-.TFtable{
-    width: 400px;
-  /*  table-layout: fixed;
-    border-collapse: collapse; */
-}
-
-.TFtable tbody{
-  display:block;
-  width: 100%;
-  overflow: auto;
-  height: 100px;
-}
-
-.TFtable thead tr {
-   display: block;
-}
-
-.TFtable thead {
-  background: black;
-  color:#fff;
-}
-
-.TFtable th, .TFtable td {
-  padding: 15px;
-  margin: 15px;
-  text-align: center;
-  font-family: Avenir,Helvetica,Arial,sans-serif;
-  font-size: 13px;
-  width: 200px;
-}
-
-/* encabezados estaticos*/
-
-.tableReport tr{
-  background: #dadde2;
-  cursor: pointer !important;
-}
-
 .tableReport tr:nth-child(odd){
-  background: #dfe3ea;
-  color: black;
+  background: #dfe3ea!important;
+
 }
 
 .tableReport tr:nth-child(even){
-  background: white;
-  color: black;
+  background: white !important;
+  color: black !important;
 }
 
+.knowledge {
+  background-color: #79cdda !important;
+  color: black;
+}
+.detractors {
+  background-color: #fb4117 !important;
+  color: black;
+}
+.passives {
+  background-color: #fbd417 !important;
+  color: black;
+}
+.promoters {
+  background-color: #4bb912 !important;
+  color: black;
+}
 .tableReport th {
-/*  position: -webkit-sticky;
-  position: sticky; */
   top: 0;
+  text-align: center;
+  color: black !important;
+  border: 1px solid black !important;
+  text-align: center !important;
 }
 .tableReport td {
   padding: 10px;
+  text-align: center;
+  color: black !important;
+  border: 1px solid black !important
 }
 
 table {
   display: block;
 }
-
-.tableData {
-  width: 100%;
-  overflow-x: scroll;
-  /*height: 700px; */
+.maxWidth{
+  max-width: 50px;
 }
 
 .center {
