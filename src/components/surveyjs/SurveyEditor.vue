@@ -92,6 +92,10 @@ export default {
         ]
       })
       SurveyKo.JsonObject.metaData.addProperty('question', {
+        name: 'segmentacion:boolean',
+        default: false
+      })
+      SurveyKo.JsonObject.metaData.addProperty('question', {
         name: 'audio:boolean',
         default: false
       })
