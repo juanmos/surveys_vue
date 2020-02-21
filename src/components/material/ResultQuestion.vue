@@ -33,9 +33,18 @@
         </v-icon>
       </span>Pregunta: <span>{{currentQuestion.label}}</span>
       </label>
-      <div class="">
-        <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
-      </div>
+      <v-layout xs12 offset-xs1>
+           <v-flex xs2>
+             <div class="">
+               <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
+             </div>
+           </v-flex>
+           <v-flex xs2>
+             <div class="">
+               <v-btn v-if="!isViewDetail" @click="goToDerive">Derivar</v-btn>
+             </div>
+           </v-flex>
+      </v-layout>
   </div>
   <div v-else style="margin-bottom: 20px;">
     <label style="margin-left: 20px;font-weight:bold;">
@@ -80,6 +89,7 @@
         </v-list>
       </v-menu>
       <v-btn v-if="!isViewDetail" @click="goToDetail">Detalle</v-btn>
+    <!--  <v-btn v-if="!isViewDetail" @click="goToDerive">Derivar</v-btn> -->
   </div>
   <div v-if="currentQuestion.questionCombination">
     <chart-spline-column :graphicType="graphicType" :question="currentQuestion"></chart-spline-column>
@@ -145,6 +155,9 @@ export default {
   methods: {
     goToDetail () {
       this.$emit('openModalQuestionDetail', this.currentQuestion)
+    },
+    goToDerive () {
+      this.$emit('openModalDerive', this.currentQuestion)
     },
     sortOriginal () {
       this.original = true

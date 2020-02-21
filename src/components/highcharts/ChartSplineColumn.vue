@@ -49,10 +49,16 @@ export default {
         credits: {
           enabled: false
         },
-        /* tooltip: {
-          //  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <span style="color:{point.color}"> Total:</span><b>{point.total}</b><br/>'
-        }, */
+        plotOptions: {
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              inside: true,
+              enabled: true,
+              format: '{point.y:.1f}%'
+            }
+          }
+        },
         series: this.question.series
       } : {}
     },

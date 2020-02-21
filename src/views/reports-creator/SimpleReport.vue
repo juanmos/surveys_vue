@@ -57,6 +57,7 @@
                  color="red"
                  icon="info"
                  @openModalQuestionDetail="openModal"
+                 @openModalDerive="openModalDerive"
                  :questions="questions"
                  :title="page"
                  :value="totalPolls"
@@ -104,7 +105,7 @@
                                        <span style="">
                                          <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
                                            class="title mb-2"
-                                           v-text="currenteQuestion.label"
+                                           v-text="currentQuestion.label"
                                          >
                                        </h4>
                                        </span>
@@ -125,8 +126,56 @@
                                 </div>
                                 </v-flex>
                                 <v-flex xs12>
-                                       <result-detail-question :question="currenteQuestion"></result-detail-question>
+                                       <result-detail-question :question="currentQuestion"></result-detail-question>
                                 </v-flex>
+                         </v-layout>
+                  </v-card>
+           </v-dialog>
+           <v-dialog v-model="dialogQuestionDerive" fullscreen v-if="dialogQuestionDerive">
+                  <v-card>
+                         <v-layout row wrap>
+
+                                <v-flex xs12 style="margin-bottom: 100px;">
+                                       <div class="header">
+                                       <span style="">
+                                         <h4 style="font-weight: bold; margin-left: 10px;padding-top:10px; text-transform: uppercase;"
+                                           class="title mb-2"
+                                           v-text="currentQuestion.label"
+                                         >
+                                       </h4>
+                                       </span>
+                                       <span>
+                                         <v-icon
+                                           size="40"
+                                         >
+                                         equalizer
+                                         </v-icon>
+                                       </span>
+                                       <v-btn color="dark darken-1"
+                                              style="background: #000; float: right;"
+                                              flat="flat"
+                                              @click="dialogQuestionDerive = false"
+                                                >
+                                                CERRAR
+                                       </v-btn>
+                                </div>
+                                </v-flex>
+                                <v-flex xs12 v-if="awaitDerive === true">
+                                     <center>
+                                            <v-img
+                                                 src="/images/loader.gif"
+                                                 img-alt="Image"
+                                                 height="70"
+                                                 width="70"
+                                                 aspect-ratio="2.75"
+                                                 ></v-img>
+                                            <h2>Cargando datos. Espere por favor.</h2>
+                                     </center>
+                                </v-flex>
+                                <v-flex xs12 v-else>
+                                     <report-knowledge :question="currentQuestion" :resultDerive="dataDerive"></report-knowledge>
+                                </v-flex>
+
                          </v-layout>
                   </v-card>
            </v-dialog>
@@ -139,10 +188,13 @@ import StatsCard from './../../components/material/StatsCard'
 import ResultPage from './../../components/material/ResultPage'
 import MapComponent from './../../components/graphs/Map'
 import ResultDetailQuestion from './ResultDetailQuestion'
+import ReportKnowledge from './ReportKnowledge'
+import axios from 'axios'
+const enviroment = require('./../../../config/enviroment.json')
 export default {
   props: [''],
   data: () => ({
-    currenteQuestion: {
+    currentQuestion: {
       label: ''
     },
     graphicType: 'column',
@@ -150,12 +202,15 @@ export default {
       name: '',
       users: []
     },
+    dataDerive: null,
+    awaitDerive: false,
     positionPage: 0,
     loadMarkers: true,
     selectedUser: null,
     listUsers: [],
     dialogMap: false,
     dialogQuestionDetail: false,
+    dialogQuestionDerive: false,
     projectname: '',
     pages: [],
     pagesPoll: [],
@@ -180,8 +235,42 @@ export default {
       this.$router.go(-1)
     },
     openModal (question) {
-      this.currenteQuestion = question
+      this.currentQuestion = question
       this.dialogQuestionDetail = true
+    },
+    openModalDerive (question) {
+      this.currentQuestion = question
+      this.dialogQuestionDerive = true
+      // this.questionDerive()
+      this.questionDerive2()
+    },
+    questionDerive () {
+      const {ConfigPoll} = this.$FeathersVuex
+      const config = new ConfigPoll(this.currentQuestion)
+      config.derive = true
+      config.configPollId = this.$route.params.id
+      config.save().then((result) => {
+        console.log('enviando dta')
+      })
+    },
+    questionDerive2 () {
+      this.awaitDerive = true
+      let axiosIntance = axios.create({
+        baseURL: enviroment[enviroment.currentEnviroment].backend.urlBase
+      })
+      this.currentQuestion.configPollId = this.$route.params.id
+      axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
+      axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
+      let params = new URLSearchParams()
+      // params.append('speech', true)
+      axiosIntance.post('derive-questions', this.currentQuestion, {
+        headers: {'Content-Type': 'application/json'}, params}).then(result => {
+        if (result) {
+          this.dataDerive = result.data
+          console.log('data derive--', this.dataDerive)
+          this.awaitDerive = false
+        }
+      })
     },
     getMarkers () {
       this.loadMarkers = true
@@ -241,7 +330,7 @@ export default {
   mounted () {
     this.scroll()
   },
-  components: {StatsCard, ResultPage, MapComponent, ResultDetailQuestion}
+  components: {StatsCard, ResultPage, MapComponent, ResultDetailQuestion, ReportKnowledge}
 }
 </script>
 

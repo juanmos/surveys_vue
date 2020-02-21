@@ -100,6 +100,11 @@ export default new Vuex.Store({
         type: ''
       }
     }),
+    service('derive-questions', {
+      instanceDefaults: {
+        data: null
+      }
+    }),
     service('category-project', {
       instanceDefaults: {
         name: '',
