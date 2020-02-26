@@ -23,4 +23,6 @@ yarn-error.log*
 *.sln
 *.sw*
 
-config/enviroment.json
+# Package-lock
+package-lock.json
+config/*

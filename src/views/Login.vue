@@ -1,11 +1,11 @@
 <template>
 
-    <v-app id="inspire">
+    <v-app id="inspire" dark>
       <loading-component v-if="loading"></loading-component>
           <particles-background class="particles"></particles-background>
           <v-layout align-center justify-center>
                 <v-card
-                  color="pink"
+                  color="primary"
                   style="min-width: 400px; margin: auto; margin-top: 10%;"
                   class="appear elevation-20"
                 >
@@ -40,7 +40,8 @@ export default {
     auth (credentials) {
       this.authenticate(credentials).then((result) => {
         this.setShowSnack(true)
-        this.setSnackMessage('Bienvenido a mapas mentales')
+        localStorage.setItem('user', JSON.stringify(result.user))
+        this.setSnackMessage('Bienvenido al sistema de encuestas')
         this.$router.push('/')
       }, (err) => {
         this.setShowSnack(true)

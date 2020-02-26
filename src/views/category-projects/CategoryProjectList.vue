@@ -66,7 +66,7 @@
                           <v-icon>more_vert</v-icon>
                           </v-btn>
                           <v-list>
-                            <v-list-tile @click="dialog = true">
+                            <v-list-tile @click="dialog = true;itemSelected=props.item">
                               <v-list-tile-title >Eliminar</v-list-tile-title>
                             </v-list-tile>
                             <v-dialog
@@ -94,7 +94,7 @@
                                   <v-btn
                                     color="teal darken-3"
                                     flat="flat"
-                                    @click="dialog = false, del(props.item)"
+                                    @click="dialog = false, del()"
                                   >
                                     Aceptar
                                   </v-btn>
@@ -126,7 +126,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToNew()"
                 >
                     <v-icon>add</v-icon>
@@ -175,6 +175,7 @@ export default {
       page: 1,
       limit: 20,
       total: 1,
+      itemSelected: null,
       loaded: false,
       categories: [],
       query: {},
@@ -218,9 +219,9 @@ export default {
         })
       }
     },
-    del (element) {
+    del () {
       const {CategoryProject} = this.$FeathersVuex
-      const category = new CategoryProject(element)
+      const category = new CategoryProject(this.itemSelected)
       category.removed = true
       category.patch().then((result) => {
         this.findProjects({ query: {removed: false} }).then(response => {

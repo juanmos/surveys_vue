@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import feathersVuex from 'feathers-vuex'
 import feathersClient from './feathers-client'
+import enviroment from './../config/enviroment'
 const { auth, FeathersVuex, service } = feathersVuex(feathersClient, { idField: '_id' })
 
 Vue.use(Vuex)
@@ -19,27 +20,26 @@ export default new Vuex.Store({
       },
       debug: true
     }),
-    service('boards', {
+    service('category-poll', {
       instanceDefaults: {
         name: '',
-        category: '',
-        _user_id: '',
-        memberIds: [],
-        graphic_content: {},
-        nodeDataArray: [],
-        linkDataArray: []
+        type: '',
+        _contains_codegeneral: false
       },
       debug: true
     }),
-    service('studies', {
+    service('codescategorypolls', {
       instanceDefaults: {
+        code: '',
         name: '',
-        description: '',
-        _user_id: '',
-        memberIds: [],
-        sub_studies: [],
-        geographical_scope: '',
-        _customer_id: ''
+        _categorypoll_id: ''
+      },
+      debug: true
+    }),
+    service('question-types', {
+      instanceDefaults: {
+        type_camp: '',
+        config: []
       },
       debug: true
     }),
@@ -62,68 +62,6 @@ export default new Vuex.Store({
         removed: false
       }
     }),
-    service('countries', {
-      instanceDefaults: {
-        name: '',
-        removed: false
-      }
-    }),
-    service('cities', {
-      instanceDefaults: {
-        name: '',
-        _country_id: '',
-        removed: false
-      }
-    }),
-    service('customer-contacts', {
-      instanceDefaults: {
-        name: '',
-        phones: '',
-        cellphones: '',
-        email: '',
-        position: '',
-        _customer_id: '',
-        removed: false
-      }
-    }),
-    service('main-constructs', {
-      instanceDefaults: {
-        name: '',
-        _board_id: '',
-        color: '',
-        description: ''
-      }
-    }),
-    service('graph-defaults', {
-      instanceDefaults: {
-        component: '',
-        nodeDataArray: []
-      }
-    }),
-    service('working-tables', {
-      instanceDefaults: {
-        name: '',
-        description: '',
-        component: '',
-        type: '',
-        removed: false
-      }
-    }),
-    service('table-instances', {
-      instanceDefaults: {
-        name: '',
-        _working_table_id: '',
-        _board_id: '',
-        incorporates: [],
-        nodeDataArray: [],
-        linkDataArray: [],
-        deletes: [],
-        weakens: [],
-        threats: [],
-        opportunities: [],
-        removed: false
-      }
-    }),
     service('construct-images', {
       instanceDefaults: {
         name: '',
@@ -141,10 +79,30 @@ export default new Vuex.Store({
         _country_id: ''
       }
     }),
+    service('roles', {
+      instanceDefaults: {
+        code: '',
+        name: '',
+        description: '',
+        permissionrol: []
+      }
+    }),
+    service('permission', {
+      instanceDefaults: {
+        module: '',
+        description: '',
+        url: ''
+      }
+    }),
     service('uploads', {
       instanceDefaults: {
         file: '',
         type: ''
+      }
+    }),
+    service('derive-questions', {
+      instanceDefaults: {
+        data: null
       }
     }),
     service('category-project', {
@@ -153,94 +111,340 @@ export default new Vuex.Store({
         description: ''
       }
     }),
+    service('menu-items', {
+      instanceDefaults: {
+        name: '',
+        icon: '',
+        url: ''
+      }
+    }),
+    service('menus', {
+      instanceDefaults: {
+        level: '',
+        order: '',
+        _roles_id: '',
+        _menu_id: '',
+        _menu_item_id: '',
+        removed: false
+      }
+    }),
+    service('restfuls', {
+      instanceDefaults: {
+        services: []
+      }
+    }),
+    service('users-polls', {
+      instanceDefaults: {
+        name: '',
+        email: '',
+        password: '',
+        phones: '',
+        avatar: '',
+        removed: false
+      }
+    }),
+    service('category-segmentation', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        datos: [],
+        removed: false
+      }
+    }),
+    service('polls-project', {
+      instanceDefaults: {
+        name: '',
+        date_start: '',
+        date_end: '',
+        date_deliver: '',
+        _customer_id: '',
+        _customer_contact_id: '',
+        number_polls: '',
+        state_polls: [],
+        removed: false,
+        userPolls: []
+      }
+    }),
+    service('poll-category', {
+      instanceDefaults: {
+        _polls_project_id: '',
+        _categorySegmentation_id: '',
+        removed: false
+      }
+    }),
+    service('users-roles', {
+      instanceDefaults: {
+        _user_id: null,
+        _rol_id: null,
+        rol: null,
+        removed: false
+      }
+    }),
+    service('marker-polls', {
+      instanceDefaults: {
+        _user_id: null,
+        _config_poll_id: null,
+        position: null,
+        dateStart: null,
+        dateEnd: null,
+        removed: false
+      }
+    }),
+    service('config-polls', {
+      instanceDefaults: {
+        name: '',
+        construct: '',
+        imported: false,
+        originalJson: '',
+        PollInstances: [],
+        formatedConfiguration: '',
+        parsedJson: '',
+        removed: false,
+        _polls_project_id: 0,
+        dateCreated: '',
+        dashboardSaved: '',
+        dashboardRows: 1
+      }
+    }),
+    service('poll-instances', {
+      instanceDefaults: {
+        removed: false,
+        _config_poll_id: 0
+      }
+    }),
+    service('web-survey-results', {
+      instanceDefaults: {
+        fecha_inicio: '',
+        fecha_fin: '',
+        answers: {},
+        _user_id: '',
+        _config_poll_id: ''
+      }
+    }),
+    service('users-projects', {
+      instanceDefaults: {
+        _user_id: null,
+        _project_id: null,
+        removed: false
+      }
+    }),
+    service('category-segmantation-polls', {
+      instanceDefaults: {
+        name: null,
+        description: null,
+        _project_poll_id: null,
+        datos: [],
+        removed: false
+      }
+    }),
+    service('panel-elements', {
+      instanceDefaults: {
+        _poll_id: 0,
+        questions: [],
+        removed: false
+      }
+    }),
+    service('actors', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        code: '',
+        tags: [],
+        removed: false,
+        charges: [],
+        politicalParties: []
+      }
+    }),
+    service('actor-categories', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('question-categories', {
+      instanceDefaults: {
+        name: '',
+        description: '',
+        removed: false
+      }
+    }),
+    service('master-questions', {
+      instanceDefaults: {
+        text: '',
+        category: '',
+        subcategory_questions: {},
+        type: '',
+        options: '',
+        removed: false
+      }
+    }),
+    service('consolidates', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
+    service('category-questions', {
+      instanceDefaults: {
+        name: '',
+        value: '',
+        removed: false
+      }
+    }),
+    service('position-actors', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('provinces', {
+      instanceDefaults: {
+        name: '',
+        removed: false
+      }
+    }),
+    service('electoral-projects', {
+      instanceDefaults: {
+        date: '',
+        position: '',
+        removed: false
+      }
+    }),
+    service('electoral-records', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
+    service('audios', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
+    service('question-audios', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
+    service('countries', {
+      instanceDefaults: {
+        removed: false
+      }
+    }),
+    service('mobile-survey-results', {
+      instanceDefaults: {
+        _user_id: '',
+        _config_poll_id: '',
+        removed: false
+      }
+    }),
+    service('poll-dashboards', {
+      instanceDefaults: {
+        removed: false,
+        name: '',
+        dashboardData: [],
+        dashboardRows: 0,
+        _config_poll_id: null
+      }
+    }),
+    service('companies', {
+      instanceDefaults: {
+        removed: false,
+        name: '',
+        address: '',
+        ruc: '',
+        phone: ''
+      }
+    }),
+    service('route-surveyors', {
+      instanceDefaults: {
+        latitude: '',
+        longitude: '',
+        _user_id: '',
+        date: ''
+      }
+    }),
     auth({ userService: 'users' })
   ],
   state: {
-    studyId: null,
-    currentMapId: null,
-    currentTableInstanceId: null,
-    currentConstructId: null,
-    currentConstruct: {},
-    currentDiagram: null,
     snackMessage: '',
-    showSnack: false
+    mapConfigmapConfig: false,
+    showSnack: false,
+    snackColor: 'success',
+    currentEnv: enviroment[enviroment.currentEnviroment].backend.urlBase,
+    currentPoll: null,
+    mapConfig: {
+      cluster: false,
+      drawingMode: false
+    },
+    page: 1,
+    asideOpened: false
   },
   getters: {
-    getStudyId: (state) => {
-      return state.studyId
-    },
-    getCurrentMapId: (state) => {
-      return state.currentMapId
-    },
-    getCurrentTableInstanceId: (state) => {
-      return state.currentTableInstanceId
-    },
-    getCurrentConstructId: (state) => {
-      return state.currentConstructId
-    },
-    getCurrentConstruct: (state) => {
-      return state.currentConstruct
-    },
-    getCurrentDiagram: (state) => {
-      return state.currentDiagram
-    },
     getSnackMessage: (state) => {
       return state.snackMessage
     },
     getShowSnack: (state) => {
       return state.getShowSnack
+    },
+    getPage: (state) => {
+      return state.page
+    },
+    getSnackColor: (state) => {
+      return state.getSnackColor
+    },
+    getCurrentPoll: (state) => {
+      return state.currentPoll
+    },
+    getAsideOpened: (state) => {
+      return state.asideOpened
+    },
+    getMapConfig (state) {
+      return state.mapConfig
     }
   },
   mutations: {
-    setStudyId (state, id) {
-      state.studyId = id
-    },
-    setCurrentMapId (state, id) {
-      state.currentMapId = id
-    },
-    setCurrentTableInstanceId (state, id) {
-      state.currentTableInstanceId = id
-    },
-    setCurrentConstructId (state, id) {
-      state.currentConstructId = id
-    },
-    setCurrentConstruct (state, construct) {
-      state.currentConstruct = construct
-    },
-    setCurrentDiagram (state, type) {
-      state.currentDiagram = type
-    },
     setSnackMessage (state, message) {
       state.snackMessage = message
     },
     setShowSnack (state, show) {
       state.showSnack = show
+    },
+    setPage (state, page) {
+      state.page = page
+    },
+    setSnackColor (state, type) {
+      state.snackColor = type
+    },
+    setCurrentPoll (state, poll) {
+      state.currentPoll = poll
+    },
+    setAsideOpened (state, opened) {
+      state.asideOpened = opened
+    },
+    setMapConfig (state, config) {
+      state.mapConfig = {...config}
     }
   },
   actions: {
-    setStudyId: ({ commit }, id) => {
-      commit('setStudyId', id)
-    },
-    setCurrentMapId: ({ commit }, id) => {
-      commit('setCurrentMapId', id)
-    },
-    setCurrentTableInstanceId: ({ commit }, id) => {
-      commit('setCurrentTableInstanceId', id)
-    },
-    setCurrentConstructId: ({ commit }, id) => {
-      commit('setCurrentConstructId', id)
-    },
-    setCurrentConstruct: ({ commit }, construct) => {
-      commit('setCurrentConstruct', construct)
-    },
-    setCurrentDiagram: ({ commit }, type) => {
-      commit('setCurrentDiagram', type)
-    },
     setSnackMessage: ({ commit }, message) => {
       commit('setSnackMessage', message)
     },
     setShowSnack: ({ commit }, show) => {
       commit('setShowSnack', show)
+    },
+    setPage: ({ commit }, page) => {
+      commit('setPage', page)
+    },
+    setSnackColor: ({ commit }, show) => {
+      commit('setSnackColor', show)
+    },
+    setCurrentPoll: ({ commit }, poll) => {
+      commit('setCurrentPoll', poll)
+    },
+    setAsideOpened: ({ commit }, opened) => {
+      commit('setAsideOpened', opened)
+    },
+    setMapConfig: ({ commit }, config) => {
+      commit('setMapConfig', config)
     }
   }
 })

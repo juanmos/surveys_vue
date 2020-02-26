@@ -13,7 +13,7 @@
                 small
                 top
                 right
-                color="pink"
+                color="primary"
                 @click="goToList"
                 >
                     <v-icon>list</v-icon>
@@ -26,7 +26,6 @@
 
 <script>
 import {mapState} from 'vuex'
-
 import CategoryProjectForm from './CategoryProjectForm'
 import LoadingComponent from '../../components/docaration/LoadingComponent'
 export default {

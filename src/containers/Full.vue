@@ -1,11 +1,11 @@
 <template>
-  <v-app>
+  <v-app dark>
     <side-menu :clipped="clipped" :drawer="drawer" :miniVariant="miniVariant" ></side-menu>
     <v-toolbar
       app
       :clipped-left="clipped"
       dark
-      color="primary">
+      color="black">
 
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-avatar
@@ -14,10 +14,26 @@
         >
           <img height="100" src="@/assets/logo-propraxis.png" alt="Propraxis">
       </v-avatar>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title v-text="company"></v-toolbar-title>
       <v-spacer></v-spacer>
+      <!-- <v-btn icon>
+        <v-icon @click="goApplications" title="Aplicaciones">desktop_mac</v-icon>
+      </v-btn> -->
+      <!-- <v-btn icon @click="showNotification = !showNotification">
+        <v-badge color="error" overlap>
+          <template slot="badge">2</template>
+          <v-icon title="Notificaciones">notification_important</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-card v-if="showNotification" class="listNotification">
+        <v-list dense>
+          <v-list-tile v-for="notification in notifications" :key="notification" @click="onClick">
+            <v-list-tile-title v-text="notification"/>
+          </v-list-tile>
+        </v-list>
+      </v-card> -->
       <v-btn icon>
-        <v-icon>search</v-icon>
+        <v-icon @click="goUser" title="Perfil">perm_identity</v-icon>
       </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>more_vert</v-icon>
@@ -34,6 +50,8 @@
       fixed
       app
       width="1200"
+      class="white"
+      style="color: black"
     >
       <v-list>
         <v-list-tile @click="right = !right">
@@ -46,32 +64,74 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; Propraxis 2018</span>
+      <span>&copy; Propraxis {{currentYear}}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import {mapState} from 'vuex'
-
 import SideMenu from './../components/SideMenu'
 import SnackMessage from './../components/docaration/SnackMessage'
+import router from './../router'
 export default {
   name: 'App',
   data () {
     return {
       title: 'ENCUESTAS',
       clipped: true,
+      notifications: [
+        'Mike, Thanos is coming',
+        '5 new avengers joined the team',
+        "You're now friends with Capt",
+        'Another Notification',
+        'Another One - Dj Khalid voice'
+      ],
+      showNotification: false,
       drawer: true,
       fixed: false,
+      currentYear: new Date().getFullYear(),
       miniVariant: false,
       right: true,
       rightDrawer: false
     }
   },
   computed: {
-    ...mapState('auth', { user: 'user' })
+    user () {
+      return (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+    },
+    company () {
+      let user = (this.$store.state.auth.user === null) ? JSON.parse(localStorage.getItem('user')) : this.$store.state.auth.user
+      return (user.company) ? user.company.name : 'ENCUESTAS'
+    }
+  },
+  methods: {
+    goApplications () {
+      router.push('/applications')
+    },
+    goUser () {
+      router.push('/user-edit')
+    }
   },
   components: {SideMenu, SnackMessage}
 }
 </script>
+<style>
+.listNotification {
+  outline: none;
+  z-index: 2202;
+  position: fixed;
+  left: 82%;
+  float: left;
+  top: 50px;
+}
+
+<style lang="scss">
+.styleCustom tbody tr:nth-of-type(odd) {
+  background-color: rgba(93, 97, 99, 0.87);
+  color: white;
+}
+.styleCustom tbody tr:hover {
+  background-color: #312f2f !important;
+  color: white;
+}
+</style>

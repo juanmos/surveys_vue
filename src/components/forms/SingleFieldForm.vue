@@ -3,6 +3,7 @@
         <v-layout row wrap>
             <v-flex xs8>
                 <v-text-field
+                    box
                     @click.stop="focus"
                     @keyup.enter="broadcastData"
                     v-if="type === 'text'"
@@ -14,7 +15,7 @@
                 <v-btn @click.stop="broadcastData" flat icon color="indigo">
                     <v-icon>edit</v-icon>
                 </v-btn>
-                <v-btn @click.stop="cancel" flat icon color="pink">
+                <v-btn @click.stop="cancel" flat icon color="primary">
                     <v-icon>cancel</v-icon>
                 </v-btn>
             </v-flex>

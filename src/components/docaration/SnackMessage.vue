@@ -1,6 +1,7 @@
 <template>
     <v-snackbar
         :value="showSnack"
+        :color="snackColor"
     >
         {{ snackMessage }}
         <v-btn
@@ -28,7 +29,8 @@ export default {
   computed: {
     ...mapState([
       'showSnack',
-      'snackMessage'
+      'snackMessage',
+      'snackColor'
     ]),
     ...mapGetters([
       'getShowSnack'

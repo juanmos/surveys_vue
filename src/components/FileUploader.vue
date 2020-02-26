@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-flex xs12 sm12 class="text-xs-center text-sm-center text-md-center text-lg-center">
             <v-text-field
-              label="Seleccionar Imagen"
+              :label="label ? label : `Seleccionar Imagen`"
               @click="pickFile"
               v-model="imageName"
               prepend-icon="attach_file"
@@ -12,7 +12,7 @@
               type="file"
               style="display: none"
               :ref="`image`"
-              accept="image/*"
+              :accept="inputType? inputType : `image/*`"
               @change="onFilePicked"
             >
         </v-flex>
@@ -24,6 +24,7 @@ import {mapActions, mapState} from 'vuex'
 import axios from 'axios'
 const enviroment = require('./../../config/enviroment.json')
 export default {
+  props: ['label', 'inputType', 'folder', 'loadImageRecord'],
   data () {
     return {
       imageName: '',
@@ -49,10 +50,12 @@ export default {
         }
         let fr = new FileReader()
         fr.readAsDataURL(file)
+        let folder = (this.loadImageRecord) ? 'actas' : 'construct'
         fr.addEventListener('load', () => {
           this.imageUrl = fr.result
           this.imageFile = file
-          form.append('type', 'construct')
+          form.append('type', folder)
+          // form.append('type', 'construct')
           form.append('file', file)
           this.save(form)
         })
@@ -68,13 +71,18 @@ export default {
       })
       axiosIntance.defaults.headers.common['Content-Type'] = 'application/json'
       axiosIntance.defaults.headers.common['Authorization'] = this.accessToken
-      axiosIntance.post('uploads', req, {headers: {
-        'Content-Type': 'multipart/form-data'
-      }}).then((result) => {
+      let params = new URLSearchParams()
+      if (this.inputType) params.append('spss', true)
+      // if (this.loadImageRecord) params.append('loadImageRecord', true)
+      axiosIntance.post('uploads', req, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        params}).then((result) => {
         this.$emit('fileCreated', result.data)
         this.imageName = ''
         this.setShowSnack(true)
-        this.setSnackMessage('Imagen Guardada')
+        this.setSnackMessage(this.inputType ? 'Archivo Excel SPSS Guardado' : 'Imagen Cargada')
       }).catch((err) => {
         this.setShowSnack(true)
         this.setSnackMessage('Error al Guardar')

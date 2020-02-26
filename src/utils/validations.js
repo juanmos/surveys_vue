@@ -1,6 +1,6 @@
 export const validations = {
   nameRules: [
-    v => !!v || 'Nombre es requerido'
+    v => !!v || 'Campo es requerido'
   ],
   descriptionRules: [
     v => !!v || 'descripción es requerida'
